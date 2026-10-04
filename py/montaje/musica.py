@@ -51,6 +51,19 @@ def analizar(p: Proyecto, archivo: str | None = None) -> Path:
     if len(beats) < 8:
         salir(f"sólo encontré {len(beats)} golpes; ¿la pista tiene pulso?")
 
+    # Una intro sin batería no tiene golpes que detectar, pero el pulso ya existe:
+    # se extiende hacia atrás al mismo período para que el montaje pueda usar la intro.
+    periodo = float(np.median(np.diff(beats)))
+    previos = []
+    t0 = beats[0] - periodo
+    while t0 > periodo * 0.25:
+        previos.append(t0)
+        t0 -= periodo
+    golpes_intro = len(previos)
+    if previos:
+        beats = np.concatenate([previos[::-1], beats])
+        cuadros = librosa.time_to_frames(beats, sr=sr)
+
     # Energía por golpe: RMS medio entre un golpe y el siguiente.
     rms = librosa.feature.rms(y=y)[0]
     t_rms = librosa.times_like(rms, sr=sr)
@@ -92,6 +105,7 @@ def analizar(p: Proyecto, archivo: str | None = None) -> Path:
         "archivo": relativo,
         "duracion": round(duracion, 3),
         "bpm": round(bpm, 2),
+        "golpes_intro": golpes_intro,
         "beats": [round(float(b), 3) for b in beats],
         "energia": [round(float(e), 3) for e in energia],
         "fase_compas": fase,
@@ -102,7 +116,10 @@ def analizar(p: Proyecto, archivo: str | None = None) -> Path:
     escribir_json(destino, salida, compacto=True)
     _dibujar(y, sr, salida, p.medio("analisis", "musica.png"))
 
-    print(f"{relativo}: {duracion / 60:.0f} min {duracion % 60:.0f} s, {bpm:.1f} BPM, {len(beats)} golpes, {len(secciones)} secciones")
+    print(
+        f"{relativo}: {int(duracion // 60)} min {duracion % 60:.0f} s, {bpm:.1f} BPM, {len(beats)} golpes "
+        f"({golpes_intro} extrapolados en la intro), {len(secciones)} secciones"
+    )
     for s in secciones:
         barra = "█" * int(round(s["energia"] * 20))
         print(f"  {s['ini']:7.1f}–{s['fin']:7.1f} s  golpes {s['beat_ini']:4d}–{s['beat_fin']:4d}  {barra}")

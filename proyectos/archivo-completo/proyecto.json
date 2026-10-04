@@ -7,7 +7,7 @@
    "manifest": "~/OneDrive/Documents/Desarrollo/Curiana Radio/content/galeria/obras.json"
   }
  ],
- "musica": "audio/tonada-de-luna-llena.wav",
+ "musica": "audio/tonada-de-luna-llena.mp3",
  "salida": {
   "ancho": 1920,
   "alto": 1080,

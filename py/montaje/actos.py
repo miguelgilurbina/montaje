@@ -50,6 +50,9 @@ POR_DEFECTO = {
     "luz_pared": [0.95, 0.55],  # opacidad de la pared: en calma → en caos
     "ecos": [0.45, 0.65, 0.85],  # caos a partir del cual hay 1, 2 y 3 ecos
     "golpe_camara": 0.035,  # empujón de zoom en cada primer tiempo, con caos 1
+    "umbral_silencio": 0.35,  # una sección con menos energía que esto es un respiro
+    "compases_calma": True,  # en el acto I las entradas caen parejas en primeros tiempos (montaje métrico)
+    "entrada_primera_golpes": 6,  # la primera imagen aparece despacio, sobre la intro
 }
 
 FAMILIA_RANGO = {
@@ -98,9 +101,22 @@ def planificar(p: Proyecto) -> None:
     def caos_base(t):
         return avance(t) ** prm["curva_caos"]
 
+    # Los respiros de la canción son sus secciones bajas (la intro sin batería, un
+    # corte): se leen por sección y no golpe a golpe, porque la energía suavizada
+    # desdibuja un corte de pocos segundos.
+    respiros = [(s["ini"], s["fin"]) for s in m["secciones"] if s["energia"] < prm["umbral_silencio"]]
+
+    def silencio(t):
+        """1 dentro de un respiro de la canción, 0 donde suena; rampa de un golpe en los bordes."""
+        t = np.asarray(t, dtype=float)
+        valor = np.zeros_like(t)
+        for a, b in respiros:
+            valor = np.maximum(valor, np.clip(np.minimum(t - a, b - t) / golpe_s + 0.5, 0, 1))
+        return valor
+
     def caos(t):
         pe = prm["peso_energia"]
-        return np.clip(caos_base(t) * ((1 - pe) + pe * energia(t)), 0, 1)
+        return np.clip(caos_base(t) * ((1 - pe) + pe * energia(t)) * (1 - silencio(t)), 0, 1)
 
     # ── 1. Cuándo entra cada imagen ─────────────────────────────────────────
     # Rejilla en semicorcheas, pero el caos decide cuáles se usan: en la calma sólo
@@ -115,6 +131,7 @@ def planificar(p: Proyecto) -> None:
     e = energia_beats[golpe]
     abierta = (fraccion == 0) | ((fraccion == 2) & (c >= 0.3)) | (c >= 0.6)
     peso = (prm["densidad_calma"] + c ** prm["curva_densidad"]) * (0.6 + 0.4 * e) * np.where(fraccion == 0, acento, 0.35)
+    peso *= 1 - 0.97 * silencio(t)  # en el silencio no entra nada: la pared respira
     peso[(t > t_ultima) | ~abierta] = 0
     tope = 1 + np.floor(3 * c)
     idx = repartir(peso, n, tope)
@@ -122,7 +139,19 @@ def planificar(p: Proyecto) -> None:
     primer = int(np.argmax(acento == 1.0))
     if idx[0] > primer:
         idx[0] = primer
-    idx.sort()
+    idx = np.sort(idx)
+    if prm["compases_calma"]:
+        # Acto I métrico: las entradas de la calma se reparten parejas entre los primeros
+        # tiempos que suenan (la primera queda sobre la intro, sola).
+        tt = np.linspace(0, t_coda, 2000)
+        fin_i = float(tt[np.argmax(caos_base(tt) >= ACTOS[1][1])])
+        en_i = np.flatnonzero(t[idx] < fin_i)
+        compases = [primer] + [j for j in np.flatnonzero(acento == 1.0) if primer < t[j] < fin_i and silencio(t[j]) < 0.5]
+        if 1 < len(en_i) <= len(compases):
+            elegidos = np.unique(np.round(np.linspace(0, len(compases) - 1, len(en_i))).astype(int))
+            if len(elegidos) == len(en_i):
+                idx[en_i] = np.array(compases)[elegidos]
+    idx = _anclar_a_eventos(idx, t, acento, m, golpe_s, t_ultima)
     t_ini = t[idx]
     c_ini = caos(t_ini)
     e_ini = energia(t_ini)
@@ -141,12 +170,11 @@ def planificar(p: Proyecto) -> None:
         vida_max = _lerp(prm["vida_golpes"][1], 3, ci) * golpe_s
         vida = np.clip(tope * (0.5 + 0.5 * ei) / max(ritmo[i], 1e-6), prm["vida_golpes"][0] * golpe_s, vida_max)
         if tope == 1:
-            # Una a una: la protagonista se queda hasta que entra la siguiente (relevo),
-            # salvo que la siguiente tarde más que la vida máxima: entonces respira la pared.
-            vida = vida_max
+            # Una a una: la protagonista se queda hasta que entra la siguiente (relevo).
+            vida = 32 * golpe_s
         vuelo = _lerp(*prm["vuelo_golpes"], ci) * golpe_s
         entrada = _lerp(1.0, 0.25, ci) * golpe_s
-        x = {"i": i, "ini": a, "c": ci, "e": ei, "vuelo": vuelo, "entrada": entrada, "desde": a + vida}
+        x = {"i": i, "ini": a, "c": ci, "e": ei, "tope": tope, "vuelo": vuelo, "entrada": entrada, "desde": a + vida}
 
         activas = [q for q in activas if q["desde"] > a]
         while len(activas) >= tope:
@@ -184,10 +212,11 @@ def planificar(p: Proyecto) -> None:
 
     # ── 5. Cámara sobre la pared ─────────────────────────────────────────────
     duracion = math.ceil(D * fps)
-    camara, luz = _camara(prm, prot, piezas, pieza_de, caos, primeros, t_coda, duracion, fps, W, H)
+    camara, luz = _camara(prm, prot, piezas, pieza_de, caos, silencio, primeros, t_coda, duracion, fps, W, H)
 
-    # ── 6. Ecos: montaje sobre montaje ───────────────────────────────────────
-    ecos = _ecos(prm, caos, primeros, t_coda, golpe_s, fps, W, H, rng)
+    # ── 6. Ecos: montaje sobre montaje (que callan cuando calla la canción) ──
+    silencios = _intervalos_silencio(silencio, D)
+    ecos = _ecos(prm, caos, primeros, t_coda, golpe_s, fps, W, H, rng, silencios)
 
     # ── 7. Protagonistas en cuadros ─────────────────────────────────────────
     capas = []
@@ -204,6 +233,8 @@ def planificar(p: Proyecto) -> None:
         ini = round(x["ini"] * fps)
         desde = max(ini + 1, round(x["desde"] * fps))
         fin = max(desde + 1, round(x["llega"] * fps))
+        if k == 0:
+            x["entrada"] = prm["entrada_primera_golpes"] * golpe_s
         capas.append(
             {
                 "id": it["id"],
@@ -218,7 +249,10 @@ def planificar(p: Proyecto) -> None:
                 "alto": round(alto, 1),
                 # En doble exposición lo claro quema: las protagonistas bajan con el caos y
                 # las de fondo claro bajan más, para que el pico no sea un borrón blanco.
-                "opacidad": 1.0 if ci < 0.3 else round(rng.uniform(0.55, 0.85) * (0.6 if it["luz"] > 0.5 else 1.0), 3),
+                # Y cuantas más protagonistas conviven, menos aporta cada una.
+                "opacidad": 1.0
+                if ci < 0.3
+                else round(rng.uniform(0.55, 0.85) * (0.6 if it["luz"] > 0.5 else 1.0) / (1 + 0.25 * (x["tope"] - 1)), 3),
                 "zoom": [1.0, round(1 + rng.uniform(0.02, 0.06), 4)],
                 "deriva": [round(rng.uniform(-1, 1) * 0.01 * W, 1), round(rng.uniform(-1, 1) * 0.01 * H, 1)],
                 "mezcla": "normal" if ci < 0.3 else "screen",
@@ -263,6 +297,50 @@ def planificar(p: Proyecto) -> None:
     }
     escribir(p.timeline, timeline)
     _resumen(p, m, actos, capas, ecos, piezas, fps, secuencia, prot)
+
+
+def _anclar_a_eventos(idx: np.ndarray, t: np.ndarray, acento: np.ndarray, m: dict, golpe_s: float, t_ultima: float) -> np.ndarray:
+    """Los momentos de la canción traen imagen nueva: cuando entra la batería y
+    cuando empieza cada sección. Si ninguna entrada cae a un golpe de ese momento,
+    la más cercana se corre a su primer tiempo."""
+    entra_bateria = m["beats"][m.get("golpes_intro", 0)]
+    # Las secciones de la intro no cuentan: la intro es de la primera imagen, sola.
+    eventos = [entra_bateria] + [s["ini"] for s in m["secciones"][1:] if s["ini"] >= entra_bateria]
+    idx = np.sort(idx.copy())
+    ancladas: set[int] = {0}
+    for T in eventos:
+        if T > t_ultima:
+            continue
+        candidatos = np.flatnonzero((acento == 1.0) & (t >= T - golpe_s / 2))
+        if not len(candidatos):
+            continue
+        j = int(candidatos[0])
+        if np.any(np.abs(t[idx] - t[j]) <= golpe_s):
+            continue
+        libres = [k for k in range(len(idx)) if k not in ancladas]
+        k = min(libres, key=lambda q: abs(t[idx[q]] - t[j]))
+        idx[k] = j
+        ancladas.add(k)
+        orden = np.argsort(idx, kind="stable")
+        idx = idx[orden]
+        posicion = {int(v): i for i, v in enumerate(orden)}
+        ancladas = {posicion[a] for a in ancladas}
+    return idx
+
+
+def _intervalos_silencio(silencio, D: float) -> list[tuple[float, float]]:
+    tt = np.arange(0, D, 0.1)
+    callado = silencio(tt) > 0.5
+    tramos, ini = [], None
+    for x, c in zip(tt, callado):
+        if c and ini is None:
+            ini = x
+        elif not c and ini is not None:
+            tramos.append((ini, x))
+            ini = None
+    if ini is not None:
+        tramos.append((ini, D))
+    return tramos
 
 
 def _elegir(items: list[dict], c: np.ndarray, e: np.ndarray, rng) -> list[dict]:
@@ -340,7 +418,7 @@ class _Pared:
         return cx, k * paso, w, h
 
 
-def _camara(prm, prot, piezas, pieza_de, caos, primeros, t_coda, duracion, fps, W, H):
+def _camara(prm, prot, piezas, pieza_de, caos, silencio, primeros, t_coda, duracion, fps, W, H):
     """Cámara suavizada sobre la pared: sigue a la pieza más nueva al principio y
     encuadra la pared entera al final. Claves cada 3 cuadros: [cuadro, cx, cy, escala]."""
     paso = 3
@@ -369,10 +447,11 @@ def _camara(prm, prot, piezas, pieza_de, caos, primeros, t_coda, duracion, fps, 
         centro_caja = ((cj[0] + cj[1]) / 2, (cj[2] + cj[3]) / 2)
         peso_caja = _lerp(0.5 * _suave(c), 1.0, en_coda)
         objetivo = (_lerp(nueva["x"], centro_caja[0], peso_caja), _lerp(nueva["y"], centro_caja[1], peso_caja), math.log(escala))
+        callado = float(silencio(s_t))
         if cam is None:
             cam = list(objetivo)
         else:
-            tau = _lerp(1.5, 0.6, c)
+            tau = _lerp(_lerp(1.5, 0.6, c), 6.0, callado)  # en el silencio la cámara casi se detiene
             a = 1 - math.exp(-(paso / fps) / tau)
             cam = [cam[j] + (objetivo[j] - cam[j]) * a for j in range(3)]
         # Empujón en los primeros tiempos, que crece con el caos (y se apaga en la coda).
@@ -382,12 +461,14 @@ def _camara(prm, prot, piezas, pieza_de, caos, primeros, t_coda, duracion, fps, 
             empujon = prm["golpe_camara"] * c * (1 - en_coda) * math.exp(-(s_t - previos[-1]) / 0.18)
         claves.append([f, round(cam[0], 2), round(cam[1], 2), round(math.exp(cam[2]) * (1 + empujon), 5)])
         if f % 15 == 0:
-            luces.append([f, round(_lerp(_lerp(*prm["luz_pared"], c), 1.0, en_coda), 3)])
+            luz = _lerp(_lerp(*prm["luz_pared"], c), 1.0, en_coda) * (1 - 0.55 * callado * (1 - en_coda))
+            luces.append([f, round(luz, 3)])
     return claves, luces
 
 
-def _ecos(prm, caos, primeros, t_coda, golpe_s, fps, W, H, rng):
-    """Copias de la pared sobre la pared, desde que el caos pasa el primer umbral."""
+def _ecos(prm, caos, primeros, t_coda, golpe_s, fps, W, H, rng, silencios):
+    """Copias de la pared sobre la pared, desde que el caos pasa el primer umbral.
+    Un eco que alcanza un silencio de la canción se apaga cuando empieza el silencio."""
     ecos = []
     for d in primeros:
         if d >= t_coda - 2 * golpe_s:
@@ -399,6 +480,10 @@ def _ecos(prm, caos, primeros, t_coda, golpe_s, fps, W, H, rng):
             continue
         vida = _lerp(16, 6, c) * golpe_s * rng.uniform(0.8, 1.2)
         fin_s = min(d + vida, t_coda + 4 * golpe_s)  # en la coda se apagan
+        for s_ini, _ in silencios:
+            if d < s_ini < fin_s:
+                fin_s = s_ini + golpe_s / 2
+                break
         tipo = rng.choice(["lejos", "cerca", "girado"])
         if tipo == "lejos":
             e0 = rng.uniform(0.35, 0.55)
