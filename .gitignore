@@ -1,0 +1,12 @@
+node_modules/
+__pycache__/
+*.pyc
+out/
+# Los medios viven fuera del repo (~/Videos/montaje); si alguno se cuela aquí, no se versiona.
+*.mp4
+*.mov
+*.wav
+*.mp3
+*.webp
+*.png
+!docs/**/*.png

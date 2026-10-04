@@ -1,0 +1,23 @@
+{
+ "titulo": "El archivo completo",
+ "idea": "Las 821 imágenes de la exploración con IA en un solo video, superpuestas en doble exposición al pulso de una canción. Cada imagen entra completa, en su proporción; la densidad de capas sigue a la energía de la música.",
+ "fuentes": [
+  {
+   "tipo": "galeria-curiana",
+   "manifest": "~/OneDrive/Documents/Desarrollo/Curiana Radio/content/galeria/obras.json"
+  }
+ ],
+ "musica": "audio/tonada-de-luna-llena.wav",
+ "salida": {
+  "ancho": 1920,
+  "alto": 1080,
+  "fps": 30,
+  "fondo": "#08080a"
+ },
+ "montaje": {
+  "capas_max": 4,
+  "mezcla": "screen",
+  "orden": "luz-y-tono",
+  "semilla": 7
+ }
+}

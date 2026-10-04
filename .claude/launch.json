@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "studio-archivo-completo",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["montaje.py", "studio", "archivo-completo", "--sin-abrir"],
+      "port": 3300
+    }
+  ]
+}
