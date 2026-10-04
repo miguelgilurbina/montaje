@@ -72,6 +72,7 @@ def desde_galeria_curiana(manifest: Path) -> list[dict]:
                 **color_a_rasgos(o["color"]),
                 "url": f"{base}/{o['slug']}-{ancho}.webp",
                 "img": f"imagenes/{o['slug']}.webp",
+                "mini": f"miniaturas/{o['slug']}.webp",
             }
         )
     return items
@@ -143,6 +144,34 @@ def bajar(p: Proyecto) -> None:
     with ThreadPoolExecutor(8) as ex:
         nuevas = sum(ex.map(una, items))
     print(f"{nuevas} bajadas, {len(items) - nuevas} ya estaban → {carpeta}")
+
+
+LADO_MINIATURA = 480
+
+
+def generar_miniaturas(p: Proyecto) -> None:
+    """Versiones chicas (lado mayor 480 px) para cuando la imagen es una pieza de la pared.
+
+    Con cientos de piezas en pantalla, cargar el original de cada una hace lento
+    el render y no se ve: a ese tamaño la imagen ocupa pocas decenas de píxeles.
+    Se generan de las imágenes ya bajadas; no se baja nada.
+    """
+    from PIL import Image
+
+    items = cargar(p)
+    hechas = 0
+    for it in items:
+        origen = p.medios / it["img"]
+        destino = p.medio(*it["mini"].split("/"))
+        if not origen.exists():
+            salir(f"falta {origen}; corre antes `imagenes {p.nombre} --bajar` (o --prueba)")
+        if destino.exists() and destino.stat().st_mtime >= origen.stat().st_mtime:
+            continue
+        img = Image.open(origen)
+        img.thumbnail((LADO_MINIATURA, LADO_MINIATURA))
+        img.save(destino, "WEBP", quality=82)
+        hechas += 1
+    print(f"{hechas} miniaturas nuevas, {len(items) - hechas} al día → {p.medios / 'miniaturas'}")
 
 
 def generar_prueba(p: Proyecto) -> None:

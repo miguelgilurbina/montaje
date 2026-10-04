@@ -28,10 +28,55 @@ export type Capa = {
   /** Difuminado de los bordes, como fracción del lado menor (0 = rectángulo duro). */
   borde?: number;
   seccion: number;
+  /** Modo actos: desde el cuadro `desde` la imagen vuela a su pieza de la pared y llega en `fin`. */
+  vuelo?: {desde: number; pieza: number};
 };
+
+/** Una pieza de la pared, en unidades de pared (centro y tamaño). Aparece en el cuadro `llega`. */
+export type Pieza = {
+  id: string;
+  img: string;
+  mini: string;
+  x: number;
+  y: number;
+  ancho: number;
+  alto: number;
+  llega: number;
+};
+
+export type Mural = {
+  borde: number;
+  /** Opacidad de la pared en el tiempo: [cuadro, opacidad]. */
+  luz: [number, number][];
+  /** Ordenadas por `llega`. */
+  piezas: Pieza[];
+};
+
+/** Una copia de la pared sobre la pared: montaje sobre montaje. */
+export type Eco = {
+  tipo: string;
+  ini: number;
+  fin: number;
+  entrada: number;
+  salida: number;
+  /** Cuadros hacia atrás: el eco muestra la pared como estaba entonces. */
+  desfase: number;
+  escala: [number, number];
+  rot: [number, number];
+  dx: [number, number];
+  dy: [number, number];
+  opacidad: number;
+  mezcla: string;
+};
+
+export type Acto = {nombre: string; ini: number; fin: number};
+
+/** [cuadro, centro x, centro y, escala] — qué punto de la pared queda al centro y cuántos px por unidad. */
+export type ClaveCamara = [number, number, number, number];
 
 export type Timeline = {
   version: number;
+  modo?: 'superposicion' | 'actos';
   proyecto: string;
   ancho: number;
   alto: number;
@@ -40,6 +85,10 @@ export type Timeline = {
   duracion: number;
   audio: {src: string; desde: number} | null;
   meta?: Record<string, unknown>;
+  actos?: Acto[];
+  mural?: Mural;
+  camara?: ClaveCamara[];
+  ecos?: Eco[];
   capas: Capa[];
 };
 

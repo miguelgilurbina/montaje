@@ -15,9 +15,7 @@
   "fondo": "#08080a"
  },
  "montaje": {
-  "capas_max": 4,
-  "mezcla": "screen",
-  "orden": "luz-y-tono",
+  "modo": "actos",
   "semilla": 7
  }
 }

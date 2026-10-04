@@ -110,6 +110,7 @@ def main() -> None:
     g.add_argument("--prueba", action="store_true", help="genera rellenos con la proporción y el color reales")
     g.add_argument("--medir", action="store_true", help="dice cuánto pesa bajarlas, sin bajar nada")
     g.add_argument("--bajar", action="store_true", help="baja las imágenes reales de su origen")
+    g.add_argument("--miniaturas", action="store_true", help="genera las versiones chicas para la pared (de las ya bajadas)")
 
     s = nuevo("pista-prueba", "sintetiza una pista con pulso para probar sin la canción")
     s.add_argument("--bpm", type=float, default=112.0)
@@ -148,6 +149,8 @@ def main() -> None:
             catalogo.generar_prueba(p)
         elif a.medir:
             catalogo.medir(p)
+        elif a.miniaturas:
+            catalogo.generar_miniaturas(p)
         else:
             catalogo.bajar(p)
     elif a.comando == "pista-prueba":

@@ -79,22 +79,39 @@ def _llegadas(m: dict, prm: dict, n: int):
         sub *= 2  # no caben: se afina la rejilla
     if n > usables * max_por_punto:
         salir(f"{n} imágenes no caben en {usables} puntos de rejilla; la canción es corta para este archivo")
+    return t, golpe, acento, repartir(peso, n, max_por_punto), sub
 
-    acumulado = np.cumsum(peso) / peso.sum()
-    objetivo = (np.arange(n) + 0.5) / n
-    idx = np.searchsorted(acumulado, objetivo)
 
-    # Como mucho `max_por_punto` entradas simultáneas; el excedente pasa al siguiente punto usable.
-    ocupado: dict[int, int] = {}
+def repartir(peso: np.ndarray, n: int, max_por_punto) -> np.ndarray:
+    """n entradas sobre los puntos de la rejilla, con densidad proporcional a `peso`.
+
+    Como mucho `max_por_punto` entradas simultáneas (un número, o uno por
+    punto). Primero se recorta el peso de los puntos que pedirían más que eso
+    (y se reparte lo recortado entre los demás); lo que aún sobre por redondeo
+    va al punto libre más cercano. Devuelve los índices ordenados en el tiempo.
+    """
+    tope_punto = np.broadcast_to(np.asarray(max_por_punto, dtype=float), peso.shape)
+    usables = np.flatnonzero(peso > 0)
+    if n > tope_punto[usables].sum():
+        salir(f"{n} entradas no caben en {len(usables)} puntos de rejilla; la canción es corta para este archivo")
+    w = peso.astype(float).copy()
+    for _ in range(100):
+        tope = tope_punto * 0.95 * w.sum() / n
+        exceso = w > tope
+        if not exceso.any():
+            break
+        w[exceso] = tope[exceso]
+
+    acumulado = np.cumsum(w) / w.sum()
+    idx = np.searchsorted(acumulado, (np.arange(n) + 0.5) / n)
+    ocupado = np.zeros(len(peso), dtype=int)
     finales = []
     for j in idx:
-        while peso[j] == 0 or ocupado.get(j, 0) >= max_por_punto:
-            j += 1
-            if j >= len(t):
-                salir("se acabó la rejilla repartiendo entradas; baja capas o sube la subdivisión")
-        ocupado[j] = ocupado.get(j, 0) + 1
-        finales.append(j)
-    return t, golpe, acento, np.array(finales), sub
+        libres = usables[ocupado[usables] < tope_punto[usables]]
+        k = int(libres[np.argmin(np.abs(libres - j))])
+        ocupado[k] += 1
+        finales.append(k)
+    return np.sort(np.array(finales))
 
 
 def _seccion_de(m: dict, golpe: int) -> int:
@@ -131,6 +148,18 @@ def _asignar(items: list[dict], energia_llegada: np.ndarray, seccion: np.ndarray
 
 
 def planificar(p: Proyecto) -> None:
+    modo = p.cfg.get("montaje", {}).get("modo", "superposicion")
+    if modo == "actos":
+        from . import actos
+
+        actos.planificar(p)
+    elif modo == "superposicion":
+        _superposicion(p)
+    else:
+        salir(f"modo de montaje desconocido: {modo} (hay: superposicion, actos)")
+
+
+def _superposicion(p: Proyecto) -> None:
     prm = _param(p)
     out = {"ancho": 1920, "alto": 1080, "fps": 30, "fondo": "#08080a", **p.cfg.get("salida", {})}
     W, H, fps = out["ancho"], out["alto"], out["fps"]
@@ -238,7 +267,7 @@ def planificar(p: Proyecto) -> None:
         },
         "capas": capas,
     }
-    _escribir(p.timeline, timeline)
+    escribir(p.timeline, timeline)
 
     # Resumen legible: capas simultáneas (sin contar las que se están yendo) y vida típica por sección.
     simultaneas = np.zeros(duracion + 1, dtype=int)
@@ -258,11 +287,26 @@ def planificar(p: Proyecto) -> None:
         )
 
 
-def _escribir(ruta, timeline: dict) -> None:
-    """Cabecera legible y una capa por línea: el diff de git dice qué imagen cambió."""
-    capas = timeline.pop("capas")
-    cabeza = json.dumps(timeline, ensure_ascii=False, indent=1)
-    lineas = ",\n".join("  " + json.dumps(c, ensure_ascii=False, separators=(",", ":")) for c in capas)
-    texto = cabeza[:-2] + ',\n "capas": [\n' + lineas + "\n ]\n}\n"
-    ruta.write_text(texto, encoding="utf-8")
-    timeline["capas"] = capas
+LISTAS_POR_LINEA = ("capas", "piezas", "ecos", "camara", "luz", "actos")
+
+
+def escribir(ruta, timeline: dict) -> None:
+    """Cabecera legible y un elemento por línea en las listas largas: el diff de git dice qué cambió."""
+
+    def compacto(x) -> str:
+        return json.dumps(x, ensure_ascii=False, separators=(",", ":"))
+
+    def objeto(d: dict, sangria: str) -> str:
+        filas = [f'{sangria} {json.dumps(k)}: {valor(k, v, sangria + " ")}' for k, v in d.items()]
+        return "{\n" + ",\n".join(filas) + f"\n{sangria}}}"
+
+    def valor(clave: str, v, sangria: str) -> str:
+        if isinstance(v, list) and clave in LISTAS_POR_LINEA:
+            if not v:
+                return "[]"
+            return "[\n" + ",\n".join(f"{sangria} {compacto(x)}" for x in v) + f"\n{sangria}]"
+        if isinstance(v, dict) and any(k in LISTAS_POR_LINEA for k in v):
+            return objeto(v, sangria)
+        return compacto(v)
+
+    ruta.write_text(objeto(timeline, "") + "\n", encoding="utf-8")
