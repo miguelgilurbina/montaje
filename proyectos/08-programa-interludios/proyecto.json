@@ -1,0 +1,20 @@
+{
+ "titulo": "08 · Programa con interludios (3:2)",
+ "idea": "El collage del 05 como «programa», cortado por las cortinas de Curiana Radio que Miguel hizo con Gemini, con su propio audio, estilo las propagandas de Locomotion: apertura, una cortina en el corte de la canción y el cierre.",
+ "biblioteca": "galeria-curiana",
+ "base": {"proyecto": "05-collage-curiana", "render": "curiana-3x2.mp4"},
+ "salida": {
+  "ancho": 1620,
+  "alto": 1080,
+  "fps": 30,
+  "fondo": "#08080a"
+ },
+ "nombre_salida": "programa-interludios-3x2",
+ "ensamblaje": [
+  {"interludio": "video/intro-gemini.mp4", "recorte": [280, 0, 720, 720]},
+  {"programa": [0, 9]},
+  {"interludio": "video/logo-destellos.mp4", "recorte": [280, 0, 720, 720]},
+  {"programa": [12, 22]},
+  {"interludio": "video/logo-particulas.mp4", "recorte": [280, 0, 720, 720]}
+ ]
+}

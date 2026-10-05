@@ -121,6 +121,8 @@ def main() -> None:
 
     nuevo("planificar", "catálogo + partitura → proyectos/<p>/timeline.json")
 
+    nuevo("ensamblar", "programa (render de otro experimento) + interludios con su audio → medios/<p>/render")
+
     s = nuevo("render", "renderiza el timeline a medios/render/*.mp4")
     s.add_argument("--preview", action="store_true", help="mitad de resolución y compresión rápida")
     s.add_argument("--desde", type=float, help="segundo inicial")
@@ -159,6 +161,10 @@ def main() -> None:
         musica.analizar(p, a.archivo)
     elif a.comando == "planificar":
         planificar.planificar(p)
+    elif a.comando == "ensamblar":
+        from . import ensamblar
+
+        ensamblar.ensamblar(p)
     elif a.comando == "render":
         cmd_render(p, a)
     elif a.comando == "studio":

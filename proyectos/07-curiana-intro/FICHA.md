@@ -45,3 +45,5 @@ En `~/Videos/montaje/07-curiana-intro/render/`:
 ## Lo que dijo Miguel
 
 > «me gustó mucho como usaste esa edición como de carrusel que ocupa toda la pantalla una tras otra, donde usaste fotos cuadradas de curiana radio, me gustó muchísimo» — sobre la **ráfaga de marca** (16 imágenes de marca a pantalla completa, una por semicorchea, cortes secos).
+
+> «los videos de curiana radio que te mandé, tenían audio, esos videos los pensé tipo para que sean como "interludios" estilo las propaganda de Locomotion» — en el 07 van mudos, como parte de la canción; el 08 los usa como él los pensó.

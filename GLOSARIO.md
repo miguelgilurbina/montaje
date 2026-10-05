@@ -66,6 +66,7 @@ controla. Si dices la palabra, ya sé qué perilla mover.
 | **Arco** o **curva de intensidad** | arc, intensity curve | Cómo sube y baja la tensión a lo largo del video. | `caos` (`curva_caos`, `peso_energia`) |
 | **Actos** | acts | Tramos con un tratamiento propio. | I, II, III, IV y coda |
 | **Subida, clímax, respiro** | build-up, drop/climax, breakdown | Las partes de una canción electrónica que el montaje puede seguir. | las secciones de `musica.png` |
+| **Cortina** o **interludio** | ident, bumper, interstitial | Pieza corta de identidad del canal que corta el programa con su propio sonido. Lo que Miguel llama «interludios estilo Locomotion». | `ensamblar` + `ensamblaje` |
 | **Coda** | outro, coda | El cierre después del clímax. | `coda` |
 
 Las palabras de Miguel y su traducción: **«carrusel»** = ráfaga a pantalla completa (imágenes una tras otra en cortes secos al pulso); **«montaje sobre montaje»** = puesta en
