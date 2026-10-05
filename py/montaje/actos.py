@@ -27,7 +27,7 @@ import math
 import numpy as np
 
 from . import catalogo, musica
-from .planificar import _rejilla, escribir, repartir
+from .planificar import _rejilla, audio_de, escribir, repartir
 from .rutas import Proyecto, salir
 
 POR_DEFECTO = {
@@ -281,7 +281,7 @@ def planificar(p: Proyecto) -> None:
         "proyecto": p.nombre,
         **{k: out[k] for k in ("ancho", "alto", "fps", "fondo")},
         "duracion": duracion,
-        "audio": {"src": m["archivo"], "desde": 0},
+        "audio": audio_de(p, m),
         "meta": {
             "generado": dt.datetime.now().isoformat(timespec="seconds"),
             "bpm": m["bpm"],

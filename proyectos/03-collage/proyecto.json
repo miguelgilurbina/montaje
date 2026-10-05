@@ -1,0 +1,25 @@
+{
+ "titulo": "03 · Collage infinito",
+ "idea": "Un minuto de la Tonada que va de lento a alto. Las imágenes caen una sobre otra como papeles de un collage, opacas y nítidas, al 100 % de su detalle; el cuadro se va llenando mientras la cámara se aleja (collage infinito) y el ritmo de entradas se afina con la canción: compás, golpe, corchea, semicorchea.",
+ "biblioteca": "galeria-curiana",
+ "fuentes": [
+  {
+   "tipo": "galeria-curiana",
+   "manifest": "~/OneDrive/Documents/Desarrollo/Curiana Radio/content/galeria/obras.json"
+  }
+ ],
+ "musica": "audio/tonada-de-luna-llena.mp3",
+ "tramo": [10.68, 75.42],
+ "fase_compas": 0,
+ "fundido_audio": [0, 0.15],
+ "salida": {
+  "ancho": 1920,
+  "alto": 1080,
+  "fps": 30,
+  "fondo": "#08080a"
+ },
+ "montaje": {
+  "modo": "collage",
+  "semilla": 11
+ }
+}

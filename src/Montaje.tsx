@@ -33,6 +33,7 @@ export const Montaje: React.FC<Timeline> = (tl) => {
 
   return (
     <AbsoluteFill style={{backgroundColor: tl.fondo, isolation: 'isolate', overflow: 'hidden'}}>
+      {tl.collage && tl.camara?.length ? <CollageInfinito tl={tl} frame={frame} /> : null}
       {hayPared ? <Pared tl={tl} g={frame} /> : null}
       {ecos.map((e) => (
         <CapaEco key={`eco-${e.ini}`} tl={tl} e={e} frame={frame} />
@@ -40,10 +41,26 @@ export const Montaje: React.FC<Timeline> = (tl) => {
       {visibles.map((c) => (
         <CapaImagen key={c.id} c={c} frame={frame} tl={tl} />
       ))}
-      {tl.audio ? (
-        <Html5Audio src={staticFile(tl.audio.src)} trimBefore={Math.round(tl.audio.desde * tl.fps)} />
-      ) : null}
+      <Audio tl={tl} />
     </AbsoluteFill>
+  );
+};
+
+/** El tramo de la canción, con fundidos opcionales al entrar y al salir. */
+const Audio: React.FC<{tl: Timeline}> = ({tl}) => {
+  if (!tl.audio) return null;
+  const {src, desde, hasta, fundido = [0, 0]} = tl.audio;
+  const fin = hasta !== undefined ? Math.round(hasta * tl.fps) : undefined;
+  const largo = fin !== undefined ? fin - Math.round(desde * tl.fps) : tl.duracion;
+  const [fe, fs] = fundido.map((s) => Math.max(0, Math.round(s * tl.fps)));
+  const volumen = (f: number) => Math.min(fe ? Math.min(1, f / fe) : 1, fs ? Math.min(1, (largo - f) / fs) : 1);
+  return (
+    <Html5Audio
+      src={staticFile(src)}
+      trimBefore={Math.round(desde * tl.fps)}
+      trimAfter={fin}
+      volume={fe || fs ? volumen : undefined}
+    />
   );
 };
 
@@ -174,6 +191,59 @@ const CapaEco: React.FC<{tl: Timeline; e: Eco; frame: number}> = ({tl, e, frame}
   );
 };
 
+// ── Collage ────────────────────────────────────────────────────────────────
+
+/**
+ * Papeles que caen y se quedan, vistos por una cámara que se aleja. Cada imagen va
+ * opaca, sin máscara ni mezcla: se ve con todo su detalle. Su orden en la lista es
+ * su altura en la pila.
+ */
+const CollageInfinito: React.FC<{tl: Timeline; frame: number}> = ({tl, frame}) => {
+  const {piezas, sombra} = tl.collage!;
+  const [, cx, cy, s] = camaraEn(tl.camara!, frame);
+  const W = tl.ancho;
+  const H = tl.alto;
+  const visibles = piezas.filter(
+    (p) => p.ini <= frame + PRECARGA && (p.tapada === undefined || frame < p.tapada) && enCuadro(p, cx, cy, s, W, H, 1.1),
+  );
+  return (
+    <AbsoluteFill>
+      <div
+        style={{
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          transformOrigin: '0 0',
+          transform: `translate(${W / 2}px, ${H / 2}px) scale(${s}) translate(${-cx}px, ${-cy}px)`,
+        }}
+      >
+        {visibles.map((p) => {
+          const u = curvaVuelo(avance(frame, p.ini, p.ini + Math.max(1, p.entrada)));
+          // Resolución completa mientras se ve grande; cuando la cámara ya la achicó,
+          // la miniatura alcanza para su tamaño en pantalla y ahorra memoria de render.
+          const grande = Math.max(p.ancho, p.alto) * s > UMBRAL_MINI;
+          return (
+            <Img
+              key={p.id}
+              src={staticFile(grande ? p.img : p.img.replace(/^imagenes\//, 'miniaturas/'))}
+              style={{
+                position: 'absolute',
+                left: p.x - p.ancho / 2,
+                top: p.y - p.alto / 2,
+                width: p.ancho,
+                height: p.alto,
+                opacity: frame < p.ini ? 0 : u,
+                transform: `rotate(${p.rot}deg) scale(${lerp(1.06, 1, u)})`,
+                boxShadow: sombra ? `0 ${p.alto * 0.015}px ${p.alto * 0.035}px rgba(0,0,0,${sombra})` : undefined,
+              }}
+            />
+          );
+        })}
+      </div>
+    </AbsoluteFill>
+  );
+};
+
 // ── Utilidades ─────────────────────────────────────────────────────────────
 
 /** Interpolación lineal entre claves [cuadro, ...valores], con búsqueda binaria. */
@@ -198,7 +268,9 @@ const camaraEn = (claves: ClaveCamara[], g: number): ClaveCamara => claveEn(clav
 const valorEn = (claves: [number, number][], g: number): number => (claves.length ? claveEn(claves, g)[1] : 1);
 
 /** ¿La pieza cae dentro de la zona centrada en el cuadro, `recorte` veces más grande que él? */
-function enCuadro(p: Pieza, cx: number, cy: number, s: number, W: number, H: number, recorte = 1): boolean {
+type Caja = Pick<Pieza, 'x' | 'y' | 'ancho' | 'alto'>;
+
+function enCuadro(p: Caja, cx: number, cy: number, s: number, W: number, H: number, recorte = 1): boolean {
   const dx = Math.abs((p.x - cx) * s) - (p.ancho * s) / 2;
   const dy = Math.abs((p.y - cy) * s) - (p.alto * s) / 2;
   return dx < (W / 2) * recorte + 50 && dy < (H / 2) * recorte + 50;

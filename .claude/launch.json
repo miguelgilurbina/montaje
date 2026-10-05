@@ -2,9 +2,9 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "studio-archivo-completo",
+      "name": "studio-03-collage",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["montaje.py", "studio", "archivo-completo", "--sin-abrir"],
+      "runtimeArgs": ["montaje.py", "studio", "03-collage", "--sin-abrir"],
       "port": 3300
     }
   ]

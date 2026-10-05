@@ -1,0 +1,25 @@
+{
+ "titulo": "01 · Superposición",
+ "idea": "Las 821 imágenes superpuestas en doble exposición al pulso de una pista: cada imagen entra completa, en su proporción, con bordes difuminados; la cantidad de capas sigue a la energía.",
+ "biblioteca": "galeria-curiana",
+ "fuentes": [
+  {
+   "tipo": "galeria-curiana",
+   "manifest": "~/OneDrive/Documents/Desarrollo/Curiana Radio/content/galeria/obras.json"
+  }
+ ],
+ "musica": "audio/prueba.wav",
+ "salida": {
+  "ancho": 1920,
+  "alto": 1080,
+  "fps": 30,
+  "fondo": "#08080a"
+ },
+ "montaje": {
+  "modo": "superposicion",
+  "capas_max": 4,
+  "mezcla": "screen",
+  "orden": "luz-y-tono",
+  "semilla": 7
+ }
+}

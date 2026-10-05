@@ -36,7 +36,7 @@ def cmd_render(p: Proyecto, a) -> None:
         nombre += f"-{a.desde or 0:g}-{format(a.hasta, 'g') if a.hasta is not None else 'fin'}"
     else:
         rango = []
-    destino = p.medio("render", f"{nombre}.mp4")
+    destino = p.salida("render", f"{nombre}.mp4")
     calidad = ["--scale=0.5", "--crf=28", "--jpeg-quality=70"] if a.preview else ["--crf=16", "--jpeg-quality=95"]
     orden = [_remotion(), "render", "src/index.ts", "Montaje", str(destino), *_base_remotion(p), *calidad, *rango]
     print(" ".join(orden))
@@ -56,7 +56,7 @@ def cmd_hoja(p: Proyecto, a) -> None:
     """Hojas de contacto de un render: lo que Claude mira para juzgar el montaje."""
     from PIL import Image, ImageDraw
 
-    video = p.medios / "render" / a.video
+    video = p.salidas / "render" / a.video
     if not video.exists():
         salir(f"no existe {video}")
     if not shutil.which("ffmpeg"):
@@ -84,7 +84,7 @@ def cmd_hoja(p: Proyecto, a) -> None:
                 x, y = (k % cols) * w, (k // cols) * (h + 18)
                 hoja.paste(Image.open(ruta), (x, y + 18))
                 d.text((x + 4, y + 3), f"{int(t // 60)}:{t % 60:05.2f}", fill=(230, 230, 230))
-            destino = p.medio("hojas", f"{video.stem}-{n_hoja // por_hoja + 1:02d}.png")
+            destino = p.salida("hojas", f"{video.stem}-{n_hoja // por_hoja + 1:02d}.png")
             hoja.save(destino)
             salidas.append(destino)
     print(f"{len(cuadros)} cuadros cada {a.cada} s en {len(salidas)} hojas:")

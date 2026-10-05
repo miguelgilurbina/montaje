@@ -49,6 +49,17 @@ def _param(p: Proyecto) -> dict:
     return {**POR_DEFECTO, **p.cfg.get("montaje", {})}
 
 
+def audio_de(p: Proyecto, m: dict) -> dict:
+    """El audio del timeline: el tramo de la canción y sus fundidos (en segundos)."""
+    desde, hasta = m.get("tramo", [0, m["duracion"]])
+    return {
+        "src": m["archivo"],
+        "desde": desde,
+        "hasta": hasta,
+        "fundido": p.cfg.get("fundido_audio", [0, 0]),
+    }
+
+
 def _rejilla(m: dict, sub: int):
     """Tiempos de la rejilla, golpe al que pertenece cada punto y su acento."""
     beats = np.array(m["beats"])
@@ -153,10 +164,14 @@ def planificar(p: Proyecto) -> None:
         from . import actos
 
         actos.planificar(p)
+    elif modo == "collage":
+        from . import collage
+
+        collage.planificar(p)
     elif modo == "superposicion":
         _superposicion(p)
     else:
-        salir(f"modo de montaje desconocido: {modo} (hay: superposicion, actos)")
+        salir(f"modo de montaje desconocido: {modo} (hay: superposicion, actos, collage)")
 
 
 def _superposicion(p: Proyecto) -> None:
@@ -257,7 +272,7 @@ def _superposicion(p: Proyecto) -> None:
         "proyecto": p.nombre,
         **{k: out[k] for k in ("ancho", "alto", "fps", "fondo")},
         "duracion": duracion,
-        "audio": {"src": m["archivo"], "desde": 0},
+        "audio": audio_de(p, m),
         "meta": {
             "generado": dt.datetime.now().isoformat(timespec="seconds"),
             "bpm": m["bpm"],

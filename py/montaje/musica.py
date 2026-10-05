@@ -41,7 +41,13 @@ def analizar(p: Proyecto, archivo: str | None = None) -> Path:
     if not ruta.exists():
         salir(f"no encuentro el audio en {ruta}")
 
-    y, sr = librosa.load(ruta, sr=SR, mono=True)
+    # Un experimento puede usar sólo un tramo de la canción: todos los tiempos que
+    # salen de aquí cuentan desde el comienzo del tramo, no de la canción.
+    tramo = p.cfg.get("tramo") if not archivo else None
+    if tramo:
+        y, sr = librosa.load(ruta, sr=SR, mono=True, offset=tramo[0], duration=tramo[1] - tramo[0])
+    else:
+        y, sr = librosa.load(ruta, sr=SR, mono=True)
     duracion = len(y) / sr
 
     onset = librosa.onset.onset_strength(y=y, sr=sr)
@@ -56,7 +62,7 @@ def analizar(p: Proyecto, archivo: str | None = None) -> Path:
     periodo = float(np.median(np.diff(beats)))
     previos = []
     t0 = beats[0] - periodo
-    while t0 > periodo * 0.25:
+    while t0 > -0.05:  # hasta el comienzo, incluido un golpe que caiga justo en 0
         previos.append(t0)
         t0 -= periodo
     golpes_intro = len(previos)
@@ -73,9 +79,14 @@ def analizar(p: Proyecto, archivo: str | None = None) -> Path:
     )
     energia = _suavizar(_normalizar(energia), 4)
 
-    # Primer tiempo del compás (asumiendo 4/4): la fase con más ataque.
+    # Primer tiempo del compás (asumiendo 4/4): la fase con más ataque. Con un tramo
+    # corto hay pocos datos y puede errar (la batería de la Tonada entra con una
+    # anacrusa, en el cuarto tiempo): `fase_compas` en proyecto.json la fija a mano.
     fuerza = onset[np.clip(cuadros, 0, len(onset) - 1)]
-    fase = int(np.argmax([fuerza[f::4].mean() for f in range(4)]))
+    if "fase_compas" in p.cfg:
+        fase = int(p.cfg["fase_compas"])
+    else:
+        fase = int(np.argmax([fuerza[f::4].mean() for f in range(4)]))
     primeros = beats[fase::4]
 
     # Secciones: agrupación de compases parecidos en timbre y armonía.
@@ -103,6 +114,7 @@ def analizar(p: Proyecto, archivo: str | None = None) -> Path:
 
     salida = {
         "archivo": relativo,
+        "tramo": [tramo[0], tramo[1]] if tramo else [0, round(duracion, 3)],
         "duracion": round(duracion, 3),
         "bpm": round(bpm, 2),
         "golpes_intro": golpes_intro,
@@ -112,9 +124,9 @@ def analizar(p: Proyecto, archivo: str | None = None) -> Path:
         "primeros_tiempos": [round(float(b), 3) for b in primeros],
         "secciones": secciones,
     }
-    destino = p.medio("analisis", "musica.json")
+    destino = p.salida("analisis", "musica.json")
     escribir_json(destino, salida, compacto=True)
-    _dibujar(y, sr, salida, p.medio("analisis", "musica.png"))
+    _dibujar(y, sr, salida, p.salida("analisis", "musica.png"))
 
     print(
         f"{relativo}: {int(duracion // 60)} min {duracion % 60:.0f} s, {bpm:.1f} BPM, {len(beats)} golpes "
@@ -157,7 +169,7 @@ def _dibujar(y, sr, a: dict, destino: Path) -> None:
 
 
 def cargar(p: Proyecto) -> dict:
-    ruta = p.medios / "analisis" / "musica.json"
+    ruta = p.salidas / "analisis" / "musica.json"
     if not ruta.exists():
         salir("falta el análisis de la música; corre primero: python montaje.py musica " + p.nombre)
     return leer_json(ruta)
