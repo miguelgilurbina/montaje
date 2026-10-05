@@ -1,0 +1,38 @@
+{
+ "titulo": "05 · Collage Curiana (3:2)",
+ "idea": "El collage con momentos, en 3:2, alrededor del corte de la canción (2:30–3:32). Destacan las imágenes donde se lee Curiana Radio; el logo vive como sello en una esquina, se suelta en el silencio y navega el cuadro como salvapantallas, y firma el final.",
+ "biblioteca": "galeria-curiana",
+ "fuentes": [
+  {
+   "tipo": "galeria-curiana",
+   "manifest": "~/OneDrive/Documents/Desarrollo/Curiana Radio/content/galeria/obras.json"
+  }
+ ],
+ "musica": "audio/tonada-de-luna-llena.mp3",
+ "tramo": [150.77, 212.28],
+ "fase_compas": 0,
+ "fundido_audio": [0.05, 0.2],
+ "salida": {
+  "ancho": 1620,
+  "alto": 1080,
+  "fps": 30,
+  "fondo": "#08080a"
+ },
+ "montaje": {
+  "modo": "collage",
+  "semilla": 5,
+  "silencio": 0.5
+ },
+ "momentos": [
+  {"compas": 3, "tipo": "destacado", "img": "marca"},
+  {"compas": 6, "tipo": "rafaga", "por_compas": 8, "de": "retrato"},
+  {"compas": 13, "tipo": "barrido"},
+  {"compas": 16, "tipo": "destacado", "img": "marca"},
+  {"compas": 19, "tipo": "rafaga", "por_compas": 16, "de": "marca"},
+  {"compas": 22, "tipo": "destacado", "img": "logo:lockup_claro", "firma": true, "oscuro": 0.8}
+ ],
+ "logo": {
+  "sello": {"esquina": "abajo-derecha", "alto": 0.075, "opacidad": 0.85},
+  "salvapantallas": [{"compas": 9, "compases": 4, "alto": 0.26, "velocidad": 6}]
+ }
+}

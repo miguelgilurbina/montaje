@@ -1,0 +1,43 @@
+{
+ "nota": "Curaduría a mano sobre el catálogo de la galería de Curiana Radio. `marca`: imágenes donde se lee «Curiana» o «Curiana Radio» (verificado mirándolas el 2026-10-05; las tres de la hoguera mencionan Curiana en el prompt pero no muestran el texto). Los montajes las prefieren para los destacados.",
+ "marca": [
+  "award-winning-logo-design-for-curian-bd400d8d-3",
+  "magazine-font-title-for-curiana-radio-90s-print-9f8a2b1e-1",
+  "music-magazine-curiana-radio-title-type-in-90s-dc2600db-3",
+  "music-magazine-titled-curiana-radio-ce96d707-3",
+  "organic-flowing-logo-for-curiana-radio-three-mai-171de610-3",
+  "organic-flowing-logo-for-curiana-radio-three-mai-17dc456a-3",
+  "organic-flowing-logo-for-curiana-radio-three-mai-21734978-1",
+  "organic-flowing-logo-for-curiana-radio-three-mai-2481fcaa-2",
+  "organic-flowing-logo-for-curiana-radio-three-mai-2ec1e10e-2",
+  "organic-flowing-logo-for-curiana-radio-three-mai-3b16cf33-1",
+  "organic-flowing-logo-for-curiana-radio-three-mai-434962ca-3",
+  "organic-flowing-logo-for-curiana-radio-three-mai-4fe3520b-2",
+  "organic-flowing-logo-for-curiana-radio-three-mai-940edc4d-3",
+  "organic-flowing-logo-for-curiana-radio-three-mai-a1db1804-1",
+  "organic-flowing-logo-for-curiana-radio-three-mai-ab31399b-1",
+  "organic-flowing-logo-for-curiana-radio-three-mai-b47420a9-1",
+  "organic-flowing-logo-for-curiana-radio-three-mai-b8e33fb5-1",
+  "organic-flowing-logo-for-curiana-radio-three-mai-b8e33fb5-2",
+  "organic-flowing-logo-for-curiana-radio-three-mai-bdd5c1a6-1",
+  "organic-flowing-logo-for-curiana-radio-three-mai-bdd5c1a6-3",
+  "organic-flowing-logo-for-curiana-radio-three-mai-e43a51dc-1"
+ ],
+ "destacadas_marca": [
+  "magazine-font-title-for-curiana-radio-90s-print-9f8a2b1e-1",
+  "music-magazine-curiana-radio-title-type-in-90s-dc2600db-3",
+  "music-magazine-titled-curiana-radio-ce96d707-3",
+  "organic-flowing-logo-for-curiana-radio-three-mai-21734978-1",
+  "award-winning-logo-design-for-curian-bd400d8d-3",
+  "organic-flowing-logo-for-curiana-radio-three-mai-b47420a9-1",
+  "organic-flowing-logo-for-curiana-radio-three-mai-b8e33fb5-1",
+  "organic-flowing-logo-for-curiana-radio-three-mai-4fe3520b-2"
+ ],
+ "logo": {
+  "origen": "~/OneDrive/Documents/Desarrollo/Curiana Radio/public/marca",
+  "isotipo_claro": "isotipo-hueso.png",
+  "isotipo_oscuro": "isotipo-espiral.png",
+  "lockup_oscuro": "lockup-hueso.png",
+  "lockup_claro": "lockup-bnw.png"
+ }
+}

@@ -168,6 +168,10 @@ def planificar(p: Proyecto) -> None:
         from . import collage
 
         collage.planificar(p)
+    elif modo == "cinta":
+        from . import cinta
+
+        cinta.planificar(p)
     elif modo == "superposicion":
         _superposicion(p)
     else:

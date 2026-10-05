@@ -88,24 +88,30 @@ export type PiezaCollage = {
   tapada?: number;
 };
 
+/** Un rectángulo en pantalla (centro y tamaño, px). */
+export type Rect = {x: number; y: number; ancho: number; alto: number};
+
 /** Un compás donde cambia el estilo: una imagen al frente, una ráfaga a pantalla completa o un barrido de cámara. */
 export type Momento =
   | {
       tipo: 'destacado';
       ini: number;
-      /** Cuadro en que aterriza en el collage (= `ini` de su pieza). */
+      /** Cuadro en que termina: aterriza en su pieza del collage, vuelve a su lugar o (firma) se queda. */
       fin: number;
       entrada: number;
-      /** Cuadros del vuelo final hasta su pieza. */
+      /** Cuadros del final: vuelo a su pieza o regreso a `desde`. */
       salida: number;
-      /** Cuánto se oscurece el collage detrás. */
+      /** Cuánto se oscurece lo de atrás. */
       oscuro: number;
       id: string;
       img: string;
       /** Tamaño en pantalla (px), centrada. */
       ancho: number;
       alto: number;
+      /** Pieza del collage donde aterriza; -1 si no aterriza. */
       pieza: number;
+      /** Si sale de un lugar de la pantalla (la cinta), crece desde ahí y vuelve ahí. */
+      desde?: Rect;
     }
   | {
       tipo: 'rafaga';
@@ -114,6 +120,41 @@ export type Momento =
       imagenes: {id: string; img: string; ini: number; ancho: number; alto: number}[];
     }
   | {tipo: 'barrido'; ini: number; fin: number};
+
+/**
+ * Cinta: imágenes en columna que suben un paso por golpe, como un feed. Es cíclica:
+ * al final del video la cinta avanzó exactamente su largo y el cuadro vuelve a ser
+ * el primero (loop sin costura).
+ */
+export type Cinta = {
+  /** Centro vertical de cada imagen en la cinta (px, la primera en 0) y su tamaño. */
+  items: {id: string; img: string; y: number; ancho: number; alto: number}[];
+  /** Largo total de un ciclo (px). */
+  largo: number;
+  /** Cuánto avanzó la cinta en el tiempo: [cuadro, px]. */
+  desplazamiento: [number, number][];
+  sombra: number;
+};
+
+/** El logo de Curiana Radio sobre el video. */
+export type Logo = {
+  /** Sello fijo en una esquina; late en los primeros tiempos. */
+  sello?: {img: string; x: number; y: number; alto: number; ancho: number; opacidad: number; pulsos: number[]; ocultar: [number, number][]};
+  /** El logo suelto, rebotando por el cuadro como el salvapantallas del DVD. */
+  salvapantallas?: {
+    ini: number;
+    fin: number;
+    imgs: string[];
+    ancho: number;
+    alto: number;
+    /** Posición inicial (esquina superior izquierda, px) y velocidad (px por cuadro). */
+    x0: number;
+    y0: number;
+    vx: number;
+    vy: number;
+    oscuro: number;
+  }[];
+};
 
 export type Collage = {
   /** Opacidad de la sombra de cada papel (0 = sin sombra). */
@@ -142,7 +183,9 @@ export type Timeline = {
   camara?: ClaveCamara[];
   ecos?: Eco[];
   collage?: Collage;
+  cinta?: Cinta;
   momentos?: Momento[];
+  logo?: Logo;
   capas: Capa[];
 };
 

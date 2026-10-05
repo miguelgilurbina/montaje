@@ -78,23 +78,68 @@ def desde_galeria_curiana(manifest: Path) -> list[dict]:
     return items
 
 
+# Tipo de imagen leído de su descripción (alt y título). Grueso a propósito: sirve
+# para pedir «una ráfaga de retratos» o «paisajes en la intro», no para catalogar.
+TIPOS = {
+    "retrato": r"\b(retrato|rostro|cara|hombre|mujer|niñ[oa]|persona|joven|anciano|figura humana|perfil)\b",
+    "paisaje": r"\b(paisaje|montaña|río|mar|océano|playa|desierto|selva|bosque|lago|costa|cielo|dunas?|valle|isla)\b",
+    "ciudad": r"\b(ciudad|calle|edificio|casa|arquitectura|urbano|plaza|tren|metro|vagón|tienda)\b",
+    "cartel": r"(texto|letras|título|portada|cartel|revista|logotipo|logo|tipografía|palabra)",
+    "abstracto": r"\b(patrón|espiral|ondas|círculos|concéntric|textura|geométric|abstract|líneas)\w*",
+    "ciencia-ficcion": r"\b(nave|planeta|astronauta|robot|futurista|espacial|ciborg|cyborg|androide|alien)\w*",
+}
+
+CURADURIA = Path(__file__).resolve().parents[2] / "curaduria"
+
+
+def _curaduria(nombre: str) -> dict:
+    ruta = CURADURIA / f"{nombre}.json"
+    return leer_json(ruta) if ruta.exists() else {}
+
+
 def construir(p: Proyecto) -> Path:
+    import re
+
     items: list[dict] = []
     for fuente in p.cfg["fuentes"]:
         if fuente["tipo"] == "galeria-curiana":
             items += desde_galeria_curiana(Path(fuente["manifest"]).expanduser())
         else:
             salir(f"tipo de fuente desconocido: {fuente['tipo']}")
+    cur = _curaduria(p.cfg.get("biblioteca", p.nombre))
+    marca = set(cur.get("marca", []))
+    for it in items:
+        texto = f"{it['alt']} {it['titulo']}".lower()
+        it["tipos"] = [t for t, r in TIPOS.items() if re.search(r, texto)]
+        it["marca"] = it["id"] in marca
     destino = p.medio("analisis", "catalogo.json")
     escribir_json(destino, items)
 
     conteo: dict[str, int] = {}
     for it in items:
         conteo[it["familia"]] = conteo.get(it["familia"], 0) + 1
-    print(f"{len(items)} imágenes → {destino}")
+    print(f"{len(items)} imágenes → {destino}  ({sum(it['marca'] for it in items)} con la marca a la vista)")
     for nombre, *_ in FAMILIAS:
         print(f"  {nombre:<16}{conteo.get(nombre, 0):>5}")
+    _copiar_logo(p, cur.get("logo"))
     return destino
+
+
+def _copiar_logo(p: Proyecto, logo: dict | None) -> None:
+    """Trae los archivos del logo a la biblioteca (marca/), para que Remotion los sirva."""
+    import shutil
+
+    if not logo:
+        return
+    origen = Path(logo["origen"]).expanduser()
+    for clave, archivo in logo.items():
+        if clave == "origen":
+            continue
+        fuente = origen / archivo
+        if fuente.exists():
+            shutil.copy2(fuente, p.medio("marca", archivo))
+        else:
+            print(f"  ojo: falta el logo {fuente}")
 
 
 def cargar(p: Proyecto) -> list[dict]:

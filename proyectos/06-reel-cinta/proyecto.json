@@ -1,0 +1,39 @@
+{
+ "titulo": "06 · Reel en cinta (9:16, loop)",
+ "idea": "Un reel vertical que no termina: las imágenes suben en cinta, un paso por golpe, con doble tiempo, un destacado de una imagen donde se lee Curiana Radio y una ráfaga de marca. 8 compases de la sección pareja después del corte; el último cuadro empalma con el primero (imagen y color).",
+ "biblioteca": "galeria-curiana",
+ "fuentes": [
+  {
+   "tipo": "galeria-curiana",
+   "manifest": "~/OneDrive/Documents/Desarrollo/Curiana Radio/content/galeria/obras.json"
+  }
+ ],
+ "musica": "audio/tonada-de-luna-llena.mp3",
+ "tramo": [212.28, 233.85],
+ "fase_compas": 0,
+ "fundido_audio": [0, 0],
+ "salida": {
+  "ancho": 1080,
+  "alto": 1920,
+  "fps": 30,
+  "fondo": "#08080a"
+ },
+ "montaje": {
+  "modo": "cinta",
+  "semilla": 21
+ },
+ "compases": [
+  {"pasos": 4},
+  {"pasos": 4},
+  {"pasos": 8},
+  {"momento": "destacado", "img": "marca"},
+  {"pasos": 4},
+  {"pasos": 8},
+  {"momento": "rafaga", "por_compas": 16, "de": "marca"},
+  {"pasos": 4}
+ ],
+ "logo": {
+  "sello": {"esquina": "arriba-izquierda", "alto": 0.05, "opacidad": 0.9},
+  "en_cinta": [16]
+ }
+}

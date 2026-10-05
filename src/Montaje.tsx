@@ -34,6 +34,7 @@ export const Montaje: React.FC<Timeline> = (tl) => {
   return (
     <AbsoluteFill style={{backgroundColor: tl.fondo, isolation: 'isolate', overflow: 'hidden'}}>
       {tl.collage && tl.camara?.length ? <CollageInfinito tl={tl} frame={frame} /> : null}
+      {tl.cinta ? <CintaInfinita tl={tl} frame={frame} /> : null}
       {(tl.momentos ?? [])
         .filter((mo) => frame >= mo.ini - PRECARGA && frame <= mo.fin)
         .map((mo) =>
@@ -50,6 +51,7 @@ export const Montaje: React.FC<Timeline> = (tl) => {
       {visibles.map((c) => (
         <CapaImagen key={c.id} c={c} frame={frame} tl={tl} />
       ))}
+      {tl.logo ? <LogoCuriana tl={tl} frame={frame} /> : null}
       <Audio tl={tl} />
     </AbsoluteFill>
   );
@@ -270,18 +272,30 @@ const Destacado: React.FC<{tl: Timeline; mo: Destacado_; frame: number}> = ({tl,
   }
   const W = tl.ancho;
   const H = tl.alto;
-  const despega = mo.fin - mo.salida;
+  const despega = mo.pieza >= 0 || mo.desde ? mo.fin - mo.salida : mo.fin;
   const alEntrar = curvaVuelo(avance(frame, mo.ini, mo.ini + mo.entrada));
   const respira = lerp(1, 1.035, avance(frame, mo.ini, despega));
-  const k = lerp(0.92, 1, alEntrar) * respira;
+  const k = (mo.desde ? 1 : lerp(0.92, 1, alEntrar)) * respira;
   let x = W / 2;
   let y = H / 2;
   let w = mo.ancho * k;
   let h = mo.alto * k;
   let rot = 0;
   let oscuro = mo.oscuro * alEntrar;
+  let opacidad = mo.desde ? 1 : alEntrar;
 
-  if (frame >= despega && tl.collage && tl.camara) {
+  if (mo.desde) {
+    // Sale de su lugar (en la cinta), crece al frente y al final vuelve ahí.
+    const d = mo.desde;
+    const vuelta = frame >= despega ? curvaVuelo(avance(frame, despega, mo.fin)) : 0;
+    const u = alEntrar * (1 - vuelta);
+    x = lerp(d.x, x, u);
+    y = lerp(d.y, y, u);
+    w = lerp(d.ancho, w, u);
+    h = lerp(d.alto, h, u);
+    oscuro = mo.oscuro * u;
+    opacidad = 1;
+  } else if (frame >= despega && mo.pieza >= 0 && tl.collage && tl.camara) {
     const p = tl.collage.piezas[mo.pieza];
     const [, cx, cy, s] = camaraEn(tl.camara, frame);
     const u = curvaVuelo(avance(frame, despega, mo.fin));
@@ -304,13 +318,126 @@ const Destacado: React.FC<{tl: Timeline; mo: Destacado_; frame: number}> = ({tl,
           top: y - h / 2,
           width: w,
           height: h,
-          opacity: alEntrar,
+          opacity: opacidad,
           transform: `rotate(${rot}deg)`,
           boxShadow: `0 ${h * 0.02}px ${h * 0.06}px rgba(0,0,0,0.6)`,
         }}
       />
     </>
   );
+};
+
+// ── Cinta ──────────────────────────────────────────────────────────────────
+
+/**
+ * Una columna de imágenes que sube un paso por golpe. Se dibuja cíclica (cada imagen
+ * también un largo más arriba y más abajo), así el último cuadro empalma con el primero.
+ */
+const CintaInfinita: React.FC<{tl: Timeline; frame: number}> = ({tl, frame}) => {
+  const c = tl.cinta!;
+  const desp = valorEn(c.desplazamiento, frame);
+  const W = tl.ancho;
+  const H = tl.alto;
+  const piezas: {key: string; img: string; y: number; ancho: number; alto: number}[] = [];
+  for (const it of c.items) {
+    for (const vuelta of [-1, 0, 1]) {
+      const y = H / 2 + it.y - desp + vuelta * c.largo;
+      if (y + it.alto / 2 > -40 && y - it.alto / 2 < H + 40) {
+        piezas.push({key: `${it.id}-${vuelta}`, img: it.img, y, ancho: it.ancho, alto: it.alto});
+      }
+    }
+  }
+  return (
+    <AbsoluteFill>
+      {piezas.map((p) => (
+        <Img
+          key={p.key}
+          src={staticFile(p.img)}
+          style={{
+            position: 'absolute',
+            left: (W - p.ancho) / 2,
+            top: p.y - p.alto / 2,
+            width: p.ancho,
+            height: p.alto,
+            boxShadow: c.sombra ? `0 ${p.alto * 0.015}px ${p.alto * 0.04}px rgba(0,0,0,${c.sombra})` : undefined,
+          }}
+        />
+      ))}
+    </AbsoluteFill>
+  );
+};
+
+// ── Logo ───────────────────────────────────────────────────────────────────
+
+/**
+ * El sello de Curiana Radio en una esquina (late en los primeros tiempos) y, en los
+ * tramos de salvapantallas, el logo suelto rebotando por el cuadro como el del DVD:
+ * cada vez que toca un borde cambia de versión.
+ */
+const LogoCuriana: React.FC<{tl: Timeline; frame: number}> = ({tl, frame}) => {
+  const {sello, salvapantallas = []} = tl.logo!;
+  const W = tl.ancho;
+  const H = tl.alto;
+  const activo = salvapantallas.find((s) => frame >= s.ini && frame < s.fin);
+  const elementos: React.ReactNode[] = [];
+
+  if (sello) {
+    const oculto = sello.ocultar.some(([a, b]) => frame >= a - 6 && frame < b + 6);
+    const transicion = sello.ocultar.reduce((m, [a, b]) => {
+      if (frame >= a - 6 && frame < a) return Math.min(m, (a - frame) / 6);
+      if (frame >= b && frame < b + 6) return Math.min(m, (frame - b) / 6);
+      return m;
+    }, 1);
+    const ultimo = [...sello.pulsos].reverse().find((f) => f <= frame);
+    const pulso = ultimo === undefined ? 0 : Math.exp(-(frame - ultimo) / 4);
+    const op = oculto && transicion === 1 ? 0 : sello.opacidad * transicion;
+    elementos.push(
+      <Img
+        key="sello"
+        src={staticFile(sello.img)}
+        style={{
+          position: 'absolute',
+          left: sello.x,
+          top: sello.y,
+          width: sello.ancho,
+          height: sello.alto,
+          opacity: op,
+          transform: `scale(${1 + 0.08 * pulso})`,
+          filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.55))',
+        }}
+      />,
+    );
+  }
+
+  if (activo) {
+    const t = frame - activo.ini;
+    const rebote = (p: number, max: number) => {
+      const periodo = 2 * max;
+      const m = ((p % periodo) + periodo) % periodo;
+      return {pos: m <= max ? m : periodo - m, toques: Math.floor(p / max)};
+    };
+    const bx = rebote(activo.x0 + activo.vx * t, W - activo.ancho);
+    const by = rebote(activo.y0 + activo.vy * t, H - activo.alto);
+    const img = activo.imgs[(bx.toques + by.toques) % activo.imgs.length];
+    const aparece = Math.min(1, t / 8, (activo.fin - frame) / 8);
+    elementos.push(
+      <AbsoluteFill key="velo" style={{backgroundColor: '#000', opacity: activo.oscuro * aparece}} />,
+      <Img
+        key="dvd"
+        src={staticFile(img)}
+        style={{
+          position: 'absolute',
+          left: bx.pos,
+          top: by.pos,
+          width: activo.ancho,
+          height: activo.alto,
+          opacity: aparece,
+          filter: 'drop-shadow(0 8px 24px rgba(0,0,0,0.6))',
+        }}
+      />,
+    );
+  }
+  return <>{elementos}</>;
 };
 
 /** Una imagen tras otra a pantalla completa, en cortes secos al pulso; tapa el collage mientras dura. */

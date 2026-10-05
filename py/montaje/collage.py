@@ -31,6 +31,7 @@ POR_DEFECTO = {
     "semilla": 11,
     "umbrales": [0.12, 0.32, 0.6],  # caos a partir del cual se entra por golpe, por corchea, por semicorchea
     "respiro": 0.1,  # un compás que cae esto o más en energía respecto del anterior baja dos niveles
+    "silencio": 0.0,  # un compás con menos energía que esto no recibe imágenes (0 = nunca)
     "alto": [0.8, 0.36],  # alto en pantalla de una imagen nueva (fracción del cuadro): al inicio → al final
     "acento": 1.25,  # las que caen en el primer tiempo del compás, más grandes
     "zoom_final": 0.42,  # escala de la cámara al final (1 = sin alejarse)
@@ -68,7 +69,9 @@ def planificar(p: Proyecto) -> None:
         ini = beats[i]
         fin = beats[i + 4] if i + 4 < len(beats) else D
         e = float(energia[i : i + 4].mean())
-        compases.append({"ini": float(ini), "fin": float(fin), "e": e, "intro": ini < entra_bateria - 0.05})
+        # Intro = antes de que el detector encuentre pulso Y con poca energía (un tramo
+        # puede empezar en plena canción y el primer golpe detectado llegar tarde).
+        compases.append({"ini": float(ini), "fin": float(fin), "e": e, "intro": ini < entra_bateria - 0.05 and e < 0.35})
     if fase > 0:  # golpes sueltos antes del primer compás completo: van con la intro
         compases.insert(0, {"ini": float(beats[0]), "fin": float(beats[fase]), "e": 0.0, "intro": True})
     previo_e = None
@@ -78,6 +81,8 @@ def planificar(p: Proyecto) -> None:
         nivel = sum(caos >= u for u in prm["umbrales"])
         if c["intro"]:
             nivel = 0
+        elif c["e"] < prm["silencio"]:
+            nivel = -1  # la canción casi calla: el collage se queda quieto
         else:
             nivel = max(1, nivel)
             if previo_e is not None and previo_e - c["e"] >= prm["respiro"]:
@@ -95,9 +100,9 @@ def planificar(p: Proyecto) -> None:
     rafaga_de: dict[int, list[dict]] = {}
     for i, mo in sorted(momentos_cfg.items()):
         if mo["tipo"] == "destacado":
-            heroe_de[i] = _heroe(items, mo, reservadas)
+            heroe_de[i] = _heroe(p, items, mo, reservadas)
         elif mo["tipo"] == "rafaga":
-            rafaga_de[i] = _rafaga(items, mo.get("por_compas", 8), reservadas, rng)
+            rafaga_de[i] = _rafaga(items, mo.get("por_compas", 8), reservadas, rng, mo.get("de"))
         elif mo["tipo"] != "barrido":
             salir(f"tipo de momento desconocido: {mo['tipo']} (hay: destacado, rafaga, barrido)")
 
@@ -107,7 +112,7 @@ def planificar(p: Proyecto) -> None:
     entradas = []
     for ci, c in enumerate(compases):
         mo = momentos_cfg.get(ci)
-        if mo and mo["tipo"] in ("destacado", "rafaga"):
+        if (mo and mo["tipo"] in ("destacado", "rafaga")) or c["nivel"] < 0:
             continue
         k = NIVELES[c["nivel"]]
         if c["fin"] - c["ini"] < 0.5 * (60 / m["bpm"]) * 4 and c["intro"]:
@@ -117,7 +122,7 @@ def planificar(p: Proyecto) -> None:
             if t >= D - 0.05:
                 continue
             en = {"t": t, "caos": c["caos"], "nivel": c["nivel"], "primero": j == 0, "e": c["e"]}
-            if j == 0 and (ci - 1) in heroe_de:
+            if j == 0 and (ci - 1) in heroe_de and not momentos_cfg[ci - 1].get("firma"):
                 en["fija"] = heroe_de[ci - 1]
                 en["heroe"] = ci - 1
             entradas.append(en)
@@ -251,13 +256,15 @@ def planificar(p: Proyecto) -> None:
         if mo["tipo"] == "destacado":
             it = heroe_de[ci]
             ancho_px, alto_px = a_pantalla(it, 0.86, 0.9)
-            if ci not in pieza_heroe:
-                salir(f"el destacado del compás {ci} no tiene compás siguiente donde caer")
+            firma = bool(mo.get("firma"))
+            if not firma and ci not in pieza_heroe:
+                salir(f"el destacado del compás {ci} no tiene compás siguiente donde caer (¿firma?)")
             momentos.append(
                 {
                     "tipo": "destacado",
                     "ini": ini,
-                    "fin": piezas[pieza_heroe[ci]]["ini"],
+                    # La firma (el logo al final) no aterriza: se queda hasta que termina el video.
+                    "fin": math.ceil(D * fps) if firma else piezas[pieza_heroe[ci]]["ini"],
                     "entrada": mo.get("entrada", 8),
                     "salida": mo.get("salida", 10),
                     "oscuro": mo.get("oscuro", 0.75),
@@ -265,7 +272,7 @@ def planificar(p: Proyecto) -> None:
                     "img": it["img"],
                     "ancho": ancho_px,
                     "alto": alto_px,
-                    "pieza": pieza_heroe[ci],
+                    "pieza": -1 if firma else pieza_heroe[ci],
                 }
             )
         elif mo["tipo"] == "rafaga":
@@ -300,6 +307,11 @@ def planificar(p: Proyecto) -> None:
     }
     if momentos:
         timeline["momentos"] = momentos
+    if p.cfg.get("logo"):
+        from . import marca
+
+        ocupado = [(mo["ini"], mo["fin"]) for mo in momentos if mo["tipo"] in ("destacado", "rafaga")]
+        timeline["logo"] = marca.timeline_logo(p, compases, fps, W, H, ocupado, rng)
     escribir(p.timeline, timeline)
 
     print(f"{n} imágenes en collage sobre {D:.1f} s a {m['bpm']} BPM → {p.timeline}")
@@ -307,9 +319,12 @@ def planificar(p: Proyecto) -> None:
     for ci, c in enumerate(compases):
         mo = momentos_cfg.get(ci)
         if mo and mo["tipo"] == "destacado":
-            ritmo = f"DESTACADO  {heroe_de[ci]['titulo'][:50]}"
+            nombre = "FIRMA     " if mo.get("firma") else "DESTACADO "
+            ritmo = f"{nombre} {heroe_de[ci].get('titulo', heroe_de[ci]['id'])[:50]}"
         elif mo and mo["tipo"] == "rafaga":
-            ritmo = f"RÁFAGA     {len(rafaga_de[ci])} imágenes a pantalla completa"
+            ritmo = f"RÁFAGA     {len(rafaga_de[ci])} imágenes a pantalla completa{' de ' + mo['de'] if mo.get('de') else ''}"
+        elif c["nivel"] < 0:
+            ritmo = "silencio: el collage se queda quieto"
         else:
             ritmo = f"{NIVELES[c['nivel']]:2d} {nombres[c['nivel']]}{'  (intro)' if c['intro'] else ''}"
             if mo:
@@ -359,15 +374,31 @@ def _marcar_tapadas(piezas: list[dict], mundo: tuple[float, float, float, float]
         a_la_vista.append((y0, x0, np.ones((y1 - y0, x1 - x0), dtype=bool)) if y1 > y0 and x1 > x0 else None)
 
 
-def _heroe(items: list[dict], mo: dict, reservadas: set[str]) -> dict:
-    """La imagen de un destacado: la que nombra el momento (`img` = su slug) o, si no,
-    la panorámica más presente —saturada y de luz media— que no se haya usado."""
-    if "img" in mo:
-        for it in items:
-            if it["id"] == mo["img"]:
+def _heroe(p: Proyecto, items: list[dict], mo: dict, reservadas: set[str]) -> dict:
+    """La imagen de un destacado. `img` puede ser:
+
+    - `"marca"`: la siguiente imagen donde se lee Curiana Radio (orden de la curaduría);
+    - `"logo:<versión>"`: el logo mismo (lockup_claro, lockup_oscuro, isotipo_claro…);
+    - el slug de una imagen;
+    - nada: la panorámica más presente —saturada y de luz media— que no se haya usado.
+    """
+    from . import marca
+
+    pedida = mo.get("img")
+    if pedida == "marca":
+        for it in marca.destacadas_marca(p, items):
+            if it["id"] not in reservadas:
                 reservadas.add(it["id"])
                 return it
-        salir(f"no encuentro la imagen «{mo['img']}» del destacado")
+        salir("no quedan imágenes de marca para el destacado")
+    if pedida and pedida.startswith("logo:"):
+        return marca.item_logo(p, pedida.split(":", 1)[1])
+    if pedida:
+        for it in items:
+            if it["id"] == pedida:
+                reservadas.add(it["id"])
+                return it
+        salir(f"no encuentro la imagen «{pedida}» del destacado")
     gens = {_generacion(r) for r in reservadas}
     candidatas = [it for it in items if it["familia"] == "panoramica" and it["id"] not in reservadas and _generacion(it["id"]) not in gens]
     it = max(candidatas, key=lambda it: it["sat"] * (1 - 1.5 * abs(it["luz"] - 0.42)))
@@ -375,11 +406,24 @@ def _heroe(items: list[dict], mo: dict, reservadas: set[str]) -> dict:
     return it
 
 
-def _rafaga(items: list[dict], cuantas: int, reservadas: set[str], rng) -> list[dict]:
+def _rafaga(items: list[dict], cuantas: int, reservadas: set[str], rng, de: str | None = None) -> list[dict]:
     """Las imágenes de una ráfaga: una familia de color (tonos vecinos de una semilla
-    saturada), sin variantes repetidas, para que el corte rápido tenga unidad."""
+    saturada), sin variantes repetidas, para que el corte rápido tenga unidad.
+    `de` la limita a un tipo de imagen («retrato», «paisaje», «abstracto»…) o a «marca»."""
     gens = {_generacion(r) for r in reservadas}
-    libres = [it for it in items if it["id"] not in reservadas and _generacion(it["id"]) not in gens and it["sat"] >= 0.2]
+
+    def sirve(it):
+        if de is None:
+            return it["sat"] >= 0.2
+        if de == "marca":
+            return bool(it.get("marca"))
+        return de in it.get("tipos", [])
+
+    libres = [it for it in items if it["id"] not in reservadas and _generacion(it["id"]) not in gens and sirve(it)]
+    if de == "marca":  # pocas y con variantes hermanas: aquí sí se aceptan generaciones repetidas
+        libres = [it for it in items if it["id"] not in reservadas and it.get("marca")]
+    if len(libres) < cuantas:
+        salir(f"la ráfaga pide {cuantas} imágenes de «{de}» y sólo hay {len(libres)} libres")
     saturadas = sorted(libres, key=lambda it: -it["sat"])[:40]
     semilla = saturadas[int(rng.integers(len(saturadas)))]
 
