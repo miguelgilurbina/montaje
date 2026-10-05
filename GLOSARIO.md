@@ -27,6 +27,7 @@ controla. Si dices la palabra, ya sé qué perilla mover.
 | **Acercamiento / alejamiento** | push-in / pull-back | La cámara se acerca o se aleja (aquí, de la pared). | `encuadre` |
 | **Paneo** | pan | La cámara se desplaza de lado. | la cámara siguiendo la pieza nueva |
 | **Golpe de zoom** | zoom punch, beat zoom | Un empujón breve de zoom en el pulso. | `golpe_camara` |
+| **Barrido** o **paneo rápido** | whip pan, swish pan | La cámara salta de lado tan rápido que el cuadro se vuelve otro. | `momentos` de tipo `barrido` |
 | **Vuelo** (nuestro nombre) | — | La protagonista viaja a su lugar en la pared. | `vuelo`, `vuelo_golpes` |
 
 ## Cómo se ordena en el tiempo
@@ -42,6 +43,10 @@ controla. Si dices la palabra, ya sé qué perilla mover.
 | **Raccord** o **corte por coincidencia** | match cut | Pasar a otra imagen que comparte forma, color o posición. | la elección por tono de `_elegir` |
 | **Montaje acumulativo** | accumulative montage | Las imágenes se suman en vez de reemplazarse. | la pared |
 | **Parpadeo** o **montaje estroboscópico** | flicker, strobe montage | Imágenes tan breves que casi no se leen: se perciben como textura. | el acto IV (15 por segundo) |
+| **Cambio de tempo** | tempo change | El ritmo de cortes cambia de golpe: se detiene, se duplica, se parte a la mitad. | el collage que se detiene en un destacado |
+| **Medio tiempo / doble tiempo** | half-time / double-time | Cortar la mitad o el doble de seguido que el pulso. | los niveles: compás, golpe, corchea, semicorchea |
+| **Ráfaga** o **montaje de destellos** | flash cut, rapid montage | Una serie de imágenes a pantalla completa en cortes secos muy cortos. | `momentos` de tipo `rafaga` |
+| **Destacado** o **plano de detalle** (aquí, «héroe») | spotlight, hero shot | Una imagen se aísla del resto y ocupa el cuadro un momento. | `momentos` de tipo `destacado` |
 
 ## Cómo se compone el cuadro
 

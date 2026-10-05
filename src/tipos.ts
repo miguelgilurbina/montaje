@@ -88,6 +88,33 @@ export type PiezaCollage = {
   tapada?: number;
 };
 
+/** Un compás donde cambia el estilo: una imagen al frente, una ráfaga a pantalla completa o un barrido de cámara. */
+export type Momento =
+  | {
+      tipo: 'destacado';
+      ini: number;
+      /** Cuadro en que aterriza en el collage (= `ini` de su pieza). */
+      fin: number;
+      entrada: number;
+      /** Cuadros del vuelo final hasta su pieza. */
+      salida: number;
+      /** Cuánto se oscurece el collage detrás. */
+      oscuro: number;
+      id: string;
+      img: string;
+      /** Tamaño en pantalla (px), centrada. */
+      ancho: number;
+      alto: number;
+      pieza: number;
+    }
+  | {
+      tipo: 'rafaga';
+      ini: number;
+      fin: number;
+      imagenes: {id: string; img: string; ini: number; ancho: number; alto: number}[];
+    }
+  | {tipo: 'barrido'; ini: number; fin: number};
+
 export type Collage = {
   /** Opacidad de la sombra de cada papel (0 = sin sombra). */
   sombra: number;
@@ -115,6 +142,7 @@ export type Timeline = {
   camara?: ClaveCamara[];
   ecos?: Eco[];
   collage?: Collage;
+  momentos?: Momento[];
   capas: Capa[];
 };
 

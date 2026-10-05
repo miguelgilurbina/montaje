@@ -1,0 +1,33 @@
+{
+ "titulo": "04 · Collage con momentos",
+ "idea": "El collage del 03 con momentos que cambian el tempo o el estilo: destacados (una imagen al frente, el collage se oscurece y se detiene, y ella vuelve volando a su lugar), ráfagas (imágenes a pantalla completa en cortes secos al pulso) y barridos (la cámara salta a una zona vacía y el collage vuelve a empezar).",
+ "biblioteca": "galeria-curiana",
+ "fuentes": [
+  {
+   "tipo": "galeria-curiana",
+   "manifest": "~/OneDrive/Documents/Desarrollo/Curiana Radio/content/galeria/obras.json"
+  }
+ ],
+ "musica": "audio/tonada-de-luna-llena.mp3",
+ "tramo": [10.68, 75.42],
+ "fase_compas": 0,
+ "fundido_audio": [0, 0.15],
+ "salida": {
+  "ancho": 1920,
+  "alto": 1080,
+  "fps": 30,
+  "fondo": "#08080a"
+ },
+ "montaje": {
+  "modo": "collage",
+  "semilla": 11
+ },
+ "momentos": [
+  {"compas": 6, "tipo": "destacado"},
+  {"compas": 10, "tipo": "rafaga", "por_compas": 8},
+  {"compas": 13, "tipo": "barrido"},
+  {"compas": 18, "tipo": "rafaga", "por_compas": 16},
+  {"compas": 19, "tipo": "barrido"},
+  {"compas": 22, "tipo": "destacado"}
+ ]
+}

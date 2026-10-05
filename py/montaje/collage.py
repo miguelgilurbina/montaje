@@ -85,9 +85,30 @@ def planificar(p: Proyecto) -> None:
         c["caos"], c["nivel"] = caos, nivel
         previo_e = c["e"]
 
-    # ── 2. Entradas: el compás se parte en tantas como dice su nivel ─────────
+    # ── 2. Momentos: compases donde cambia el tempo o el estilo ─────────────
+    momentos_cfg = {int(mo["compas"]): mo for mo in p.cfg.get("momentos", [])}
+    for i in momentos_cfg:
+        if not 0 <= i < len(compases):
+            salir(f"el momento del compás {i} cae fuera del tramo (hay {len(compases)} compases)")
+    reservadas: set[str] = set()
+    heroe_de: dict[int, dict] = {}
+    rafaga_de: dict[int, list[dict]] = {}
+    for i, mo in sorted(momentos_cfg.items()):
+        if mo["tipo"] == "destacado":
+            heroe_de[i] = _heroe(items, mo, reservadas)
+        elif mo["tipo"] == "rafaga":
+            rafaga_de[i] = _rafaga(items, mo.get("por_compas", 8), reservadas, rng)
+        elif mo["tipo"] != "barrido":
+            salir(f"tipo de momento desconocido: {mo['tipo']} (hay: destacado, rafaga, barrido)")
+
+    # ── 3. Entradas: el compás se parte en tantas como dice su nivel ─────────
+    # Durante un destacado o una ráfaga el collage se detiene (cambio de tempo); al
+    # terminar un destacado, su imagen cae al collage en el primer tiempo siguiente.
     entradas = []
-    for c in compases:
+    for ci, c in enumerate(compases):
+        mo = momentos_cfg.get(ci)
+        if mo and mo["tipo"] in ("destacado", "rafaga"):
+            continue
         k = NIVELES[c["nivel"]]
         if c["fin"] - c["ini"] < 0.5 * (60 / m["bpm"]) * 4 and c["intro"]:
             k = 1
@@ -95,41 +116,78 @@ def planificar(p: Proyecto) -> None:
             t = c["ini"] + (c["fin"] - c["ini"]) * j / k
             if t >= D - 0.05:
                 continue
-            entradas.append({"t": t, "caos": c["caos"], "nivel": c["nivel"], "primero": j == 0, "e": c["e"]})
+            en = {"t": t, "caos": c["caos"], "nivel": c["nivel"], "primero": j == 0, "e": c["e"]}
+            if j == 0 and (ci - 1) in heroe_de:
+                en["fija"] = heroe_de[ci - 1]
+                en["heroe"] = ci - 1
+            entradas.append(en)
     n = len(entradas)
 
-    # ── 3. Qué imagen: de oscuras a claras con la subida, encadenadas por tono ─
-    elegidas = _elegir(items, entradas, prm, rng)
+    # ── 4. Qué imagen: de oscuras a claras con la subida, encadenadas por tono ─
+    elegidas = _elegir(items, entradas, prm, rng, reservadas)
 
-    # ── 4. Cámara: se aleja de forma continua (zoom exponencial, cada vez más rápido) ─
+    # ── 5. Cámara: se aleja de forma continua (zoom exponencial, cada vez más rápido) ─
     def escala(t: float) -> float:
         u = min(1.0, max(0.0, t / D))
         return prm["zoom_final"] ** (u**1.6)
 
     deriva = rng.uniform(-1, 1, size=2) * np.array([W, H]) * 0.04
-    camara = []
-    for f in range(0, math.ceil(D * fps) + 3, 3):
-        u = min(1.0, f / fps / D)
-        camara.append([f, round(float(deriva[0] * u), 2), round(float(deriva[1] * u), 2), round(escala(f / fps), 5)])
+
+    # Barridos: la cámara salta de golpe a una zona vacía del mundo (una vista y algo más).
+    direcciones = [(1.0, 0.0), (-0.55, 0.85), (-1.0, 0.0), (0.55, -0.85)]
+    barridos = []
+    for n_b, (ci, mo) in enumerate(sorted((i, mo) for i, mo in momentos_cfg.items() if mo["tipo"] == "barrido")):
+        t0 = compases[ci]["ini"]
+        dx, dy = mo.get("direccion", direcciones[n_b % len(direcciones)])
+        distancia = 1.15 * W / escala(t0)
+        barridos.append((t0, mo.get("cuadros", 10) / fps, dx * distancia, dy * distancia * H / W * 1.6))
+
+    def desplazamiento(t):
+        x = y = 0.0
+        for t0, dur, bx, by in barridos:
+            u = min(1.0, max(0.0, (t - t0) / dur))
+            u = u * u * (3 - 2 * u)
+            x, y = x + bx * u, y + by * u
+        return x, y
 
     def cam(t):
         u = min(1.0, t / D)
-        return deriva[0] * u, deriva[1] * u, escala(t)
+        px, py = desplazamiento(t)
+        return deriva[0] * u + px, deriva[1] * u + py, escala(t)
 
-    # ── 5. Dónde cae cada una: el hueco más viejo del collage ───────────────
+    camara = []
+    for f in range(0, math.ceil(D * fps) + 3, 1 if barridos else 3):
+        cx, cy, s = cam(f / fps)
+        camara.append([f, round(float(cx), 2), round(float(cy), 2), round(s, 5)])
+
+    # ── 6. Dónde cae cada una: el hueco más viejo del collage ───────────────
     s_fin = escala(D)
     ancho_mundo, alto_mundo = W / s_fin * 1.1, H / s_fin * 1.1
-    gx, gy = 96, 54
+    # El mundo se agranda hacia donde barre la cámara.
+    px_tot = [desplazamiento(t)[0] for t in (0, D)] + [0.0]
+    py_tot = [desplazamiento(t)[1] for t in (0, D)] + [0.0]
+    for t0, dur, bx, by in barridos:
+        px_tot.append(desplazamiento(t0 + dur)[0])
+        py_tot.append(desplazamiento(t0 + dur)[1])
+    mundo = (
+        -ancho_mundo / 2 + min(px_tot),
+        ancho_mundo / 2 + max(px_tot),
+        -alto_mundo / 2 + min(py_tot),
+        alto_mundo / 2 + max(py_tot),
+    )
+    gx = round(96 * (mundo[1] - mundo[0]) / ancho_mundo)
+    gy = round(54 * (mundo[3] - mundo[2]) / alto_mundo)
     edad = np.full((gy, gx), -1e9)  # último momento en que se cubrió cada celda del mundo
 
     def celdas(x, y, w, h):
-        x0 = int(np.clip((x - w / 2 + ancho_mundo / 2) / ancho_mundo * gx, 0, gx))
-        x1 = int(np.clip((x + w / 2 + ancho_mundo / 2) / ancho_mundo * gx, 0, gx))
-        y0 = int(np.clip((y - h / 2 + alto_mundo / 2) / alto_mundo * gy, 0, gy))
-        y1 = int(np.clip((y + h / 2 + alto_mundo / 2) / alto_mundo * gy, 0, gy))
+        x0 = int(np.clip((x - w / 2 - mundo[0]) / (mundo[1] - mundo[0]) * gx, 0, gx))
+        x1 = int(np.clip((x + w / 2 - mundo[0]) / (mundo[1] - mundo[0]) * gx, 0, gx))
+        y0 = int(np.clip((y - h / 2 - mundo[2]) / (mundo[3] - mundo[2]) * gy, 0, gy))
+        y1 = int(np.clip((y + h / 2 - mundo[2]) / (mundo[3] - mundo[2]) * gy, 0, gy))
         return slice(y0, max(y0 + 1, y1)), slice(x0, max(x0 + 1, x1))
 
     piezas = []
+    pieza_heroe: dict[int, int] = {}
     for k, (en, it) in enumerate(zip(entradas, elegidas)):
         t = en["t"]
         cx, cy, s = cam(t)
@@ -161,6 +219,9 @@ def planificar(p: Proyecto) -> None:
         edad[sy, sx] = t
 
         entrada = round(prm["entrada_cuadros"][0] + (prm["entrada_cuadros"][1] - prm["entrada_cuadros"][0]) * en["caos"])
+        if "heroe" in en:
+            entrada = 1  # llega volando desde el destacado: aparece de una
+            pieza_heroe[en["heroe"]] = len(piezas)
         piezas.append(
             {
                 "id": it["id"],
@@ -175,7 +236,49 @@ def planificar(p: Proyecto) -> None:
             }
         )
 
-    _marcar_tapadas(piezas, ancho_mundo, alto_mundo)
+    _marcar_tapadas(piezas, mundo)
+
+    # ── 7. Momentos en cuadros ──────────────────────────────────────────────
+    def a_pantalla(it, alto_max, ancho_max):
+        """Lo más grande que cabe, sin pasar de su tamaño nativo."""
+        alto_px = min(alto_max * H, it["h"], ancho_max * W / it["ratio"])
+        return round(alto_px * it["ratio"], 1), round(alto_px, 1)
+
+    momentos = []
+    for ci, mo in sorted(momentos_cfg.items()):
+        c = compases[ci]
+        ini, fin = round(c["ini"] * fps), round(c["fin"] * fps)
+        if mo["tipo"] == "destacado":
+            it = heroe_de[ci]
+            ancho_px, alto_px = a_pantalla(it, 0.86, 0.9)
+            if ci not in pieza_heroe:
+                salir(f"el destacado del compás {ci} no tiene compás siguiente donde caer")
+            momentos.append(
+                {
+                    "tipo": "destacado",
+                    "ini": ini,
+                    "fin": piezas[pieza_heroe[ci]]["ini"],
+                    "entrada": mo.get("entrada", 8),
+                    "salida": mo.get("salida", 10),
+                    "oscuro": mo.get("oscuro", 0.75),
+                    "id": it["id"],
+                    "img": it["img"],
+                    "ancho": ancho_px,
+                    "alto": alto_px,
+                    "pieza": pieza_heroe[ci],
+                }
+            )
+        elif mo["tipo"] == "rafaga":
+            fotos = rafaga_de[ci]
+            imagenes = []
+            for j, it in enumerate(fotos):
+                ancho_px, alto_px = a_pantalla(it, 1.0, 1.0)
+                imagenes.append(
+                    {"id": it["id"], "img": it["img"], "ini": round((c["ini"] + (c["fin"] - c["ini"]) * j / len(fotos)) * fps), "ancho": ancho_px, "alto": alto_px}
+                )
+            momentos.append({"tipo": "rafaga", "ini": ini, "fin": fin, "imagenes": imagenes})
+        else:
+            momentos.append({"tipo": "barrido", "ini": ini, "fin": ini + mo.get("cuadros", 10)})
 
     duracion = math.ceil(D * fps)
     timeline = {
@@ -195,15 +298,26 @@ def planificar(p: Proyecto) -> None:
         "collage": {"sombra": prm["sombra"], "piezas": piezas},
         "capas": [],
     }
+    if momentos:
+        timeline["momentos"] = momentos
     escribir(p.timeline, timeline)
 
     print(f"{n} imágenes en collage sobre {D:.1f} s a {m['bpm']} BPM → {p.timeline}")
     nombres = ["por compás", "por golpe", "por corchea", "por semicorchea"]
-    for c in compases:
-        print(f"  {c['ini']:6.2f} s  energía {c['e']:.2f}  caos {c['caos']:.2f}  {NIVELES[c['nivel']]:2d} {nombres[c['nivel']]}{'  (intro)' if c['intro'] else ''}")
+    for ci, c in enumerate(compases):
+        mo = momentos_cfg.get(ci)
+        if mo and mo["tipo"] == "destacado":
+            ritmo = f"DESTACADO  {heroe_de[ci]['titulo'][:50]}"
+        elif mo and mo["tipo"] == "rafaga":
+            ritmo = f"RÁFAGA     {len(rafaga_de[ci])} imágenes a pantalla completa"
+        else:
+            ritmo = f"{NIVELES[c['nivel']]:2d} {nombres[c['nivel']]}{'  (intro)' if c['intro'] else ''}"
+            if mo:
+                ritmo += "  + BARRIDO"
+        print(f"  {ci:2d}  {c['ini']:6.2f} s  energía {c['e']:.2f}  caos {c['caos']:.2f}  {ritmo}")
 
 
-def _marcar_tapadas(piezas: list[dict], ancho_mundo: float, alto_mundo: float) -> None:
+def _marcar_tapadas(piezas: list[dict], mundo: tuple[float, float, float, float]) -> None:
     """Pone `tapada` (cuadro) en cada pieza que otras posteriores terminan cubriendo entera.
 
     Al final del collage hay cientos de papeles apilados y casi todos quedaron
@@ -211,14 +325,17 @@ def _marcar_tapadas(piezas: list[dict], ancho_mundo: float, alto_mundo: float) -
     rejilla del mundo, conservadora: la pieza tapada cuenta con su caja más un
     margen (por el giro y la sombra) y la que tapa sólo con su interior.
     """
-    gx, gy = 640, 360
+    xmin, xmax, ymin, ymax = mundo
+    # Celdas de ~1/640 del ancho del mundo base; si el mundo se agrandó por barridos, más celdas.
+    gx = max(640, round(640 * (xmax - xmin) / (ymax - ymin) * 9 / 16))
+    gy = round(gx * (ymax - ymin) / (xmax - xmin))
 
     def rect(p, factor):
         w, h = p["ancho"] * factor, p["alto"] * factor
-        x0 = int(np.floor((p["x"] - w / 2 + ancho_mundo / 2) / ancho_mundo * gx))
-        x1 = int(np.ceil((p["x"] + w / 2 + ancho_mundo / 2) / ancho_mundo * gx))
-        y0 = int(np.floor((p["y"] - h / 2 + alto_mundo / 2) / alto_mundo * gy))
-        y1 = int(np.ceil((p["y"] + h / 2 + alto_mundo / 2) / alto_mundo * gy))
+        x0 = int(np.floor((p["x"] - w / 2 - xmin) / (xmax - xmin) * gx))
+        x1 = int(np.ceil((p["x"] + w / 2 - xmin) / (xmax - xmin) * gx))
+        y0 = int(np.floor((p["y"] - h / 2 - ymin) / (ymax - ymin) * gy))
+        y1 = int(np.ceil((p["y"] + h / 2 - ymin) / (ymax - ymin) * gy))
         return max(0, y0), min(gy, y1), max(0, x0), min(gx, x1)
 
     # Por pieza: su caja con margen (110 %) y qué celdas de esa caja siguen a la vista.
@@ -242,16 +359,66 @@ def _marcar_tapadas(piezas: list[dict], ancho_mundo: float, alto_mundo: float) -
         a_la_vista.append((y0, x0, np.ones((y1 - y0, x1 - x0), dtype=bool)) if y1 > y0 and x1 > x0 else None)
 
 
-def _elegir(items: list[dict], entradas: list[dict], prm: dict, rng) -> list[dict]:
+def _heroe(items: list[dict], mo: dict, reservadas: set[str]) -> dict:
+    """La imagen de un destacado: la que nombra el momento (`img` = su slug) o, si no,
+    la panorámica más presente —saturada y de luz media— que no se haya usado."""
+    if "img" in mo:
+        for it in items:
+            if it["id"] == mo["img"]:
+                reservadas.add(it["id"])
+                return it
+        salir(f"no encuentro la imagen «{mo['img']}» del destacado")
+    gens = {_generacion(r) for r in reservadas}
+    candidatas = [it for it in items if it["familia"] == "panoramica" and it["id"] not in reservadas and _generacion(it["id"]) not in gens]
+    it = max(candidatas, key=lambda it: it["sat"] * (1 - 1.5 * abs(it["luz"] - 0.42)))
+    reservadas.add(it["id"])
+    return it
+
+
+def _rafaga(items: list[dict], cuantas: int, reservadas: set[str], rng) -> list[dict]:
+    """Las imágenes de una ráfaga: una familia de color (tonos vecinos de una semilla
+    saturada), sin variantes repetidas, para que el corte rápido tenga unidad."""
+    gens = {_generacion(r) for r in reservadas}
+    libres = [it for it in items if it["id"] not in reservadas and _generacion(it["id"]) not in gens and it["sat"] >= 0.2]
+    saturadas = sorted(libres, key=lambda it: -it["sat"])[:40]
+    semilla = saturadas[int(rng.integers(len(saturadas)))]
+
+    def distancia(it):
+        d = abs(it["tono"] - semilla["tono"]) % 360
+        return min(d, 360 - d)
+
+    elegidas, usadas_gen = [], set()
+    for it in sorted(libres, key=distancia):
+        g = _generacion(it["id"])
+        if g in usadas_gen:
+            continue
+        elegidas.append(it)
+        usadas_gen.add(g)
+        reservadas.add(it["id"])
+        if len(elegidas) == cuantas:
+            break
+    rng.shuffle(elegidas)
+    return elegidas
+
+
+def _elegir(items: list[dict], entradas: list[dict], prm: dict, rng, reservadas: set[str] | None = None) -> list[dict]:
     """Una imagen por entrada: la luz sube con la energía y el tono encadena con la anterior.
-    Se evita repetir variantes de una misma generación mientras queden otras."""
-    usadas_gen: set[str] = set()
-    usadas: set[int] = set()
+    Se evita repetir variantes de una misma generación mientras queden otras. Las
+    reservadas para momentos no entran al collage, salvo las fijas (la imagen de un
+    destacado cayendo en su lugar)."""
+    reservadas = reservadas or set()
+    usadas_gen: set[str] = {_generacion(r) for r in reservadas}
+    usadas: set[int] = {j for j, it in enumerate(items) if it["id"] in reservadas}
     luces = np.array([it["luz"] for it in items])
     lo, hi = np.percentile(luces, [5, 95])
     tono_previo = None
     elegidas = []
     for en in entradas:
+        if "fija" in en:
+            elegidas.append(en["fija"])
+            if en["fija"]["sat"] >= 0.12:
+                tono_previo = en["fija"]["tono"]
+            continue
         objetivo = lo + (hi - lo) * min(1.0, 0.15 + 0.85 * en["caos"])
         disponibles = [
             j

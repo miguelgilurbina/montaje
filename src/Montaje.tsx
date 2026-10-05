@@ -8,7 +8,7 @@ import {
   staticFile,
   useCurrentFrame,
 } from 'remotion';
-import type {Capa, ClaveCamara, Eco, Pieza, Timeline} from './tipos';
+import type {Capa, ClaveCamara, Eco, Momento, Pieza, Timeline} from './tipos';
 
 /** Cuadros antes de su entrada en que la imagen ya está montada (invisible), para que el Studio la tenga cargada. */
 const PRECARGA = 20;
@@ -34,6 +34,15 @@ export const Montaje: React.FC<Timeline> = (tl) => {
   return (
     <AbsoluteFill style={{backgroundColor: tl.fondo, isolation: 'isolate', overflow: 'hidden'}}>
       {tl.collage && tl.camara?.length ? <CollageInfinito tl={tl} frame={frame} /> : null}
+      {(tl.momentos ?? [])
+        .filter((mo) => frame >= mo.ini - PRECARGA && frame <= mo.fin)
+        .map((mo) =>
+          mo.tipo === 'destacado' ? (
+            <Destacado key={`d-${mo.ini}`} tl={tl} mo={mo} frame={frame} />
+          ) : mo.tipo === 'rafaga' ? (
+            <Rafaga key={`r-${mo.ini}`} tl={tl} mo={mo} frame={frame} />
+          ) : null,
+        )}
       {hayPared ? <Pared tl={tl} g={frame} /> : null}
       {ecos.map((e) => (
         <CapaEco key={`eco-${e.ini}`} tl={tl} e={e} frame={frame} />
@@ -240,6 +249,93 @@ const CollageInfinito: React.FC<{tl: Timeline; frame: number}> = ({tl, frame}) =
           );
         })}
       </div>
+    </AbsoluteFill>
+  );
+};
+
+// ── Momentos ───────────────────────────────────────────────────────────────
+
+type Destacado_ = Extract<Momento, {tipo: 'destacado'}>;
+type Rafaga_ = Extract<Momento, {tipo: 'rafaga'}>;
+
+/**
+ * Una imagen al frente: el collage se oscurece, ella sube grande y nítida (nunca
+ * más que su tamaño nativo), respira con un acercamiento lento y al final vuela a
+ * su lugar en el collage, siguiendo a la cámara.
+ */
+const Destacado: React.FC<{tl: Timeline; mo: Destacado_; frame: number}> = ({tl, mo, frame}) => {
+  if (frame < mo.ini) {
+    // Montada invisible para que esté cargada cuando entra.
+    return <Img src={staticFile(mo.img)} style={{position: 'absolute', width: 1, height: 1, opacity: 0}} />;
+  }
+  const W = tl.ancho;
+  const H = tl.alto;
+  const despega = mo.fin - mo.salida;
+  const alEntrar = curvaVuelo(avance(frame, mo.ini, mo.ini + mo.entrada));
+  const respira = lerp(1, 1.035, avance(frame, mo.ini, despega));
+  const k = lerp(0.92, 1, alEntrar) * respira;
+  let x = W / 2;
+  let y = H / 2;
+  let w = mo.ancho * k;
+  let h = mo.alto * k;
+  let rot = 0;
+  let oscuro = mo.oscuro * alEntrar;
+
+  if (frame >= despega && tl.collage && tl.camara) {
+    const p = tl.collage.piezas[mo.pieza];
+    const [, cx, cy, s] = camaraEn(tl.camara, frame);
+    const u = curvaVuelo(avance(frame, despega, mo.fin));
+    x = lerp(x, W / 2 + (p.x - cx) * s, u);
+    y = lerp(y, H / 2 + (p.y - cy) * s, u);
+    w = lerp(w, p.ancho * s, u);
+    h = lerp(h, p.alto * s, u);
+    rot = lerp(0, p.rot, u);
+    oscuro *= 1 - u;
+  }
+
+  return (
+    <>
+      <AbsoluteFill style={{backgroundColor: '#000', opacity: oscuro}} />
+      <Img
+        src={staticFile(mo.img)}
+        style={{
+          position: 'absolute',
+          left: x - w / 2,
+          top: y - h / 2,
+          width: w,
+          height: h,
+          opacity: alEntrar,
+          transform: `rotate(${rot}deg)`,
+          boxShadow: `0 ${h * 0.02}px ${h * 0.06}px rgba(0,0,0,0.6)`,
+        }}
+      />
+    </>
+  );
+};
+
+/** Una imagen tras otra a pantalla completa, en cortes secos al pulso; tapa el collage mientras dura. */
+const Rafaga: React.FC<{tl: Timeline; mo: Rafaga_; frame: number}> = ({tl, mo, frame}) => {
+  if (frame >= mo.fin) return null;
+  const actual = [...mo.imagenes].reverse().find((im) => im.ini <= frame);
+  const siguiente = mo.imagenes.find((im) => im.ini > frame);
+  return (
+    <AbsoluteFill style={{backgroundColor: frame >= mo.ini ? tl.fondo : 'transparent'}}>
+      {actual && frame >= mo.ini ? (
+        <Img
+          key={actual.id}
+          src={staticFile(actual.img)}
+          style={{
+            position: 'absolute',
+            left: (tl.ancho - actual.ancho) / 2,
+            top: (tl.alto - actual.alto) / 2,
+            width: actual.ancho,
+            height: actual.alto,
+          }}
+        />
+      ) : null}
+      {siguiente ? (
+        <Img src={staticFile(siguiente.img)} style={{position: 'absolute', width: 1, height: 1, opacity: 0}} />
+      ) : null}
     </AbsoluteFill>
   );
 };

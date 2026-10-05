@@ -41,6 +41,19 @@ En `~/Videos/montaje/03-collage/render/`: `collage-1080.mp4` (1080p),
 `medir-58-60.mp4` (tramo de medición); `hojas/cuadro-59s.png` (un cuadro a
 resolución completa).
 
+También `collage-1080-compartir.mp4`: la misma a 1080p en dos pasadas a 3,2 Mb/s
+(27 MB), para mandar por chat (límite de 30 MB).
+
 ## Lo que dijo Miguel
 
-(pendiente)
+> «Excelente.»
+
+> «Siento que tienen que haber momentos donde cambiamos el tempo o el estilo de
+> mostrar imágenes, como que deberían haber animaciones que especializan a
+> alguna imagen.»
+
+## Aprendido
+
+- Es lo que Miguel buscaba con «superpuesto»: collage nítido, cada imagen legible.
+- Le falta **contraste en el tiempo**: un solo tratamiento durante todo el minuto,
+  aunque acelere, se siente parejo. De ahí sale el 04.
