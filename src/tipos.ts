@@ -119,7 +119,24 @@ export type Momento =
       fin: number;
       imagenes: {id: string; img: string; ini: number; ancho: number; alto: number}[];
     }
-  | {tipo: 'barrido'; ini: number; fin: number};
+  | {tipo: 'barrido'; ini: number; fin: number}
+  | {
+      tipo: 'video';
+      ini: number;
+      fin: number;
+      /** Ruta relativa a la biblioteca. */
+      src: string;
+      /** Parte del video que se muestra: [x, y, ancho, alto] en píxeles del video. */
+      recorte: [number, number, number, number];
+      /** Tamaño del video original (px). */
+      fuente: [number, number];
+      /** Tamaño en pantalla (px), centrado. */
+      ancho: number;
+      alto: number;
+      /** Velocidad de reproducción, para que dure justo sus compases. */
+      velocidad: number;
+      volumen: number;
+    };
 
 /**
  * Cinta: imágenes en columna que suben un paso por golpe, como un feed. Es cíclica:

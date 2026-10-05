@@ -15,3 +15,4 @@ si la idea cambia, es otro número.
 | 04 | [Collage con momentos](proyectos/04-collage-momentos/FICHA.md) | 2026-10-05 | Tonada, 0:10.7–1:15.4 | el 03 con destacados, ráfagas y barridos en compases elegidos | — |
 | 05 | [Collage Curiana (3:2)](proyectos/05-collage-curiana/FICHA.md) | 2026-10-05 | Tonada, 2:30.8–3:32.3 | collage con momentos, marca destacada, logo sello + salvapantallas en el silencio + firma | — |
 | 06 | [Reel en cinta (9:16, loop)](proyectos/06-reel-cinta/FICHA.md) | 2026-10-05 | Tonada, 3:32.3–3:53.9 | feed vertical que sube por golpe, doble tiempo, destacado y ráfaga de marca; loop sin costura | — |
+| 07 | [Collage Curiana con intro y cierre (3:2)](proyectos/07-curiana-intro/FICHA.md) | 2026-10-05 | Tonada, 2:22.8–3:40.4 | el 05 abierto con la portada CURIANA y cerrado con el logo animado (videos de Miguel con Gemini) | — |

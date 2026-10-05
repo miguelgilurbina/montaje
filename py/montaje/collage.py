@@ -103,8 +103,10 @@ def planificar(p: Proyecto) -> None:
             heroe_de[i] = _heroe(p, items, mo, reservadas)
         elif mo["tipo"] == "rafaga":
             rafaga_de[i] = _rafaga(items, mo.get("por_compas", 8), reservadas, rng, mo.get("de"))
-        elif mo["tipo"] != "barrido":
-            salir(f"tipo de momento desconocido: {mo['tipo']} (hay: destacado, rafaga, barrido)")
+        elif mo["tipo"] not in ("barrido", "video"):
+            salir(f"tipo de momento desconocido: {mo['tipo']} (hay: destacado, rafaga, barrido, video)")
+    # Compases que ocupa un video (puede durar varios).
+    en_video = {i + k: i for i, mo in momentos_cfg.items() if mo["tipo"] == "video" for k in range(mo.get("compases", 1))}
 
     # ── 3. Entradas: el compás se parte en tantas como dice su nivel ─────────
     # Durante un destacado o una ráfaga el collage se detiene (cambio de tempo); al
@@ -112,7 +114,7 @@ def planificar(p: Proyecto) -> None:
     entradas = []
     for ci, c in enumerate(compases):
         mo = momentos_cfg.get(ci)
-        if (mo and mo["tipo"] in ("destacado", "rafaga")) or c["nivel"] < 0:
+        if (mo and mo["tipo"] in ("destacado", "rafaga")) or c["nivel"] < 0 or ci in en_video:
             continue
         k = NIVELES[c["nivel"]]
         if c["fin"] - c["ini"] < 0.5 * (60 / m["bpm"]) * 4 and c["intro"]:
@@ -284,6 +286,8 @@ def planificar(p: Proyecto) -> None:
                     {"id": it["id"], "img": it["img"], "ini": round((c["ini"] + (c["fin"] - c["ini"]) * j / len(fotos)) * fps), "ancho": ancho_px, "alto": alto_px}
                 )
             momentos.append({"tipo": "rafaga", "ini": ini, "fin": fin, "imagenes": imagenes})
+        elif mo["tipo"] == "video":
+            momentos.append(_momento_video(p, mo, compases, ci, fps, W, H))
         else:
             momentos.append({"tipo": "barrido", "ini": ini, "fin": ini + mo.get("cuadros", 10)})
 
@@ -310,7 +314,7 @@ def planificar(p: Proyecto) -> None:
     if p.cfg.get("logo"):
         from . import marca
 
-        ocupado = [(mo["ini"], mo["fin"]) for mo in momentos if mo["tipo"] in ("destacado", "rafaga")]
+        ocupado = [(mo["ini"], mo["fin"]) for mo in momentos if mo["tipo"] in ("destacado", "rafaga", "video")]
         timeline["logo"] = marca.timeline_logo(p, compases, fps, W, H, ocupado, rng)
     escribir(p.timeline, timeline)
 
@@ -323,6 +327,8 @@ def planificar(p: Proyecto) -> None:
             ritmo = f"{nombre} {heroe_de[ci].get('titulo', heroe_de[ci]['id'])[:50]}"
         elif mo and mo["tipo"] == "rafaga":
             ritmo = f"RÁFAGA     {len(rafaga_de[ci])} imágenes a pantalla completa{' de ' + mo['de'] if mo.get('de') else ''}"
+        elif ci in en_video:
+            ritmo = f"VIDEO      {momentos_cfg[en_video[ci]]['src']}"
         elif c["nivel"] < 0:
             ritmo = "silencio: el collage se queda quieto"
         else:
@@ -372,6 +378,48 @@ def _marcar_tapadas(piezas: list[dict], mundo: tuple[float, float, float, float]
                 a_la_vista[i] = None
         y0, y1, x0, x1 = rect(p, 1.10)
         a_la_vista.append((y0, x0, np.ones((y1 - y0, x1 - x0), dtype=bool)) if y1 > y0 and x1 > x0 else None)
+
+
+def _momento_video(p: Proyecto, mo: dict, compases: list[dict], ci: int, fps: int, W: int, H: int) -> dict:
+    """Un video (por ejemplo la intro hecha con Gemini) que ocupa `compases` compases.
+
+    Se recorta la parte que importa (`recorte`: [x, y, ancho, alto] en píxeles del
+    video), se agranda lo justo para caber en el cuadro y se ajusta su velocidad
+    para que termine exactamente en el golpe donde arranca lo que sigue.
+    """
+    import json
+    import subprocess
+
+    ruta = p.medios / mo["src"]
+    if not ruta.exists():
+        salir(f"no encuentro el video {ruta}")
+    info = json.loads(
+        subprocess.run(
+            ["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height:format=duration", "-of", "json", str(ruta)],
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout
+    )
+    vw, vh = info["streams"][0]["width"], info["streams"][0]["height"]
+    dur = float(info["format"]["duration"])
+    sx, sy, sw, sh = mo.get("recorte", [0, 0, vw, vh])
+    k = min(W / sw, H / sh)
+    c0 = compases[ci]
+    c1 = compases[min(len(compases) - 1, ci + mo.get("compases", 1) - 1)]
+    ini, fin = round(c0["ini"] * fps), round(c1["fin"] * fps)
+    return {
+        "tipo": "video",
+        "ini": ini,
+        "fin": fin,
+        "src": mo["src"],
+        "recorte": [sx, sy, sw, sh],
+        "fuente": [vw, vh],
+        "ancho": round(sw * k, 1),
+        "alto": round(sh * k, 1),
+        "velocidad": round(dur / ((fin - ini) / fps), 4),
+        "volumen": mo.get("volumen", 0),
+    }
 
 
 def _heroe(p: Proyecto, items: list[dict], mo: dict, reservadas: set[str]) -> dict:

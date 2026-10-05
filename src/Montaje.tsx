@@ -5,6 +5,8 @@ import {
   Html5Audio,
   Img,
   interpolate,
+  OffthreadVideo,
+  Sequence,
   staticFile,
   useCurrentFrame,
 } from 'remotion';
@@ -35,6 +37,9 @@ export const Montaje: React.FC<Timeline> = (tl) => {
     <AbsoluteFill style={{backgroundColor: tl.fondo, isolation: 'isolate', overflow: 'hidden'}}>
       {tl.collage && tl.camara?.length ? <CollageInfinito tl={tl} frame={frame} /> : null}
       {tl.cinta ? <CintaInfinita tl={tl} frame={frame} /> : null}
+      {(tl.momentos ?? []).map((mo) =>
+        mo.tipo === 'video' ? <MomentoVideo key={`v-${mo.ini}`} tl={tl} mo={mo} /> : null,
+      )}
       {(tl.momentos ?? [])
         .filter((mo) => frame >= mo.ini - PRECARGA && frame <= mo.fin)
         .map((mo) =>
@@ -324,6 +329,49 @@ const Destacado: React.FC<{tl: Timeline; mo: Destacado_; frame: number}> = ({tl,
         }}
       />
     </>
+  );
+};
+
+type Video_ = Extract<Momento, {tipo: 'video'}>;
+
+/**
+ * Un video dentro del montaje (la intro hecha con Gemini): se recorta la parte que
+ * importa, se centra sobre el fondo y se ajusta su velocidad para que dure justo
+ * sus compases. Tapa lo que haya detrás mientras dura.
+ */
+const MomentoVideo: React.FC<{tl: Timeline; mo: Video_}> = ({tl, mo}) => {
+  const [sx, sy, sw, sh] = mo.recorte;
+  const k = mo.ancho / sw;
+  return (
+    <Sequence from={mo.ini} durationInFrames={mo.fin - mo.ini}>
+      <AbsoluteFill style={{backgroundColor: tl.fondo}}>
+        <div
+          style={{
+            position: 'absolute',
+            left: (tl.ancho - mo.ancho) / 2,
+            top: (tl.alto - mo.alto) / 2,
+            width: mo.ancho,
+            height: mo.alto,
+            overflow: 'hidden',
+          }}
+        >
+          <OffthreadVideo
+            src={staticFile(mo.src)}
+            playbackRate={mo.velocidad}
+            volume={mo.volumen}
+            muted={mo.volumen === 0}
+            style={{
+              position: 'absolute',
+              left: -sx * k,
+              top: -sy * k,
+              width: mo.fuente[0] * k,
+              height: mo.fuente[1] * k,
+              maxWidth: 'none',
+            }}
+          />
+        </div>
+      </AbsoluteFill>
+    </Sequence>
   );
 };
 
