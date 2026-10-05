@@ -53,4 +53,4 @@ En `~/Videos/montaje/05-collage-curiana/render/`: `curiana-3x2.mp4` (1620×1080,
 
 ## Lo que dijo Miguel
 
-(pendiente)
+> «me gustó mucho como usaste esa edición como de carrusel que ocupa toda la pantalla una tras otra, donde usaste fotos cuadradas de curiana radio, me gustó muchísimo» — sobre la **ráfaga de marca** (16 imágenes de marca a pantalla completa, una por semicorchea, cortes secos).

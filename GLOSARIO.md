@@ -68,6 +68,6 @@ controla. Si dices la palabra, ya sé qué perilla mover.
 | **Subida, clímax, respiro** | build-up, drop/climax, breakdown | Las partes de una canción electrónica que el montaje puede seguir. | las secciones de `musica.png` |
 | **Coda** | outro, coda | El cierre después del clímax. | `coda` |
 
-Las palabras de Miguel y su traducción: **«montaje sobre montaje»** = puesta en
+Las palabras de Miguel y su traducción: **«carrusel»** = ráfaga a pantalla completa (imágenes una tras otra en cortes secos al pulso); **«montaje sobre montaje»** = puesta en
 abismo con ecos; **«composición infinita en el fondo»** = mosaico acumulativo
 con cámara virtual; **«más caótico»** = la curva de caos.

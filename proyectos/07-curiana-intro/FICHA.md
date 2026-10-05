@@ -44,4 +44,4 @@ En `~/Videos/montaje/07-curiana-intro/render/`:
 
 ## Lo que dijo Miguel
 
-(pendiente)
+> «me gustó mucho como usaste esa edición como de carrusel que ocupa toda la pantalla una tras otra, donde usaste fotos cuadradas de curiana radio, me gustó muchísimo» — sobre la **ráfaga de marca** (16 imágenes de marca a pantalla completa, una por semicorchea, cortes secos).
