@@ -27,7 +27,8 @@ Una sola curva de **caos** (avance × energía) gobierna todo.
 - **Música:** «Tonada de Luna Llena (Basic Need Remix)», Simón Díaz y Basic Need
   (Wonderwheel Recordings, 2020), versión de 4:53, 89,1 BPM. El mp3 vino del
   video oficial de YouTube: **para publicar hace falta comprarla** (Bandcamp de
-  Pablo Sánchez) **o el permiso del sello**.
+  Pablo Sánchez) **o el permiso del sello**. 2026-10-05: Miguel indicó que los
+  derechos ya están resueltos.
 
 ## Lo que salió
 
