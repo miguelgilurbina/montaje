@@ -64,3 +64,12 @@ archivo, qué comando correr) no van aquí.
 - Compartió cómo otros hacen películas con Claude (HyperFrames, archivos de
   dirección, cientos de vueltas) «para que lo revisemos». El 2026-10-12 dijo
   «Vale» a empezar por esta carpeta y por la capa de sonido (09).
+
+## 2026-10-12 · Harness y glitch
+
+- Nombró al conjunto «Harness de Edición: "Montaje"» (repo independiente de
+  Curiana Radio).
+- Propuso integrar un flujo **«Video Glitch» (Carena + JVC)**: replicar en digital
+  un equipo que rompe la señal (Carena MVP-4000) y otro que la estabiliza
+  (JVC KM-250, como TBC): separación de canales RGB, desgarro horizontal, ruido
+  de cinta VHS.

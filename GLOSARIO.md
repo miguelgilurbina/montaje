@@ -86,6 +86,13 @@ controla. Si dices la palabra, ya sé qué perilla mover.
 | **Pico real** | true peak (dBTP) | El punto más alto de la onda; sobre 0 se rompe. Se deja en −1 por seguridad. | `pico` en publicacion.json |
 | **Firma sonora** | sonic logo, mnemonic | Un motivo corto que identifica a la marca. | por hacer |
 
+**Harness** (arnés) es el nombre que Miguel le dio al conjunto: el repo `montaje`
+(lo que fabrica el video; en inglés también *rig*) más cómo trabaja Claude dentro
+de él (la skill, la dirección y las vueltas de revisión). **Glitch** o **falla de
+señal**: la imagen que se rompe como una cinta o una transmisión dañada
+(separación RGB, desgarro horizontal, ruido); **TBC** (*time base corrector*): el
+aparato que vuelve a estabilizar una señal de video analógica.
+
 Las palabras de Miguel y su traducción: **«carrusel»** = ráfaga a pantalla completa (imágenes una tras otra en cortes secos al pulso); **«montaje sobre montaje»** = puesta en
 abismo con ecos; **«composición infinita en el fondo»** = mosaico acumulativo
 con cámara virtual; **«más caótico»** = la curva de caos.
