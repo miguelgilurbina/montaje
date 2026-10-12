@@ -2,6 +2,12 @@
   "version": "0.0.1",
   "configurations": [
     {
+      "name": "panel",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "panel"],
+      "port": 3310
+    },
+    {
       "name": "studio-03-collage",
       "runtimeExecutable": "python",
       "runtimeArgs": ["montaje.py", "studio", "03-collage", "--sin-abrir"],

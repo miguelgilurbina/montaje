@@ -8,16 +8,23 @@
     "node": ">=22"
   },
   "scripts": {
-    "tipos": "tsc --noEmit"
+    "tipos": "tsc --noEmit",
+    "panel": "next dev -p 3310",
+    "panel:build": "next build",
+    "panel:start": "next start -p 3310"
   },
   "dependencies": {
     "@remotion/cli": "4.0.532",
+    "@remotion/player": "^4.0.532",
+    "next": "^16.4.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "remotion": "4.0.532"
   },
   "devDependencies": {
+    "@types/node": "^26.6.5",
     "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.3.0",
     "typescript": "^5.9.0"
   }
 }

@@ -11,3 +11,8 @@ out/
 *.png
 !docs/**/*.png
 proyectos/ejemplo/timeline.json
+
+# El panel (Next)
+.next/
+next-env.d.ts
+*.tsbuildinfo

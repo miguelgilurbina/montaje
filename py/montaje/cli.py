@@ -52,6 +52,15 @@ def cmd_studio(p: Proyecto, a) -> None:
     subprocess.run(orden, cwd=RAIZ, check=True)
 
 
+def cmd_panel(p: Proyecto, a) -> None:
+    """El panel (Next): ver el video sin renderizar, editar proyecto.json y correr los comandos."""
+    exe = RAIZ / "node_modules" / ".bin" / ("next.cmd" if sys.platform == "win32" else "next")
+    if not exe.exists():
+        salir("falta Next; corre `npm install` en la raíz del repo")
+    print(f"panel: http://localhost:{a.puerto}/p/{p.nombre}")
+    subprocess.run([str(exe), "dev", "-p", str(a.puerto)], cwd=RAIZ, check=True)
+
+
 def cmd_hoja(p: Proyecto, a) -> None:
     """Hojas de contacto de un render: lo que Claude mira para juzgar el montaje."""
     from PIL import Image, ImageDraw
@@ -140,6 +149,9 @@ def main() -> None:
     s.add_argument("--puerto", type=int, default=3300)
     s.add_argument("--sin-abrir", action="store_true", help="no abrir el navegador del sistema")
 
+    s = nuevo("panel", "abre el panel en el navegador: el video sin renderizar, proyecto.json y los comandos")
+    s.add_argument("--puerto", type=int, default=3310)
+
     s = nuevo("hoja", "hojas de contacto de un render (medios/hojas/*.png)")
     s.add_argument("video", help="nombre del archivo dentro de medios/render")
     s.add_argument("--cada", type=float, default=2.0, help="segundos entre cuadros")
@@ -190,3 +202,5 @@ def main() -> None:
         cmd_studio(p, a)
     elif a.comando == "hoja":
         cmd_hoja(p, a)
+    elif a.comando == "panel":
+        cmd_panel(p, a)

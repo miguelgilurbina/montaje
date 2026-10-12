@@ -72,13 +72,20 @@ python montaje.py imagenes mi-video --miniaturas
 python montaje.py pista-prueba mi-video          # (si no hay canción)
 python montaje.py musica mi-video --archivo audio/prueba.wav
 python montaje.py planificar mi-video            # → proyectos/mi-video/timeline.json
-python montaje.py studio mi-video                # verlo antes de renderizar (puerto 3300)
+python montaje.py panel mi-video                 # el panel: verlo sin renderizar, editar y correr todo (puerto 3310)
 python montaje.py render mi-video --preview --desde 0 --hasta 20
 python montaje.py hoja mi-video preview-0-20.mp4 --cada 1
 python montaje.py render mi-video                # el final
 ```
 
 Cada comando dice dónde dejó lo que hizo; `python montaje.py --help` los lista.
+
+**El panel** (`panel`, Next.js en el mismo paquete) es la mesa de trabajo: el
+video dibujado en el navegador por el mismo código que lo renderiza, la tira de
+la canción con los compases numerados y los momentos, `proyecto.json` editable y
+botones para planificar, analizar la música, renderizar un tramo o el final,
+sonorizar y poner la señal, con la salida de cada comando a la vista. Remotion
+Studio (`studio`, puerto 3300) sigue disponible para inspeccionar cuadro a cuadro.
 Los parámetros del montaje están en `proyecto.json` (los que faltan salen de
 `POR_DEFECTO` en `py/montaje/planificar.py` y en cada modo).
 
@@ -122,6 +129,8 @@ están en el repo.
   `cinta`, `actos`), marca y logo, sonido, señal, ensamblado, publicación.
 - `src/` — la composición de Remotion (`Montaje.tsx`) y los tipos del timeline
   (`tipos.ts`).
+- `app/`, `components/`, `lib/` — el panel (Next): páginas, reproductor, tira,
+  servidor de medios con rangos y los comandos como API.
 - `proyectos/<p>/` — cada experimento. `curaduria/` — listas de imágenes de marca
   por biblioteca.
 

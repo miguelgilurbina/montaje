@@ -19,6 +19,9 @@ const UMBRAL_MINI = 420;
 /** Bajo este alto en pantalla (px) la pieza no lleva calado: no se vería y cada máscara cuesta tiempo de render. */
 const UMBRAL_CALADO = 60;
 
+/** Un archivo de la biblioteca: en el render sale de --public-dir; en el panel, del servidor (`base`). */
+const archivo = (tl: Timeline, ruta: string) => (tl.base ? tl.base + ruta : staticFile(ruta));
+
 const fijo = {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'} as const;
 const suave = Easing.inOut(Easing.quad);
 const curvaVuelo = Easing.inOut(Easing.cubic);
@@ -72,7 +75,7 @@ const Audio: React.FC<{tl: Timeline}> = ({tl}) => {
   const volumen = (f: number) => Math.min(fe ? Math.min(1, f / fe) : 1, fs ? Math.min(1, (largo - f) / fs) : 1);
   return (
     <Html5Audio
-      src={staticFile(src)}
+      src={archivo(tl, src)}
       trimBefore={Math.round(desde * tl.fps)}
       trimAfter={fin}
       volume={fe || fs ? volumen : undefined}
@@ -105,7 +108,7 @@ const CapaImagen: React.FC<{c: Capa; frame: number; tl: Timeline}> = ({c, frame,
     mixBlendMode: c.mezcla as CSSProperties['mixBlendMode'],
     ...mascara((c.borde ?? 0) * Math.min(c.ancho, c.alto)),
   };
-  return <Img src={staticFile(c.img)} style={estilo} />;
+  return <Img src={archivo(tl, c.img)} style={estilo} />;
 };
 
 /** De su lugar como protagonista a su pieza en la pared, siguiendo a la cámara mientras vuela. */
@@ -138,7 +141,7 @@ const ImagenEnVuelo: React.FC<{c: Capa; frame: number; tl: Timeline}> = ({c, fra
     mixBlendMode: (u < 0.5 ? c.mezcla : 'normal') as CSSProperties['mixBlendMode'],
     ...mascara(borde),
   };
-  return <Img src={staticFile(c.img)} style={estilo} />;
+  return <Img src={archivo(tl, c.img)} style={estilo} />;
 };
 
 // ── La pared ───────────────────────────────────────────────────────────────
@@ -169,7 +172,7 @@ const Pared: React.FC<{tl: Timeline; g: number; recorte?: number}> = ({tl, g, re
         {piezas.map((p) => (
           <Img
             key={p.id}
-            src={staticFile(p.ancho * s > UMBRAL_MINI ? p.img : p.mini)}
+            src={archivo(tl, p.ancho * s > UMBRAL_MINI ? p.img : p.mini)}
             style={{
               position: 'absolute',
               left: p.x - p.ancho / 2,
@@ -241,7 +244,7 @@ const CollageInfinito: React.FC<{tl: Timeline; frame: number}> = ({tl, frame}) =
           return (
             <Img
               key={p.id}
-              src={staticFile(grande ? p.img : p.img.replace(/^imagenes\//, 'miniaturas/'))}
+              src={archivo(tl, grande ? p.img : p.img.replace(/^imagenes\//, 'miniaturas/'))}
               style={{
                 position: 'absolute',
                 left: p.x - p.ancho / 2,
@@ -273,7 +276,7 @@ type Rafaga_ = Extract<Momento, {tipo: 'rafaga'}>;
 const Destacado: React.FC<{tl: Timeline; mo: Destacado_; frame: number}> = ({tl, mo, frame}) => {
   if (frame < mo.ini) {
     // Montada invisible para que esté cargada cuando entra.
-    return <Img src={staticFile(mo.img)} style={{position: 'absolute', width: 1, height: 1, opacity: 0}} />;
+    return <Img src={archivo(tl, mo.img)} style={{position: 'absolute', width: 1, height: 1, opacity: 0}} />;
   }
   const W = tl.ancho;
   const H = tl.alto;
@@ -316,7 +319,7 @@ const Destacado: React.FC<{tl: Timeline; mo: Destacado_; frame: number}> = ({tl,
     <>
       <AbsoluteFill style={{backgroundColor: '#000', opacity: oscuro}} />
       <Img
-        src={staticFile(mo.img)}
+        src={archivo(tl, mo.img)}
         style={{
           position: 'absolute',
           left: x - w / 2,
@@ -356,7 +359,7 @@ const MomentoVideo: React.FC<{tl: Timeline; mo: Video_}> = ({tl, mo}) => {
           }}
         >
           <OffthreadVideo
-            src={staticFile(mo.src)}
+            src={archivo(tl, mo.src)}
             playbackRate={mo.velocidad}
             volume={mo.volumen}
             muted={mo.volumen === 0}
@@ -400,7 +403,7 @@ const CintaInfinita: React.FC<{tl: Timeline; frame: number}> = ({tl, frame}) => 
       {piezas.map((p) => (
         <Img
           key={p.key}
-          src={staticFile(p.img)}
+          src={archivo(tl, p.img)}
           style={{
             position: 'absolute',
             left: (W - p.ancho) / 2,
@@ -442,7 +445,7 @@ const LogoCuriana: React.FC<{tl: Timeline; frame: number}> = ({tl, frame}) => {
     elementos.push(
       <Img
         key="sello"
-        src={staticFile(sello.img)}
+        src={archivo(tl, sello.img)}
         style={{
           position: 'absolute',
           left: sello.x,
@@ -472,7 +475,7 @@ const LogoCuriana: React.FC<{tl: Timeline; frame: number}> = ({tl, frame}) => {
       <AbsoluteFill key="velo" style={{backgroundColor: '#000', opacity: activo.oscuro * aparece}} />,
       <Img
         key="dvd"
-        src={staticFile(img)}
+        src={archivo(tl, img)}
         style={{
           position: 'absolute',
           left: bx.pos,
@@ -498,7 +501,7 @@ const Rafaga: React.FC<{tl: Timeline; mo: Rafaga_; frame: number}> = ({tl, mo, f
       {actual && frame >= mo.ini ? (
         <Img
           key={actual.id}
-          src={staticFile(actual.img)}
+          src={archivo(tl, actual.img)}
           style={{
             position: 'absolute',
             left: (tl.ancho - actual.ancho) / 2,
@@ -509,7 +512,7 @@ const Rafaga: React.FC<{tl: Timeline; mo: Rafaga_; frame: number}> = ({tl, mo, f
         />
       ) : null}
       {siguiente ? (
-        <Img src={staticFile(siguiente.img)} style={{position: 'absolute', width: 1, height: 1, opacity: 0}} />
+        <Img src={archivo(tl, siguiente.img)} style={{position: 'absolute', width: 1, height: 1, opacity: 0}} />
       ) : null}
     </AbsoluteFill>
   );

@@ -1,0 +1,278 @@
+/* La noche de Curiana Radio, en versión mesa de trabajo. */
+:root {
+  --fondo: #0f1621;
+  --hondo: #07090d;
+  --panel: #131c28;
+  --hueso: #eee6d4;
+  --hueso-2: #c6cfd9;
+  --filete: #3a4b61;
+  --filete-fuerte: #5a6d85;
+  --acento: #e6b43c;
+  --dato: #7e93aa;
+  --rojo: #b64924;
+  --mono: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: var(--fondo);
+  color: var(--hueso);
+  font: 14px/1.45 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.dato {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--dato);
+}
+
+/* ── El panel ── */
+
+.panel {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr) 380px;
+  height: 100vh;
+}
+
+.lateral {
+  background: var(--hondo);
+  border-right: 1px solid var(--filete);
+  padding: 16px 0;
+  overflow: auto;
+}
+
+.lateral .marca {
+  display: block;
+  padding: 0 16px 12px;
+  color: var(--acento);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.lateral nav a {
+  display: block;
+  padding: 6px 16px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--hueso-2);
+  border-left: 2px solid transparent;
+}
+
+.lateral nav a:hover {
+  color: var(--hueso);
+}
+
+.lateral nav a.activo {
+  color: var(--hueso);
+  border-left-color: var(--acento);
+  background: var(--panel);
+}
+
+.centro {
+  padding: 16px 20px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.centro header h1 {
+  margin: 0 0 2px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.tira {
+  width: 100%;
+  border: 1px solid var(--filete);
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: crosshair;
+}
+
+.tira svg {
+  display: block;
+}
+
+.tiempo {
+  margin-top: -4px;
+}
+
+.vacio {
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--dato);
+  border: 1px dashed var(--filete);
+  border-radius: 4px;
+}
+
+.consola {
+  margin: 0;
+  min-height: 120px;
+  max-height: 260px;
+  overflow: auto;
+  padding: 10px 12px;
+  background: var(--hondo);
+  border: 1px solid var(--filete);
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--hueso-2);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.render video {
+  width: 100%;
+  margin-top: 6px;
+  background: #000;
+}
+
+.derecha {
+  background: var(--hondo);
+  border-left: 1px solid var(--filete);
+  padding: 16px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.derecha h2 {
+  margin: 8px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dato);
+}
+
+.derecha textarea {
+  width: 100%;
+  min-height: 360px;
+  resize: vertical;
+  padding: 10px;
+  background: var(--panel);
+  color: var(--hueso);
+  border: 1px solid var(--filete);
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.4;
+  tab-size: 2;
+}
+
+.derecha textarea:focus {
+  outline: none;
+  border-color: var(--filete-fuerte);
+}
+
+.error {
+  color: #e2a158;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+button {
+  padding: 7px 12px;
+  background: var(--panel);
+  color: var(--hueso);
+  border: 1px solid var(--filete-fuerte);
+  border-radius: 4px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  border-color: var(--acento);
+}
+
+button.fuerte {
+  background: var(--acento);
+  color: var(--fondo);
+  border-color: var(--acento);
+  font-weight: 600;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.fila {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--hueso-2);
+}
+
+.fila input {
+  width: 64px;
+  margin: 0 4px;
+  padding: 4px 6px;
+  background: var(--panel);
+  color: var(--hueso);
+  border: 1px solid var(--filete);
+  border-radius: 3px;
+  font: inherit;
+}
+
+.ocupado {
+  color: var(--acento);
+}
+
+/* ── La portada: lista de experimentos ── */
+
+.portada {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+.portada h1 {
+  color: var(--acento);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 16px;
+}
+
+.portada a.tarjeta {
+  display: block;
+  padding: 12px 14px;
+  margin: 8px 0;
+  background: var(--panel);
+  border: 1px solid var(--filete);
+  border-radius: 4px;
+}
+
+.portada a.tarjeta:hover {
+  border-color: var(--acento);
+}
+
+.portada a.tarjeta b {
+  font-family: var(--mono);
+  font-weight: 500;
+  color: var(--hueso-2);
+  margin-right: 10px;
+}
