@@ -15,6 +15,7 @@ y está hecho, falta su veredicto), *propuesta* (de Claude).
 | **Cortinas** | piezas cortas con su propio sonido que cortan el programa | idea de Miguel (08) | `ensamblar` |
 | **Loop sin costura** | el último cuadro empalma con el primero | pedido (06) | `modo: cinta` |
 | **Barrido** | la cámara salta de golpe a otra zona del collage | propuesta (04, 05) | `barrido` |
+| **La señal** | la transmisión se rompe en las transiciones (color separado, filas desgarradas, nieve, la imagen rueda) y vuelve limpia en el golpe; nunca sobre una imagen protagonista | propuesta (10), idea de Miguel («Video Glitch») | `senal` |
 | **La radio en el sonido** | estática AM y silbido de sintonía en el silencio; los rebotes del logo afinados a la canción | propuesta (09) | `sonorizar` |
 
 ## Por hacer (propuestas)

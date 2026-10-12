@@ -123,6 +123,8 @@ def main() -> None:
 
     nuevo("ensamblar", "programa (render de otro experimento) + interludios con su audio → medios/<p>/render")
 
+    nuevo("senal", "fallas de transmisión (glitch) en las transiciones de un render ya hecho, con su sonido → medios/<p>/render")
+
     nuevo("sonorizar", "suma la capa de efectos (sintetizados, al pulso de los momentos) a un render ya hecho → medios/<p>/render")
 
     s = nuevo("paquete", "prepara video, portada y texto para cada red (no publica nada)")
@@ -170,6 +172,10 @@ def main() -> None:
         from . import ensamblar
 
         ensamblar.ensamblar(p)
+    elif a.comando == "senal":
+        from . import senal
+
+        senal.senal(p)
     elif a.comando == "sonorizar":
         from . import sonido
 

@@ -18,5 +18,6 @@ si la idea cambia, es otro número.
 | 07 | [Collage Curiana con intro y cierre (3:2)](proyectos/07-curiana-intro/FICHA.md) | 2026-10-05 | Tonada, 2:22.8–3:40.4 | el 05 abierto con la portada CURIANA y cerrado con el logo animado (videos de Miguel con Gemini) | le encantó la ráfaga de marca («carrusel») |
 | 08 | [Programa con interludios (3:2)](proyectos/08-programa-interludios/FICHA.md) | 2026-10-05 | la del 05 | el collage del 05 cortado por las cortinas de Curiana (videos de Gemini con su sonido), estilo Locomotion | — |
 | 09 | [Sonido sobre el collage Curiana](proyectos/09-sonido-curiana/FICHA.md) | 2026-10-12 | la del 05 | primera capa de diseño sonoro: efectos sintetizados y afinados a la tónica en cada momento del 05; masterización en `paquete` | — |
+| 10 | [Señal: fallas de transmisión](proyectos/10-senal-curiana/FICHA.md) | 2026-10-12 | la del 05 | el «Video Glitch» de Miguel en digital: la señal se cae en el salvapantallas, vuelve en el barrido y la firma engancha limpia; con su sonido | — |
 
 La dirección que vale para todos los experimentos (tono, paleta, motivos, referencias, sonido y las palabras de Miguel) está en [`direccion/`](direccion/README.md).

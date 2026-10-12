@@ -1,0 +1,10 @@
+{
+ "titulo": "10 · Señal: fallas de transmisión sobre el 09",
+ "idea": "El flujo «Video Glitch» que propuso Miguel (un aparato que rompe la señal y otro que la estabiliza, como un TBC), hecho en digital con ffmpeg: la señal se cae al entrar al salvapantallas y rueda, vuelve en el barrido, y el logo de la firma llega averiado y engancha limpio. Con su sonido: zumbido de cabezal, ruido y cortes de un cuadro. Las imágenes protagonistas nunca se averían.",
+ "biblioteca": "galeria-curiana",
+ "base": {"proyecto": "09-sonido-curiana", "render": "curiana-3x2-sonido.mp4"},
+ "nombre_salida": "curiana-3x2-senal",
+ "senal": {
+  "intensidad": 1.0
+ }
+}

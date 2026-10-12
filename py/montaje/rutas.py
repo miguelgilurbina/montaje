@@ -61,6 +61,19 @@ def leer_json(ruta: Path):
     return json.loads(ruta.read_text(encoding="utf-8"))
 
 
+def timeline_de(p: Proyecto) -> tuple[Proyecto, dict]:
+    """El timeline que vale para un experimento: el suyo o, si se arma sobre otro
+    (`base`), el del primero de la cadena que lo tenga (10 → 09 → 05)."""
+    vistos = []
+    while not p.timeline.exists():
+        base = p.cfg.get("base")
+        if not base or p.nombre in vistos:
+            salir(f"ni {p.nombre} ni su cadena de `base` tienen timeline ({' → '.join(vistos + [p.nombre])})")
+        vistos.append(p.nombre)
+        p = Proyecto(base["proyecto"])
+    return p, leer_json(p.timeline)
+
+
 def escribir_json(ruta: Path, datos, compacto: bool = False) -> None:
     ruta.parent.mkdir(parents=True, exist_ok=True)
     if compacto:
