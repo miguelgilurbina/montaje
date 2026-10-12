@@ -34,6 +34,14 @@ python montaje.py hoja archivo-completo preview-20-50.mp4 --cada 1
 python montaje.py studio archivo-completo
 ```
 
+Después del render, la postproducción no vuelve a renderizar la imagen:
+
+```bash
+python montaje.py sonorizar 09-sonido-curiana        # capa de efectos sobre un render
+python montaje.py ensamblar 08-programa-interludios  # programa + cortinas
+python montaje.py paquete 06-reel-cinta --red instagram-reel youtube-short  # masterizado, listo para subir
+```
+
 Los medios (imágenes, audio, análisis, renders) van en `~/Videos/montaje/<p>/`,
 fuera del repo y fuera de OneDrive. `MONTAJE_MEDIOS` cambia esa raíz.
 
@@ -43,6 +51,8 @@ fuera del repo y fuera de OneDrive. `MONTAJE_MEDIOS` cambia esa raíz.
 - `py/montaje/` — catálogo, análisis de música, planificador, comandos.
 - `src/` — la composición de Remotion (`Montaje.tsx`) y los tipos del timeline.
 - `proyectos/<p>/` — `proyecto.json` (la idea y los parámetros) y `timeline.json` (la edición).
+- `direccion/` — la biblia: tono, paleta, motivos, referencias, sonido y lo que dijo Miguel. Se lee antes de cada experimento.
+- `EXPERIMENTOS.md`, `GLOSARIO.md`, `PUBLICACIONES.md` — bitácora, vocabulario y registro de publicaciones.
 
 ## Proyectos
 

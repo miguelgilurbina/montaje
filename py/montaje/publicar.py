@@ -10,6 +10,12 @@ Para un experimento y una o más redes deja en `~/Videos/montaje/<p>/publicar/<r
 - `texto.txt` — el texto del posteo (Instagram) o título + descripción (YouTube),
   armado desde `publicacion.json` del experimento, que es lo que Miguel corrige.
 
+El audio sale **masterizado** para las redes: −14 LUFS integrados y pico real
+de −1 dBTP (`lufs` y `pico` en `publicacion.json` lo cambian). Se mide primero y
+se aplica como ganancia pareja (`loudnorm` en dos pasadas, lineal): YouTube baja a
+−14 lo que llega más fuerte, así que entregar ahí no pierde nada, y el pico de −1
+evita que la compresión de la red recorte.
+
 No publica nada: publicar es un paso aparte que siempre necesita el sí de Miguel.
 Cada paquete queda anotado en PUBLICACIONES.md.
 """
@@ -17,6 +23,7 @@ Cada paquete queda anotado en PUBLICACIONES.md.
 from __future__ import annotations
 
 import datetime as dt
+import json
 import subprocess
 from pathlib import Path
 
@@ -39,6 +46,27 @@ def _probar(ruta: Path) -> tuple[int, int, float]:
     ).stdout.split()
     w, h = (int(x) for x in salida[0].split(",")[:2])
     return w, h, float(salida[1])
+
+
+def _sonoridad(ruta: Path, filtro: str) -> dict:
+    """Corre `loudnorm` (que mide) y devuelve su informe JSON."""
+    r = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", "-i", str(ruta), "-vn", "-af", filtro, "-f", "null", "-"], capture_output=True, text=True)
+    texto = r.stderr
+    try:
+        return json.loads(texto[texto.rindex("{") : texto.rindex("}") + 1])
+    except ValueError:
+        salir(f"no pude medir la sonoridad de {ruta}: {texto.strip()[-400:]}")
+
+
+def _master(ruta: Path, lufs: float, pico: float) -> tuple[str, dict]:
+    """Filtro de masterización (ganancia pareja hasta `lufs`, pico real ≤ `pico`) y la medición de entrada."""
+    objetivo = f"loudnorm=I={lufs}:TP={pico}:LRA=20"
+    m = _sonoridad(ruta, f"{objetivo}:print_format=json")
+    filtro = (
+        f"{objetivo}:measured_I={m['input_i']}:measured_TP={m['input_tp']}:measured_LRA={m['input_lra']}"
+        f":measured_thresh={m['input_thresh']}:offset={m['target_offset']}:linear=true"
+    )
+    return filtro, m
 
 
 def _texto(pub: dict, red: str) -> str:
@@ -67,6 +95,8 @@ def paquete(p: Proyecto, redes: list[str]) -> None:
     if not render.exists():
         salir(f"no existe el render {render}")
     w, h, dur = _probar(render)
+    lufs, pico = pub.get("lufs", -14.0), pub.get("pico", -1.0)
+    master, entrada = _master(render, lufs, pico)
 
     filas = []
     for red in redes:
@@ -90,9 +120,10 @@ def paquete(p: Proyecto, redes: list[str]) -> None:
         subprocess.run(
             ["ffmpeg", "-v", "error", "-y", "-i", str(render),
              "-c:v", "libx264", "-profile:v", "high", "-preset", "slow", "-crf", "17", "-pix_fmt", "yuv420p", "-r", "30",
-             "-c:a", "aac", "-b:a", "256k", "-ar", "48000", "-movflags", "+faststart", str(video)],
+             "-af", master, "-c:a", "aac", "-b:a", "256k", "-ar", "48000", "-movflags", "+faststart", str(video)],
             check=True,
         )
+        salida = _sonoridad(video, f"loudnorm=I={lufs}:TP={pico}:print_format=json")
         portada = carpeta / "portada.jpg"
         filtro = []
         if spec.get("miniatura"):
@@ -102,7 +133,10 @@ def paquete(p: Proyecto, redes: list[str]) -> None:
         (carpeta / "texto.txt").write_text(_texto(pub, red), encoding="utf-8")
         mb = video.stat().st_size / 1e6
         filas.append((red, spec["nombre"], carpeta, mb))
-        print(f"{spec['nombre']}: {w}×{h}, {dur:.1f} s, {mb:.0f} MB → {carpeta}")
+        print(
+            f"{spec['nombre']}: {w}×{h}, {dur:.1f} s, {mb:.0f} MB, audio {entrada['input_i']} → {salida['input_i']} LUFS"
+            f" (pico {salida['input_tp']} dBTP) → {carpeta}"
+        )
 
     registro = RAIZ / "PUBLICACIONES.md"
     if not registro.exists():
@@ -113,6 +147,13 @@ def paquete(p: Proyecto, redes: list[str]) -> None:
             encoding="utf-8",
         )
     hoy = dt.date.today().isoformat()
-    with registro.open("a", encoding="utf-8") as f:
-        for red, nombre, _, _ in filas:
-            f.write(f"| {hoy} | {p.nombre} | {nombre} | preparado | — |\n")
+    lineas = registro.read_text(encoding="utf-8").splitlines()
+    for red, nombre, _, _ in filas:
+        fila = f"| {hoy} | {p.nombre} | {nombre} | preparado | — |"
+        # Rehacer un paquete que aún no se publicó actualiza su fila; no la repite.
+        previa = next((i for i, l in enumerate(lineas) if f"| {p.nombre} | {nombre} | preparado |" in l), None)
+        if previa is None:
+            lineas.append(fila)
+        else:
+            lineas[previa] = fila
+    registro.write_text("\n".join(lineas) + "\n", encoding="utf-8")

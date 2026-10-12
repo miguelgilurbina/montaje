@@ -5,5 +5,5 @@ Cada paquete preparado y cada publicación. «Preparado» = el paquete existe en
 
 | Fecha | Experimento | Red | Estado | Enlace |
 |---|---|---|---|---|
-| 2026-10-05 | 06-reel-cinta | Instagram · Reel | preparado | — |
-| 2026-10-05 | 06-reel-cinta | YouTube · Short | preparado | — |
+| 2026-10-12 | 06-reel-cinta | Instagram · Reel | preparado | — |
+| 2026-10-12 | 06-reel-cinta | YouTube · Short | preparado | — |

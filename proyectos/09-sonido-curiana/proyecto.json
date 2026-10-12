@@ -1,0 +1,11 @@
+{
+ "titulo": "09 · Sonido sobre el collage Curiana (3:2)",
+ "idea": "La primera capa de diseño sonoro: el render del 05 con efectos sintetizados en código y amarrados a sus momentos (impacto en los destacados, subida y obturador en las ráfagas, soplo en el barrido, estática de radio y rebotes afinados en el salvapantallas, campana en la firma).",
+ "biblioteca": "galeria-curiana",
+ "base": {"proyecto": "05-collage-curiana", "render": "curiana-3x2.mp4"},
+ "nombre_salida": "curiana-3x2-sonido",
+ "sonido": {
+  "efectos": {},
+  "agachar": 3
+ }
+}

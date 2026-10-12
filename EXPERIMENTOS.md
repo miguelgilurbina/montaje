@@ -17,3 +17,6 @@ si la idea cambia, es otro número.
 | 06 | [Reel en cinta (9:16, loop)](proyectos/06-reel-cinta/FICHA.md) | 2026-10-05 | Tonada, 3:32.3–3:53.9 | feed vertical que sube por golpe, doble tiempo, destacado y ráfaga de marca; loop sin costura | — |
 | 07 | [Collage Curiana con intro y cierre (3:2)](proyectos/07-curiana-intro/FICHA.md) | 2026-10-05 | Tonada, 2:22.8–3:40.4 | el 05 abierto con la portada CURIANA y cerrado con el logo animado (videos de Miguel con Gemini) | le encantó la ráfaga de marca («carrusel») |
 | 08 | [Programa con interludios (3:2)](proyectos/08-programa-interludios/FICHA.md) | 2026-10-05 | la del 05 | el collage del 05 cortado por las cortinas de Curiana (videos de Gemini con su sonido), estilo Locomotion | — |
+| 09 | [Sonido sobre el collage Curiana](proyectos/09-sonido-curiana/FICHA.md) | 2026-10-12 | la del 05 | primera capa de diseño sonoro: efectos sintetizados y afinados a la tónica en cada momento del 05; masterización en `paquete` | — |
+
+La dirección que vale para todos los experimentos (tono, paleta, motivos, referencias, sonido y las palabras de Miguel) está en [`direccion/`](direccion/README.md).

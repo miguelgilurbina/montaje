@@ -69,6 +69,23 @@ controla. Si dices la palabra, ya sé qué perilla mover.
 | **Cortina** o **interludio** | ident, bumper, interstitial | Pieza corta de identidad del canal que corta el programa con su propio sonido. Lo que Miguel llama «interludios estilo Locomotion». | `ensamblar` + `ensamblaje` |
 | **Coda** | outro, coda | El cierre después del clímax. | `coda` |
 
+## El sonido
+
+| Nombre | En inglés | Qué es | Aquí |
+|---|---|---|---|
+| **Diseño sonoro** | sound design | Los sonidos que no son la música ni la voz y que le dan cuerpo a lo que pasa en la imagen. | `sonorizar` |
+| **Efecto** | sound effect, SFX | Un sonido puntual amarrado a una acción. | `py/montaje/sonido.py` |
+| **Impacto** | hit, impact | Golpe grave que marca una llegada. | destacados |
+| **Soplo** | whoosh, swoosh | Aire que pasa: acompaña un movimiento rápido. | barridos, vuelos |
+| **Subida** | riser | Sonido que crece y desemboca en algo. | antes de cada ráfaga |
+| **Cama** | bed, ambience | Un fondo continuo y bajo debajo de lo demás. | la estática del salvapantallas |
+| **Agachar** (la música) | ducking, sidechain | Bajar la música un instante para que un efecto o la voz se oiga. | `sonido.agachar` |
+| **Mezcla** | mix | El balance de volúmenes entre música, efectos y voz. | `sonido.efectos` |
+| **Masterización** | mastering | El último ajuste de volumen para entregar: cuánto suena en total y hasta dónde llegan los picos. | `paquete` |
+| **LUFS** | loudness units | Cómo de fuerte se percibe un audio entero. Las redes nivelan alrededor de −14. | `lufs` en publicacion.json |
+| **Pico real** | true peak (dBTP) | El punto más alto de la onda; sobre 0 se rompe. Se deja en −1 por seguridad. | `pico` en publicacion.json |
+| **Firma sonora** | sonic logo, mnemonic | Un motivo corto que identifica a la marca. | por hacer |
+
 Las palabras de Miguel y su traducción: **«carrusel»** = ráfaga a pantalla completa (imágenes una tras otra en cortes secos al pulso); **«montaje sobre montaje»** = puesta en
 abismo con ecos; **«composición infinita en el fondo»** = mosaico acumulativo
 con cámara virtual; **«más caótico»** = la curva de caos.
