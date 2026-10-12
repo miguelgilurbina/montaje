@@ -10,3 +10,4 @@ out/
 *.webp
 *.png
 !docs/**/*.png
+proyectos/ejemplo/timeline.json

@@ -4,6 +4,9 @@
   "private": true,
   "description": "Montaje de video hecho entre Miguel y Claude: la edición vive en un timeline.json que los dos leemos y escribimos; Remotion lo renderiza.",
   "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "tipos": "tsc --noEmit"
   },

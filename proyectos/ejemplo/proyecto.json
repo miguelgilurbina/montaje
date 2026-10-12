@@ -1,0 +1,22 @@
+{
+ "titulo": "Ejemplo · tus imágenes al pulso de una canción",
+ "nota": "Copia esta carpeta con otro nombre para tu propio proyecto. `fuentes` apunta a una carpeta con imágenes (jpg, png, webp); `musica` es un archivo dentro de ~/Videos/montaje/<proyecto>/audio/ (o la pista sintética de `pista-prueba`).",
+ "idea": "Un collage: las imágenes caen una sobre otra, opacas y nítidas, al ritmo de la canción, y la cámara se aleja mientras el cuadro se llena.",
+ "fuentes": [
+  {
+   "tipo": "carpeta",
+   "ruta": "~/Imagenes/mi-serie"
+  }
+ ],
+ "musica": "audio/prueba.wav",
+ "salida": {
+  "ancho": 1920,
+  "alto": 1080,
+  "fps": 30,
+  "fondo": "#08080a"
+ },
+ "montaje": {
+  "modo": "collage",
+  "semilla": 1
+ }
+}

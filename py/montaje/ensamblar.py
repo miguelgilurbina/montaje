@@ -29,7 +29,7 @@ from pathlib import Path
 
 import numpy as np
 
-from .rutas import MEDIOS, Proyecto, leer_json, salir
+from .rutas import Proyecto, leer_json, salir
 
 FUNDIDO = 0.04  # segundos de fundido de audio en cada empalme
 

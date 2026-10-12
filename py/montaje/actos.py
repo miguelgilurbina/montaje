@@ -28,7 +28,7 @@ import numpy as np
 
 from . import catalogo, musica
 from .planificar import _rejilla, audio_de, escribir, repartir
-from .rutas import Proyecto, salir
+from .rutas import Proyecto
 
 POR_DEFECTO = {
     "subdivision": 2,

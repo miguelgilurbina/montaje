@@ -1,9 +1,17 @@
 """El catálogo: todas las imágenes de un proyecto en una lista homogénea.
 
-Cada fuente (por ahora, la galería de Curiana Radio) se traduce a la misma forma:
-proporción, familia, color dominante, luz y tono, y lo que dice la imagen
-(título, alt, concepto). El montaje decide sobre esto sin abrir las imágenes;
-mirarlas es para verificar, no para clasificar.
+Cada fuente se traduce a la misma forma: proporción, familia, color dominante,
+luz y tono, y lo que dice la imagen (título, alt, concepto). El montaje decide
+sobre esto sin abrir las imágenes; mirarlas es para verificar, no para clasificar.
+
+Fuentes (`fuentes` en proyecto.json):
+
+- `{"tipo": "carpeta", "ruta": "~/Imagenes/mi-serie"}` — el caso general: una
+  carpeta con imágenes (jpg, png, webp). Al lado puede haber un
+  `descripciones.json` (`{"archivo.jpg": {"titulo": …, "alt": …, "concepto": …}}`)
+  para que el montaje sepa qué muestra cada una.
+- `{"tipo": "galeria-curiana", "manifest": "…/obras.json"}` — la galería de
+  Curiana Radio, que vive en Vercel Blob y trae sus descripciones y colores.
 """
 
 from __future__ import annotations
@@ -27,6 +35,7 @@ FAMILIAS = [
 ]
 
 MARCA_PRUEBA = ".prueba"
+EXTENSIONES = {".jpg", ".jpeg", ".png", ".webp"}
 
 
 def familia(ratio: float) -> str:
@@ -78,6 +87,72 @@ def desde_galeria_curiana(manifest: Path) -> list[dict]:
     return items
 
 
+def _slug(texto: str) -> str:
+    import re
+    import unicodedata
+
+    plano = unicodedata.normalize("NFKD", texto).encode("ascii", "ignore").decode()
+    return re.sub(r"-+", "-", re.sub(r"[^a-z0-9]+", "-", plano.lower())).strip("-") or "imagen"
+
+
+def _color_dominante(im) -> str:
+    """El color más presente, de una versión chica de la imagen (corte por mediana)."""
+    from PIL import Image
+
+    chica = im.convert("RGB")
+    chica.thumbnail((64, 64))
+    q = chica.quantize(colors=6, method=Image.Quantize.MEDIANCUT)
+    paleta = q.getpalette()
+    conteo: dict[int, int] = {}
+    for i in q.getdata():
+        conteo[i] = conteo.get(i, 0) + 1
+    i = max(conteo, key=conteo.get)
+    return "#%02x%02x%02x" % tuple(paleta[3 * i : 3 * i + 3])
+
+
+def desde_carpeta(ruta: Path) -> list[dict]:
+    """Una carpeta de imágenes: se mide cada una y se le saca el color."""
+    from PIL import Image
+
+    if not ruta.is_dir():
+        salir(f"no encuentro la carpeta de imágenes {ruta}")
+    desc_ruta = ruta / "descripciones.json"
+    descripciones = leer_json(desc_ruta) if desc_ruta.exists() else {}
+    items = []
+    ids: set[str] = set()
+    for archivo in sorted(ruta.iterdir()):
+        if archivo.suffix.lower() not in EXTENSIONES:
+            continue
+        with Image.open(archivo) as im:
+            w, h = im.size
+            color = _color_dominante(im)
+        slug = _slug(archivo.stem)
+        while slug in ids:
+            slug += "-2"
+        ids.add(slug)
+        d = descripciones.get(archivo.name, {})
+        items.append(
+            {
+                "id": slug,
+                "fuente": "carpeta",
+                "titulo": d.get("titulo", archivo.stem.replace("-", " ").replace("_", " ")),
+                "alt": d.get("alt", ""),
+                "concepto": d.get("concepto", ""),
+                "w": w,
+                "h": h,
+                "ratio": round(w / h, 4),
+                "familia": familia(w / h),
+                **color_a_rasgos(color),
+                "origen": str(archivo),
+                "img": f"imagenes/{slug}{archivo.suffix.lower()}",
+                "mini": f"miniaturas/{slug}.webp",
+            }
+        )
+    if not items:
+        salir(f"la carpeta {ruta} no tiene imágenes ({', '.join(sorted(EXTENSIONES))})")
+    return items
+
+
 # Tipo de imagen leído de su descripción (alt y título). Grueso a propósito: sirve
 # para pedir «una ráfaga de retratos» o «paisajes en la intro», no para catalogar.
 TIPOS = {
@@ -102,7 +177,9 @@ def construir(p: Proyecto) -> Path:
 
     items: list[dict] = []
     for fuente in p.cfg["fuentes"]:
-        if fuente["tipo"] == "galeria-curiana":
+        if fuente["tipo"] == "carpeta":
+            items += desde_carpeta(Path(fuente["ruta"]).expanduser())
+        elif fuente["tipo"] == "galeria-curiana":
             items += desde_galeria_curiana(Path(fuente["manifest"]).expanduser())
         else:
             salir(f"tipo de fuente desconocido: {fuente['tipo']}")
@@ -155,6 +232,13 @@ def cargar(p: Proyecto) -> list[dict]:
 def medir(p: Proyecto) -> None:
     """Suma el peso de lo que habría que bajar, sin bajar nada (peticiones HEAD)."""
     items = cargar(p)
+    locales = [it for it in items if "origen" in it]
+    remotas = [it for it in items if "url" in it]
+    if locales:
+        total = sum(Path(it["origen"]).stat().st_size for it in locales)
+        print(f"{len(locales)} archivos ya en disco, {total / 1e6:.1f} MB: `--bajar` los copia a la biblioteca")
+    if not remotas:
+        return
 
     def peso(it):
         req = urllib.request.Request(it["url"], method="HEAD")
@@ -162,9 +246,9 @@ def medir(p: Proyecto) -> None:
             return int(r.headers.get("Content-Length", 0))
 
     with ThreadPoolExecutor(16) as ex:
-        pesos = list(ex.map(peso, items))
+        pesos = list(ex.map(peso, remotas))
     total = sum(pesos)
-    print(f"{len(items)} archivos, {total / 1e6:.1f} MB en total (origen: {items[0]['url'].split('/galeria/')[0]})")
+    print(f"{len(remotas)} archivos por bajar, {total / 1e6:.1f} MB en total (origen: {remotas[0]['url'].split('/galeria/')[0]})")
 
 
 def bajar(p: Proyecto) -> None:
@@ -173,14 +257,20 @@ def bajar(p: Proyecto) -> None:
     marca = carpeta / MARCA_PRUEBA
     if marca.exists():
         # Las de prueba ocupan los mismos nombres: se reemplazan todas.
-        for f in carpeta.glob("*.webp"):
-            f.unlink()
+        for f in carpeta.iterdir():
+            if f.suffix.lower() in EXTENSIONES:
+                f.unlink()
         marca.unlink()
 
     def una(it):
+        import shutil
+
         destino = p.medios / it["img"]
         if destino.exists() and destino.stat().st_size > 0:
             return 0
+        if "origen" in it:
+            shutil.copy2(it["origen"], destino)
+            return 1
         tmp = destino.with_suffix(".parcial")
         urllib.request.urlretrieve(it["url"], tmp)
         tmp.replace(destino)
@@ -188,7 +278,8 @@ def bajar(p: Proyecto) -> None:
 
     with ThreadPoolExecutor(8) as ex:
         nuevas = sum(ex.map(una, items))
-    print(f"{nuevas} bajadas, {len(items) - nuevas} ya estaban → {carpeta}")
+    verbo = "copiadas" if all("origen" in it for it in items) else "bajadas"
+    print(f"{nuevas} {verbo}, {len(items) - nuevas} ya estaban → {carpeta}")
 
 
 LADO_MINIATURA = 480
@@ -229,7 +320,7 @@ def generar_prueba(p: Proyecto) -> None:
 
     items = cargar(p)
     carpeta = p.medio("imagenes", "x").parent
-    reales = [f for f in carpeta.glob("*.webp")] if not (carpeta / MARCA_PRUEBA).exists() else []
+    reales = [f for f in carpeta.iterdir() if f.suffix.lower() in EXTENSIONES] if not (carpeta / MARCA_PRUEBA).exists() else []
     if reales:
         salir(f"ya hay {len(reales)} imágenes reales en {carpeta}; no las piso con las de prueba")
 
@@ -246,6 +337,6 @@ def generar_prueba(p: Proyecto) -> None:
         d = ImageDraw.Draw(img)
         d.rectangle([4, 4, w - 5, h - 5], outline=claro, width=6)
         d.text((24, 24), f"{it['familia']}  {it['titulo'][:40]}", fill=(255, 255, 255))
-        img.save(p.medios / it["img"], "WEBP", quality=70)
+        img.save(p.medios / it["img"], quality=70)
     (carpeta / MARCA_PRUEBA).write_text("imágenes de relleno; `imagenes --bajar` las reemplaza\n", encoding="utf-8")
     print(f"{len(items)} imágenes de prueba → {carpeta}")
