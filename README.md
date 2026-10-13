@@ -98,6 +98,16 @@ Junto a una carpeta de imágenes puede haber un `descripciones.json`
 (`{"archivo.jpg": {"titulo": …, "alt": …, "concepto": …}}`): con eso el montaje
 sabe qué muestra cada imagen y puede pedir «una ráfaga de retratos».
 
+## Todo trabaja en tu máquina
+
+Nada del flujo necesita la nube: el análisis, la planificación, el render, el
+sonido, la señal y el panel corren en local y leen y escriben archivos locales.
+Las imágenes, el audio y los renders viven fuera del repo y nunca se suben (git
+ignora todos los formatos de medios). El repo en GitHub guarda sólo el código y
+las decisiones (`proyecto.json`, timelines, fichas). El panel no carga nada de
+internet y la telemetría de Next va apagada. Lo único que sale a la red es lo
+que tú pides: bajar imágenes de una fuente remota o instalar dependencias.
+
 ## Dónde vive cada cosa
 
 | Qué | Dónde | Por qué |
