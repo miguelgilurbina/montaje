@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "Montaje de video hecho entre Miguel y Claude: la edición vive en un timeline.json que los dos leemos y escribimos; Remotion lo renderiza.",
+  "license": "MIT",
   "type": "module",
   "engines": {
     "node": ">=22"

@@ -119,9 +119,10 @@ varios experimentos; las salidas de cada uno van en su propia carpeta.
   parámetro que mueve cada cosa.
 - **`PUBLICACIONES.md`** — qué se preparó para qué red. Nada se publica sin el sí
   de la persona.
-- La skill de Claude Code con el flujo paso a paso (`montaje`) explica cómo
-  trabaja el agente: mirar las hojas antes de opinar, registrar cada
-  experimento, no tocar los originales, pedir ok antes de bajar nada.
+- **`.claude/skills/montaje/SKILL.md`** — la skill de Claude Code con el flujo
+  paso a paso: cómo trabaja el agente (mirar las hojas antes de opinar,
+  registrar cada experimento, no tocar los originales, pedir ok antes de bajar
+  nada). Al abrir el repo con Claude Code se carga sola.
 
 Los experimentos 01–10 son los de Curiana Radio: sirven de ejemplo de cómo se
 itera (y de qué dijo quien dirige en cada vuelta). Sus imágenes y su música no
@@ -141,7 +142,7 @@ están en el repo.
 
 ## Licencias
 
-El código de este repo: ver `LICENSE`. Remotion tiene [su propia
+El código de este repo es libre bajo la licencia MIT (`LICENSE`). Remotion tiene [su propia
 licencia](https://github.com/remotion-dev/remotion/blob/main/LICENSE.md): gratis
 para personas y empresas chicas, con licencia de empresa a partir de cierto
 tamaño; quien use esto en una organización debe revisarla. Las imágenes y la
