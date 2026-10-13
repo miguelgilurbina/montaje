@@ -34,3 +34,25 @@ export function formatear(v: unknown, nivel = 0): string {
 
 /** ¿Son el mismo valor? (Comparación por estructura, sin importar el formato.) */
 export const iguales = (a: unknown, b: unknown): boolean => JSON.stringify(a) === JSON.stringify(b);
+
+// ── Leer y escribir dentro de proyecto.json sin mutarlo ──
+
+export type Cfg = Record<string, unknown>;
+
+export const obtener = (cfg: unknown, ruta: string[]): unknown =>
+  ruta.reduce<unknown>((v, k) => (v && typeof v === 'object' ? (v as Record<string, unknown>)[k] : undefined), cfg);
+
+/** Devuelve una copia con `valor` en `ruta`; `undefined` borra la clave. Crea los objetos que falten. */
+export function poner(cfg: Cfg, ruta: string[], valor: unknown): Cfg {
+  if (ruta.length === 0) return cfg;
+  const [k, ...resto] = ruta;
+  const copia: Cfg = {...cfg};
+  if (resto.length === 0) {
+    if (valor === undefined) delete copia[k];
+    else copia[k] = valor;
+    return copia;
+  }
+  const hijo = copia[k];
+  copia[k] = poner(hijo && typeof hijo === 'object' && !Array.isArray(hijo) ? (hijo as Cfg) : {}, resto, valor);
+  return copia;
+}

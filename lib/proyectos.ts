@@ -75,3 +75,26 @@ export function escribirProyecto(nombre: string, cfg: Record<string, unknown>): 
   if (!nombreValido(nombre)) throw new Error('nombre inválido');
   fs.writeFileSync(path.join(PROYECTOS, nombre, 'proyecto.json'), formatear(cfg) + '\n', 'utf-8');
 }
+
+export type Biblioteca = {
+  imagenes: {id: string; titulo: string; marca: boolean; tipos: string[]; mini: string}[];
+  videos: string[];
+  logos: string[];
+};
+
+/** Lo que el panel ofrece para elegir: imágenes del catálogo, videos y versiones del logo de una biblioteca. */
+export function leerBiblioteca(nombre: string): Biblioteca {
+  const p = leerProyecto(nombre);
+  const biblioteca = p?.biblioteca ?? nombre;
+  type Item = {id: string; titulo: string; marca?: boolean; tipos?: string[]; mini: string};
+  const catalogo = leerJson<Item[]>(path.join(MEDIOS, biblioteca, 'analisis', 'catalogo.json')) ?? [];
+  const carpetaVideo = path.join(MEDIOS, biblioteca, 'video');
+  const videos = fs.existsSync(carpetaVideo) ? fs.readdirSync(carpetaVideo).filter((v) => /\.(mp4|mov|webm)$/i.test(v)).map((v) => `video/${v}`) : [];
+  const curaduria = leerJson<{logo?: Record<string, string>}>(path.join(RAIZ, 'curaduria', `${biblioteca}.json`));
+  const logos = Object.keys(curaduria?.logo ?? {}).filter((k) => k !== 'origen');
+  return {
+    imagenes: catalogo.map((it) => ({id: it.id, titulo: it.titulo, marca: Boolean(it.marca), tipos: it.tipos ?? [], mini: it.mini})),
+    videos,
+    logos,
+  };
+}

@@ -41,8 +41,37 @@ a {
 
 .panel {
   display: grid;
-  grid-template-columns: 220px minmax(0, 1fr) 380px;
+  grid-template-columns: 200px minmax(0, 1fr) 380px;
   height: 100vh;
+}
+
+/* En una ventana angosta, las tres columnas se apilan: el video primero. */
+@media (max-width: 1100px) {
+  .panel {
+    grid-template-columns: minmax(0, 1fr);
+    height: auto;
+    min-height: 100vh;
+  }
+  .lateral {
+    border-right: 0;
+    border-bottom: 1px solid var(--filete);
+    padding: 10px 0;
+  }
+  .lateral nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 6px;
+    padding: 0 10px;
+  }
+  .lateral nav a {
+    padding: 4px 8px;
+    border-left: 0;
+    border-radius: 3px;
+  }
+  .derecha {
+    border-left: 0;
+    border-top: 1px solid var(--filete);
+  }
 }
 
 .lateral {
@@ -98,12 +127,12 @@ a {
   width: 100%;
   border: 1px solid var(--filete);
   border-radius: 4px;
-  overflow: hidden;
   cursor: crosshair;
 }
 
 .tira svg {
   display: block;
+  border-radius: 4px;
 }
 
 .tiempo {
@@ -275,4 +304,320 @@ button:disabled {
   font-weight: 500;
   color: var(--hueso-2);
   margin-right: 10px;
+}
+
+/* ── La tira editable ── */
+
+.tira {
+  position: relative;
+}
+
+.tira rect.celda {
+  cursor: copy;
+}
+
+.tira rect.celda:hover {
+  fill: rgba(230, 180, 60, 0.12);
+}
+
+.tira rect.celda.llena {
+  cursor: default;
+}
+
+.tira rect.celda.llena:hover {
+  fill: transparent;
+}
+
+.tira g.bloque {
+  cursor: grab;
+}
+
+.menu-momentos {
+  position: absolute;
+  top: 118px;
+  z-index: 5;
+  width: 190px;
+  padding: 6px;
+  background: var(--panel);
+  border: 1px solid var(--filete-fuerte);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.menu-momentos .dato {
+  padding: 2px 6px 4px;
+}
+
+.menu-momentos button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+  border-color: transparent;
+  padding: 5px 8px;
+}
+
+.menu-momentos button:hover {
+  background: var(--hondo);
+}
+
+.punto {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex: none;
+}
+
+/* ── La ficha del momento ── */
+
+.ficha {
+  padding: 10px 12px;
+  background: var(--hondo);
+  border: 1px solid var(--filete);
+  border-left: 3px solid var(--acento);
+  border-radius: 4px;
+}
+
+.ficha-cabeza {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ficha-cabeza .frase {
+  flex: 1 1 200px;
+}
+
+.ficha .campos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 8px 18px;
+  margin-top: 10px;
+}
+
+/* ── Campos y perillas ── */
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12.5px;
+  color: var(--hueso-2);
+}
+
+.campo > span:first-child {
+  color: var(--hueso);
+}
+
+.campo.casilla {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.campo input[type='range'] {
+  width: 100%;
+  accent-color: var(--acento);
+}
+
+.campo b {
+  font-family: var(--mono);
+  font-weight: 500;
+  color: var(--dato);
+}
+
+.campo input:not([type='checkbox']):not([type='range']):not([type='color']),
+.campo select,
+.perilla input[type='number'],
+.perilla select {
+  padding: 4px 6px;
+  background: var(--panel);
+  color: var(--hueso);
+  border: 1px solid var(--filete);
+  border-radius: 3px;
+  font: inherit;
+  font-size: 12.5px;
+}
+
+.campo input[type='number'],
+.perilla input[type='number'] {
+  width: 84px;
+  font-family: var(--mono);
+}
+
+.opciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+
+.opciones button {
+  padding: 4px 9px;
+  font-size: 12px;
+}
+
+.opciones button.activo {
+  background: var(--acento);
+  color: var(--fondo);
+  border-color: var(--acento);
+  font-weight: 600;
+}
+
+.opciones.esquinas button {
+  font-family: var(--mono);
+}
+
+.mini {
+  width: 96px;
+  border-radius: 3px;
+  border: 1px solid var(--filete);
+}
+
+.frase {
+  font-size: 11.5px;
+  color: var(--dato);
+  line-height: 1.35;
+}
+
+.quitar {
+  padding: 2px 8px;
+  font-size: 12px;
+  color: var(--dato);
+  border-color: transparent;
+}
+
+.quitar:hover {
+  color: var(--hueso);
+}
+
+.partes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.partes label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* ── El formulario ── */
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.seccion {
+  border: 1px solid var(--filete);
+  border-radius: 4px;
+  background: var(--panel);
+}
+
+.seccion > summary {
+  cursor: pointer;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dato);
+  list-style: none;
+}
+
+.seccion > summary::before {
+  content: '▸ ';
+}
+
+.seccion[open] > summary::before {
+  content: '▾ ';
+}
+
+.seccion > :not(summary) {
+  margin: 0 10px 10px;
+}
+
+.seccion .campo + .campo,
+.seccion .perilla + .perilla {
+  margin-top: 10px;
+}
+
+.perilla {
+  padding: 8px 10px 8px 8px;
+  margin: 0 10px 8px !important;
+  border-left: 2px solid transparent;
+}
+
+.perilla.cambiada {
+  border-left-color: var(--acento);
+  background: var(--hondo);
+  border-radius: 0 4px 4px 0;
+}
+
+.perilla-nombre {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12.5px;
+}
+
+.perilla .control {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.perilla .control input[type='range'] {
+  flex: 1;
+  accent-color: var(--acento);
+}
+
+.seccion textarea {
+  width: 100%;
+  min-height: 320px;
+  resize: vertical;
+  padding: 10px;
+  background: var(--hondo);
+  color: var(--hueso);
+  border: 1px solid var(--filete);
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.chip {
+  margin-left: 8px;
+  padding: 1px 7px;
+  border: 1px solid var(--filete-fuerte);
+  border-radius: 10px;
+  color: var(--hueso-2);
+}
+
+.chip.ocupado {
+  border-color: var(--acento);
+  color: var(--acento);
+}
+
+.derecha .casilla {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--hueso-2);
+}
+
+.chip.error {
+  border-color: var(--rojo);
+  color: #e2a158;
 }

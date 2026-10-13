@@ -81,11 +81,16 @@ python montaje.py render mi-video                # el final
 Cada comando dice dónde dejó lo que hizo; `python montaje.py --help` los lista.
 
 **El panel** (`panel`, Next.js en el mismo paquete) es la mesa de trabajo: el
-video dibujado en el navegador por el mismo código que lo renderiza, la tira de
-la canción con los compases numerados y los momentos, `proyecto.json` editable y
-botones para planificar, analizar la música, renderizar un tramo o el final,
-sonorizar y poner la señal, con la salida de cada comando a la vista. Remotion
-Studio (`studio`, puerto 3300) sigue disponible para inspeccionar cuadro a cuadro.
+video dibujado en el navegador por el mismo código que lo renderiza; la **tira**
+de la canción (energía por golpe, compases numerados) donde los momentos se
+ponen con un clic, se arrastran de compás y se ajustan en su ficha; las
+decisiones de `proyecto.json` como **formulario** (la canción, el formato, el
+montaje con cada perilla explicada, la marca) y el JSON plegado para lo demás.
+Cada cambio replanifica solo y el video se actualiza; hay deshacer. Botones para
+analizar la música, renderizar un tramo o el final, sonorizar y poner la señal,
+con la salida de cada comando a la vista. El vocabulario de las perillas está en
+`lib/vocabulario.ts`. Remotion Studio (`studio`, puerto 3300) sigue disponible
+para inspeccionar cuadro a cuadro.
 Los parámetros del montaje están en `proyecto.json` (los que faltan salen de
 `POR_DEFECTO` en `py/montaje/planificar.py` y en cada modo).
 
