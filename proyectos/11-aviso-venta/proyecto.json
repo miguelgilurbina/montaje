@@ -1,0 +1,8 @@
+{
+ "titulo": "11 · Aviso de venta con canción neutra",
+ "idea": "Un video hecho afuera (un aviso inmobiliario de CapCut, 24,6 s, vertical) al que Miguel pidió ponerle «una canción que sea neutro». La canción se escribe en código, afinada y al tempo, sin derechos de nadie, y reemplaza al audio original.",
+ "fuentes": [],
+ "salida": {"ancho": 476, "alto": 848, "fps": 30, "fondo": "#000000"},
+ "componer": {"bpm": 100, "tonalidad": "re mayor", "progresion": "I V vi IV", "semilla": 3},
+ "musicalizar": {"video": "video/aviso-venta.mp4", "original": 0.0, "nombre_salida": "aviso-venta-cancion"}
+}

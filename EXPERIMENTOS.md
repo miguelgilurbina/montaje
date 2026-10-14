@@ -19,5 +19,6 @@ si la idea cambia, es otro número.
 | 08 | [Programa con interludios (3:2)](proyectos/08-programa-interludios/FICHA.md) | 2026-10-05 | la del 05 | el collage del 05 cortado por las cortinas de Curiana (videos de Gemini con su sonido), estilo Locomotion | — |
 | 09 | [Sonido sobre el collage Curiana](proyectos/09-sonido-curiana/FICHA.md) | 2026-10-12 | la del 05 | primera capa de diseño sonoro: efectos sintetizados y afinados a la tónica en cada momento del 05; masterización en `paquete` | — |
 | 10 | [Señal: fallas de transmisión](proyectos/10-senal-curiana/FICHA.md) | 2026-10-12 | la del 05 | el «Video Glitch» de Miguel en digital: la señal se cae en el salvapantallas, vuelve en el barrido y la firma engancha limpia; con su sonido | — |
+| 11 | [Aviso de venta con canción neutra](proyectos/11-aviso-venta/FICHA.md) | 2026-10-13 | compuesta en código (re mayor, 100 BPM) | un video de afuera al que se le cambia la música por una cama neutra sin derechos: `componer` + `musicalizar` | — |
 
 La dirección que vale para todos los experimentos (tono, paleta, motivos, referencias, sonido y las palabras de Miguel) está en [`direccion/`](direccion/README.md).

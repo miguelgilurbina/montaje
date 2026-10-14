@@ -135,6 +135,10 @@ def main() -> None:
 
     nuevo("ensamblar", "programa (render de otro experimento) + interludios con su audio → medios/<p>/render")
 
+    nuevo("componer", "escribe una canción neutra en código (afinada, al tempo pedido) → medios/audio")
+
+    nuevo("musicalizar", "le pone música a un video que ya existe (compone si hace falta) → medios/<p>/render")
+
     nuevo("senal", "fallas de transmisión (glitch) en las transiciones de un render ya hecho, con su sonido → medios/<p>/render")
 
     nuevo("sonorizar", "suma la capa de efectos (sintetizados, al pulso de los momentos) a un render ya hecho → medios/<p>/render")
@@ -187,6 +191,14 @@ def main() -> None:
         from . import ensamblar
 
         ensamblar.ensamblar(p)
+    elif a.comando == "componer":
+        from . import componer
+
+        componer.escribir(p)
+    elif a.comando == "musicalizar":
+        from . import musicalizar
+
+        musicalizar.musicalizar(p)
     elif a.comando == "senal":
         from . import senal
 

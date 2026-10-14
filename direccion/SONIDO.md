@@ -56,4 +56,5 @@ Las cortinas (`ensamblar`) se nivelan al programa antes de unirse.
 - **Ambientes por familia de imágenes** (agua, desierto, ciudad…), muy bajos,
   según las descripciones del catálogo.
 - **Firma sonora de Curiana Radio:** un motivo corto propio (escrito en código)
-  para cortinas y cierres.
+  para cortinas y cierres. Desde el 11 existe `componer`: una cama neutra en
+  código; la firma sería su paso siguiente.

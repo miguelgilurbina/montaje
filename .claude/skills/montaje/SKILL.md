@@ -92,7 +92,12 @@ Todo comando se corre desde la raíz del repo: `python montaje.py <comando> <pro
     con su sonido; nunca sobre una imagen protagonista. `geq` no recorta: cada
     canal va con `clip(…, 0, 255)`. Mirar las hojas de cada ventana (`hoja
     --desde --hasta --cada 0.0667`).
-12. **Entrega:** `ensamblar` (cortinas) y `paquete` (por red, masterizado a
+12. **Música propia y videos de afuera:** `componer <p>` escribe una canción
+    neutra en código (afinada, al tempo, sin derechos); `musicalizar <p>` le pone
+    una pista a un video que ya existe sin tocar la imagen (compone primero si
+    hace falta, con la duración exacta del video; `original` = cuánto queda del
+    audio de origen). Mirar el espectrograma de la pista antes de entregar.
+13. **Entrega:** `ensamblar` (cortinas) y `paquete` (por red, masterizado a
     −14 LUFS y pico real −1 dBTP).
 
 Miguel mira y ajusta en **el panel**: `python montaje.py panel <p>` (Next, puerto
