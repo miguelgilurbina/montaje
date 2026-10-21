@@ -1,0 +1,9 @@
+{
+ "titulo": "12 · Abstract (1:1)",
+ "idea": "276 imágenes cuadradas de Midjourney (patrones en trompe-l'œil, selva amazónica, pirámides mayas, ciudades, mazmorras medievales, lava, colonias espaciales) al pulso de «Broken Like An Angel» de Dollybraid. Entre 1:00 y 1:30: hay que encontrar el tramo de la canción que mejor funcione.",
+ "biblioteca": "abstract",
+ "fuentes": [{"tipo": "carpeta", "ruta": "~/Videos/montaje/abstract"}],
+ "musica": "audio/broken-like-an-angel.mp3",
+ "salida": {"ancho": 1080, "alto": 1080, "fps": 30, "fondo": "#08080a"},
+ "montaje": {"modo": "collage", "semilla": 12}
+}

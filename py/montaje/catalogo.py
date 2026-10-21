@@ -110,12 +110,35 @@ def _color_dominante(im) -> str:
     return "#%02x%02x%02x" % tuple(paleta[3 * i : 3 * i + 3])
 
 
-def desde_carpeta(ruta: Path) -> list[dict]:
-    """Una carpeta de imágenes: se mide cada una y se le saca el color."""
+# Midjourney nombra sus archivos <usuario>_<prompt recortado>_<uuid de la generación>_<variante>:
+# el nombre trae lo que muestra la imagen y de qué generación es (sus 4 variantes comparten uuid).
+MIDJOURNEY = __import__("re").compile(r"^[^_]+_(?P<prompt>.+)_(?P<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})_(?P<var>\d)$")
+
+
+def _desde_nombre(stem: str) -> tuple[str, str]:
+    """(slug, título) a partir del nombre del archivo; si es de Midjourney, el título es su prompt."""
+    import re
+
+    m = MIDJOURNEY.match(stem)
+    if not m:
+        return _slug(stem), stem.replace("-", " ").replace("_", " ")
+    # Los parámetros (--ar, --chaos, --sref…) no describen la imagen.
+    prompt = re.split(r"_--", m["prompt"])[0].replace("_", " ").strip()
+    slug = f"{_slug(prompt)[:48].strip('-')}-{m['uuid'][:8]}-{m['var']}"
+    return slug, prompt
+
+
+def desde_carpeta(ruta: Path, medios: Path | None = None) -> list[dict]:
+    """Una carpeta de imágenes: se mide cada una y se le saca el color.
+
+    Si la carpeta ya está dentro de los medios del proyecto, las imágenes se usan
+    donde están (sin copiarlas a `imagenes/`).
+    """
     from PIL import Image
 
     if not ruta.is_dir():
         salir(f"no encuentro la carpeta de imágenes {ruta}")
+    en_sitio = medios is not None and ruta.resolve().is_relative_to(medios.resolve())
     desc_ruta = ruta / "descripciones.json"
     descripciones = leer_json(desc_ruta) if desc_ruta.exists() else {}
     items = []
@@ -126,16 +149,17 @@ def desde_carpeta(ruta: Path) -> list[dict]:
         with Image.open(archivo) as im:
             w, h = im.size
             color = _color_dominante(im)
-        slug = _slug(archivo.stem)
+        slug, titulo = _desde_nombre(archivo.stem)
         while slug in ids:
             slug += "-2"
         ids.add(slug)
         d = descripciones.get(archivo.name, {})
+        img = archivo.resolve().relative_to(medios.resolve()).as_posix() if en_sitio else f"imagenes/{slug}{archivo.suffix.lower()}"
         items.append(
             {
                 "id": slug,
                 "fuente": "carpeta",
-                "titulo": d.get("titulo", archivo.stem.replace("-", " ").replace("_", " ")),
+                "titulo": d.get("titulo", titulo),
                 "alt": d.get("alt", ""),
                 "concepto": d.get("concepto", ""),
                 "w": w,
@@ -144,7 +168,7 @@ def desde_carpeta(ruta: Path) -> list[dict]:
                 "familia": familia(w / h),
                 **color_a_rasgos(color),
                 "origen": str(archivo),
-                "img": f"imagenes/{slug}{archivo.suffix.lower()}",
+                "img": img,
                 "mini": f"miniaturas/{slug}.webp",
             }
         )
@@ -155,13 +179,14 @@ def desde_carpeta(ruta: Path) -> list[dict]:
 
 # Tipo de imagen leído de su descripción (alt y título). Grueso a propósito: sirve
 # para pedir «una ráfaga de retratos» o «paisajes en la intro», no para catalogar.
+# En español y en inglés (los prompts de Midjourney suelen estar en inglés).
 TIPOS = {
-    "retrato": r"\b(retrato|rostro|cara|hombre|mujer|niñ[oa]|persona|joven|anciano|figura humana|perfil)\b",
-    "paisaje": r"\b(paisaje|montaña|río|mar|océano|playa|desierto|selva|bosque|lago|costa|cielo|dunas?|valle|isla)\b",
-    "ciudad": r"\b(ciudad|calle|edificio|casa|arquitectura|urbano|plaza|tren|metro|vagón|tienda)\b",
-    "cartel": r"(texto|letras|título|portada|cartel|revista|logotipo|logo|tipografía|palabra)",
-    "abstracto": r"\b(patrón|espiral|ondas|círculos|concéntric|textura|geométric|abstract|líneas)\w*",
-    "ciencia-ficcion": r"\b(nave|planeta|astronauta|robot|futurista|espacial|ciborg|cyborg|androide|alien)\w*",
+    "retrato": r"\b(retrato|rostro|cara|hombre|mujer|niñ[oa]|persona|joven|anciano|figura humana|perfil|portrait|face|man|woman|girl|boy|person)\b",
+    "paisaje": r"\b(paisaje|montaña|río|mar|océano|playa|desierto|selva|bosque|lago|costa|cielo|dunas?|valle|isla|landscape|mountain|river|sea|ocean|beach|desert|jungle|forest|lake|coast|sky|valley|island|waves?|cascade|lava)\b",
+    "ciudad": r"\b(ciudad|calle|edificio|casa|arquitectura|urbano|plaza|tren|metro|vagón|tienda|city|street|building|house|architecture|urban|village|pyramid|dungeon)\b",
+    "cartel": r"(texto|letras|título|portada|cartel|revista|logotipo|logo|tipografía|palabra|typography|lettering|poster|magazine)",
+    "abstracto": r"\b(patrón|espiral|ondas|círculos|concéntric|textura|geométric|abstract|líneas|pattern|spiral|geometric|trompe)\w*",
+    "ciencia-ficcion": r"\b(nave|planeta|astronauta|robot|futurista|espacial|ciborg|cyborg|androide|alien|planet|martian|space|solarpunk|futuristic|colony)\w*",
 }
 
 CURADURIA = Path(__file__).resolve().parents[2] / "curaduria"
@@ -178,7 +203,7 @@ def construir(p: Proyecto) -> Path:
     items: list[dict] = []
     for fuente in p.cfg["fuentes"]:
         if fuente["tipo"] == "carpeta":
-            items += desde_carpeta(Path(fuente["ruta"]).expanduser())
+            items += desde_carpeta(Path(fuente["ruta"]).expanduser(), p.medios)
         elif fuente["tipo"] == "galeria-curiana":
             items += desde_galeria_curiana(Path(fuente["manifest"]).expanduser())
         else:
