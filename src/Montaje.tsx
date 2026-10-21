@@ -93,7 +93,8 @@ const CapaImagen: React.FC<{c: Capa; frame: number; tl: Timeline}> = ({c, frame,
   const finMovimiento = c.vuelo ? c.vuelo.desde : c.fin;
   const t = avance(frame, c.ini, finMovimiento);
 
-  const alEntrar = interpolate(frame, [c.ini, c.ini + Math.max(1, c.entrada)], [0, 1], {...fijo, easing: suave});
+  // entrada 0 = corte seco: visible entera desde su primer cuadro.
+  const alEntrar = c.entrada > 0 ? interpolate(frame, [c.ini, c.ini + c.entrada], [0, 1], {...fijo, easing: suave}) : 1;
   const alSalir = c.salida > 0 ? interpolate(frame, [c.fin - c.salida, c.fin], [1, 0], {...fijo, easing: suave}) : 1;
   const opacidad = frame < c.ini ? 0 : c.opacidad * Math.min(alEntrar, alSalir);
 

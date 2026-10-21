@@ -187,7 +187,7 @@ export type Timeline = {
   version: number;
   /** Prefijo de URL para los archivos de la biblioteca cuando lo dibuja el panel (no el render). */
   base?: string;
-  modo?: 'superposicion' | 'actos' | 'collage';
+  modo?: 'superposicion' | 'actos' | 'collage' | 'cinta' | 'secuencia';
   proyecto: string;
   ancho: number;
   alto: number;

@@ -2,10 +2,11 @@
 // español y una frase que dice qué hace. El panel lo muestra; GLOSARIO.md lo
 // explica largo. Los valores por defecto son los de POR_DEFECTO en Python.
 
-export type Modo = 'collage' | 'cinta' | 'actos' | 'superposicion';
+export type Modo = 'collage' | 'secuencia' | 'cinta' | 'actos' | 'superposicion';
 
 export const MODOS: Record<Modo, {nombre: string; frase: string}> = {
   collage: {nombre: 'Collage infinito', frase: 'Papeles nítidos que caen uno sobre otro al pulso y se quedan; la cámara se aleja mientras el cuadro se llena.'},
+  secuencia: {nombre: 'Secuencia (pantalla completa)', frase: 'Una imagen tras otra ocupando todo el cuadro, en cortes al pulso; ordenadas por parecido, así una serie de variaciones se lee como una imagen que se transforma.'},
   cinta: {nombre: 'Cinta (reel en loop)', frase: 'Una columna de imágenes que sube un paso por golpe; el último cuadro empalma con el primero.'},
   actos: {nombre: 'Actos', frase: 'De una imagen a la vez al caos: cada protagonista vuela a una pared que crece; ecos, respiros y coda.'},
   superposicion: {nombre: 'Superposición', frase: 'Doble exposición pareja: las imágenes entran al pulso, se mezclan y se van.'},
@@ -42,6 +43,14 @@ export const PARAMETROS: Record<Modo, Parametro[]> = {
     {clave: 'entrada_cuadros', nombre: 'Golpe de entrada', frase: 'Cuadros que tarda una imagen en caer: en la calma y en el pico.', tipo: 'par', min: 1, max: 20, paso: 1, partes: ['calma', 'pico'], defecto: [6, 2]},
     {clave: 'candidatos', nombre: 'Candidatos', frase: 'Cuántos lugares prueba cada imagen antes de elegir el que lleva más tiempo sin cubrirse.', tipo: 'entero', min: 1, max: 100, paso: 1, defecto: 28},
     {clave: 'una_por_generacion', nombre: 'Una por generación', frase: 'No repetir variantes de la misma imagen (las que Midjourney hizo juntas).', tipo: 'bool', defecto: true},
+  ],
+  secuencia: [
+    {clave: 'contraste', nombre: 'Contraste de ritmo', frase: 'Cuánto más rápido corta lo fuerte que lo suave: 1 = parejo; más = la calma lenta y el pico vertiginoso.', tipo: 'numero', min: 0.5, max: 4, paso: 0.1, defecto: 2},
+    {clave: 'max_por_golpe', nombre: 'Cortes máximos por golpe', frase: 'El tope de velocidad: 4 = semicorcheas; 2 = corcheas.', tipo: 'entero', min: 1, max: 4, paso: 1, defecto: 4},
+    {clave: 'umbral_calma', nombre: 'Umbral de calma', frase: 'Bajo esta energía, un corte por compás y con fundido encadenado.', tipo: 'numero', min: 0, max: 1, paso: 0.05, defecto: 0.3},
+    {clave: 'fundido_calma', nombre: 'Fundido en la calma', frase: 'Segundos del fundido encadenado entre imágenes cuando la canción está tranquila.', tipo: 'numero', min: 0, max: 2, paso: 0.05, defecto: 0.4},
+    {clave: 'original_golpes', nombre: 'Duración de la original', frase: 'Golpes que se queda la original cada vez que vuelve (en la calma se queda el compás entero).', tipo: 'entero', min: 1, max: 4, paso: 1, defecto: 1},
+    {clave: 'cierre_golpes', nombre: 'Cierre', frase: 'Golpes finales con la original al frente. 0 = sin cierre.', tipo: 'entero', min: 0, max: 16, paso: 1, defecto: 4},
   ],
   cinta: [
     {...semilla, defecto: 21},

@@ -145,6 +145,12 @@ aquí: lee el launch.json de Curiana. Ambos recargan solos al cambiar el timelin
   espirales, glitch VHS, destello).
 - Para mandarle un video por chat (límite 30 MB): reencodar a 1080p en dos
   pasadas (`-b:v` ≈ 28 MB × 8 / duración) y revisar un cuadro antes de enviar.
+- **`secuencia`** (`py/montaje/secuencia.py`) — una imagen tras otra a pantalla
+  completa, en cortes al pulso, **sin collage**. Para series que comparten forma
+  (variaciones del editor de Midjourney): ordenadas por parecido, el corte rápido
+  se lee como metamorfosis. La `original` vuelve en `original_en` (el «uno» de
+  cada frase) y cierra; se usan todas, una vez, escalando los cortes por compás a
+  la energía (`contraste`, `max_por_golpe`). Calma con fundido, ritmo con corte seco.
 - **`actos`** (`py/montaje/actos.py`) — de una imagen a la vez al caos. Abre con
   las de mayor formato (panorámicas), una a una; cada protagonista **vuela** a
   su lugar en una **pared** (mosaico acumulativo que crece en elipse) y la

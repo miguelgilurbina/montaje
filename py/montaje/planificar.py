@@ -172,10 +172,14 @@ def planificar(p: Proyecto) -> None:
         from . import cinta
 
         cinta.planificar(p)
+    elif modo == "secuencia":
+        from . import secuencia
+
+        secuencia.planificar(p)
     elif modo == "superposicion":
         _superposicion(p)
     else:
-        salir(f"modo de montaje desconocido: {modo} (hay: superposicion, actos, collage)")
+        salir(f"modo de montaje desconocido: {modo} (hay: superposicion, actos, collage, cinta, secuencia)")
 
 
 def _superposicion(p: Proyecto) -> None:

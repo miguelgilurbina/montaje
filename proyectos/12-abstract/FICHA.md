@@ -69,3 +69,4 @@ queda **negro ~0,4 s** hasta que cae la imagen siguiente.
 ## Lo que dijo Miguel
 
 - «la C», «formato cuadrado».
+- Sobre el borrador: «no me gusta que usemos collage, la idea es que usemos todas en seguidillas […] podríamos intercalar la "original" de vez en cuando. Ahora que lo pienso me gusta más la versión de la canción A.» → experimento 13 (secuencia a pantalla completa).

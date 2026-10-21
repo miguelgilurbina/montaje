@@ -1,0 +1,17 @@
+{
+ "titulo": "13 · Variaciones (1:1)",
+ "idea": "Las 275 variaciones que Miguel hizo en el editor de Midjourney a partir de una sola imagen (midjourney-editor-1792552364848), una tras otra a pantalla completa en cuadrado, sin collage: comparten la forma, así que el corte rápido se lee como una imagen que se transforma. La original vuelve de vez en cuando. Tramo A de «Broken Like An Angel» (0:06–1:05, un minuto).",
+ "biblioteca": "abstract",
+ "fuentes": [{"tipo": "carpeta", "ruta": "~/Videos/montaje/abstract"}],
+ "musica": "audio/broken-like-an-angel.mp3",
+ "tramo": [5.83, 65.25],
+ "fundido_audio": [0.3, 1.4],
+ "salida": {"ancho": 1080, "alto": 1080, "fps": 30, "fondo": "#000000"},
+ "montaje": {
+  "modo": "secuencia",
+  "original": "midjourney-editor-1792552364848",
+  "original_en": [0, 4, 12, 20],
+  "original_golpes": 1,
+  "cierre_golpes": 4
+ }
+}

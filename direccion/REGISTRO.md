@@ -73,3 +73,14 @@ archivo, qué comando correr) no van aquí.
   un equipo que rompe la señal (Carena MVP-4000) y otro que la estabiliza
   (JVC KM-250, como TBC): separación de canales RGB, desgarro horizontal, ruido
   de cinta VHS.
+
+## 2026-10-21 · Abstract y variaciones (12, 13)
+
+- «tiene que ser máximo de 1 min o 1 min y medio. Tenemos que conseguir la parte
+  de la canción que mejor nos funcione.»
+- Sobre el collage del 12: «no me gusta que usemos collage, la idea es que usemos
+  todas en seguidillas, piensa que todas tienen el mismo formato, las cree en base
+  a midjourney-editor-1792552364848 en la página de edits de midjourney, por lo que
+  siguen un patrón, y más bien, podríamos intercalar la "original" de vez en
+  cuando.» «todas estas imágenes deben ir una encima de la otra, ocupando 100% del
+  viewport 1:1».
