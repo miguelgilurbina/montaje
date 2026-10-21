@@ -57,9 +57,16 @@ Tramo **A** de «Broken Like An Angel» (Dollybraid): 0:05.83–1:05.25 (59,4 s)
 
 ## Lo que salió
 
-`~/Videos/montaje/13-variaciones/render/preview.mp4` (540×540, 1:00; render en
-51 s).
+`~/Videos/montaje/13-variaciones/render/`:
+
+- `preview.mp4` (540×540, 1:00; render en 51 s);
+- `variaciones-1080.mp4`, el final (1080×1080, 113 MB, render en 1 min 15 s);
+- `variaciones-compartir.mp4` (28 MB, dos pasadas a 3,6 Mb/s, audio masterizado).
+
+La canción viene masterizada muy fuerte: el render queda en −8,6 LUFS con picos
+de +0,5 dBFS (recorta). La versión para compartir va a −14 LUFS y pico −4 dBTP;
+para publicar, `paquete` hace lo mismo.
 
 ## Lo que dijo Miguel
 
-(pendiente)
+- Sobre el preview: «Me parece que está bien» → render final.
