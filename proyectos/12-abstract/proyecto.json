@@ -1,9 +1,64 @@
 {
  "titulo": "12 · Abstract (1:1)",
- "idea": "276 imágenes cuadradas de Midjourney (patrones en trompe-l'œil, selva amazónica, pirámides mayas, ciudades, mazmorras medievales, lava, colonias espaciales) al pulso de «Broken Like An Angel» de Dollybraid. Entre 1:00 y 1:30: hay que encontrar el tramo de la canción que mejor funcione.",
+ "idea": "276 imágenes cuadradas de Midjourney (patrones en trompe-l'œil, selva amazónica, pirámides mayas, ciudades, mazmorras medievales, lava, colonias espaciales) en collage cuadrado al pulso de «Broken Like An Angel» de Dollybraid. Tramo C que eligió Miguel (2:47–4:08, 1:20): una pausa corta, la subida a la sección más fuerte y el cierre real de la canción, que se apaga sola.",
  "biblioteca": "abstract",
- "fuentes": [{"tipo": "carpeta", "ruta": "~/Videos/montaje/abstract"}],
+ "fuentes": [
+  {
+   "tipo": "carpeta",
+   "ruta": "~/Videos/montaje/abstract"
+  }
+ ],
  "musica": "audio/broken-like-an-angel.mp3",
- "salida": {"ancho": 1080, "alto": 1080, "fps": 30, "fondo": "#08080a"},
- "montaje": {"modo": "collage", "semilla": 12}
+ "salida": {
+  "ancho": 1080,
+  "alto": 1080,
+  "fps": 30,
+  "fondo": "#08080a"
+ },
+ "montaje": {
+  "modo": "collage",
+  "semilla": 12,
+  "silencio": 0.5
+ },
+ "tramo": [
+  167.39,
+  247.8
+ ],
+ "fundido_audio": [
+  0.05,
+  0.5
+ ],
+ "fase_compas": 0,
+ "momentos": [
+  {
+   "compas": 8,
+   "tipo": "rafaga",
+   "por_compas": 8,
+   "de": "paisaje"
+  },
+  {
+   "compas": 12,
+   "tipo": "barrido"
+  },
+  {
+   "compas": 16,
+   "tipo": "destacado"
+  },
+  {
+   "compas": 24,
+   "tipo": "rafaga",
+   "por_compas": 16,
+   "de": "abstracto"
+  },
+  {
+   "compas": 28,
+   "tipo": "destacado"
+  },
+  {
+   "compas": 34,
+   "tipo": "destacado",
+   "firma": true,
+   "oscuro": 0.85
+  }
+ ]
 }

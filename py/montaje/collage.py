@@ -448,7 +448,9 @@ def _heroe(p: Proyecto, items: list[dict], mo: dict, reservadas: set[str]) -> di
                 return it
         salir(f"no encuentro la imagen «{pedida}» del destacado")
     gens = {_generacion(r) for r in reservadas}
-    candidatas = [it for it in items if it["familia"] == "panoramica" and it["id"] not in reservadas and _generacion(it["id"]) not in gens]
+    libres = [it for it in items if it["id"] not in reservadas and _generacion(it["id"]) not in gens]
+    # Las panorámicas lucen más al frente; si el proyecto no tiene (p. ej. todas cuadradas), cualquiera.
+    candidatas = [it for it in libres if it["familia"] == "panoramica"] or libres
     it = max(candidatas, key=lambda it: it["sat"] * (1 - 1.5 * abs(it["luz"] - 0.42)))
     reservadas.add(it["id"])
     return it
