@@ -1,0 +1,22 @@
+{
+ "titulo": "14 · Caliz: la ráfaga de retratos al pulso",
+ "idea": "Un video preeditado con Caliz Estudio (colaboración, 2:02) que hay que mejorar con lo que hay. En 1:15 una ráfaga de 15 retratos corre a su propio reloj (3 cuadros cada uno) sobre una canción en tresillo. Se rescatan los retratos del propio video y se vuelven a pegar en el mismo rectángulo, acelerando: uno por golpe en el corte del bajo, tresillo con el tambor cuando vuelve el bajo y entra el video de la puerta.",
+ "biblioteca": "calizEstudio",
+ "sincronizar": {
+  "video": "WhatsApp Video 2025-08-08 at 20.30.34.mp4",
+  "nombre_salida": "caliz-rafaga-acelerando",
+  "crf": 14,
+  "rafagas": [
+   {
+    "nombre": "retratos de 1:15",
+    "rect": [336, 55, 288, 434],
+    "piezas": [73.501, 75.237, 75.337, 75.437, 75.537, 75.637, 75.737, 75.837, 75.937, 76.037, 76.137, 76.238, 76.338, 76.438, 76.538],
+    "fin": 77.505,
+    "ancla": 75.637,
+    "subdivision": 3,
+    "inicio": -14,
+    "reloj": [[1, 2], [4, 3], [9, 1], [1, 0]]
+   }
+  ]
+ }
+}

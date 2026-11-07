@@ -46,6 +46,10 @@ controla. Si dices la palabra, ya sé qué perilla mover.
 | **Cambio de tempo** | tempo change | El ritmo de cortes cambia de golpe: se detiene, se duplica, se parte a la mitad. | el collage que se detiene en un destacado |
 | **Medio tiempo / doble tiempo** | half-time / double-time | Cortar la mitad o el doble de seguido que el pulso. | los niveles: compás, golpe, corchea, semicorchea |
 | **Ráfaga** o **montaje de destellos** | flash cut, rapid montage | Una serie de imágenes a pantalla completa en cortes secos muy cortos. | `momentos` de tipo `rafaga` |
+| **Tresillo** | triplet | El golpe partido en tres partes iguales en vez de dos o cuatro. Muchos tambores van así; cortar en corcheas o semicorcheas sobre un tresillo se siente a destiempo. | `subdivision: 3` en `sincronizar` |
+| **Acelerando** | accelerando | Los cortes se apuran hacia un punto: de uno por golpe a uno por tresillo. | el `reloj` de `sincronizar` |
+| **Anacrusa** | pickup, upbeat | Lo que entra justo antes del «uno» y lo anuncia. | `inicio` negativo en `sincronizar` |
+| **Volver a poner al pulso** | retime to the beat, beat-sync | Cambiar cuándo entra cada pieza de una ráfaga ya editada para que caiga en la rejilla de la canción, sin tocar el resto del video ni el audio. | comando `sincronizar` |
 | **Destacado** o **plano de detalle** (aquí, «héroe») | spotlight, hero shot | Una imagen se aísla del resto y ocupa el cuadro un momento. | `momentos` de tipo `destacado` |
 
 ## Cómo se compone el cuadro
@@ -95,4 +99,4 @@ aparato que vuelve a estabilizar una señal de video analógica.
 
 Las palabras de Miguel y su traducción: **«carrusel»** = ráfaga a pantalla completa (imágenes una tras otra en cortes secos al pulso); **«montaje sobre montaje»** = puesta en
 abismo con ecos; **«composición infinita en el fondo»** = mosaico acumulativo
-con cámara virtual; **«más caótico»** = la curva de caos.
+con cámara virtual; **«más caótico»** = la curva de caos. **«reel rápido de imágenes mientras un video corre»** = ráfaga sobre un video que sigue corriendo debajo; **«sincronización de video»** = volver a poner al pulso (`sincronizar`).

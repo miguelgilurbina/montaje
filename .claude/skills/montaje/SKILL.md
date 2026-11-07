@@ -97,7 +97,22 @@ Todo comando se corre desde la raíz del repo: `python montaje.py <comando> <pro
     una pista a un video que ya existe sin tocar la imagen (compone primero si
     hace falta, con la duración exacta del video; `original` = cuánto queda del
     audio de origen). Mirar el espectrograma de la pista antes de entregar.
-13. **Entrega:** `ensamblar` (cortinas) y `paquete` (por red, masterizado a
+13. **Un video que ya viene editado** (un preeditado, una colaboración):
+    primero leerlo entero sin canción ni capas aparte, con hojas cada 0,5 s y la
+    sonoridad de cada cuadro, cortes con `select='gt(scene,0.25)'`, espectrograma
+    y pulso; después, el tramo sospechoso cuadro a cuadro. Si una ráfaga corre a
+    su propio reloj, **`sincronizar <p>`** (`py/montaje/sincronizar.py`) la vuelve
+    a poner al pulso: rescata cada pieza del propio video (su cuadro más nítido,
+    recortado del rectángulo) y la pega en el mismo lugar según un `reloj` en
+    subdivisiones desde un **ancla** (un «uno» seguro). Sólo cambia ese
+    rectángulo en esa ventana; el audio se copia sin tocar. Mirar si la música va
+    en **tresillo** (autocorrelación de los ataques) antes de elegir la rejilla.
+    **Antes de tocar nada: preguntarle a Miguel qué le molesta de ese tramo, y
+    comprobar si cada pieza se mueve.** Lo que parece imagen en una hoja de contacto
+    puede ser un clip; `sincronizar` pega un solo cuadro, así que sirve sólo para
+    piezas fijas y se detiene si alguna se mueve. Lo que se rechazó y por qué:
+    `proyectos/14-caliz-rafaga/FICHA.md`.
+14. **Entrega:** `ensamblar` (cortinas) y `paquete` (por red, masterizado a
     −14 LUFS y pico real −1 dBTP).
 
 Miguel mira y ajusta en **el panel**: `python montaje.py panel <p>` (Next, puerto
@@ -197,6 +212,9 @@ lo hecho a mano se pierde.
 ## Reglas
 
 - **Lo original no se toca.** Todo lo que sale va a `render/`, `hojas/`, `analisis/`.
+- **Las salidas no duran.** Miguel borra lo de `~/Videos/montaje` después de publicar
+  para no acumular: no dar por hecho que un render o una biblioteca vieja sigue ahí
+  (ni buscarlos); el registro que queda es la FICHA.
 - **Los rellenos no son las imágenes.** Son más claros y planos que las reales:
   no se ajustan opacidad, mezcla ni exposición mirando rellenos.
 - **En `screen`, lo blanco quema.** Las imágenes de fondo claro (pocas en la

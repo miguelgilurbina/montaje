@@ -84,3 +84,19 @@ archivo, qué comando correr) no van aquí.
   siguen un patrón, y más bien, podríamos intercalar la "original" de vez en
   cuando.» «todas estas imágenes deben ir una encima de la otra, ocupando 100% del
   viewport 1:1».
+
+## 2026-11-03 · Caliz: un preeditado (14)
+
+- «es una video que ya está preeditado, pero que hay que mejorar». Es «una
+  colaboración con media que creamos nosotros con un estudio de edición y
+  creación de ia. Caliz Estudio».
+- «me gustaría sumarle a nuestro motor […] poder crear como sincronización de
+  video. Para poder generar modificación de video.»
+- El lugar: «una parte entre medio donde se ve que hay un reel rapido de imagenes
+  mientras un video corre». «Pensemos que esto es lo que tenemos, no quiero
+  pedirme más cosas a caliz».
+- Eligió **acelerando** para la ráfaga: un retrato por golpe mientras la canción
+  corta el bajo, tresillo con el tambor cuando vuelve.
+- Sobre el resultado: «tomaste un reel que se ataba a movimiento, donde en el
+  mismo formato habían videos con estos personajes moviendose. Que le brindó una
+  capa extra de movimiento, no siento que sea mejor a lo que ya estaba.»

@@ -143,6 +143,8 @@ def main() -> None:
 
     nuevo("sonorizar", "suma la capa de efectos (sintetizados, al pulso de los momentos) a un render ya hecho → medios/<p>/render")
 
+    nuevo("sincronizar", "vuelve a poner al pulso una ráfaga dentro de un video que ya existe (sin tocar el audio) → medios/<p>/render")
+
     s = nuevo("paquete", "prepara video, portada y texto para cada red (no publica nada)")
     s.add_argument("--red", nargs="+", required=True, help="instagram-reel, instagram-feed, youtube-short, youtube")
 
@@ -207,6 +209,10 @@ def main() -> None:
         from . import sonido
 
         sonido.sonorizar(p)
+    elif a.comando == "sincronizar":
+        from . import sincronizar
+
+        sincronizar.sincronizar(p)
     elif a.comando == "paquete":
         from . import publicar
 
