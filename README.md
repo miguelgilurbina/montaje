@@ -105,7 +105,8 @@ sonido, la señal y el panel corren en local y leen y escriben archivos locales.
 Las imágenes, el audio y los renders viven fuera del repo y nunca se suben (git
 ignora todos los formatos de medios). El repo en GitHub guarda sólo el código y
 las decisiones (`proyecto.json`, timelines, fichas). El panel no carga nada de
-internet y la telemetría de Next va apagada. Lo único que sale a la red es lo
+internet, escucha sólo en tu computador (127.0.0.1, no en la red de la casa) y
+la telemetría de Next va apagada. Lo único que sale a la red es lo
 que tú pides: bajar imágenes de una fuente remota o instalar dependencias.
 
 ## Dónde vive cada cosa

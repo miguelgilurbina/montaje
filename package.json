@@ -10,17 +10,17 @@
   },
   "scripts": {
     "tipos": "tsc --noEmit",
-    "panel": "next dev -p 3310",
+    "panel": "next dev -H 127.0.0.1 -p 3310",
     "panel:build": "next build",
-    "panel:start": "next start -p 3310"
+    "panel:start": "next start -H 127.0.0.1 -p 3310"
   },
   "dependencies": {
-    "@remotion/cli": "4.0.532",
-    "@remotion/player": "^4.0.532",
+    "@remotion/cli": "4.0.541",
+    "@remotion/player": "^4.0.541",
     "next": "^16.4.5",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "remotion": "4.0.532"
+    "remotion": "4.0.541"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",

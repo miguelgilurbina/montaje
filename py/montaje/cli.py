@@ -59,9 +59,10 @@ def cmd_panel(p: Proyecto, a) -> None:
     if not exe.exists():
         salir("falta Next; corre `npm install` en la raíz del repo")
     print(f"panel: http://localhost:{a.puerto}/p/{p.nombre}")
-    # Todo trabaja en local: Next no manda su telemetría anónima a Vercel.
+    # Todo trabaja en local: Next no manda su telemetría anónima a Vercel, y el
+    # panel escucha sólo en este computador (no en la red de la casa).
     entorno = {**os.environ, "NEXT_TELEMETRY_DISABLED": "1"}
-    subprocess.run([str(exe), "dev", "-p", str(a.puerto)], cwd=RAIZ, check=True, env=entorno)
+    subprocess.run([str(exe), "dev", "-H", "127.0.0.1", "-p", str(a.puerto)], cwd=RAIZ, check=True, env=entorno)
 
 
 def cmd_hoja(p: Proyecto, a) -> None:
