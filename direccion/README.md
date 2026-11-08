@@ -19,6 +19,9 @@ decisión de estilo; Miguel la corrige cuando algo no es así.
 - **«Miguel:»** o una cita entre comillas latinas es una decisión suya: manda.
 - **«Propuesta:»** es de Claude y espera su visto bueno. Cuando Miguel la
   aprueba (o la cambia), se reescribe como decisión y se anota en REGISTRO.md.
+- Una edición con veredicto de Miguel (aprobada o rechazada) se guarda como
+  estilo en [`estilos/`](../estilos/README.md): su receta, para qué sirve y sus
+  palabras, con una muestra. Lo que cambia una regla general sube además aquí.
 - Lo que una ficha de experimento descubre y Miguel aprueba sube aquí; la ficha
   queda como historia, la biblia como regla.
 

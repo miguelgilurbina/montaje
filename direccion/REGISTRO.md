@@ -100,3 +100,15 @@ archivo, qué comando correr) no van aquí.
 - Sobre el resultado: «tomaste un reel que se ataba a movimiento, donde en el
   mismo formato habían videos con estos personajes moviendose. Que le brindó una
   capa extra de movimiento, no siento que sea mejor a lo que ya estaba.»
+
+## 2026-11-07 · Práctica, estilos y guion
+
+- «armo un paquete de imagenes y videos, para ir practicando formas de edición.
+  Y vamos entrenando»
+- «la idea es poder parametrizar estilos para luego poder elegir distintos tipos
+  de edición para videos específicos segun guión»
+- Eligió escribir el guion **en palabras** (Claude lo parte en tramos y propone
+  un estilo por tramo) y empezar el catálogo **con lo que ya hay**.
+- «no tenemos tanto espacio en el disco para mantener todos los ejercicios, pero
+  por eso pensaba que podríamos ir armando una galería dentro del mismo
+  producto» → `estilos/` + muestras livianas + la galería `/estilos` del panel.

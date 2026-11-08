@@ -1,0 +1,29 @@
+{
+ "nombre": "Collage de variaciones",
+ "frase": "El collage infinito, en cuadrado, con una serie de variaciones de una misma imagen.",
+ "para": [
+  "mostrar el archivo"
+ ],
+ "material": "serie",
+ "energia": "sube",
+ "dura": "un tramo de la canción",
+ "tecnica": {
+  "modo": "collage",
+  "silencio": 0.5
+ },
+ "estado": "rechazado",
+ "miguel": [
+  "no me gusta que usemos collage, la idea es que usemos todas en seguidillas"
+ ],
+ "visto_en": [
+  "12-abstract"
+ ],
+ "evitar": [
+  "series de variaciones: para eso, secuencia-de-variaciones"
+ ],
+ "muestra": {
+  "de": "12-abstract/render/preview.mp4",
+  "desde": 36.0,
+  "hasta": 44.0
+ }
+}

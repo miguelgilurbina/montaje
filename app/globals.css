@@ -621,3 +621,218 @@ button:disabled {
   border-color: var(--rojo);
   color: #e2a158;
 }
+
+/* ── La galería de estilos ── */
+
+.galeria {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+
+.galeria .migas {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--dato);
+}
+
+.galeria .migas a:hover {
+  color: var(--acento);
+}
+
+.galeria h1 {
+  color: var(--acento);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 16px;
+  margin: 10px 0 6px;
+}
+
+.galeria > p.dato {
+  max-width: 72ch;
+  margin: 0 0 18px;
+}
+
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 6px 0;
+}
+
+.filtros > .dato {
+  width: 64px;
+}
+
+.filtros a {
+  padding: 3px 9px;
+  border: 1px solid var(--filete);
+  border-radius: 999px;
+  font-size: 12.5px;
+  color: var(--hueso-2);
+}
+
+.filtros a:hover {
+  border-color: var(--filete-fuerte);
+  color: var(--hueso);
+}
+
+.filtros a.activo {
+  border-color: var(--acento);
+  color: var(--acento);
+}
+
+.estilos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.estilo {
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  border: 1px solid var(--filete);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* La caja de la muestra tiene alto fijo: el video se ajusta adentro, sin
+   empujar la tarjeta con su tamaño propio (540 o 720 px). */
+.estilo .muestra {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 260px;
+  overflow: hidden;
+  background: var(--hondo);
+  border-bottom: 1px solid var(--filete);
+}
+
+.estilo .muestra video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.estilo .muestra p {
+  padding: 0 24px;
+  text-align: center;
+}
+
+.estilo .cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px 14px;
+  flex: 1;
+}
+
+.estilo .cuerpo p {
+  margin: 0;
+}
+
+.estilo header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.estilo h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.estilo .sello {
+  flex: none;
+  padding: 1px 8px;
+  border: 1px solid var(--filete-fuerte);
+  border-radius: 3px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--hueso-2);
+}
+
+.estado-aprobado .sello {
+  border-color: var(--acento);
+  color: var(--acento);
+}
+
+.estado-rechazado .sello {
+  border-color: var(--rojo);
+  color: #e2a158;
+}
+
+.estado-rechazado .muestra video {
+  opacity: 0.85;
+}
+
+.estilo ul.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.estilo ul.chips li {
+  padding: 1px 8px;
+  background: var(--fondo);
+  border: 1px solid var(--filete);
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--hueso-2);
+}
+
+.estilo .miguel blockquote {
+  margin: 0 0 4px;
+  padding-left: 10px;
+  border-left: 2px solid var(--acento);
+  color: var(--hueso);
+  font-style: italic;
+}
+
+.estado-rechazado .miguel blockquote {
+  border-left-color: var(--rojo);
+}
+
+.estilo ul.evitar {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--hueso-2);
+  font-size: 13px;
+}
+
+.estilo ul.evitar li::marker {
+  content: '✕  ';
+  color: var(--rojo);
+}
+
+.estilo footer {
+  margin-top: auto;
+  padding-top: 6px;
+  border-top: 1px solid var(--filete);
+  overflow-wrap: anywhere;
+}
+
+.estilo footer a {
+  color: var(--hueso-2);
+  text-decoration: underline;
+  text-decoration-color: var(--filete-fuerte);
+}
+
+.estilo .tecnica {
+  color: var(--hueso-2);
+}
+
+.portada a.tarjeta.estilos-entrada {
+  border-color: var(--filete-fuerte);
+  margin-bottom: 20px;
+}

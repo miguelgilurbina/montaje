@@ -1,6 +1,6 @@
 ---
 name: montaje
-description: Editar video junto a Miguel con el repo `montaje` (Remotion + Python + ffmpeg) — montajes de imágenes al ritmo de una canción, superposiciones, y más adelante voz en off, subtítulos y sonidos. Usar cuando se pida editar o montar un video, armar un video con imágenes (por ejemplo las de la galería de Curiana), analizar una canción para cortar al pulso, planificar o ajustar un timeline, renderizar un preview o el final, mirar un render en hojas de contacto, abrir el Studio, o empezar un proyecto de video nuevo.
+description: Editar video junto a Miguel con el repo `montaje` (Remotion + Python + ffmpeg) — montajes de imágenes al ritmo de una canción, superposiciones, y más adelante voz en off, subtítulos y sonidos. Usar cuando se pida editar o montar un video, armar un video con imágenes (por ejemplo las de la galería de Curiana), analizar una canción para cortar al pulso, planificar o ajustar un timeline, renderizar un preview o el final, mirar un render en hojas de contacto, abrir el Studio, empezar un proyecto de video nuevo, escribir o traducir el guion de un video, elegir un estilo, o sumar uno al catálogo de estilos (la galería del panel).
 ---
 
 # Montaje
@@ -20,6 +20,8 @@ archivo (o lo pide en el chat) y lo ve en el Studio.
 | Bitácora | `montaje/EXPERIMENTOS.md` | índice de experimentos con el veredicto de Miguel |
 | Biblioteca | `~/Videos/montaje/<biblioteca>/` (`imagenes/ miniaturas/ audio/ analisis/catalogo.json`) | compartida por los experimentos que la nombran en `biblioteca`; **fuera de OneDrive** |
 | Salidas | `~/Videos/montaje/NN-nombre/` (`analisis/musica.json render/ hojas/`) | propias de cada experimento: ninguno pisa a otro |
+| Estilos | `montaje/estilos/<id>.json` (receta, uso, veredicto) | el catálogo para elegir según el guion: va a git |
+| Muestras de estilos | `~/Videos/montaje/estilos/<id>.mp4` (segundos livianos) | lo que queda de un ejercicio cuando se borran sus salidas; **no van al repo** (es público) |
 | Esta skill | `~/.claude/skills/montaje/` | disponible desde cualquier proyecto |
 
 ## Dirección: leerla antes de empezar
@@ -48,6 +50,26 @@ Miguel quiere un registro de cada experimento. Por eso:
 
 Todo comando se corre desde la raíz del repo: `python montaje.py <comando> <proyecto>`.
 `python montaje.py --help` lista los comandos; cada uno dice dónde dejó lo que hizo.
+
+## Estilos y guion
+
+`estilos/README.md` explica el catálogo entero; lo esencial:
+
+- **Técnica** (código) → **estilo** (`estilos/<id>.json`: la técnica con sus
+  valores, `para`, `material`, `energia`, `estado`, las palabras de Miguel y
+  `evitar`) → **guion** (`proyectos/<p>/GUION.md`).
+- **El guion lo escribe Miguel en palabras.** Claude lo parte en tramos y, debajo,
+  propone un estilo por tramo en una tabla (lo que tiene que pasar, material,
+  estilo, por qué): primero los aprobados con ese `para` y ese `material`, nunca
+  uno cuyo `evitar` describa el tramo. Sin estilo que sirva, el tramo es un
+  ejercicio. Miguel corrige la tabla antes de armar el `proyecto.json`.
+- **Cada ejercicio** prueba una técnica en dos o tres versiones cortas; antes se
+  pregunta qué se busca. Cada versión es un estilo con su muestra
+  (`muestra <id> --de <render> --desde --hasta`). La elegida queda `aprobado`; las
+  otras `rechazado` o `a medias`, con su porqué. Después del veredicto, los
+  renders del ejercicio se pueden borrar: la receta y la muestra quedan.
+- `python montaje.py estilos` valida el catálogo (vocabulario cerrado, experimentos
+  que existen, veredictos con cita) y lo lista; la galería está en `/estilos` del panel.
 
 ## El flujo
 
@@ -127,7 +149,8 @@ deshacer. Botones para música, render, sonorizar y señal mostrando su salida. 
 También está Remotion Studio: `python montaje.py studio <p>` (puerto 3300).
 Lanzar cualquiera con `run_in_terminal` (pestaña del panel Terminal de Miguel),
 no como proceso de fondo: esos mueren a las 2 horas. `preview_start` no sirve
-aquí: lee el launch.json de Curiana. Ambos recargan solos al cambiar el timeline.
+aquí (lee el launch.json de Curiana); para mirarlo, `navigate` del navegador
+integrado a `http://localhost:3310` con el panel ya corriendo. Ambos recargan solos al cambiar el timeline.
 
 ## Modos de montaje (`montaje.modo` en proyecto.json)
 

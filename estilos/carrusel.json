@@ -1,0 +1,25 @@
+{
+ "nombre": "Carrusel",
+ "frase": "Imágenes cuadradas de marca a pantalla completa, una tras otra por semicorchea, en cortes secos.",
+ "para": [
+  "presentar la marca",
+  "subir la energía"
+ ],
+ "material": "fotos",
+ "energia": "alta",
+ "dura": "un compás",
+ "tecnica": {
+  "momento": "rafaga",
+  "de": "marca",
+  "por_compas": 16
+ },
+ "estado": "aprobado",
+ "miguel": [
+  "me gustó mucho como usaste esa edición como de carrusel que ocupa toda la pantalla una tras otra, donde usaste fotos cuadradas de curiana radio, me gustó muchísimo"
+ ],
+ "visto_en": [
+  "05-collage-curiana",
+  "07-curiana-intro"
+ ],
+ "evitar": []
+}

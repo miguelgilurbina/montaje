@@ -1,0 +1,28 @@
+{
+ "nombre": "Doble exposición",
+ "frase": "Las imágenes entran al pulso, enteras y con los bordes difuminados, y se suman en luz; la cantidad de capas sigue a la energía de la canción.",
+ "para": [
+  "mostrar el archivo"
+ ],
+ "material": "fotos",
+ "energia": "sigue",
+ "dura": "un tramo de la canción",
+ "tecnica": {
+  "modo": "superposicion",
+  "capas_max": 4,
+  "mezcla": "screen",
+  "orden": "luz-y-tono"
+ },
+ "estado": "a medias",
+ "miguel": [
+  "hasta ahora me gusta la prueba que hiciste",
+  "encontré monótona la edición, es igual en todos lados"
+ ],
+ "visto_en": [
+  "01-superposicion"
+ ],
+ "evitar": [
+  "un video entero sólo con esto: se siente parejo",
+  "imágenes protagonistas: la mezcla las ensucia (direccion/TONO.md, regla 1)"
+ ]
+}

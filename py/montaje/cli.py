@@ -170,7 +170,28 @@ def main() -> None:
     s.add_argument("--columnas", type=int, default=5)
     s.add_argument("--filas", type=int, default=6)
 
+    # El catálogo de estilos no es de un proyecto: no lleva <proyecto>.
+    s = sub.add_parser("estilos", help="valida y lista el catálogo de estilos (estilos/*.json)", description="valida y lista el catálogo de estilos (estilos/*.json)")
+    s.add_argument("--para", help="sólo los que sirven para esto (abrir, cerrar, subir la energía…)")
+    s.add_argument("--material", help="fotos, clips, mixto o serie")
+    s.add_argument("--estado", help="aprobado, a medias, pedido, propuesta o rechazado")
+
+    s = sub.add_parser("muestra", help="corta unos segundos livianos de un render como muestra de un estilo → medios/estilos/<id>.mp4", description="corta unos segundos livianos de un render como muestra de un estilo → medios/estilos/<id>.mp4")
+    s.add_argument("estilo", help="id del estilo (nombre del archivo en estilos/, sin .json)")
+    s.add_argument("--de", required=True, help="el render, relativo a los medios (p. ej. 13-variaciones/render/final.mp4)")
+    s.add_argument("--desde", type=float, required=True)
+    s.add_argument("--hasta", type=float, required=True)
+    s.add_argument("--alto", type=int, default=540, help="alto en píxeles (no agranda)")
+
     a = ap.parse_args()
+    if a.comando in ("estilos", "muestra"):
+        from . import estilos
+
+        if a.comando == "estilos":
+            estilos.listar(a.para, a.material, a.estado)
+        else:
+            estilos.muestra(a.estilo, a.de, a.desde, a.hasta, a.alto)
+        return
     p = Proyecto(a.proyecto)
     if a.comando == "catalogo":
         catalogo.construir(p)

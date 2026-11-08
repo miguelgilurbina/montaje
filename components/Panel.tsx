@@ -245,6 +245,7 @@ export default function Panel({proyectos, inicial}: {proyectos: Resumen[]; inici
           montaje
         </Link>
         <nav>
+          <Link href="/estilos">estilos →</Link>
           {proyectos.map((x) => (
             <Link key={x.nombre} href={`/p/${x.nombre}`} className={x.nombre === nombre ? 'activo' : ''} title={x.titulo}>
               {x.nombre}

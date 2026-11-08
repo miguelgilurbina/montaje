@@ -1,0 +1,30 @@
+{
+ "nombre": "Secuencia de variaciones",
+ "frase": "Una imagen tras otra a pantalla completa, ordenadas por parecido, para que una serie de variaciones se lea como una sola imagen que se transforma; la original vuelve en el «uno» de cada frase y cierra.",
+ "para": [
+  "mostrar el archivo"
+ ],
+ "material": "serie",
+ "energia": "sigue",
+ "dura": "un tramo de la canción",
+ "tecnica": {
+  "modo": "secuencia",
+  "original_golpes": 1,
+  "cierre_golpes": 4
+ },
+ "estado": "aprobado",
+ "miguel": [
+  "la idea es que usemos todas en seguidillas",
+  "podríamos intercalar la \"original\" de vez en cuando",
+  "Me parece que está bien"
+ ],
+ "visto_en": [
+  "13-variaciones"
+ ],
+ "evitar": [],
+ "muestra": {
+  "de": "13-variaciones/render/variaciones-1080.mp4",
+  "desde": 24.6,
+  "hasta": 32.6
+ }
+}

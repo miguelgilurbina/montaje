@@ -72,6 +72,9 @@ controla. Si dices la palabra, ya sé qué perilla mover.
 | **Subida, clímax, respiro** | build-up, drop/climax, breakdown | Las partes de una canción electrónica que el montaje puede seguir. | las secciones de `musica.png` |
 | **Cortina** o **interludio** | ident, bumper, interstitial | Pieza corta de identidad del canal que corta el programa con su propio sonido. Lo que Miguel llama «interludios estilo Locomotion». | `ensamblar` + `ensamblaje` |
 | **Coda** | outro, coda | El cierre después del clímax. | `coda` |
+| **Guion** | script, edit plan | El video en palabras, partido en tramos, cada uno con lo que tiene que pasar. Aquí lo escribe Miguel y Claude le pone un estilo a cada tramo. | `proyectos/<p>/GUION.md` |
+| **Estilo** | look, treatment, preset | Una técnica con sus valores, un nombre y para qué sirve: lo que se elige para un tramo del guion. | `estilos/<id>.json`, galería en `/estilos` |
+| **Técnica** | technique | Lo que el motor sabe hacer (un modo, un momento, un comando). De una técnica salen muchos estilos. | `py/montaje/` |
 
 ## El sonido
 

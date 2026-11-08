@@ -1,0 +1,48 @@
+{
+ "nombre": "Acelerando",
+ "frase": "Una ráfaga de retratos dentro de un video ya editado, vuelta a pegar al tresillo de la canción: uno por golpe en el corte del bajo y uno por tresillo cuando vuelve; cada pieza, un cuadro fijo.",
+ "para": [
+  "subir la energía"
+ ],
+ "material": "fotos",
+ "energia": "sube",
+ "dura": "dos compases",
+ "tecnica": {
+  "comando": "sincronizar",
+  "subdivision": 3,
+  "reloj": [
+   [
+    1,
+    2
+   ],
+   [
+    4,
+    3
+   ],
+   [
+    9,
+    1
+   ],
+   [
+    1,
+    0
+   ]
+  ]
+ },
+ "estado": "rechazado",
+ "miguel": [
+  "no me gustó la modificación, porque no sé si te diste cuenta, pero tomaste un reel que se ataba a movimiento, donde en el mismo formato habían videos con estos personajes moviendose. Que le brindó una capa extra de movimiento, no siento que sea mejor a lo que ya estaba."
+ ],
+ "visto_en": [
+  "14-caliz-rafaga"
+ ],
+ "evitar": [
+  "clips que se mueven: los congela en un cuadro (sincronizar ahora se detiene)",
+  "un video ya editado sin preguntar antes qué molesta del tramo"
+ ],
+ "muestra": {
+  "de": "14-caliz-rafaga/render/caliz-rafaga-acelerando-comparar-1.mp4",
+  "desde": 0.0,
+  "hasta": 9.6
+ }
+}

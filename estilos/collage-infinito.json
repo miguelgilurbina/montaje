@@ -1,0 +1,28 @@
+{
+ "nombre": "Collage infinito",
+ "frase": "Papeles nítidos al 100 % de su detalle que caen al pulso y se quedan; el cuadro se llena mientras la cámara se aleja, y el ritmo de entradas sube con la canción: compás, golpe, corchea, semicorchea.",
+ "para": [
+  "mostrar el archivo"
+ ],
+ "material": "fotos",
+ "energia": "sube",
+ "dura": "un tramo de la canción",
+ "tecnica": {
+  "modo": "collage"
+ },
+ "estado": "aprobado",
+ "miguel": [
+  "Excelente.",
+  "Siento que tienen que haber momentos donde cambiamos el tempo o el estilo de mostrar imágenes"
+ ],
+ "visto_en": [
+  "03-collage",
+  "04-collage-momentos",
+  "05-collage-curiana",
+  "07-curiana-intro"
+ ],
+ "evitar": [
+  "solo, sin momentos que lo corten (carrusel, destacado, barrido)",
+  "series de variaciones de una misma imagen: ver collage-de-variaciones"
+ ]
+}

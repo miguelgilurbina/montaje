@@ -1,0 +1,27 @@
+{
+ "nombre": "Actos: de una a la pared",
+ "frase": "Las panorámicas entran una a una y vuelan a una pared-mosaico que crece; el caos sube con la canción, con ecos de la pared, respiros y una coda que muestra el archivo entero.",
+ "para": [
+  "abrir",
+  "transición",
+  "presentar la marca"
+ ],
+ "material": "fotos",
+ "energia": "sube",
+ "dura": "de una intro a la canción entera",
+ "tecnica": {
+  "modo": "actos"
+ },
+ "estado": "aprobado",
+ "miguel": [
+  "creo que cumple con el brief pero siento que no fue como me lo imaginé",
+  "me parece que está muy buena como transición",
+  "podemos usarlo por ejemplo para hacer aparecer el logo de curiana radio, es decir está buenísimo como un intro"
+ ],
+ "visto_en": [
+  "02-actos"
+ ],
+ "evitar": [
+  "como pieza principal de un video: «no fue como me lo imaginé»"
+ ]
+}

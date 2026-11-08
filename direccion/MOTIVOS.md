@@ -4,6 +4,10 @@ Los recursos que vuelven de un video a otro y hacen que se reconozcan como de
 Curiana Radio. **Estado:** *aprobado* (Miguel lo dijo), *pedido* (Miguel lo pidió
 y está hecho, falta su veredicto), *propuesta* (de Claude).
 
+Aquí está la identidad. La receta de cada edición, para qué sirve, su muestra y
+el veredicto completo (también lo rechazado) están en el catálogo de
+[estilos](../estilos/README.md).
+
 | Motivo | Qué es | Estado | Dónde vive |
 |---|---|---|---|
 | **Collage infinito** | papeles nítidos al 100 % que caen al pulso y se quedan; la cámara se aleja | aprobado: «Excelente» (03) | `modo: collage` |
