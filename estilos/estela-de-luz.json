@@ -1,0 +1,30 @@
+{
+ "nombre": "Estela de luz",
+ "frase": "Lo claro deja rastro y se apaga despacio, como una foto de exposición larga que se mueve: los flamencos arrastran su rosa.",
+ "para": [
+  "respirar",
+  "transición"
+ ],
+ "material": "clips",
+ "energia": "calma",
+ "dura": "un clip",
+ "tecnica": {
+  "comando": "transformar",
+  "efecto": "estela",
+  "fuerza": 0.8
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "15-anoranza-de-natalia"
+ ],
+ "evitar": [
+  "clips quietos: sin movimiento no hay rastro",
+  "fondos muy claros: el rastro se pierde"
+ ],
+ "muestra": {
+  "de": "15-anoranza-de-natalia/render/comparar-estela.mp4",
+  "desde": 0.0,
+  "hasta": 5.0
+ }
+}

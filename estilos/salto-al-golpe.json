@@ -1,0 +1,33 @@
+{
+ "nombre": "Salto al golpe",
+ "frase": "Dentro de cada clip, un salto a otro momento en cada golpe de la canción: el pulso se ve en la imagen sin cambiar de clip.",
+ "para": [
+  "subir la energía"
+ ],
+ "material": "clips",
+ "energia": "alta",
+ "dura": "dos compases por clip",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "golpe",
+  "frase_compases": 2,
+  "reparto": "ronda",
+  "velocidad": [
+   0.8,
+   1.0
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "16-laboratorio-de-la-noche"
+ ],
+ "evitar": [
+  "clips muy cortos (5 s): los saltos repiten momentos"
+ ],
+ "muestra": {
+  "de": "16-laboratorio-de-la-noche/render/salto-al-golpe-final-58-70.mp4",
+  "desde": 1.0,
+  "hasta": 11.0
+ }
+}

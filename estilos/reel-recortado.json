@@ -1,0 +1,34 @@
+{
+ "nombre": "Reel recortado que sigue al sujeto",
+ "frase": "El 3:2 recortado a 9:16, corrido hacia donde está lo que se mueve o tiene detalle, y deslizándose si el sujeto se mueve.",
+ "para": [
+  "mostrar el archivo",
+  "subir la energía"
+ ],
+ "material": "clips",
+ "energia": "media",
+ "dura": "un reel",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "frase",
+  "frase_compases": 4,
+  "salida": "1080x1920",
+  "encuadre": "cubrir",
+  "seguir": true
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "16-laboratorio-de-la-noche",
+  "20-anoranza-para-redes"
+ ],
+ "evitar": [
+  "dos sujetos separados (la pareja a caballo y la casa): el recorte deja uno afuera",
+  "sujetos anchos o de perfil (un barco, un perro de lado): aun siguiéndolos, el 9:16 los corta"
+ ],
+ "muestra": {
+  "de": "16-laboratorio-de-la-noche/render/reel-recorte-final-84-98.mp4",
+  "desde": 1.0,
+  "hasta": 11.0
+ }
+}

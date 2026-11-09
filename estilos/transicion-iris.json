@@ -1,0 +1,31 @@
+{
+ "nombre": "Iris desde el sujeto",
+ "frase": "Un círculo se abre desde lo que importa del clip que llega (su centro de interés, no el centro del cuadro) hasta llenar todo.",
+ "para": [
+  "transición",
+  "destacar"
+ ],
+ "material": "clips",
+ "energia": "media",
+ "dura": "lo que dura el fundido entre clips (uno o dos golpes)",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "frase",
+  "frase_compases": 2,
+  "transicion": "iris",
+  "fundido_golpes": 2
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "21-laboratorio-de-la-manana"
+ ],
+ "evitar": [
+  "clips sin un sujeto claro: el círculo se abre desde cualquier parte"
+ ],
+ "muestra": {
+  "de": "21-laboratorio-de-la-manana/render/iris-final-30-47.mp4",
+  "desde": 0.5,
+  "hasta": 10.5
+ }
+}

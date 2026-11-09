@@ -1,0 +1,29 @@
+{
+ "nombre": "Televisor viejo",
+ "frase": "Líneas de barrido, el rojo y el azul corridos, una franja de luz que baja y la pantalla con las esquinas redondeadas.",
+ "para": [
+  "abrir",
+  "transición",
+  "mostrar el archivo"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un tramo",
+ "tecnica": {
+  "capa": "tv",
+  "lineas": 0.28,
+  "corrimiento": 3,
+  "curva": 0.06
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "15-anoranza-de-natalia"
+ ],
+ "evitar": [],
+ "muestra": {
+  "de": "15-anoranza-de-natalia/render/a-tv-final-92-104.mp4",
+  "desde": 1.0,
+  "hasta": 11.0
+ }
+}

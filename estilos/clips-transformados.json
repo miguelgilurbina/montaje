@@ -1,0 +1,28 @@
+{
+ "nombre": "Clips transformados en el montaje",
+ "frase": "Cada clip que tiene una variante transformada la usa en su frase: el pesquero en barrido temporal, las olas en reversa, los árboles de ida y vuelta, el ciclista con eco, los flamencos con estela.",
+ "para": [
+  "respirar",
+  "mostrar el archivo"
+ ],
+ "material": "clips",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "frase",
+  "frase_compases": 4,
+  "transformados": "todo"
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "16-laboratorio-de-la-noche"
+ ],
+ "evitar": [],
+ "muestra": {
+  "de": "16-laboratorio-de-la-noche/render/transformados-final-36-60.mp4",
+  "desde": 2.0,
+  "hasta": 14.0
+ }
+}

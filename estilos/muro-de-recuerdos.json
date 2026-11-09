@@ -1,0 +1,34 @@
+{
+ "nombre": "Muro de recuerdos",
+ "frase": "Una cuadrícula de 3×3 con nueve clips distintos corriendo a la vez; cada celda cambia de clip cada cuatro golpes, una un golpe después de la otra, así los cambios recorren el muro como una ola. Nunca se repite un clip a la vez.",
+ "para": [
+  "mostrar el archivo",
+  "abrir",
+  "cerrar"
+ ],
+ "material": "clips",
+ "energia": "media",
+ "dura": "un tramo",
+ "tecnica": {
+  "modo": "pulso",
+  "muro": [
+   3,
+   3
+  ],
+  "muro_golpes": 4
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "16-laboratorio-de-la-noche"
+ ],
+ "evitar": [
+  "pocos clips (menos que celdas): tendría que repetir",
+  "formatos verticales: las celdas quedan angostas"
+ ],
+ "muestra": {
+  "de": "16-laboratorio-de-la-noche/render/muro-final-30-42.mp4",
+  "desde": 1.0,
+  "hasta": 11.0
+ }
+}

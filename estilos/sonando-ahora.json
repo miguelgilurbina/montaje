@@ -1,0 +1,27 @@
+{
+ "nombre": "Sonando ahora",
+ "frase": "El crédito de la canción como lo pondría una emisora: una raya de oro que crece y, a su lado, «sonando ahora» en mono y el nombre en cartel, abajo a la izquierda.",
+ "para": [
+  "presentar la marca",
+  "abrir"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "unos 7 s",
+ "tecnica": {
+  "capa": "credito"
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "16-laboratorio-de-la-noche"
+ ],
+ "evitar": [
+  "las letras de la marca (Archivo Black, Lora) no están instaladas: se ve con Bahnschrift condensada y Georgia itálica hasta que estén"
+ ],
+ "muestra": {
+  "de": "16-laboratorio-de-la-noche/render/titulos-final-0-20.mp4",
+  "desde": 11.5,
+  "hasta": 19.5
+ }
+}

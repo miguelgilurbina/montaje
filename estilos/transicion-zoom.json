@@ -1,0 +1,28 @@
+{
+ "nombre": "Llegar desde cerca",
+ "frase": "El clip nuevo aparece agrandado y desenfocado y se asienta en su lugar mientras toma foco.",
+ "para": [
+  "transición"
+ ],
+ "material": "clips",
+ "energia": "media",
+ "dura": "un golpe",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "frase",
+  "frase_compases": 2,
+  "transicion": "zoom",
+  "fundido_golpes": 1
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "21-laboratorio-de-la-manana"
+ ],
+ "evitar": [],
+ "muestra": {
+  "de": "21-laboratorio-de-la-manana/render/zoom-final-30-47.mp4",
+  "desde": 0.5,
+  "hasta": 10.5
+ }
+}

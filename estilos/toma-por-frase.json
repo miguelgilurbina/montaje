@@ -1,0 +1,38 @@
+{
+ "nombre": "Una toma por frase",
+ "frase": "Un clip por frase de la canción (cuatro compases), de corrido y en cámara lenta, con fundidos largos en el «uno» de cada frase.",
+ "para": [
+  "respirar",
+  "mostrar el archivo"
+ ],
+ "material": "clips",
+ "energia": "calma",
+ "dura": "una frase por clip (unos 10 s)",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "frase",
+  "frase_compases": 4,
+  "reparto": "seguido",
+  "fundido_golpes": 2,
+  "fundido_calma_golpes": 4,
+  "velocidad": [
+   0.45,
+   0.6
+  ]
+ },
+ "estado": "aprobado",
+ "miguel": [
+  "Esta buenísimo. Me gustó"
+ ],
+ "visto_en": [
+  "15-anoranza-de-natalia"
+ ],
+ "evitar": [
+  "clips cortos para una canción larga: la cámara lenta pasa de la mitad y, sin cuadros interpolados (`clips_interpolar`), traba"
+ ],
+ "muestra": {
+  "de": "15-anoranza-de-natalia/render/a-final.mp4",
+  "desde": 44.0,
+  "hasta": 56.0
+ }
+}

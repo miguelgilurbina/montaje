@@ -1,0 +1,30 @@
+{
+ "nombre": "Onda",
+ "frase": "Una piedra en el agua: cada dos compases, en el «uno», un anillo de distorsión se abre desde el centro del cuadro y se apaga al salir.",
+ "para": [
+  "transición",
+  "destacar"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "tres golpes por onda",
+ "tecnica": {
+  "capa": "onda",
+  "fuerza": 60,
+  "cada_compases": 2,
+  "golpes_dura": 3
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "16-laboratorio-de-la-noche"
+ ],
+ "evitar": [
+  "con escalones duros en el mapa el anillo se veía como un serrucho en las líneas rectas: ahora es una ola senoidal desenfocada, suave y sutil; más fuerza si se quiere notar"
+ ],
+ "muestra": {
+  "de": "16-laboratorio-de-la-noche/render/onda-final-30-42.mp4",
+  "desde": 1.0,
+  "hasta": 11.0
+ }
+}

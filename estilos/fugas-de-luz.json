@@ -1,0 +1,28 @@
+{
+ "nombre": "Fugas de luz",
+ "frase": "Manchas de luz cálida (oro, ocre, hueso) que entran por un borde en el «uno» de cada ocho compases y se apagan despacio.",
+ "para": [
+  "transición",
+  "abrir"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "unos golpes por fuga",
+ "tecnica": {
+  "capa": "fugas",
+  "cada_compases": 8,
+  "golpes": 6,
+  "fuerza": 0.32
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "15-anoranza-de-natalia"
+ ],
+ "evitar": [],
+ "muestra": {
+  "de": "15-anoranza-de-natalia/render/c-recuerdo-final.mp4",
+  "desde": 62.0,
+  "hasta": 70.0
+ }
+}

@@ -1,0 +1,31 @@
+{
+ "nombre": "Reel con relleno",
+ "frase": "El 3:2 entero en un 9:16, con el mismo clip agrandado, desenfocado y oscuro arriba y abajo.",
+ "para": [
+  "mostrar el archivo",
+  "respirar"
+ ],
+ "material": "clips",
+ "energia": "calma",
+ "dura": "un reel",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "frase",
+  "frase_compases": 4,
+  "salida": "1080x1920",
+  "encuadre": "relleno"
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "16-laboratorio-de-la-noche"
+ ],
+ "evitar": [
+  "en el teléfono el clip queda en una franja de un tercio del alto: chico; para reels, mejor recortar o 4:5"
+ ],
+ "muestra": {
+  "de": "16-laboratorio-de-la-noche/render/reel-relleno-final-84-98.mp4",
+  "desde": 1.0,
+  "hasta": 11.0
+ }
+}

@@ -1,0 +1,31 @@
+{
+ "nombre": "Barras de cine",
+ "frase": "Dos franjas negras se cierran desde arriba y desde abajo en cuatro golpes y dejan el cuadro en cinemascope; al final se abren.",
+ "para": [
+  "abrir",
+  "cerrar",
+  "destacar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo, o el video entero",
+ "tecnica": {
+  "capa": "barras",
+  "formato": 2.39,
+  "abre_golpes": 4
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "21-laboratorio-de-la-manana"
+ ],
+ "evitar": [
+  "un cuadro vertical: las franjas se comen dos tercios de la imagen",
+  "sujetos pegados al borde de arriba o de abajo"
+ ],
+ "muestra": {
+  "de": "21-laboratorio-de-la-manana/render/barras-final-0-14.mp4",
+  "desde": 1.0,
+  "hasta": 12.0
+ }
+}

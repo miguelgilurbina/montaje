@@ -1,0 +1,29 @@
+{
+ "nombre": "Calima",
+ "frase": "El aire caliente sobre los médanos: la imagen ondula hacia arriba, despacio, y se agita un instante en cada golpe.",
+ "para": [
+  "respirar",
+  "transición"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "capa": "calima",
+  "fuerza": 10,
+  "golpe": 14
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "15-anoranza-de-natalia"
+ ],
+ "evitar": [
+  "textos o logos: se deforman"
+ ],
+ "muestra": {
+  "de": "15-anoranza-de-natalia/render/a-calima-final-104-116.mp4",
+  "desde": 1.0,
+  "hasta": 11.0
+ }
+}

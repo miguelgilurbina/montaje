@@ -1,0 +1,29 @@
+{
+ "nombre": "Cuadrado",
+ "frase": "1:1 recortado al centro de interés: el formato del feed. A estos clips 3:2 les queda bien, pierden poco.",
+ "para": [
+  "mostrar el archivo"
+ ],
+ "material": "clips",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "frase",
+  "frase_compases": 4,
+  "salida": "1080x1080",
+  "encuadre": "cubrir",
+  "seguir": true
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "16-laboratorio-de-la-noche"
+ ],
+ "evitar": [],
+ "muestra": {
+  "de": "16-laboratorio-de-la-noche/render/cuadrado-final-84-98.mp4",
+  "desde": 1.0,
+  "hasta": 11.0
+ }
+}

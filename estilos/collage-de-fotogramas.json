@@ -1,0 +1,27 @@
+{
+ "nombre": "Collage de fotogramas",
+ "frase": "El cuadro más nítido de cada clip (dos por clip) como papeles del collage infinito.",
+ "para": [
+  "mostrar el archivo"
+ ],
+ "material": "serie",
+ "energia": "sube",
+ "dura": "un tramo",
+ "tecnica": {
+  "modo": "collage",
+  "fuente": "fotogramas de los clips"
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "17-fotogramas"
+ ],
+ "evitar": [
+  "pocas imágenes para un tramo largo: con 40 fotogramas en 3 min el collage repite la misma una y otra vez (el burro, a mi juicio no funciona); necesita cientos"
+ ],
+ "muestra": {
+  "de": "17-fotogramas/render/collage-final-20-46.mp4",
+  "desde": 14.0,
+  "hasta": 24.0
+ }
+}

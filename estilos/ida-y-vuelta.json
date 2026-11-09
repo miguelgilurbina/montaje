@@ -1,0 +1,28 @@
+{
+ "nombre": "Ida y vuelta",
+ "frase": "Hacia adelante y de regreso, sin costura (boomerang): un clip de 5 s se vuelve uno de 10 que respira, como un vaivén.",
+ "para": [
+  "respirar",
+  "loop"
+ ],
+ "material": "clips",
+ "energia": "calma",
+ "dura": "el doble del clip",
+ "tecnica": {
+  "comando": "transformar",
+  "efecto": "ida-y-vuelta"
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "15-anoranza-de-natalia"
+ ],
+ "evitar": [
+  "movimientos con dirección clara (alguien que camina, un ciclista): el regreso se lee como error"
+ ],
+ "muestra": {
+  "de": "15-anoranza-de-natalia/render/comparar-ida-y-vuelta.mp4",
+  "desde": 0.0,
+  "hasta": 10.0
+ }
+}

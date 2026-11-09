@@ -1,0 +1,31 @@
+{
+ "nombre": "Empuje",
+ "frase": "El clip que entra corre al que se va, que sale por el otro lado: los dos se mueven juntos, como diapositivas.",
+ "para": [
+  "transición",
+  "subir la energía"
+ ],
+ "material": "clips",
+ "energia": "media",
+ "dura": "lo que dura el fundido entre clips (uno o dos golpes)",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "frase",
+  "frase_compases": 2,
+  "transicion": "empuje",
+  "fundido_golpes": 2
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "21-laboratorio-de-la-manana"
+ ],
+ "evitar": [
+  "encima de fantasmas (doble o estela): el fantasma no se mueve con el clip"
+ ],
+ "muestra": {
+  "de": "21-laboratorio-de-la-manana/render/empuje-final-30-47.mp4",
+  "desde": 0.5,
+  "hasta": 10.5
+ }
+}

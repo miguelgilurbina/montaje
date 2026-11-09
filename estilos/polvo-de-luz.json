@@ -1,0 +1,26 @@
+{
+ "nombre": "Polvo de luz",
+ "frase": "Motas de luz que flotan hacia arriba, a distintas distancias, y brillan en los golpes de la canción.",
+ "para": [
+  "respirar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "todo el video o un tramo",
+ "tecnica": {
+  "capa": "polvo",
+  "motas": 55,
+  "brillo": 0.5
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "15-anoranza-de-natalia"
+ ],
+ "evitar": [],
+ "muestra": {
+  "de": "15-anoranza-de-natalia/render/c-recuerdo-final.mp4",
+  "desde": 152.0,
+  "hasta": 162.0
+ }
+}

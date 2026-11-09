@@ -1,0 +1,33 @@
+{
+ "nombre": "Tira de película",
+ "frase": "El cuadro entre dos bandas negras con sus perforaciones, que corren como en el proyector; con la textura de recuerdo encima.",
+ "para": [
+  "respirar",
+  "abrir",
+  "cerrar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo o el video entero",
+ "tecnica": {
+  "capa": "pelicula",
+  "borde": 0.07,
+  "velocidad": 1.5,
+  "con": [
+   "recuerdo"
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "16-laboratorio-de-la-noche"
+ ],
+ "evitar": [
+  "formatos verticales: las bandas se comen el ancho que ya es poco"
+ ],
+ "muestra": {
+  "de": "16-laboratorio-de-la-noche/render/cuenta-y-pelicula-final-0-14.mp4",
+  "desde": 3.0,
+  "hasta": 13.0
+ }
+}

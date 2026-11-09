@@ -1,0 +1,31 @@
+{
+ "nombre": "La foto que despierta",
+ "frase": "Cada clip entra quieto y en sepia, como una foto, durante el fundido y dos golpes más; en el golpe se mueve y toma color.",
+ "para": [
+  "respirar",
+  "abrir",
+  "destacar"
+ ],
+ "material": "clips",
+ "energia": "calma",
+ "dura": "cuatro golpes al entrar cada clip",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "frase",
+  "frase_compases": 4,
+  "congelar_golpes": 4
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "16-laboratorio-de-la-noche"
+ ],
+ "evitar": [
+  "congelar menos que el fundido (con 2 golpes de cada uno la foto se quedaba quieta sólo mientras aparecía y no se notaba)"
+ ],
+ "muestra": {
+  "de": "16-laboratorio-de-la-noche/render/foto-que-despierta-final-44-60.mp4",
+  "desde": 3.0,
+  "hasta": 13.0
+ }
+}

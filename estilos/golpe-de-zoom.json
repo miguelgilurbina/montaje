@@ -1,0 +1,26 @@
+{
+ "nombre": "Golpe de zoom",
+ "frase": "Un empujón corto de zoom (3,5 %) en cada «uno», que vuelve en unos cuadros, sobre un clip por compás: el corte y el empujón caen juntos.",
+ "para": [
+  "subir la energía"
+ ],
+ "material": "cualquiera",
+ "energia": "alta",
+ "dura": "un tramo",
+ "tecnica": {
+  "capa": "golpe",
+  "fuerza": 0.035,
+  "cada": "compas"
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "16-laboratorio-de-la-noche"
+ ],
+ "evitar": [],
+ "muestra": {
+  "de": "16-laboratorio-de-la-noche/render/golpe-de-zoom-final-30-42.mp4",
+  "desde": 1.0,
+  "hasta": 11.0
+ }
+}

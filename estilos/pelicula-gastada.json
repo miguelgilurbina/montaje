@@ -1,0 +1,30 @@
+{
+ "nombre": "Película gastada",
+ "frase": "Rayones verticales que duran un rato y tiemblan, manchas de un cuadro, grano y parpadeo: una copia que pasó muchas veces por el proyector.",
+ "para": [
+  "abrir",
+  "respirar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "capa": "rayas",
+  "rayones": 0.6,
+  "manchas": 0.6,
+  "con": "recuerdo"
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "21-laboratorio-de-la-manana"
+ ],
+ "evitar": [
+  "encima de rótulos chicos: las manchas se confunden con la letra"
+ ],
+ "muestra": {
+  "de": "21-laboratorio-de-la-manana/render/rayas-final-44-58.mp4",
+  "desde": 0.5,
+  "hasta": 10.5
+ }
+}

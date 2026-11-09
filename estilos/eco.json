@@ -1,0 +1,29 @@
+{
+ "nombre": "Eco",
+ "frase": "Cada cuadro lleva encima los de medio segundo atrás, cada vez más tenues: el movimiento deja fantasmas, como un recuerdo que se repite.",
+ "para": [
+  "respirar",
+  "transición"
+ ],
+ "material": "clips",
+ "energia": "calma",
+ "dura": "un clip",
+ "tecnica": {
+  "comando": "transformar",
+  "efecto": "eco",
+  "fuerza": 0.6
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "15-anoranza-de-natalia"
+ ],
+ "evitar": [
+  "clips quietos: no se nota"
+ ],
+ "muestra": {
+  "de": "15-anoranza-de-natalia/render/comparar-eco.mp4",
+  "desde": 0.0,
+  "hasta": 5.0
+ }
+}

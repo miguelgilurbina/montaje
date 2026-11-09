@@ -19,9 +19,15 @@
   "podemos usarlo por ejemplo para hacer aparecer el logo de curiana radio, es decir está buenísimo como un intro"
  ],
  "visto_en": [
-  "02-actos"
+  "02-actos",
+  "17-fotogramas"
  ],
  "evitar": [
   "como pieza principal de un video: «no fue como me lo imaginé»"
- ]
+ ],
+ "muestra": {
+  "de": "17-fotogramas/render/actos-final-70-96.mp4",
+  "desde": 8.0,
+  "hasta": 20.0
+ }
 }

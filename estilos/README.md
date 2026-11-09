@@ -5,15 +5,15 @@ edición que probamos (cómo se hizo, para qué sirve y lo que dijo Miguel) y
 **elegir** según el guion de un video qué estilo va en cada tramo.
 
 Se ve en el panel, en **`/estilos`** (`python montaje.py panel <p>` y el enlace
-«estilos» de la portada): cada estilo con su muestra, sus filtros por estado, uso
-y material. Desde la consola: `python montaje.py estilos [--para abrir]
+«estilos» de la portada): cada estilo con su muestra, sus filtros por estado, uso,
+material y experimento (`en`: lo que salió de un ejercicio o de una noche). Desde la consola: `python montaje.py estilos [--para abrir]
 [--material clips] [--estado aprobado]`, que además valida todos los archivos.
 
 ## Tres capas
 
 | Capa | Qué es | Dónde vive |
 |---|---|---|
-| **Técnica** | lo que el motor sabe hacer: un modo (`collage`, `secuencia`…), un momento (`rafaga`, `destacado`…) o un comando (`sincronizar`…) | el código, `py/montaje/` |
+| **Técnica** | lo que el motor sabe hacer: un modo (`collage`, `secuencia`, `pulso`…), un momento (`rafaga`, `destacado`…), un comando (`sincronizar`, `transformar`…) o una capa hecha en código (`recuerdo`, `fugas`…) | el código, `py/montaje/` |
 | **Estilo** | una técnica con sus valores, un nombre, para qué sirve, con qué material, y el veredicto de Miguel | aquí, un archivo por estilo |
 | **Guion** | el video partido en tramos, cada uno con lo que tiene que pasar y su estilo | el proyecto de cada video (`GUION.md`) |
 
@@ -29,15 +29,16 @@ ráfaga con valores y material distintos.
 | `nombre` | cómo lo llamamos al hablar |
 | `frase` | qué se ve, en una o dos líneas |
 | `para` | para qué sirve en un guion (lista; vocabulario abajo) |
-| `material` | con qué funciona: `fotos`, `clips`, `mixto` o `serie` (variaciones de una misma imagen) |
+| `material` | con qué funciona: `fotos`, `clips`, `mixto`, `serie` (variaciones de una misma imagen), `cualquiera` (una capa que va encima de lo que sea) o `ninguno` (sale entero del código) |
 | `energia` | qué le hace al ritmo: `calma`, `media`, `alta`, `sube` (de lento a rápido) o `sigue` (acelera y frena con la canción) |
 | `dura` | cuánto ocupa, en palabras («un compás», «un tramo de la canción») |
-| `tecnica` | la receta: exactamente uno de `modo`, `momento` o `comando`, con los valores que la distinguen. Se copia a `montaje` o a `momentos` de un `proyecto.json` |
+| `tecnica` | la receta: exactamente uno de `modo`, `momento`, `comando` o `capa`, con los valores que la distinguen. Se copia a `montaje`, a `momentos` o a `sintesis` de un `proyecto.json` |
 | `estado` | `aprobado`, `a medias`, `pedido`, `propuesta` o `rechazado` |
 | `miguel` | lo que dijo Miguel, **con sus palabras**. Obligatorio si está aprobado, a medias o rechazado |
 | `visto_en` | los experimentos donde se usó (su `FICHA.md` cuenta la historia completa) |
 | `evitar` | dónde no va, y por qué. Un rechazo se guarda aquí para no repetirlo |
 | `muestra` | (lo escribe `muestra`) de qué render y qué segundos salió la muestra |
+| `veredicto` | (lo escribe la galería) el último veredicto dado con un clic: `estado`, `fecha`, `via`. Vale como las palabras de Miguel para validar un aprobado, a medias o rechazado |
 
 ### Vocabulario de `para`
 
@@ -84,7 +85,9 @@ archivo:
 Para elegir: los que tienen el `para` y el `material` del tramo; primero los
 aprobados; nunca uno cuyo `evitar` describa el tramo. Si no hay ninguno, el tramo
 es un ejercicio (abajo). Miguel corrige la tabla; recién entonces se arma el
-`proyecto.json`.
+`proyecto.json`: con clips, cada fila de la tabla es un tramo de `tramos` en el
+montaje (`desde`, `hasta`, las perillas del estilo y el `material`), y las capas
+de síntesis llevan su `desde`/`hasta`. Ejemplo: `proyectos/19-anoranza-con-guion/`.
 
 ## Cómo crece: los ejercicios
 
@@ -97,3 +100,22 @@ qué se busca; después, Miguel elige y dice por qué.
 - Las otras quedan `rechazado` (o `a medias`), con su porqué en `miguel` y en
   `evitar`. Lo que no queremos también se recuerda.
 - Después del veredicto, los renders del ejercicio se pueden borrar.
+
+## El veredicto, la vuelta de ejercicio y el recorrido (2026-11-09)
+
+- **Veredicto desde la consola:** `python montaje.py veredicto <id> <estado> --cita
+  "…"`. Es el mismo que usa la galería: una sola forma de escribir un estilo.
+- **Veredicto en la galería.** Cada tarjeta de `/estilos` tiene «sí» (`aprobado`),
+  «a medias» y «no» (`rechazado`), y un lugar para escribir qué le pareció. El clic
+  cambia `estado` y deja `veredicto`; si Miguel escribió, sus palabras van a
+  `miguel` y a `direccion/REGISTRO.md` con la fecha. «deshacer» lo devuelve a
+  `propuesta` (las palabras ya anotadas quedan). Lo que haya que **evitar** a
+  partir de un «no» lo escribe Claude después, leyendo esas palabras.
+- **`python montaje.py ejercicio <p> [--final --muestra]`** corre todas las
+  versiones de un experimento y corta la muestra de cada una en su estilo.
+- **`python montaje.py recorrido [--en <experimento>] [--estado propuesta]`** arma
+  un video con unos segundos de cada muestra y su nombre, en
+  `<medios>/estilos/recorridos/`.
+- **`python montaje.py guion <p>`** propone, para cada sección de la canción, los
+  estilos de este catálogo que sirven (por `para`, `energia` y `material`; los
+  aprobados primero, los rechazados nunca).

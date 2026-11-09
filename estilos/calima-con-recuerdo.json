@@ -1,0 +1,29 @@
+{
+ "nombre": "Calima con recuerdo",
+ "frase": "El aire caliente que ondula, con el grano y la viñeta del recuerdo: los médanos al mediodía, filmados hace cincuenta años.",
+ "para": [
+  "respirar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "capa": "calima",
+  "fuerza": 9,
+  "golpe": 12,
+  "con": [
+   "recuerdo"
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "16-laboratorio-de-la-noche"
+ ],
+ "evitar": [],
+ "muestra": {
+  "de": "16-laboratorio-de-la-noche/render/calima-recuerdo-final-104-116.mp4",
+  "desde": 1.0,
+  "hasta": 11.0
+ }
+}

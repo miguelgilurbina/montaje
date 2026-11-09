@@ -1,0 +1,33 @@
+{
+ "nombre": "Fotos y clips juntos",
+ "frase": "Fotos y clips en el mismo reparto, intercalados: un clip, una foto. Cada foto ocupa su frase como un clip más, acercándose despacio (una sí, una no se aleja) y deslizándose un poco de lado.",
+ "para": [
+  "mostrar el archivo",
+  "respirar"
+ ],
+ "material": "mixto",
+ "energia": "media",
+ "dura": "un tramo o el video entero",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "frase",
+  "frase_compases": 2,
+  "mezclar_fotos": true,
+  "zoom_foto": 0.09,
+  "transicion": "cortina"
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "21-laboratorio-de-la-manana"
+ ],
+ "evitar": [
+  "fotos más chicas que el cuadro: el acercamiento las ablanda",
+  "`corte: golpe` con fotos: el acercamiento vuelve a empezar en cada salto"
+ ],
+ "muestra": {
+  "de": "21-laboratorio-de-la-manana/render/mixto-final-27-53.mp4",
+  "desde": 0.5,
+  "hasta": 14.5
+ }
+}

@@ -1,0 +1,34 @@
+{
+ "nombre": "Rótulos de cartel",
+ "frase": "Dos o tres palabras grandes al centro, condensadas y en oro, una por golpe: nombran lo que se ve como el cartel de un capítulo.",
+ "para": [
+  "abrir",
+  "transición",
+  "destacar"
+ ],
+ "material": "cualquiera",
+ "energia": "sigue",
+ "dura": "unos cuatro segundos por frase",
+ "tecnica": {
+  "capa": "rotulos",
+  "voz": "cartel",
+  "lugar": "centro",
+  "cada": "golpe",
+  "tam": 0.105,
+  "color": "oro"
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "21-laboratorio-de-la-manana"
+ ],
+ "evitar": [
+  "más de cuatro palabras: tapa la imagen",
+  "encima de un rostro"
+ ],
+ "muestra": {
+  "de": "21-laboratorio-de-la-manana/render/rotulos-cartel-final-27-48.mp4",
+  "desde": 0.3,
+  "hasta": 11.3
+ }
+}

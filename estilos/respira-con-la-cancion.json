@@ -1,0 +1,38 @@
+{
+ "nombre": "Respira con la canción",
+ "frase": "Dos compases por clip en lo pleno y cuatro en la calma, donde el clip que viene se asoma en doble exposición antes de entrar; los primeros clips vuelven al final.",
+ "para": [
+  "mostrar el archivo",
+  "respirar"
+ ],
+ "material": "clips",
+ "energia": "sigue",
+ "dura": "un tramo de la canción",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "frase",
+  "frase_compases": 2,
+  "frase_compases_calma": 4,
+  "reparto": "ronda",
+  "fundido_golpes": 1,
+  "fundido_calma_golpes": 4,
+  "doble_golpes": 4,
+  "doble_opacidad": 0.45,
+  "estela_golpes": 1,
+  "velocidad": [
+   0.45,
+   0.75
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "15-anoranza-de-natalia"
+ ],
+ "evitar": [],
+ "muestra": {
+  "de": "15-anoranza-de-natalia/render/c-final-arreglado.mp4",
+  "desde": 4.0,
+  "hasta": 16.0
+ }
+}

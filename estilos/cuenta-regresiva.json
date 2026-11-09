@@ -1,0 +1,25 @@
+{
+ "nombre": "Cuenta regresiva de proyector",
+ "frase": "La cola de una película vieja antes de la imagen: 4, 3, 2, 1, un número por golpe de la canción, con el barrido que gira, la cruz y el parpadeo.",
+ "para": [
+  "abrir"
+ ],
+ "material": "ninguno",
+ "energia": "sube",
+ "dura": "cuatro golpes",
+ "tecnica": {
+  "capa": "cuenta",
+  "numeros": 4
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "16-laboratorio-de-la-noche"
+ ],
+ "evitar": [],
+ "muestra": {
+  "de": "16-laboratorio-de-la-noche/render/cuenta-y-pelicula-final-0-14.mp4",
+  "desde": 0.0,
+  "hasta": 6.0
+ }
+}

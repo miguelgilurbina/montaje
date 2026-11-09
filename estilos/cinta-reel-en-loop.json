@@ -1,0 +1,32 @@
+{
+ "nombre": "Cinta de reel en loop",
+ "frase": "Las imágenes en columna suben un paso por golpe (aquí a medio tiempo), con una ráfaga y un destacado de quiebre; el último cuadro empalma con el primero.",
+ "para": [
+  "loop",
+  "mostrar el archivo"
+ ],
+ "material": "fotos",
+ "energia": "media",
+ "dura": "doce compases",
+ "tecnica": {
+  "modo": "cinta",
+  "compases": "2 pasos por compás, ráfaga en el 7, destacado en el 11"
+ },
+ "estado": "pedido",
+ "miguel": [
+  "interminable y muy repetible"
+ ],
+ "visto_en": [
+  "06-reel-cinta",
+  "18-cinta-de-fotogramas"
+ ],
+ "evitar": [
+  "material apagado u oscuro con los filtros de la galería de Curiana: hay que abrir sat_min y luz",
+  "imágenes chicas: en el vertical quedan pequeñas"
+ ],
+ "muestra": {
+  "de": "18-cinta-de-fotogramas/render/final.mp4",
+  "desde": 0.0,
+  "hasta": 12.0
+ }
+}

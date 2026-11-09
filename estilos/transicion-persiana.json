@@ -1,0 +1,30 @@
+{
+ "nombre": "Persiana",
+ "frase": "El clip nuevo entra en franjas verticales que se ensanchan hasta cerrarse.",
+ "para": [
+  "transición"
+ ],
+ "material": "clips",
+ "energia": "media",
+ "dura": "lo que dura el fundido entre clips (uno o dos golpes)",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "frase",
+  "frase_compases": 2,
+  "transicion": "persiana",
+  "fundido_golpes": 2
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "21-laboratorio-de-la-manana"
+ ],
+ "evitar": [
+  "imágenes con muchas líneas verticales (rejas, palmeras): las franjas se confunden con ellas"
+ ],
+ "muestra": {
+  "de": "21-laboratorio-de-la-manana/render/persiana-final-30-47.mp4",
+  "desde": 0.5,
+  "hasta": 10.5
+ }
+}

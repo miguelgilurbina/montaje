@@ -1,0 +1,38 @@
+{
+ "nombre": "Un clip por compás",
+ "frase": "Cambia de clip en cada compás (cada dos en la calma); los clips vuelven en ronda con otros momentos y el que se va deja una estela.",
+ "para": [
+  "mostrar el archivo",
+  "subir la energía"
+ ],
+ "material": "clips",
+ "energia": "media",
+ "dura": "un compás por clip",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "frase",
+  "frase_compases": 1,
+  "frase_compases_calma": 2,
+  "reparto": "ronda",
+  "fundido_golpes": 0.25,
+  "fundido_calma_golpes": 1.5,
+  "estela_golpes": 1.5,
+  "velocidad": [
+   0.55,
+   0.75
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "15-anoranza-de-natalia"
+ ],
+ "evitar": [
+  "pocos clips en una canción larga: en ronda se repiten varias vueltas"
+ ],
+ "muestra": {
+  "de": "15-anoranza-de-natalia/render/b-final-arreglado.mp4",
+  "desde": 30.0,
+  "hasta": 40.0
+ }
+}

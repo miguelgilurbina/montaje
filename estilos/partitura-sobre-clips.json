@@ -1,0 +1,29 @@
+{
+ "nombre": "Partitura sobre los clips",
+ "frase": "La canción dibujada como una línea fina al pie del cuadro, encima de los clips: se ve respirar la música.",
+ "para": [
+  "mostrar el archivo"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un tramo",
+ "tecnica": {
+  "capa": "partitura",
+  "y": 0.9,
+  "alto": 0.09,
+  "opacidad": 0.75
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "16-laboratorio-de-la-noche"
+ ],
+ "evitar": [
+  "sobre clips con mucho detalle abajo (pasto, agua): la línea se pierde"
+ ],
+ "muestra": {
+  "de": "16-laboratorio-de-la-noche/render/partitura-sobre-clips-final-112-124.mp4",
+  "desde": 1.0,
+  "hasta": 11.0
+ }
+}

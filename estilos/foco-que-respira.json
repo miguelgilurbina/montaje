@@ -1,0 +1,29 @@
+{
+ "nombre": "Foco que respira",
+ "frase": "La imagen se enfoca de golpe en cada golpe de la canción y se desenfoca enseguida: el pulso se ve como un parpadeo del lente.",
+ "para": [
+  "subir la energía",
+  "transición"
+ ],
+ "material": "cualquiera",
+ "energia": "sigue",
+ "dura": "un tramo corto",
+ "tecnica": {
+  "capa": "foco",
+  "fuerza": 4,
+  "cada": "golpe"
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "16-laboratorio-de-la-noche"
+ ],
+ "evitar": [
+  "un video entero: casi todo el tiempo está desenfocado y cansa; mejor unos compases"
+ ],
+ "muestra": {
+  "de": "16-laboratorio-de-la-noche/render/foco-final-84-96.mp4",
+  "desde": 1.0,
+  "hasta": 11.0
+ }
+}

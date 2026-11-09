@@ -1,0 +1,31 @@
+{
+ "nombre": "Destello",
+ "frase": "Un fogonazo cálido sube sobre el clip que se va, lo tapa, y cuando baja ya está el siguiente.",
+ "para": [
+  "transición",
+  "subir la energía"
+ ],
+ "material": "clips",
+ "energia": "media",
+ "dura": "un golpe",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "frase",
+  "frase_compases": 2,
+  "transicion": "destello",
+  "fundido_golpes": 1
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "21-laboratorio-de-la-manana"
+ ],
+ "evitar": [
+  "más de una vez cada pocos compases: una luz que pega seguido cansa (y molesta a quien es sensible a los destellos)"
+ ],
+ "muestra": {
+  "de": "21-laboratorio-de-la-manana/render/destello-final-30-47.mp4",
+  "desde": 0.5,
+  "hasta": 10.5
+ }
+}

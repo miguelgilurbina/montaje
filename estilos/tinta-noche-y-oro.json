@@ -1,0 +1,31 @@
+{
+ "nombre": "Tinta: noche y oro",
+ "frase": "Todo a dos tintas de la paleta: las sombras en índigo y las luces en oro de arena, como un cartel serigrafiado que se mueve.",
+ "para": [
+  "abrir",
+  "cerrar",
+  "transición"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo o el video entero",
+ "tecnica": {
+  "capa": "tinta",
+  "oscuro": "indigo",
+  "claro": "oro",
+  "fuerza": 0.85
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "15-anoranza-de-natalia"
+ ],
+ "evitar": [
+  "imágenes de la galería que tienen que verse con su color (son el producto)"
+ ],
+ "muestra": {
+  "de": "15-anoranza-de-natalia/render/a-tinta-final-54-66.mp4",
+  "desde": 1.0,
+  "hasta": 11.0
+ }
+}

@@ -1,0 +1,30 @@
+{
+ "nombre": "Barrido temporal",
+ "frase": "Cada fila de la imagen es de otro instante (arriba el presente, abajo dos segundos atrás): lo que se mueve se estira y se dobla.",
+ "para": [
+  "transición",
+  "destacar"
+ ],
+ "material": "clips",
+ "energia": "media",
+ "dura": "un clip",
+ "tecnica": {
+  "comando": "transformar",
+  "efecto": "barrido",
+  "fuerza": 2.0
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "15-anoranza-de-natalia"
+ ],
+ "evitar": [
+  "clips casi quietos (la curiara a la deriva): no cambia nada",
+  "personas de cerca: el cuerpo se deforma mucho"
+ ],
+ "muestra": {
+  "de": "15-anoranza-de-natalia/render/comparar-barrido.mp4",
+  "desde": 0.0,
+  "hasta": 5.0
+ }
+}

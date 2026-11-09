@@ -1,0 +1,30 @@
+{
+ "nombre": "Cortina",
+ "frase": "Un borde blando barre el cuadro de lado a lado y deja el clip nuevo detrás; alterna derecha e izquierda.",
+ "para": [
+  "transición"
+ ],
+ "material": "clips",
+ "energia": "media",
+ "dura": "lo que dura el fundido entre clips (uno o dos golpes)",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "frase",
+  "frase_compases": 2,
+  "transicion": "cortina",
+  "fundido_golpes": 2
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "21-laboratorio-de-la-manana"
+ ],
+ "evitar": [
+  "en la calma: el barrido es un gesto, pide pulso"
+ ],
+ "muestra": {
+  "de": "21-laboratorio-de-la-manana/render/cortina-final-30-47.mp4",
+  "desde": 0.5,
+  "hasta": 10.5
+ }
+}

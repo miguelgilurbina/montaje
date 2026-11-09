@@ -1,0 +1,29 @@
+{
+ "nombre": "Tinta: noche eléctrica y ácido",
+ "frase": "Las sombras casi negras azuladas y las luces en ácido: verdoso, como visión nocturna.",
+ "para": [
+  "transición"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un tramo corto",
+ "tecnica": {
+  "capa": "tinta",
+  "oscuro": "#0b1a3a",
+  "claro": "acido",
+  "fuerza": 0.85
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "16-laboratorio-de-la-noche"
+ ],
+ "evitar": [
+  "un video entero: el verde enferma la imagen; a lo sumo un golpe de transición"
+ ],
+ "muestra": {
+  "de": "16-laboratorio-de-la-noche/render/tinta-electrico-acido-final-160-172.mp4",
+  "desde": 1.0,
+  "hasta": 11.0
+ }
+}

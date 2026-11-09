@@ -1,0 +1,35 @@
+{
+ "nombre": "Rampa de velocidad",
+ "frase": "La velocidad del clip sigue a la energía muy abierta: casi quieto (0,3×) en la calma, más rápido que la realidad (1,4×) en el pico.",
+ "para": [
+  "subir la energía",
+  "transición"
+ ],
+ "material": "clips",
+ "energia": "sigue",
+ "dura": "un tramo con cambio de energía",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "frase",
+  "frase_compases": 2,
+  "frase_compases_calma": 4,
+  "reparto": "ronda",
+  "velocidad": [
+   0.3,
+   1.4
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "16-laboratorio-de-la-noche"
+ ],
+ "evitar": [
+  "clips cortos en el pico: a 1,4× se acaban y se repiten"
+ ],
+ "muestra": {
+  "de": "16-laboratorio-de-la-noche/render/rampa-final-18-34.mp4",
+  "desde": 4.0,
+  "hasta": 14.0
+ }
+}

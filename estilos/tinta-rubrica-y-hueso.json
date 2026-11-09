@@ -1,0 +1,29 @@
+{
+ "nombre": "Tinta: rúbrica y hueso",
+ "frase": "Las sombras en rúbrica (el rojo tierra del isotipo) y las luces en hueso: el campo como una foto quemada por el sol.",
+ "para": [
+  "abrir",
+  "cerrar",
+  "respirar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "capa": "tinta",
+  "oscuro": "rubrica",
+  "claro": "hueso",
+  "fuerza": 0.9
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "16-laboratorio-de-la-noche"
+ ],
+ "evitar": [],
+ "muestra": {
+  "de": "16-laboratorio-de-la-noche/render/tinta-rubrica-hueso-final-126-138.mp4",
+  "desde": 1.0,
+  "hasta": 11.0
+ }
+}

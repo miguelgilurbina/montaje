@@ -1,0 +1,30 @@
+{
+ "nombre": "Título al pulso",
+ "frase": "El nombre de la pieza aparece letra por letra en la rejilla de la canción (cartel condensado, comprimido a 0,82), con una línea en itálica dorada debajo; se va con un fundido.",
+ "para": [
+  "abrir",
+  "presentar la marca"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "unos 8 s",
+ "tecnica": {
+  "capa": "titulo",
+  "voz": "cartel",
+  "tam": 0.1,
+  "letras_golpes": 3
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "16-laboratorio-de-la-noche"
+ ],
+ "evitar": [
+  "las letras de la marca (Archivo Black, Lora) no están instaladas: se ve con Bahnschrift condensada y Georgia itálica hasta que estén"
+ ],
+ "muestra": {
+  "de": "16-laboratorio-de-la-noche/render/titulos-final-0-20.mp4",
+  "desde": 1.0,
+  "hasta": 11.0
+ }
+}

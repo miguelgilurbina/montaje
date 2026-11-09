@@ -1,0 +1,28 @@
+{
+ "nombre": "Sonido de proyector",
+ "frase": "Sintetizado en código sobre el render: el traqueteo de la película (un golpecito por cuadro, el zumbido del motor) mientras hay tira de película o cuenta regresiva, el pitido del 2 de la cuenta y un «clac» de diapositiva cada vez que una foto despierta.",
+ "para": [
+  "abrir",
+  "respirar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "lo que dure la película",
+ "tecnica": {
+  "comando": "proyector",
+  "nivel": 16
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "16-laboratorio-de-la-noche"
+ ],
+ "evitar": [
+  "Claude no oye la mezcla: los efectos van 16 dB bajo la canción (medido) y el clac pica a −13,5 dBFS; el oído es de Miguel"
+ ],
+ "muestra": {
+  "de": "16-laboratorio-de-la-noche/render/cuenta-y-pelicula-final-0-14-proyector.mp4",
+  "desde": 0.0,
+  "hasta": 9.0
+ }
+}

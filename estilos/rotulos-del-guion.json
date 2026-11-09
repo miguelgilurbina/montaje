@@ -1,0 +1,32 @@
+{
+ "nombre": "Rótulos del guion",
+ "frase": "Las frases del guion abajo, en itálica: cada una entra en su golpe, palabra por palabra a la corchea, y se va antes de la siguiente.",
+ "para": [
+  "abrir",
+  "respirar",
+  "destacar"
+ ],
+ "material": "cualquiera",
+ "energia": "sigue",
+ "dura": "unos cuatro segundos por frase",
+ "tecnica": {
+  "capa": "rotulos",
+  "voz": "oraculo",
+  "lugar": "abajo",
+  "cada": "medio"
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "21-laboratorio-de-la-manana"
+ ],
+ "evitar": [
+  "frases largas con cortes rápidos: no da tiempo a leer y mirar",
+  "la letra de una canción ajena: eso es otra licencia"
+ ],
+ "muestra": {
+  "de": "21-laboratorio-de-la-manana/render/rotulos-final-27-48.mp4",
+  "desde": 0.3,
+  "hasta": 11.3
+ }
+}

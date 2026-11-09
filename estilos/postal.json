@@ -1,0 +1,30 @@
+{
+ "nombre": "Postal",
+ "frase": "Recuerdo (grano, viñeta, halo) más una tinta suave de rúbrica y hueso y fugas de luz cada cuatro compases: una postal vieja que se mueve.",
+ "para": [
+  "abrir",
+  "cerrar",
+  "respirar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "todo el video o un tramo",
+ "tecnica": {
+  "capa": "recuerdo",
+  "con": [
+   "tinta rubrica/hueso 0.35",
+   "fugas cada 4 compases"
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "16-laboratorio-de-la-noche"
+ ],
+ "evitar": [],
+ "muestra": {
+  "de": "16-laboratorio-de-la-noche/render/postal-final-0-12.mp4",
+  "desde": 1.0,
+  "hasta": 11.0
+ }
+}

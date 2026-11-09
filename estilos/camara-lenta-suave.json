@@ -1,0 +1,28 @@
+{
+ "nombre": "Cámara lenta suave",
+ "frase": "A la mitad de velocidad sin trabarse: se inventan los cuadros que faltan en vez de repetirlos (a la izquierda, repetidos; a la derecha, inventados).",
+ "para": [
+  "respirar"
+ ],
+ "material": "clips",
+ "energia": "calma",
+ "dura": "un clip",
+ "tecnica": {
+  "comando": "transformar",
+  "efecto": "lento",
+  "fuerza": 2
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "15-anoranza-de-natalia"
+ ],
+ "evitar": [
+  "movimientos rápidos y cruzados (manos, multitudes): los cuadros inventados se deforman"
+ ],
+ "muestra": {
+  "de": "15-anoranza-de-natalia/render/comparar-lento.mp4",
+  "desde": 0.0,
+  "hasta": 5.0
+ }
+}

@@ -1,0 +1,31 @@
+{
+ "nombre": "Díptico",
+ "frase": "Dos clips a la vez, cada uno en su mitad: cada clip con su pareja de la otra mitad del archivo (el mar con el campo), recortados siguiendo al sujeto.",
+ "para": [
+  "mostrar el archivo",
+  "transición"
+ ],
+ "material": "clips",
+ "energia": "media",
+ "dura": "una frase",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "frase",
+  "frase_compases": 4,
+  "dividir": 2,
+  "seguir": true
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "16-laboratorio-de-la-noche"
+ ],
+ "evitar": [
+  "clips con el sujeto en un borde: en media pantalla queda afuera"
+ ],
+ "muestra": {
+  "de": "16-laboratorio-de-la-noche/render/diptico-final-0-14.mp4",
+  "desde": 1.0,
+  "hasta": 11.0
+ }
+}

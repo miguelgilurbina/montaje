@@ -1,0 +1,32 @@
+{
+ "nombre": "Mosaico de tiempo",
+ "frase": "El mismo clip en una cuadrícula de 3×3, cada celda un cuarto de segundo más atrás: el movimiento recorre la cuadrícula en diagonal, como una ola.",
+ "para": [
+  "mostrar el archivo",
+  "destacar"
+ ],
+ "material": "clips",
+ "energia": "media",
+ "dura": "una frase",
+ "tecnica": {
+  "modo": "pulso",
+  "rejilla": [
+   3,
+   3,
+   0.25
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "15-anoranza-de-natalia"
+ ],
+ "evitar": [
+  "clips quietos: las nueve celdas se ven iguales"
+ ],
+ "muestra": {
+  "de": "15-anoranza-de-natalia/render/a-rejilla-final-150-162.mp4",
+  "desde": 1.0,
+  "hasta": 11.0
+ }
+}

@@ -1,0 +1,28 @@
+{
+ "nombre": "Caleidoscopio",
+ "frase": "El centro del clip repetido en espejo en los cuatro cuartos del cuadro: el mar y las olas se vuelven un patrón simétrico que se mueve.",
+ "para": [
+  "transición",
+  "subir la energía"
+ ],
+ "material": "clips",
+ "energia": "media",
+ "dura": "una frase",
+ "tecnica": {
+  "modo": "pulso",
+  "espejo": 4
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "15-anoranza-de-natalia"
+ ],
+ "evitar": [
+  "personas y caras: el espejo las parte al medio"
+ ],
+ "muestra": {
+  "de": "15-anoranza-de-natalia/render/a-espejo-final-34-46.mp4",
+  "desde": 1.0,
+  "hasta": 11.0
+ }
+}

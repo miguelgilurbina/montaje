@@ -1,0 +1,28 @@
+{
+ "nombre": "Reversa",
+ "frase": "El clip hacia atrás: las olas que se retiran del aire, la señora que vuelve a entrar. El tiempo del recuerdo que se devuelve.",
+ "para": [
+  "respirar",
+  "transición"
+ ],
+ "material": "clips",
+ "energia": "calma",
+ "dura": "un clip",
+ "tecnica": {
+  "comando": "transformar",
+  "efecto": "reversa"
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "15-anoranza-de-natalia"
+ ],
+ "evitar": [
+  "gente caminando o hablando: hacia atrás se nota enseguida y puede volverse cómico"
+ ],
+ "muestra": {
+  "de": "15-anoranza-de-natalia/render/comparar-reversa.mp4",
+  "desde": 0.0,
+  "hasta": 5.0
+ }
+}

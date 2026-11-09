@@ -1,0 +1,30 @@
+{
+ "nombre": "Doble exposición en cada cambio",
+ "frase": "En cada cambio de clip, el que viene aparece transparente cuatro golpes antes: el video entero es una cadena de dobles exposiciones.",
+ "para": [
+  "respirar",
+  "transición"
+ ],
+ "material": "clips",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "modo": "pulso",
+  "frase_compases": 2,
+  "reparto": "ronda",
+  "doble_golpes": 4,
+  "doble_en": "todo",
+  "doble_opacidad": 0.5
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "16-laboratorio-de-la-noche"
+ ],
+ "evitar": [],
+ "muestra": {
+  "de": "16-laboratorio-de-la-noche/render/doble-siempre-final-40-55.mp4",
+  "desde": 2.0,
+  "hasta": 12.0
+ }
+}

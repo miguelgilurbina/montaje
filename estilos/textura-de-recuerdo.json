@@ -1,0 +1,34 @@
+{
+ "nombre": "Textura de recuerdo",
+ "frase": "Grano de película nuevo en cada cuadro, viñeta, un parpadeo leve, el cuadro que se mece como en el proyector y un halo en las luces.",
+ "para": [
+  "respirar",
+  "abrir",
+  "cerrar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "todo el video o un tramo",
+ "tecnica": {
+  "capa": "recuerdo",
+  "grano": 0.24,
+  "vineta": 0.42,
+  "calidez": 0.06,
+  "parpadeo": 0.035,
+  "temblor": 1.1,
+  "halo": 0.18
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "15-anoranza-de-natalia"
+ ],
+ "evitar": [
+  "imágenes que tienen que verse al 100 % con su detalle (las de la galería de Curiana): el grano y el halo las ensucian"
+ ],
+ "muestra": {
+  "de": "15-anoranza-de-natalia/render/c-recuerdo-final.mp4",
+  "desde": 0.0,
+  "hasta": 10.0
+ }
+}

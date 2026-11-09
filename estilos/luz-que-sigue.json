@@ -1,0 +1,36 @@
+{
+ "nombre": "La luz sigue a la canción",
+ "frase": "El brillo y el color del video suben y bajan con la energía de la canción: se apaga y se destiñe en el silencio, se enciende cuando entra la banda, y late un poco en cada golpe.",
+ "para": [
+  "respirar",
+  "subir la energía"
+ ],
+ "material": "cualquiera",
+ "energia": "sigue",
+ "dura": "el video entero o un cambio de sección",
+ "tecnica": {
+  "capa": "luz",
+  "brillo": [
+   0.72,
+   1.12
+  ],
+  "color": [
+   0.5,
+   1.2
+  ],
+  "golpe": 0.06
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "21-laboratorio-de-la-manana"
+ ],
+ "evitar": [
+  "material ya oscuro: en la calma se pierde el detalle de las sombras"
+ ],
+ "muestra": {
+  "de": "21-laboratorio-de-la-manana/render/luz-final-126-146.mp4",
+  "desde": 4.0,
+  "hasta": 16.0
+ }
+}

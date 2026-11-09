@@ -1,0 +1,31 @@
+{
+ "nombre": "Transiciones en ronda",
+ "frase": "Cada cambio de clip usa una transición distinta, en orden: cortina, iris, empuje, destello, zoom, persiana.",
+ "para": [
+  "transición",
+  "mostrar el archivo"
+ ],
+ "material": "clips",
+ "energia": "media",
+ "dura": "lo que dura el fundido entre clips (uno o dos golpes)",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "frase",
+  "frase_compases": 2,
+  "transicion": "ronda",
+  "fundido_golpes": 2
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "21-laboratorio-de-la-manana"
+ ],
+ "evitar": [
+  "un video entero: seis gestos distintos seguidos se leen como catálogo, no como estilo"
+ ],
+ "muestra": {
+  "de": "21-laboratorio-de-la-manana/render/ronda-final-27-62.mp4",
+  "desde": 2.5,
+  "hasta": 14.5
+ }
+}

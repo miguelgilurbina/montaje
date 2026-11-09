@@ -1,0 +1,32 @@
+{
+ "nombre": "La canción sola",
+ "frase": "Sin material: manchas de la paleta que respiran con la energía, la canción dibujada como un horizonte, polvo y grano. Todo en código.",
+ "para": [
+  "abrir",
+  "cerrar",
+  "transición"
+ ],
+ "material": "ninguno",
+ "energia": "sigue",
+ "dura": "una intro, una cortina o una canción entera",
+ "tecnica": {
+  "modo": "solo-sintesis",
+  "capas": [
+   "campo",
+   "partitura",
+   "polvo",
+   "recuerdo"
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "15-anoranza-de-natalia"
+ ],
+ "evitar": [],
+ "muestra": {
+  "de": "15-anoranza-de-natalia/render/sola-final.mp4",
+  "desde": 84.0,
+  "hasta": 96.0
+ }
+}

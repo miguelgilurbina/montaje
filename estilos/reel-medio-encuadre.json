@@ -1,0 +1,28 @@
+{
+ "nombre": "Reel a medio encuadre",
+ "frase": "El 3:2 en un 9:16 a mitad de camino entre entero y recortado, con relleno desenfocado arriba y abajo y siguiendo al sujeto: se ve el 61 % del ancho (recortado, el 37 %). El barco y el perro de perfil quedan enteros, y el título y el crédito caen en las bandas.",
+ "para": [
+  "mostrar el archivo",
+  "respirar"
+ ],
+ "material": "clips",
+ "energia": "media",
+ "dura": "un reel",
+ "tecnica": {
+  "modo": "pulso",
+  "salida": "1080x1920",
+  "encuadre": "medio",
+  "seguir": true
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "20-anoranza-para-redes"
+ ],
+ "evitar": [],
+ "muestra": {
+  "de": "20-anoranza-para-redes/render/9-16-medio-final-arreglado.mp4",
+  "desde": 0.0,
+  "hasta": 10.0
+ }
+}

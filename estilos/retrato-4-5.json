@@ -1,0 +1,30 @@
+{
+ "nombre": "Retrato 4:5 con relleno",
+ "frase": "El 3:2 entero en un 4:5 (el formato alto del feed de Instagram), con bandas de relleno desenfocado arriba y abajo: el más equilibrado de los verticales.",
+ "para": [
+  "mostrar el archivo",
+  "respirar"
+ ],
+ "material": "clips",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "frase",
+  "frase_compases": 4,
+  "salida": "1080x1350",
+  "encuadre": "relleno"
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "16-laboratorio-de-la-noche",
+  "20-anoranza-para-redes"
+ ],
+ "evitar": [],
+ "muestra": {
+  "de": "16-laboratorio-de-la-noche/render/retrato-4-5-final-84-98.mp4",
+  "desde": 1.0,
+  "hasta": 11.0
+ }
+}
