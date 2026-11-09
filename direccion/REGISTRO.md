@@ -112,3 +112,29 @@ archivo, qué comando correr) no van aquí.
 - «no tenemos tanto espacio en el disco para mantener todos los ejercicios, pero
   por eso pensaba que podríamos ir armando una galería dentro del mismo
   producto» → `estilos/` + muestras livianas + la galería `/estilos` del panel.
+
+## 2026-11-08 · 15 · Añoranza de Natalia (primer ejercicio con clips)
+
+- El material: 20 clips suyos (lanchas, playa, hamacas, campo) y «la canción de
+  mi abuela Natalia».
+- Qué busca, entre «que siga la canción» y «que se sienta como un recuerdo»:
+  «una mezcla de la primera con la segunda.»
+- El nombre del experimento: «Añoranza de Natalia».
+- Para la noche: «Trabajar en el motor para mejorar clips, y desarrollar más
+  ideas para la sintetización de videos.»
+- Sobre la versión a (una toma por frase, cámara lenta interpolada, fundidos
+  largos en el «uno» de cada frase): «Esta buenísimo. Me gustó».
+- «tenemos toda la noche para hacer pruebas. Y ir trabajando en el motor de
+  sinterización de videos. La idea de estos entrenamientos es ir armando una
+  galería»
+- Al irse a dormir: «le saques el jugo. No tienen que ser tramos completos de
+  la canción de 3 min. Puedes iterar y probar todos los formatos posibles. La
+  idea es que mañana tengamos una galería surtida y nutrida. Y experiencia».
+
+## 2026-11-09 · 21 · Laboratorio de la mañana
+
+- Sobre los temporales de Remotion que no se podían borrar: «Te doy permiso.»
+- «aún tenemos tiempo de hacer algo más. Revisa lo que tenemos hasta ahora y
+  mejora lo más posible hasta las 7:59 am. Le interesa que el motor tanto en
+  entrenamiento como en sinterización de videos y además propone que más podemos
+  hacer para el motor»

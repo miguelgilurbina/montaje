@@ -32,7 +32,28 @@ canción ───musica────▶ musica.json   ├─planificar─▶ tim
 
 - **Modos de montaje:** `collage` (papeles nítidos que se acumulan, cámara que
   se aleja), `cinta` (feed vertical en loop para reels), `actos` (de una imagen
-  a la vez al caos, con pared, ecos y coda), `superposicion` (doble exposición).
+  a la vez al caos, con pared, ecos y coda), `superposicion` (doble exposición),
+  `secuencia` (una tras otra a pantalla completa) y `pulso` (**clips**: cada uno
+  en su frase de la canción, saltando entre sus mejores momentos, con fundidos
+  o transiciones (cortina, iris, empuje, destello, zoom, persiana), fantasmas,
+  díptico, ventana, caleidoscopio, muro… y un estilo por tramo del guion; las
+  fotos del proyecto pueden entrar al mismo reparto, con un acercamiento lento).
+- **Clips:** copias de trabajo (giradas, HDR→SDR, cámara lenta interpolada), lectura
+  de cada clip como curvas (movimiento, cámara, temblor, nitidez, centro de
+  interés) y clips transformados (`transformar`: estela, eco, barrido temporal,
+  reversa, ida y vuelta).
+- **Síntesis:** capas hechas en código al pulso de la canción (grano y recuerdo,
+  fugas de luz, polvo, la canción dibujada, campos de color, tintas, calima,
+  televisor, onda, foco, golpe de zoom, títulos, «sonando ahora», cuenta
+  regresiva, tira de película, rótulos al pulso, la luz que sigue a la canción,
+  barras de cine, película gastada) y el sonido del proyector (`proyector`).
+- **Estilos:** el catálogo de recetas con su muestra y el veredicto, que se da en
+  la galería del panel (`/estilos`).
+- **Ejercicios:** `ejercicio` corre todas las versiones de un experimento (plan,
+  render, hoja, medidas y muestra) o barre una perilla y pone los valores lado a
+  lado (`--barrer fundido_golpes=0.5,1,2,4`), `revisar` mide un render (negro, cuadros
+  repetidos, destellos por segundo, sonoridad), `recorrido` junta la galería en un
+  video y `guion` propone los estilos que sirven en cada tramo de la canción.
 - **Al pulso:** la canción se analiza (BPM, golpes, compases, energía por golpe,
   secciones, tonalidad) y el ritmo de entradas la sigue: compás → golpe →
   corchea → semicorchea.
@@ -149,7 +170,9 @@ están en el repo.
 - `app/`, `components/`, `lib/` — el panel (Next): páginas, reproductor, tira,
   servidor de medios con rangos y los comandos como API.
 - `proyectos/<p>/` — cada experimento. `curaduria/` — listas de imágenes de marca
-  por biblioteca.
+  por biblioteca. `estilos/` — el catálogo de estilos.
+- `py/pruebas/` — pruebas del motor: `python -m pytest py/pruebas -q` (las que
+  necesitan medios se saltan si no están).
 
 ## Licencias
 
