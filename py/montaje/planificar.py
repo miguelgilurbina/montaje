@@ -159,6 +159,14 @@ def _asignar(items: list[dict], energia_llegada: np.ndarray, seccion: np.ndarray
 
 
 def planificar(p: Proyecto) -> None:
+    _planificar_modo(p)
+    # Las capas hechas en código (grano, fugas de luz, polvo…) van encima de cualquier modo.
+    from . import sintesis
+
+    sintesis.aplicar_y_escribir(p)
+
+
+def _planificar_modo(p: Proyecto) -> None:
     modo = p.cfg.get("montaje", {}).get("modo", "superposicion")
     if modo == "actos":
         from . import actos
@@ -176,10 +184,36 @@ def planificar(p: Proyecto) -> None:
         from . import secuencia
 
         secuencia.planificar(p)
+    elif modo == "pulso":
+        from . import pulso
+
+        pulso.planificar(p)
+    elif modo == "solo-sintesis":
+        _solo_sintesis(p)
     elif modo == "superposicion":
         _superposicion(p)
     else:
-        salir(f"modo de montaje desconocido: {modo} (hay: superposicion, actos, collage, cinta, secuencia)")
+        salir(f"modo de montaje desconocido: {modo} (hay: superposicion, actos, collage, cinta, secuencia, pulso, solo-sintesis)")
+
+
+def _solo_sintesis(p: Proyecto) -> None:
+    """Un video sin material: sólo la canción y las capas de `sintesis` (campo, partitura, polvo…)."""
+    out = {"ancho": 1920, "alto": 1080, "fps": 30, "fondo": "#07090d", **p.cfg.get("salida", {})}
+    m = musica.cargar(p)
+    if not p.cfg.get("sintesis"):
+        salir("modo solo-sintesis sin `sintesis` en proyecto.json: no habría nada que ver")
+    timeline = {
+        "version": 1,
+        "modo": "solo-sintesis",
+        "proyecto": p.nombre,
+        **{k: out[k] for k in ("ancho", "alto", "fps", "fondo")},
+        "duracion": math.ceil(m["duracion"] * out["fps"]),
+        "audio": audio_de(p, m),
+        "meta": {"generado": dt.datetime.now().isoformat(timespec="seconds"), "bpm": m["bpm"], "version": p.version},
+        "capas": [],
+    }
+    escribir(p.timeline, timeline)
+    print(f"sólo síntesis, {m['duracion']:.1f} s → {p.timeline}")
 
 
 def _superposicion(p: Proyecto) -> None:
@@ -310,7 +344,7 @@ def _superposicion(p: Proyecto) -> None:
         )
 
 
-LISTAS_POR_LINEA = ("capas", "piezas", "ecos", "camara", "luz", "actos")
+LISTAS_POR_LINEA = ("capas", "piezas", "ecos", "camara", "luz", "actos", "sintesis")
 
 
 def escribir(ruta, timeline: dict) -> None:

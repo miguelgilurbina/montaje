@@ -23,26 +23,247 @@ def _remotion() -> str:
 def _base_remotion(p: Proyecto) -> list[str]:
     if not p.timeline.exists():
         salir("falta el timeline; corre primero: python montaje.py planificar " + p.nombre)
+    tl = leer_json(p.timeline)
+    if any("video" in c for c in tl.get("capas", [])) or tl.get("sintesis"):
+        return [f"--props={p.timeline}", f"--public-dir={_publico(p, tl)}",
+                # Los clips: sin tope, la caché de cuadros del compositor crece hasta quedarse sin memoria.
+                "--offthreadvideo-cache-size-in-bytes=1500000000"]
     return [f"--props={p.timeline}", f"--public-dir={p.medios}"]
 
 
-def cmd_render(p: Proyecto, a) -> None:
+def _publico(p: Proyecto, tl: dict) -> Path:
+    """Una carpeta con sólo lo que el timeline usa, en vínculos duros.
+
+    Remotion copia la carpeta pública entera en cada render, y la biblioteca de clips
+    trae los originales del teléfono (gigas): así copia sólo las copias de trabajo y
+    el audio. Vínculos duros y no simbólicos: su servidor no sirve un enlace que
+    apunta fuera de la carpeta (404). En el disco no ocupan nada aparte.
+    """
+    rutas: set[str] = set()
+
+    def juntar(x) -> None:
+        if isinstance(x, dict):
+            for v in x.values():
+                juntar(v)
+        elif isinstance(x, list):
+            for v in x:
+                juntar(v)
+        elif isinstance(x, str) and 0 < len(x) < 400 and not x.startswith(("#", "http")):
+            try:
+                if (p.medios / x).is_file():
+                    rutas.add(x)
+                    # La pared de `actos` dibuja las miniaturas, que no están escritas en el timeline.
+                    if x.startswith("imagenes/") and (p.medios / "miniaturas" / x[len("imagenes/"):]).is_file():
+                        rutas.add("miniaturas/" + x[len("imagenes/"):])
+            except (OSError, ValueError):  # un texto cualquiera (un título, un color) no es una ruta
+                pass
+
+    juntar({k: v for k, v in tl.items() if k != "meta"})
+    # Una por versión: dos renders a la vez no se pisan la carpeta.
+    destino = p.salida(f".publico-{p.version}" if p.version else ".publico", "x").parent
+    shutil.rmtree(destino, ignore_errors=True)
+    for r in sorted(rutas):
+        enlace = destino / r
+        enlace.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            os.link(p.medios / r, enlace)
+        except OSError:  # otra unidad: no queda más que copiar
+            shutil.copy2(p.medios / r, enlace)
+    return destino
+
+
+def cmd_render(p: Proyecto, a) -> Path:
+    if not p.timeline.exists():
+        salir("falta el timeline; corre primero: python montaje.py planificar " + p.nombre)
     tl = leer_json(p.timeline)
     fps = tl["fps"]
     nombre = a.salida or ("preview" if a.preview else "final")
+    if p.version and not a.salida:
+        nombre = f"{p.version}-{nombre}"
     if a.desde is not None or a.hasta is not None:
         desde = round((a.desde or 0) * fps)
-        hasta = min(tl["duracion"] - 1, round(a.hasta * fps) if a.hasta is not None else tl["duracion"] - 1)
+        # `--frames` incluye el último: hasta el segundo 42 es hasta el cuadro anterior al del 42 (si no, dos tramos seguidos repiten un cuadro).
+        hasta = min(tl["duracion"] - 1, round(a.hasta * fps) - 1 if a.hasta is not None else tl["duracion"] - 1)
         rango = [f"--frames={desde}-{hasta}"]
         nombre += f"-{a.desde or 0:g}-{format(a.hasta, 'g') if a.hasta is not None else 'fin'}"
     else:
         rango = []
     destino = p.salida("render", f"{nombre}.mp4")
-    calidad = ["--scale=0.5", "--crf=28", "--jpeg-quality=70"] if a.preview else ["--crf=16", "--jpeg-quality=95"]
+    # Con grano, cada cuadro es ruido nuevo y la calidad constante no tiene techo: 3 min a CRF 16
+    # pesaron 1,9 GB (y 1,5 GB a CRF 21). Con grano, tasa fija: 12 Mb/s ≈ 270 MB por 3 min.
+    grano = any(s.get("tipo") == "recuerdo" and s.get("grano", 0) > 0 for s in tl.get("sintesis", []))
+    final = ["--video-bitrate=12M"] if grano else ["--crf=16"]
+    calidad = ["--scale=0.5", "--crf=28", "--jpeg-quality=70"] if a.preview else [*final, "--jpeg-quality=95"]
     orden = [_remotion(), "render", "src/index.ts", "Montaje", str(destino), *_base_remotion(p), *calidad, *rango]
     print(" ".join(orden))
     subprocess.run(orden, cwd=RAIZ, check=True)
     print(f"→ {destino}")
+    return destino
+
+
+class _Variante(Proyecto):
+    """Una versión que no está escrita en proyecto.json: la de base con una perilla cambiada.
+    Su timeline vive en las salidas (`barridos/`), no en el repo: es de usar y tirar."""
+
+    def __init__(self, nombre: str, base: str | None, clave: str, valor):
+        super().__init__(nombre, base)
+        self.cfg["montaje"] = {**self.cfg.get("montaje", {}), clave: valor}
+        import re
+
+        # El nombre va a un archivo: sin corchetes, comas ni dos puntos.
+        self.version = re.sub(r"[^\w.-]+", "_", f"{base + '-' if base else ''}{clave}-{valor}").strip("_")
+        self._timeline = self.salida("barridos", f"timeline-{self.version}.json")
+
+    @property
+    def timeline(self) -> Path:
+        return self._timeline
+
+
+def valores_del_barrido(texto: str) -> tuple[str, list]:
+    """«fundido_golpes=0.5,1,2» → la perilla y sus valores (números, true/false o palabras).
+    Si un valor lleva comas adentro (una lista), los valores se separan con punto y coma:
+    «rejilla=[3,3,0.25];[2,2,0.5]»."""
+    import json
+
+    clave, _, lista = texto.partition("=")
+    if not clave.strip() or not lista.strip():
+        salir("`--barrer` va como perilla=valor,valor,…  (por ejemplo: fundido_golpes=0.5,1,2,4)")
+    valores = []
+    for crudo in lista.split(";" if ";" in lista else ","):
+        try:
+            valores.append(json.loads(crudo.strip()))
+        except ValueError:
+            valores.append(crudo.strip())
+    return clave.strip(), valores
+
+
+def cmd_barrer(a) -> None:
+    """Una perilla, varios valores, una sola pantalla: cada valor se planifica y se renderiza sobre
+    la misma base, y las variantes salen lado a lado, sincronizadas, cada una con su etiqueta.
+    Es la forma de afinar mirando: «¿cuánto fundido?»."""
+    import tempfile
+    from argparse import Namespace
+
+    from . import estilos, planificar, revisar
+
+    clave, valores = valores_del_barrido(a.barrer)
+    if a.version and len(a.version) != 1:
+        salir("con `--barrer`, `--version` es una sola: la base sobre la que se cambia la perilla")
+    base = a.version[0] if a.version else None
+    if not 2 <= len(valores) <= 9:
+        salir("un barrido compara de dos a nueve valores")
+    renders = []
+    for valor in valores:
+        p = _Variante(a.proyecto, base, clave, valor)
+        print(f"\n── {clave} = {valor} " + "─" * 40)
+        planificar.planificar(p)
+        desde, hasta = (a.desde, a.hasta) if a.desde is not None or a.hasta is not None else (p.prueba or (None, None))
+        if hasta is None:
+            salir("un barrido se mira en un tramo corto: di `--desde` y `--hasta` (o pon `prueba` en la versión de base)")
+        pedido = Namespace(preview=not a.final, desde=desde, hasta=hasta, salida=None)
+        try:
+            render = cmd_render(p, pedido)
+        except subprocess.CalledProcessError:
+            render = cmd_render(p, pedido)
+        medida = revisar.medir(render)
+        print("  " + revisar.linea(medida))
+        for alerta in revisar.avisos(medida):
+            print(f"  ⚠ {alerta}")
+        renders.append((valor, render))
+
+    # Las variantes en una cuadrícula, cada una con su etiqueta; el sonido, el de la primera.
+    n = len(renders)
+    cols = 1 if n == 1 else 2 if n <= 4 else 3
+    filas = -(-n // cols)
+    sondeo = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height", "-of", "csv=p=0", str(renders[0][1])],
+                            capture_output=True, text=True, check=True).stdout.strip().split(",")
+    w, h = int(sondeo[0]), int(sondeo[1])
+    cw = (1920 // cols) // 2 * 2
+    ch = round(cw * h / w / 2) * 2
+    base_p = Proyecto(a.proyecto)
+    destino = base_p.salida("render", f"barrido-{base + '-' if base else ''}{clave}.mp4")
+    with tempfile.TemporaryDirectory() as tmp:
+        entradas, filtros, celdas = [], [], []
+        for i, (valor, render) in enumerate(renders):
+            cartel = Path(tmp) / f"e{i}.png"
+            estilos._rotulo(f"{clave} = {valor}", base or "base", cw, ch, cartel)
+            entradas += ["-i", str(render)]
+        for i in range(n):
+            entradas += ["-loop", "1", "-i", str(Path(tmp) / f"e{i}.png")]
+            filtros.append(f"[{i}:v]scale={cw}:{ch},setsar=1[v{i}];[v{i}][{n + i}:v]overlay=0:0:shortest=1[c{i}]")
+            celdas.append(f"{(i % cols) * cw}_{(i // cols) * ch}")
+        filtros.append("".join(f"[c{i}]" for i in range(n)) + f"xstack=inputs={n}:layout={'|'.join(celdas)}:fill=black,format=yuv420p[s]")
+        subprocess.run(["ffmpeg", "-v", "error", "-y", *entradas, "-filter_complex", ";".join(filtros), "-map", "[s]", "-map", "0:a?",
+                        "-c:v", "libx264", "-crf", "20", "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart", str(destino)], check=True)
+    cmd_hoja(base_p, Namespace(video=destino.name, cada=a.cada, desde=None, hasta=None, ancho=640, columnas=3, filas=5))
+    print(f"\n{n} valores de `{clave}` lado a lado ({cols}×{filas}) → {destino}")
+
+
+def cmd_ejercicio(a) -> None:
+    """Una vuelta de ejercicio: cada versión del proyecto se planifica, se renderiza su tramo
+    de prueba y se saca su hoja de contacto; con `--muestra`, además corta la muestra del
+    estilo que la versión nombra. Una versión que falla no detiene a las demás.
+
+    En proyecto.json, cada versión dice cómo se prueba:
+
+        "versiones": {"cortina": {"transicion": "cortina", "prueba": [30, 46], "estilo": "transicion-cortina"}}
+    """
+    import time
+    from argparse import Namespace
+
+    from . import estilos, planificar, revisar
+    from .rutas import MEDIOS
+
+    if a.barrer:
+        cmd_barrer(a)
+        return
+    base = Proyecto(a.proyecto)
+    versiones = a.version or list(base.cfg.get("versiones", {}))
+    if not versiones:
+        salir(f"«{a.proyecto}» no tiene `versiones` en proyecto.json: un ejercicio compara versiones")
+    filas = []
+    for v in versiones:
+        t0 = time.time()
+        try:
+            p = Proyecto(a.proyecto, v)
+            print(f"\n── {v} " + "─" * max(4, 60 - len(v)))
+            planificar.planificar(p)
+            desde, hasta = (a.desde, a.hasta) if a.desde is not None or a.hasta is not None else (p.prueba or (None, None))
+            pedido = Namespace(preview=not a.final, desde=desde, hasta=hasta, salida=None)
+            try:
+                render = cmd_render(p, pedido)
+            except subprocess.CalledProcessError:
+                # Remotion a veces pierde un cuadro («Failed to fetch») y a la segunda sale.
+                print("  el render falló; va de nuevo")
+                render = cmd_render(p, pedido)
+            cmd_hoja(p, Namespace(video=render.name, cada=a.cada, desde=None, hasta=None, ancho=384, columnas=5, filas=6))
+            # Lo que la hoja no muestra: negro, cuadros repetidos, destellos, sonoridad.
+            medida = revisar.medir(render)
+            print("  " + revisar.linea(medida))
+            alertas = revisar.avisos(medida)
+            for alerta in alertas:
+                print(f"  ⚠ {alerta}")
+            nota = ""
+            if a.muestra:
+                if not p.estilo:
+                    nota = "sin `estilo`: no se cortó muestra"
+                elif not (estilos.ESTILOS / f"{p.estilo}.json").exists():
+                    nota = f"falta estilos/{p.estilo}.json: no se cortó muestra"
+                else:
+                    largo = (hasta - (desde or 0)) if hasta is not None else leer_json(p.timeline)["duracion"] / leer_json(p.timeline)["fps"] - (desde or 0)
+                    m0, m1 = p.muestra or (0.5, min(largo, 10.5))
+                    estilos.muestra(p.estilo, render.relative_to(MEDIOS).as_posix(), m0, m1, 540)
+                    nota = f"muestra → {p.estilo}"
+            filas.append((v, f"{time.time() - t0:5.0f} s", render.name, " · ".join([nota, *(f"⚠ {x}" for x in alertas)]).strip(" ·")))
+        except (SystemExit, Exception) as err:  # noqa: BLE001  una versión mal escrita no detiene a las demás
+            filas.append((v, f"{time.time() - t0:5.0f} s", "FALLÓ", f"{type(err).__name__}: {err}"[:110]))
+    print("\n" + "═" * 64)
+    for v, tiempo, archivo, nota in filas:
+        print(f"{v:<24} {tiempo}  {archivo}  {nota}")
+    fallas = sum(f[2] == "FALLÓ" for f in filas)
+    print(f"{len(filas) - fallas} de {len(filas)} versiones; renders y hojas en {base.salidas}")
+    if fallas:
+        raise SystemExit(1)
 
 
 def cmd_studio(p: Proyecto, a) -> None:
@@ -65,7 +286,7 @@ def cmd_panel(p: Proyecto, a) -> None:
     subprocess.run([str(exe), "dev", "-H", "127.0.0.1", "-p", str(a.puerto)], cwd=RAIZ, check=True, env=entorno)
 
 
-def cmd_hoja(p: Proyecto, a) -> None:
+def cmd_hoja(p: Proyecto, a) -> list[Path]:
     """Hojas de contacto de un render: lo que Claude mira para juzgar el montaje."""
     from PIL import Image, ImageDraw
 
@@ -103,6 +324,7 @@ def cmd_hoja(p: Proyecto, a) -> None:
     print(f"{len(cuadros)} cuadros cada {a.cada} s en {len(salidas)} hojas:")
     for s in salidas:
         print(f"  {s}")
+    return salidas
 
 
 def main() -> None:
@@ -132,7 +354,15 @@ def main() -> None:
     s = nuevo("musica", "analiza la canción: pulso, energía, secciones → analisis/musica.json + .png")
     s.add_argument("--archivo", help="ruta relativa a los medios (por defecto, `musica` del proyecto)")
 
-    nuevo("planificar", "catálogo + partitura → proyectos/<p>/timeline.json")
+    s = nuevo("planificar", "catálogo + partitura → proyectos/<p>/timeline.json")
+    s.add_argument("--version", help="una de las `versiones` de proyecto.json → timeline-<version>.json")
+
+    nuevo("clips", "copias de trabajo y curvas de los clips (movimiento, cámara, nitidez, cortes) → analisis/clips.json + hojas/clips.png")
+
+    s = nuevo("transformar", "clips nuevos hechos de los clips: estela de luz, eco, barrido temporal o cámara lenta suave → transformados/")
+    s.add_argument("--efecto", required=True, help="estela, eco, barrido o lento")
+    s.add_argument("--clip", nargs="+", help="ids de los clips (por defecto, todos)")
+    s.add_argument("--fuerza", type=float, help="estela, eco y barrido: segundos · lento: veces más lento")
 
     nuevo("ensamblar", "programa (render de otro experimento) + interludios con su audio → medios/<p>/render")
 
@@ -144,6 +374,11 @@ def main() -> None:
 
     nuevo("sonorizar", "suma la capa de efectos (sintetizados, al pulso de los momentos) a un render ya hecho → medios/<p>/render")
 
+    s = nuevo("proyector", "el sonido del proyector (traqueteo, pop del 2, clac de diapositiva) sobre un render con película o fotos que despiertan")
+    s.add_argument("--version", help="usa timeline-<version>.json y <version>-final.mp4")
+    s.add_argument("--render", help="el archivo en render/ (por defecto, el final de la versión)")
+    s.add_argument("--nivel", type=float, default=16.0, help="dB por debajo de la canción")
+
     nuevo("sincronizar", "vuelve a poner al pulso una ráfaga dentro de un video que ya existe (sin tocar el audio) → medios/<p>/render")
 
     s = nuevo("paquete", "prepara video, portada y texto para cada red (no publica nada)")
@@ -154,10 +389,12 @@ def main() -> None:
     s.add_argument("--desde", type=float, help="segundo inicial")
     s.add_argument("--hasta", type=float, help="segundo final")
     s.add_argument("--salida", help="nombre del archivo, sin extensión")
+    s.add_argument("--version", help="renderiza timeline-<version>.json; el archivo lleva el nombre de la versión")
 
     s = nuevo("studio", "abre Remotion Studio con el timeline del proyecto")
     s.add_argument("--puerto", type=int, default=3300)
     s.add_argument("--sin-abrir", action="store_true", help="no abrir el navegador del sistema")
+    s.add_argument("--version", help="abre timeline-<version>.json")
 
     s = nuevo("panel", "abre el panel en el navegador: el video sin renderizar, proyecto.json y los comandos")
     s.add_argument("--puerto", type=int, default=3310)
@@ -170,6 +407,20 @@ def main() -> None:
     s.add_argument("--ancho", type=int, default=384)
     s.add_argument("--columnas", type=int, default=5)
     s.add_argument("--filas", type=int, default=6)
+
+    s = nuevo("revisar", "mide un render: negro, imagen quieta, cuadros repetidos, cortes, destellos por segundo y sonoridad")
+    s.add_argument("video", help="nombre del archivo dentro de medios/render")
+
+    nuevo("guion", "el esqueleto del guion: la canción en tramos con los estilos de la galería que sirven en cada uno → proyectos/<p>/GUION.md (si no existe)")
+
+    s = nuevo("ejercicio", "una vuelta de ejercicio: planifica cada versión, renderiza su tramo de prueba, saca su hoja y (con --muestra) la muestra de su estilo")
+    s.add_argument("--version", nargs="+", help="sólo estas versiones (por defecto, todas las de proyecto.json)")
+    s.add_argument("--desde", type=float, help="segundo inicial (por defecto, el `prueba` de cada versión)")
+    s.add_argument("--hasta", type=float, help="segundo final")
+    s.add_argument("--final", action="store_true", help="resolución completa (por defecto, preview a la mitad)")
+    s.add_argument("--cada", type=float, default=1.0, help="segundos entre cuadros de la hoja")
+    s.add_argument("--muestra", action="store_true", help="corta la muestra del `estilo` de cada versión (conviene con --final)")
+    s.add_argument("--barrer", help="perilla=valor,valor,…: en vez de las versiones, la misma base con esa perilla en cada valor, lado a lado (fundido_golpes=0.5,1,2,4)")
 
     # El catálogo de estilos no es de un proyecto: no lleva <proyecto>.
     s = sub.add_parser("estilos", help="valida y lista el catálogo de estilos (estilos/*.json)", description="valida y lista el catálogo de estilos (estilos/*.json)")
@@ -184,18 +435,52 @@ def main() -> None:
     s.add_argument("--hasta", type=float, required=True)
     s.add_argument("--alto", type=int, default=540, help="alto en píxeles (no agranda)")
 
+    s = sub.add_parser("veredicto", help="anota el veredicto de Miguel sobre un estilo (lo usa la galería del panel)",
+                       description="anota el veredicto de Miguel sobre un estilo: estado, fecha y, si las hay, sus palabras (también en direccion/REGISTRO.md)")
+    s.add_argument("estilo", help="id del estilo")
+    s.add_argument("estado", help="aprobado, a medias, rechazado, o propuesta para deshacer")
+    s.add_argument("--cita", default="", help="lo que dijo Miguel, con sus palabras")
+    s.add_argument("--via", default="chat", help="por dónde lo dio: chat o galeria")
+
+    s = sub.add_parser("recorrido", help="la galería de corrido: unos segundos de cada muestra con su nombre, en un video liviano → medios/estilos/recorridos/",
+                       description="la galería de corrido: unos segundos de cada muestra con su nombre, en un video liviano → medios/estilos/recorridos/")
+    s.add_argument("--en", help="sólo los estilos vistos en este experimento (p. ej. 21-laboratorio-de-la-manana)")
+    s.add_argument("--estado", help="aprobado, a medias, pedido, propuesta o rechazado")
+    s.add_argument("--para", help="sólo los que sirven para esto")
+    s.add_argument("--segundos", type=float, default=6.0, help="cuánto se ve cada estilo")
+    s.add_argument("--salida", help="nombre del archivo, sin extensión")
+    s.add_argument("--peso", type=float, default=28.0, help="MB como mucho (el chat acepta 30)")
+
     a = ap.parse_args()
-    if a.comando in ("estilos", "muestra"):
+    if a.comando in ("estilos", "muestra", "recorrido", "veredicto"):
         from . import estilos
 
-        if a.comando == "estilos":
+        if a.comando == "veredicto":
+            import json
+
+            e = estilos.veredicto(a.estilo, a.estado, a.cita, a.via)
+            print(json.dumps({"estado": e["estado"], "miguel": e["miguel"]}, ensure_ascii=False))
+        elif a.comando == "estilos":
             estilos.listar(a.para, a.material, a.estado)
+        elif a.comando == "recorrido":
+            estilos.recorrido(a.en, a.estado, a.para, a.segundos, a.salida, a.peso)
         else:
             estilos.muestra(a.estilo, a.de, a.desde, a.hasta, a.alto)
         return
-    p = Proyecto(a.proyecto)
+    if a.comando == "ejercicio":
+        cmd_ejercicio(a)
+        return
+    p = Proyecto(a.proyecto, getattr(a, "version", None))
     if a.comando == "catalogo":
         catalogo.construir(p)
+    elif a.comando == "clips":
+        from . import clips
+
+        clips.analizar(p)
+    elif a.comando == "transformar":
+        from . import transformar
+
+        transformar.transformar(p, a.efecto, a.clip, a.fuerza)
     elif a.comando == "imagenes":
         if a.prueba:
             catalogo.generar_prueba(p)
@@ -209,6 +494,14 @@ def main() -> None:
         musica.pista_prueba(p, a.bpm, a.duracion)
     elif a.comando == "musica":
         musica.analizar(p, a.archivo)
+    elif a.comando == "revisar":
+        from . import revisar
+
+        revisar.revisar(p, a.video)
+    elif a.comando == "guion":
+        from . import guion
+
+        guion.escribir(p)
     elif a.comando == "planificar":
         planificar.planificar(p)
     elif a.comando == "ensamblar":
@@ -231,6 +524,10 @@ def main() -> None:
         from . import sonido
 
         sonido.sonorizar(p)
+    elif a.comando == "proyector":
+        from . import proyector
+
+        proyector.proyector(p, a.render, a.nivel)
     elif a.comando == "sincronizar":
         from . import sincronizar
 

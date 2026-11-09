@@ -30,6 +30,42 @@ export type Capa = {
   seccion: number;
   /** Modo actos: desde el cuadro `desde` la imagen vuela a su pieza de la pared y llega en `fin`. */
   vuelo?: {desde: number; pieza: number};
+  /** Si está, `img` es un clip (su copia de trabajo) y esto dice qué parte se ve. */
+  video?: CapaVideo;
+  /** La capa se ve sólo dentro de este rectángulo del lienzo (un díptico: cada clip en su mitad). */
+  marco?: Rect;
+  /** Sombra de la caja (0..1): un clip chico sobre un fondo, como una ventana. */
+  sombra?: number;
+  /**
+   * Cómo entra sobre el clip que se va, durante sus `entrada` cuadros (sin esto, fundido):
+   * cortina (un borde que barre), iris (un círculo que se abre desde `centro`), empuje
+   * (entra corriendo al otro), destello (un fogonazo), zoom (llega desde cerca, desenfocado)
+   * o persiana (franjas). `dir` es hacia dónde se mueve: [1, 0] = a la derecha.
+   */
+  transicion?: {tipo: 'cortina' | 'iris' | 'empuje' | 'destello' | 'zoom' | 'persiana'; dir: [number, number]; centro?: [number, number]};
+  /** En sus últimos `cuadros`, el clip que entra con empuje la corre hacia `dir` hasta sacarla del cuadro. */
+  empujada?: {cuadros: number; dir: [number, number]};
+};
+
+export type CapaVideo = {
+  /** Segundo del clip en que empieza la capa. */
+  desde: number;
+  /** 1 = tiempo real; 0.8 = un poco lento. */
+  velocidad: number;
+  /** Tamaño del clip (px), para el relleno. */
+  fuente: [number, number];
+  /** `img` es una foto, no un clip: se dibuja quieta y el movimiento se lo dan el zoom y la deriva de la capa. */
+  foto?: boolean;
+  /** Detrás, el mismo clip agrandado, desenfocado y oscuro: para un vertical en un cuadro horizontal (o al revés). */
+  relleno?: boolean;
+  /** Volumen del sonido del clip (0 o ausente = mudo). */
+  volumen?: number;
+  /** Caleidoscopio: el centro del clip en espejo, 2 (izquierda | derecha) o 4 (los cuatro cuartos). */
+  espejo?: 2 | 4;
+  /** Mosaico de tiempo: el clip repetido en una cuadrícula, cada celda `desfase` s más atrás que la anterior (en diagonal). */
+  rejilla?: {columnas: number; filas: number; desfase: number};
+  /** La foto que despierta: los primeros `congelar` cuadros, quieto en `desde` y apagado; después corre desde ahí y toma color. */
+  congelar?: number;
 };
 
 /** Una pieza de la pared, en unidades de pared (centro y tamaño). Aparece en el cuadro `llega`. */
@@ -173,6 +209,234 @@ export type Logo = {
   }[];
 };
 
+/**
+ * Capas hechas en código (src/Sintesis.tsx), encima del montaje salvo `campo`, que va
+ * de fondo. `fundido`: cuadros en que aparecen y se van. Las arma py/montaje/sintesis.py.
+ */
+export type Sintesis =
+  | {
+      tipo: 'recuerdo';
+      ini: number;
+      fin: number;
+      fundido?: number;
+      /** 0..1 cada uno; `temblor` en px. */
+      grano: number;
+      vineta: number;
+      calidez: number;
+      parpadeo: number;
+      temblor: number;
+      halo: number;
+      semilla: number;
+    }
+  | {
+      tipo: 'fugas';
+      ini: number;
+      fin: number;
+      fundido?: number;
+      /** Cada fuga: posición y deriva como fracción del cuadro, radio como fracción del ancho. */
+      destellos: {ini: number; fin: number; x: number; y: number; dx: number; dy: number; radio: number; giro: number; color: string; fuerza: number}[];
+    }
+  | {tipo: 'polvo'; ini: number; fin: number; fundido?: number; motas: number; golpes: number[]; brillo: number; semilla: number}
+  | {
+      tipo: 'partitura';
+      ini: number;
+      fin: number;
+      fundido?: number;
+      /** JSON de la biblioteca con el espectro de la canción, cuadro a cuadro. */
+      espectro: string;
+      /** Segundo de la canción en que empieza el video (el tramo). */
+      desde: number;
+      color: string;
+      /** Línea de base y altura máxima, como fracción del alto. */
+      y: number;
+      alto: number;
+      opacidad: number;
+    }
+  | {
+      tipo: 'campo';
+      ini: number;
+      fin: number;
+      fundido?: number;
+      colores: string[];
+      /** [cuadro, energía 0..1]. */
+      energia: [number, number][];
+      /** Cuadros de los «uno». */
+      golpes: number[];
+      opacidad: number;
+      mezcla: string;
+      semilla: number;
+    }
+  | {
+      /** Los clips teñidos a dos tintas: las sombras de `oscuro`, las luces de `claro`. Filtro sobre el contenido. */
+      tipo: 'tinta';
+      ini: number;
+      fin: number;
+      fundido?: number;
+      oscuro: string;
+      claro: string;
+      /** 0 = el original … 1 = sólo las dos tintas. */
+      fuerza: number;
+    }
+  | {
+      /** El aire caliente: la imagen ondula hacia arriba y se agita en los golpes. Filtro sobre el contenido. */
+      tipo: 'calima';
+      ini: number;
+      fin: number;
+      fundido?: number;
+      /** Desplazamiento en px: el de siempre y el empujón de cada golpe. */
+      fuerza: number;
+      golpe: number;
+      golpes: number[];
+      semilla: number;
+    }
+  | {
+      /** Televisor viejo: líneas de barrido, colores corridos, una franja de luz que baja y la pantalla redondeada. */
+      tipo: 'tv';
+      ini: number;
+      fin: number;
+      fundido?: number;
+      lineas: number;
+      /** Corrimiento del rojo y el azul, en px. */
+      corrimiento: number;
+      curva: number;
+      semilla: number;
+    }
+  | {
+      /** Un texto que aparece letra por letra al pulso y se va con un fundido. */
+      tipo: 'titulo';
+      ini: number;
+      fin: number;
+      fundido?: number;
+      texto: string;
+      /** cartel (condensada, mayúsculas), oraculo (itálica serif), dato (mono). */
+      voz: 'cartel' | 'oraculo' | 'dato';
+      /** Alto de la letra, como fracción del alto del cuadro. */
+      tam: number;
+      /** Posición del texto (fracciones del cuadro) y alineación. */
+      x: number;
+      y: number;
+      alinear: 'centro' | 'izquierda';
+      color: string;
+      /** Cuadro en que aparece cada letra (los espacios cuentan). */
+      letras: number[];
+    }
+  | {
+      /** «Sonando ahora»: el crédito de la canción como en una emisora, abajo a la izquierda. */
+      tipo: 'credito';
+      ini: number;
+      fin: number;
+      fundido?: number;
+      lineas: [string, string];
+      color: string;
+    }
+  | {
+      /**
+       * Rótulos: las frases del guion en pantalla. Cada una entra palabra por palabra
+       * (cada palabra en su cuadro, al pulso) y se va con un fundido antes de la siguiente.
+       */
+      tipo: 'rotulos';
+      ini: number;
+      fin: number;
+      fundido?: number;
+      voz: 'cartel' | 'oraculo' | 'dato';
+      /** Alto de la letra, como fracción del lado menor del cuadro. */
+      tam: number;
+      lugar: 'abajo' | 'centro' | 'arriba';
+      color: string;
+      /** Oscuridad de la mancha que va detrás para que se lea sobre cualquier imagen (0 = sin mancha). */
+      sombra: number;
+      lineas: {ini: number; fin: number; palabras: [string, number][]}[];
+    }
+  | {
+      /** La cuenta regresiva de la cola de una película (4, 3, 2, 1), un número por golpe; tapa el cuadro. */
+      tipo: 'cuenta';
+      ini: number;
+      fin: number;
+      fundido?: number;
+      /** Cuadro en que empieza cada número. */
+      numeros: [number, number][];
+      semilla: number;
+    }
+  | {
+      /** La tira de película: bandas negras a los lados con sus perforaciones, que corren. */
+      tipo: 'pelicula';
+      ini: number;
+      fin: number;
+      fundido?: number;
+      /** Ancho de cada banda, como fracción del ancho del cuadro. */
+      borde: number;
+      /** Perforaciones que pasan por segundo. */
+      velocidad: number;
+    }
+  | {
+      /** Una piedra en el agua: en cada golpe pedido, un anillo de distorsión se abre desde el centro. Filtro. */
+      tipo: 'onda';
+      ini: number;
+      fin: number;
+      fundido?: number;
+      golpes: number[];
+      /** Desplazamiento máximo (px) y cuadros que tarda el anillo en salir del cuadro. */
+      fuerza: number;
+      dura: number;
+    }
+  | {
+      /** El foco respira: desenfocado entre golpes, nítido en cada golpe. Filtro. */
+      tipo: 'foco';
+      ini: number;
+      fin: number;
+      fundido?: number;
+      golpes: number[];
+      /** Desenfoque máximo (px). */
+      fuerza: number;
+    }
+  | {
+      /** Un empujón de zoom en cada golpe pedido, que vuelve enseguida. */
+      tipo: 'golpe';
+      ini: number;
+      fin: number;
+      fundido?: number;
+      golpes: number[];
+      /** Cuánto empuja (0.03 = 3 %). */
+      fuerza: number;
+    }
+  | {
+      /** La luz sigue a la canción: brillo y color del contenido según la energía, con un latido en cada golpe. Filtro. */
+      tipo: 'luz';
+      ini: number;
+      fin: number;
+      fundido?: number;
+      /** La energía suavizada: [cuadro, 0..1] por golpe. */
+      energia: [number, number][];
+      golpes: number[];
+      /** Brillo y saturación en la calma y en el pico (1 = sin cambio). */
+      brillo: [number, number];
+      color: [number, number];
+      /** Cuánto sube el brillo en cada golpe. */
+      golpe: number;
+    }
+  | {
+      /** Las franjas negras del cine: se cierran en `abre` cuadros al entrar y se abren al salir. */
+      tipo: 'barras';
+      ini: number;
+      fin: number;
+      fundido?: number;
+      /** Proporción del cuadro que queda a la vista (2.39 = cinemascope). */
+      formato: number;
+      abre: number;
+      color: string;
+    }
+  | {
+      /** La película gastada: rayones verticales que duran un rato y manchas de un cuadro. */
+      tipo: 'rayas';
+      ini: number;
+      fin: number;
+      fundido?: number;
+      /** Cuántos rayones y manchas (0..1). */
+      rayones: number;
+      manchas: number;
+      semilla: number;
+    };
+
 export type Collage = {
   /** Opacidad de la sombra de cada papel (0 = sin sombra). */
   sombra: number;
@@ -187,7 +451,7 @@ export type Timeline = {
   version: number;
   /** Prefijo de URL para los archivos de la biblioteca cuando lo dibuja el panel (no el render). */
   base?: string;
-  modo?: 'superposicion' | 'actos' | 'collage' | 'cinta' | 'secuencia';
+  modo?: 'superposicion' | 'actos' | 'collage' | 'cinta' | 'secuencia' | 'pulso' | 'solo-sintesis';
   proyecto: string;
   ancho: number;
   alto: number;
@@ -205,6 +469,7 @@ export type Timeline = {
   cinta?: Cinta;
   momentos?: Momento[];
   logo?: Logo;
+  sintesis?: Sintesis[];
   capas: Capa[];
 };
 

@@ -29,7 +29,16 @@ def salir(mensaje: str) -> None:
 
 
 class Proyecto:
-    def __init__(self, nombre: str):
+    """Un experimento. Con `version`, una de las variantes con nombre de su `montaje`
+    (`"versiones": {"b": {...}}` en proyecto.json): sus parámetros se suman a los del
+    montaje (y su `sintesis`, si trae, reemplaza a la del proyecto) y su timeline es
+    `timeline-<version>.json`, para comparar sin pisarse.
+
+    Una versión también puede decir cómo se prueba (lo lee `ejercicio`): `prueba`
+    ([desde, hasta] en segundos: el tramo que se renderiza), `estilo` (el id del
+    estilo de la galería que muestra) y `muestra` ([desde, hasta] dentro de ese render)."""
+
+    def __init__(self, nombre: str, version: str | None = None):
         self.nombre = nombre
         self.dir = PROYECTOS / nombre
         archivo = self.dir / "proyecto.json"
@@ -39,10 +48,27 @@ class Proyecto:
         self.cfg = json.loads(archivo.read_text(encoding="utf-8"))
         self.medios = MEDIOS / self.cfg.get("biblioteca", nombre)
         self.salidas = MEDIOS / nombre
+        self.version = version
+        self.prueba: list[float] | None = None
+        self.estilo: str | None = None
+        self.muestra: list[float] | None = None
+        if version:
+            versiones = self.cfg.get("versiones", {})
+            if version not in versiones:
+                salir(f"«{nombre}» no tiene la versión «{version}». Tiene: {', '.join(versiones) or 'ninguna'}")
+            propios = dict(versiones[version])
+            # Cómo se prueba la versión no es una perilla del montaje.
+            self.prueba, self.estilo, self.muestra = (propios.pop(k, None) for k in ("prueba", "estilo", "muestra"))
+            # Una versión puede traer sus propias capas de síntesis y su propio lienzo
+            # (reemplazan a los del proyecto): así un mismo tramo se prueba en 9:16, 1:1…
+            for clave in ("sintesis", "salida"):
+                if clave in propios:
+                    self.cfg[clave] = propios.pop(clave)
+            self.cfg["montaje"] = {**self.cfg.get("montaje", {}), **propios}
 
     @property
     def timeline(self) -> Path:
-        return self.dir / "timeline.json"
+        return self.dir / (f"timeline-{self.version}.json" if self.version else "timeline.json")
 
     def medio(self, *partes: str) -> Path:
         """Ruta dentro de la biblioteca (imágenes, audio, catálogo), creando la carpeta madre."""

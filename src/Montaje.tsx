@@ -2,6 +2,7 @@ import type {CSSProperties} from 'react';
 import {
   AbsoluteFill,
   Easing,
+  Freeze,
   Html5Audio,
   Img,
   interpolate,
@@ -10,7 +11,8 @@ import {
   staticFile,
   useCurrentFrame,
 } from 'remotion';
-import type {Capa, ClaveCamara, Eco, Momento, Pieza, Timeline} from './tipos';
+import {CapaSintesis, escalaPelicula, filtroDe, golpeDeZoom, temblorDe} from './Sintesis';
+import type {Capa, CapaVideo, ClaveCamara, Eco, Momento, Pieza, Timeline} from './tipos';
 
 /** Cuadros antes de su entrada en que la imagen ya está montada (invisible), para que el Studio la tenga cargada. */
 const PRECARGA = 20;
@@ -36,34 +38,56 @@ export const Montaje: React.FC<Timeline> = (tl) => {
   const ecos = (tl.ecos ?? []).filter((e) => frame >= e.ini && frame < e.fin);
   const hayPared = Boolean(tl.mural && tl.camara?.length);
 
+  const sintesis = tl.sintesis ?? [];
+  const escala = sintesis.length ? escalaPelicula(tl, frame) * golpeDeZoom(tl, frame) : 1;
+  const temblor = sintesis.length ? [temblorDe(tl, frame), escala !== 1 ? `scale(${escala})` : ''].filter(Boolean).join(' ') || undefined : undefined;
+  const {filtro, defs} = sintesis.length ? filtroDe(tl, frame) : {filtro: undefined, defs: null};
+
   return (
     <AbsoluteFill style={{backgroundColor: tl.fondo, isolation: 'isolate', overflow: 'hidden'}}>
-      {tl.collage && tl.camara?.length ? <CollageInfinito tl={tl} frame={frame} /> : null}
-      {tl.cinta ? <CintaInfinita tl={tl} frame={frame} /> : null}
-      {(tl.momentos ?? []).map((mo) =>
-        mo.tipo === 'video' ? <MomentoVideo key={`v-${mo.ini}`} tl={tl} mo={mo} /> : null,
-      )}
-      {(tl.momentos ?? [])
-        .filter((mo) => frame >= mo.ini - PRECARGA && frame <= mo.fin)
-        .map((mo) =>
-          mo.tipo === 'destacado' ? (
-            <Destacado key={`d-${mo.ini}`} tl={tl} mo={mo} frame={frame} />
-          ) : mo.tipo === 'rafaga' ? (
-            <Rafaga key={`r-${mo.ini}`} tl={tl} mo={mo} frame={frame} />
-          ) : null,
+      {sintesis
+        .filter((s) => s.tipo === 'campo')
+        .map((s, i) => (
+          <CapaSintesis key={`campo-${i}`} tl={tl} s={s} frame={frame} />
+        ))}
+      {defs}
+      {/* Sin temblor ni filtro el contenido va suelto, como siempre: un div con transform o filter cambiaría cómo se mezclan las capas. */}
+      <Contenido temblor={temblor} filtro={filtro}>
+        {tl.collage && tl.camara?.length ? <CollageInfinito tl={tl} frame={frame} /> : null}
+        {tl.cinta ? <CintaInfinita tl={tl} frame={frame} /> : null}
+        {(tl.momentos ?? []).map((mo) =>
+          mo.tipo === 'video' ? <MomentoVideo key={`v-${mo.ini}`} tl={tl} mo={mo} /> : null,
         )}
-      {hayPared ? <Pared tl={tl} g={frame} /> : null}
-      {ecos.map((e) => (
-        <CapaEco key={`eco-${e.ini}`} tl={tl} e={e} frame={frame} />
-      ))}
-      {visibles.map((c) => (
-        <CapaImagen key={c.id} c={c} frame={frame} tl={tl} />
-      ))}
+        {(tl.momentos ?? [])
+          .filter((mo) => frame >= mo.ini - PRECARGA && frame <= mo.fin)
+          .map((mo) =>
+            mo.tipo === 'destacado' ? (
+              <Destacado key={`d-${mo.ini}`} tl={tl} mo={mo} frame={frame} />
+            ) : mo.tipo === 'rafaga' ? (
+              <Rafaga key={`r-${mo.ini}`} tl={tl} mo={mo} frame={frame} />
+            ) : null,
+          )}
+        {hayPared ? <Pared tl={tl} g={frame} /> : null}
+        {ecos.map((e) => (
+          <CapaEco key={`eco-${e.ini}`} tl={tl} e={e} frame={frame} />
+        ))}
+        {visibles.map((c) => (
+          <CapaImagen key={c.id} c={c} frame={frame} tl={tl} />
+        ))}
+      </Contenido>
+      {sintesis
+        .filter((s) => s.tipo !== 'campo')
+        .map((s, i) => (
+          <CapaSintesis key={`sintesis-${i}`} tl={tl} s={s} frame={frame} />
+        ))}
       {tl.logo ? <LogoCuriana tl={tl} frame={frame} /> : null}
       <Audio tl={tl} />
     </AbsoluteFill>
   );
 };
+
+const Contenido: React.FC<{temblor?: string; filtro?: string; children: React.ReactNode}> = ({temblor, filtro, children}) =>
+  temblor || filtro ? <AbsoluteFill style={{transform: temblor, filter: filtro}}>{children}</AbsoluteFill> : <>{children}</>;
 
 /** El tramo de la canción, con fundidos opcionales al entrar y al salir. */
 const Audio: React.FC<{tl: Timeline}> = ({tl}) => {
@@ -86,6 +110,7 @@ const Audio: React.FC<{tl: Timeline}> = ({tl}) => {
 // ── Protagonistas ──────────────────────────────────────────────────────────
 
 const CapaImagen: React.FC<{c: Capa; frame: number; tl: Timeline}> = ({c, frame, tl}) => {
+  if (c.video) return <CapaClip c={c} frame={frame} tl={tl} />;
   if (c.vuelo && tl.mural && tl.camara && frame >= c.vuelo.desde) {
     return <ImagenEnVuelo c={c} frame={frame} tl={tl} />;
   }
@@ -110,6 +135,269 @@ const CapaImagen: React.FC<{c: Capa; frame: number; tl: Timeline}> = ({c, frame,
     ...mascara((c.borde ?? 0) * Math.min(c.ancho, c.alto)),
   };
   return <Img src={archivo(tl, c.img)} style={estilo} />;
+};
+
+/**
+ * Un clip como capa: los mismos fundidos, zoom, deriva y mezcla que una imagen, pero
+ * corre desde `video.desde` a `video.velocidad`. Con `relleno`, detrás va el mismo
+ * clip cubriendo el cuadro, desenfocado y oscuro (un vertical en un cuadro horizontal).
+ */
+const CapaClip: React.FC<{c: Capa; frame: number; tl: Timeline}> = ({c, frame, tl}) => {
+  const v = c.video!;
+  const t = avance(frame, c.ini, c.fin);
+  const alEntrar = c.entrada > 0 ? interpolate(frame, [c.ini, c.ini + c.entrada], [0, 1], {...fijo, easing: suave}) : 1;
+  const alSalir = c.salida > 0 ? interpolate(frame, [c.fin - c.salida, c.fin], [1, 0], {...fijo, easing: suave}) : 1;
+  let opacidad = frame < c.ini ? 0 : c.opacidad * Math.min(alEntrar, alSalir);
+  // La transición: cómo entra sobre el clip que se va (que sigue entero debajo hasta que ésta termina).
+  const paso = transicionDe(c, frame, alEntrar, tl);
+  if (paso) opacidad = frame < c.ini ? 0 : c.opacidad * paso.opacidad * alSalir;
+  // En una toma corta puede estar entrando todavía cuando ya la empujan: los dos movimientos se suman, no se pisan.
+  const empuje = empujeDe(c, frame, tl);
+  const sale: CSSProperties = empuje.transform && paso?.estilo.transform ? {transform: `${empuje.transform} ${paso.estilo.transform}`} : empuje;
+  const src = archivo(tl, c.img);
+  // La foto que despierta: quieta en `desde` durante `congelar` cuadros; para que después
+  // corra desde ahí sin saltar, el clip arranca `congelar` cuadros antes.
+  const congelar = v.congelar ?? 0;
+  const local = frame - c.ini;
+  const despierta = congelar ? interpolate(local, [congelar - 2, congelar + 12], [0, 1], fijo) : 1;
+  const reproducir = {
+    src,
+    trimBefore: Math.max(0, Math.round(v.desde * tl.fps - congelar * v.velocidad)),
+    playbackRate: v.velocidad,
+    muted: !v.volumen,
+    volume: v.volumen ?? 0,
+  };
+  const m = c.marco;
+  const caja = (
+    <div
+      style={{
+        position: 'absolute',
+        left: c.x - c.ancho / 2 - (m ? m.x - m.ancho / 2 : 0),
+        top: c.y - c.alto / 2 - (m ? m.y - m.alto / 2 : 0),
+        width: c.ancho,
+        height: c.alto,
+        overflow: 'hidden',
+        transform: `translate(${c.deriva[0] * t}px, ${c.deriva[1] * t}px) scale(${entre(c.zoom, t)})`,
+        filter: despierta < 1 ? `sepia(${(0.6 * (1 - despierta)).toFixed(3)}) saturate(${(0.35 + 0.65 * despierta).toFixed(3)})` : undefined,
+        boxShadow: c.sombra ? `0 ${c.alto * 0.02}px ${c.alto * 0.07}px rgba(0,0,0,${c.sombra})` : undefined,
+        ...mascara((c.borde ?? 0) * Math.min(c.ancho, c.alto)),
+      }}
+    >
+      <Freeze frame={congelar} active={congelar > 0 && local < congelar}>
+        <DibujoClip v={v} reproducir={reproducir} ancho={c.ancho} alto={c.alto} fps={tl.fps} fondo={tl.fondo} />
+      </Freeze>
+    </div>
+  );
+  return (
+    <Sequence
+      from={c.ini}
+      durationInFrames={Math.max(1, c.fin - c.ini)}
+      premountFor={PRECARGA}
+      style={{opacity: opacidad, mixBlendMode: c.mezcla as CSSProperties['mixBlendMode'], ...paso?.estilo, ...sale}}
+    >
+      <AbsoluteFill style={paso?.contenido !== undefined ? {opacity: paso.contenido} : undefined}>
+        {v.relleno ? (
+          // Con la foto que despierta, el fondo desenfocado se queda quieto con ella (antes seguía corriendo detrás).
+          <Freeze frame={congelar} active={congelar > 0 && local < congelar}>
+            <Relleno tl={tl} fuente={v.fuente} reproducir={reproducir} foto={v.foto} />
+          </Freeze>
+        ) : null}
+        {m ? (
+          <div style={{position: 'absolute', left: m.x - m.ancho / 2, top: m.y - m.alto / 2, width: m.ancho, height: m.alto, overflow: 'hidden'}}>
+            {caja}
+          </div>
+        ) : (
+          caja
+        )}
+      </AbsoluteFill>
+      {/* El fogonazo va después del clip (encima de él) y sin z-index: con uno se pintaba también sobre títulos y rótulos. */}
+      {paso?.encima}
+    </Sequence>
+  );
+};
+
+/**
+ * La entrada de un clip con `transicion`: en vez de aparecer de a poco, se abre paso
+ * sobre el que se va. `u` es el avance de su entrada (0 → 1, ya suavizado). Devuelve
+ * la opacidad y el estilo de la capa entera en este cuadro, y lo que va encima (el fogonazo).
+ */
+function transicionDe(
+  c: Capa,
+  frame: number,
+  u: number,
+  tl: Timeline,
+): {opacidad: number; estilo: CSSProperties; encima?: React.ReactNode; contenido?: number} | null {
+  const tr = c.transicion;
+  if (!tr || c.entrada <= 0 || frame >= c.ini + c.entrada) return null;
+  const W = tl.ancho;
+  const H = tl.alto;
+  const [dx, dy] = tr.dir;
+  const mascara_ = (m: string): CSSProperties => ({maskImage: m, WebkitMaskImage: m});
+  // Hacia dónde avanza el borde: 90deg = de izquierda a derecha.
+  const angulo = dx > 0 ? 90 : dx < 0 ? 270 : dy > 0 ? 180 : 0;
+  if (tr.tipo === 'cortina') {
+    const borde = 7; // % del cuadro que ocupa el borde blando
+    const p = u * (100 + borde);
+    return {opacidad: 1, estilo: mascara_(`linear-gradient(${angulo}deg, #000 ${(p - borde).toFixed(2)}%, transparent ${p.toFixed(2)}%)`)};
+  }
+  if (tr.tipo === 'iris') {
+    const [cx, cy] = tr.centro ?? [W / 2, H / 2];
+    const lejos = Math.hypot(Math.max(cx, W - cx), Math.max(cy, H - cy));
+    const borde = H * 0.05;
+    const r = u * (lejos + borde);
+    return {opacidad: 1, estilo: mascara_(`radial-gradient(circle at ${cx}px ${cy}px, #000 ${Math.max(0, r - borde).toFixed(1)}px, transparent ${r.toFixed(1)}px)`)};
+  }
+  if (tr.tipo === 'persiana') {
+    const horizontal = dx !== 0;
+    const ancho = (horizontal ? W : H) / (horizontal ? 14 : 9);
+    const lleno = (u * ancho).toFixed(1);
+    return {
+      opacidad: 1,
+      estilo: mascara_(`repeating-linear-gradient(${angulo}deg, #000 0, #000 ${lleno}px, transparent ${lleno}px, transparent ${ancho.toFixed(1)}px)`),
+    };
+  }
+  if (tr.tipo === 'empuje') {
+    return {opacidad: 1, estilo: {transform: `translate(${(-dx * (1 - u) * W).toFixed(1)}px, ${(-dy * (1 - u) * H).toFixed(1)}px)`}};
+  }
+  if (tr.tipo === 'zoom') {
+    return {opacidad: u, estilo: {transform: `scale(${(1 + 0.28 * (1 - u)).toFixed(4)})`, filter: `blur(${((1 - u) * H * 0.012).toFixed(1)}px)`}};
+  }
+  // destello: un fogonazo cálido sube sobre el clip que se va y lo tapa; el nuevo aparece
+  // debajo justo en el tope de la luz, y se descubre cuando baja.
+  const luz = u < 0.45 ? u / 0.45 : 1 - (u - 0.45) / 0.55;
+  return {
+    opacidad: 1,
+    estilo: {},
+    contenido: u < 0.45 ? 0 : 1,
+    encima: (
+      <AbsoluteFill style={{backgroundColor: '#fff1d0', opacity: Math.pow(Math.max(0, luz), 0.8), mixBlendMode: 'screen', pointerEvents: 'none'}} />
+    ),
+  };
+}
+
+/** El clip que se va cuando el siguiente entra con empuje: sale por el otro lado en los mismos cuadros. */
+function empujeDe(c: Capa, frame: number, tl: Timeline): CSSProperties {
+  const e = c.empujada;
+  if (!e || e.cuadros <= 0 || frame < c.fin - e.cuadros) return {};
+  const u = interpolate(frame, [c.fin - e.cuadros, c.fin], [0, 1], {...fijo, easing: suave});
+  return {transform: `translate(${(e.dir[0] * u * tl.ancho).toFixed(1)}px, ${(e.dir[1] * u * tl.alto).toFixed(1)}px)`};
+}
+
+type Reproducir = {src: string; trimBefore: number; playbackRate: number; muted: boolean; volume: number};
+
+/** Lo que se ve en la caja de una capa: el clip corriendo o, si la capa es una foto, la imagen. */
+const Fuente: React.FC<{foto?: boolean; src: string; trimBefore: number; playbackRate: number; muted?: boolean; volume?: number; style?: CSSProperties}> = ({
+  foto,
+  style,
+  ...reproducir
+}) => (foto ? <Img src={reproducir.src} style={style} /> : <OffthreadVideo {...reproducir} style={style} />);
+
+/**
+ * El clip dentro de su caja: entero, en caleidoscopio (`espejo`: el centro del clip
+ * repetido en espejo, en dos mitades o cuatro cuartos que empalman en las costuras)
+ * o en mosaico de tiempo (`rejilla`: el clip en cada celda, cada una `desfase` s más
+ * atrás, en diagonal, así el movimiento recorre la cuadrícula como una ola).
+ */
+const DibujoClip: React.FC<{v: CapaVideo; reproducir: Reproducir; ancho: number; alto: number; fps: number; fondo: string}> = ({
+  v,
+  reproducir,
+  ancho,
+  alto,
+  fps,
+  fondo,
+}) => {
+  const lleno: CSSProperties = {width: '100%', height: '100%', objectFit: 'fill', display: 'block'};
+  if (v.espejo) {
+    const cols = 2;
+    const filas = v.espejo === 4 ? 2 : 1;
+    const w = ancho / cols;
+    const h = alto / filas;
+    const celdas = [];
+    for (let j = 0; j < filas; j++) {
+      for (let i = 0; i < cols; i++) {
+        celdas.push(
+          <div
+            key={`${i}-${j}`}
+            style={{
+              position: 'absolute',
+              left: i * w,
+              top: j * h,
+              width: w,
+              height: h,
+              overflow: 'hidden',
+              transform: `scale(${i ? -1 : 1}, ${j ? -1 : 1})`,
+            }}
+          >
+            {/* El centro del clip: la caja entera corrida medio tramo. */}
+            <Fuente
+              foto={v.foto}
+              {...reproducir}
+              muted={i + j > 0 || reproducir.muted}
+              style={{position: 'absolute', left: -(ancho - w) / 2, top: -(alto - h) / 2, width: ancho, height: alto, maxWidth: 'none'}}
+            />
+          </div>,
+        );
+      }
+    }
+    return <>{celdas}</>;
+  }
+  if (v.rejilla) {
+    const {columnas, filas, desfase} = v.rejilla;
+    const hueco = Math.max(2, Math.round(Math.min(ancho, alto) * 0.006));
+    const w = (ancho - hueco * (columnas - 1)) / columnas;
+    const h = (alto - hueco * (filas - 1)) / filas;
+    const celdas = [];
+    for (let j = 0; j < filas; j++) {
+      for (let i = 0; i < columnas; i++) {
+        const atras = Math.round((i + j) * desfase * fps);
+        celdas.push(
+          <div key={`${i}-${j}`} style={{position: 'absolute', left: i * (w + hueco), top: j * (h + hueco), width: w, height: h, overflow: 'hidden'}}>
+            <Fuente
+              foto={v.foto}
+              {...reproducir}
+              trimBefore={Math.max(0, reproducir.trimBefore - atras)}
+              muted={i + j > 0 || reproducir.muted}
+              style={{...lleno, objectFit: 'cover'}}
+            />
+          </div>,
+        );
+      }
+    }
+    return <div style={{position: 'absolute', inset: 0, backgroundColor: fondo}}>{celdas}</div>;
+  }
+  return <Fuente foto={v.foto} {...reproducir} style={lleno} />;
+};
+
+/** El clip cubriendo el cuadro, desenfocado y oscuro. Se dibuja a un cuarto y se agranda: el desenfoque cuesta mucho menos. */
+const Relleno: React.FC<{
+  tl: Timeline;
+  fuente: [number, number];
+  reproducir: {src: string; trimBefore: number; playbackRate: number};
+  foto?: boolean;
+}> = ({tl, fuente, reproducir, foto}) => {
+  const k = 4;
+  const W = tl.ancho / k;
+  const H = tl.alto / k;
+  const s = Math.max(W / fuente[0], H / fuente[1]) * 1.12;
+  const w = fuente[0] * s;
+  const h = fuente[1] * s;
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        width: W,
+        height: H,
+        overflow: 'hidden',
+        transformOrigin: '0 0',
+        transform: `scale(${k})`,
+        filter: 'blur(5px) brightness(0.4) saturate(0.8)',
+      }}
+    >
+      <Fuente foto={foto} {...reproducir} muted style={{position: 'absolute', left: (W - w) / 2, top: (H - h) / 2, width: w, height: h, maxWidth: 'none'}} />
+    </div>
+  );
 };
 
 /** De su lugar como protagonista a su pieza en la pared, siguiendo a la cámara mientras vuela. */

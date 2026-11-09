@@ -37,6 +37,11 @@ POR_DEFECTO = {
     "hueco": 0.025,  # espacio entre imágenes (fracción del alto del cuadro)
     "paso_cuadros": 7,  # cuánto dura cada paso de la cinta
     "sombra": 0.5,
+    # Qué imágenes entran a la rueda de color. Pensado para la galería de Curiana;
+    # material más apagado (postales viejas, fotogramas) necesita abrirlo.
+    "sat_min": 0.25,
+    "luz": [0.15, 0.75],
+    "una_por_generacion": True,
 }
 
 
@@ -88,7 +93,7 @@ def planificar(p: Proyecto) -> None:
         if cfg.get("momento") == "rafaga":
             rafagas[ci] = _rafaga(items, cfg.get("por_compas", 8), reservadas, rng, cfg.get("de"))
 
-    resto = _rueda_de_color(items, n - len(fijas), reservadas, rng)
+    resto = _rueda_de_color(items, n - len(fijas), reservadas, rng, prm["sat_min"], prm["luz"], prm["una_por_generacion"])
     cinta, j = [], 0
     for k in range(n):
         if k in fijas:
@@ -210,11 +215,12 @@ def planificar(p: Proyecto) -> None:
         print(f"  {ci}  {c['ini']:6.2f} s  {que}")
 
 
-def _rueda_de_color(items: list[dict], cuantas: int, reservadas: set[str], rng) -> list[dict]:
+def _rueda_de_color(items: list[dict], cuantas: int, reservadas: set[str], rng,
+                    sat_min: float = 0.25, luz: tuple[float, float] = (0.15, 0.75), una_por_generacion: bool = True) -> list[dict]:
     """Imágenes saturadas, una por generación, ordenadas alrededor del círculo de color:
     al final de la cinta el color vuelve a donde empezó (el loop también es cromático)."""
     gens = {_generacion(r) for r in reservadas}
-    candidatas = [it for it in items if it["id"] not in reservadas and it["sat"] >= 0.25 and not it.get("marca") and 0.15 <= it["luz"] <= 0.75]
+    candidatas = [it for it in items if it["id"] not in reservadas and it["sat"] >= sat_min and not it.get("marca") and luz[0] <= it["luz"] <= luz[1]]
     rng.shuffle(candidatas)
     elegidas, usadas = [], set(gens)
     # Repartidas por el círculo: se toma la más cercana a cada tono objetivo.
@@ -225,7 +231,7 @@ def _rueda_de_color(items: list[dict], cuantas: int, reservadas: set[str], rng) 
             d = abs(it["tono"] - objetivo) % 360
             return min(d, 360 - d)
 
-        libres = [it for it in candidatas if _generacion(it["id"]) not in usadas]
+        libres = [it for it in candidatas if it not in elegidas and (not una_por_generacion or _generacion(it["id"]) not in usadas)]
         if not libres:
             salir("no alcanzan las imágenes para la cinta")
         it = min(libres, key=distancia)
