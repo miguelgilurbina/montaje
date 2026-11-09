@@ -54,12 +54,13 @@ export function listar(): Resumen[] {
     });
 }
 
-export function leerProyecto(nombre: string): Proyecto | null {
-  if (!nombreValido(nombre)) return null;
+/** Un proyecto, con el timeline de la base o, con `version`, el de esa versión (`timeline-<version>.json`). */
+export function leerProyecto(nombre: string, version?: string | null): Proyecto | null {
+  if (!nombreValido(nombre) || (version && !nombreValido(version))) return null;
   const cfg = leerJson<Record<string, unknown>>(path.join(PROYECTOS, nombre, 'proyecto.json'));
   if (!cfg) return null;
   const biblioteca = typeof cfg.biblioteca === 'string' ? cfg.biblioteca : nombre;
-  const timeline = leerJson<Timeline>(path.join(PROYECTOS, nombre, 'timeline.json'));
+  const timeline = leerJson<Timeline>(path.join(PROYECTOS, nombre, version ? `timeline-${version}.json` : 'timeline.json'));
   // Las salidas (análisis, renders) son propias del experimento; la biblioteca, compartida.
   const musica = leerJson<Musica>(path.join(MEDIOS, nombre, 'analisis', 'musica.json'));
   return {

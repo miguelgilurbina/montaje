@@ -2,7 +2,6 @@
 // sin `Range`, el reproductor no puede saltar dentro del audio ni del video.
 import {createReadStream, statSync} from 'node:fs';
 import path from 'node:path';
-import {Readable} from 'node:stream';
 import {MEDIOS} from '@/lib/proyectos';
 
 export const dynamic = 'force-dynamic';
@@ -15,6 +14,9 @@ const TIPOS: Record<string, string> = {
   '.mp3': 'audio/mpeg',
   '.wav': 'audio/wav',
   '.mp4': 'video/mp4',
+  '.mov': 'video/quicktime',
+  '.m4v': 'video/mp4',
+  '.webm': 'video/webm',
   '.json': 'application/json',
 };
 
@@ -44,7 +46,7 @@ export async function GET(req: Request, {params}: {params: Promise<{ruta: string
     }
     status = 206;
   }
-  const cuerpo = Readable.toWeb(createReadStream(archivo, {start: inicio, end: fin})) as ReadableStream;
+  const cuerpo = flujo(createReadStream(archivo, {start: inicio, end: fin}), req.signal);
   const headers: Record<string, string> = {
     'Content-Type': TIPOS[path.extname(archivo).toLowerCase()] ?? 'application/octet-stream',
     'Content-Length': String(fin - inicio + 1),
@@ -53,4 +55,50 @@ export async function GET(req: Request, {params}: {params: Promise<{ruta: string
   };
   if (status === 206) headers['Content-Range'] = `bytes ${inicio}-${fin}/${st.size}`;
   return new Response(cuerpo, {status, headers});
+}
+
+/**
+ * El archivo como flujo web, a mano: `Readable.toWeb` sigue escribiendo cuando el
+ * navegador corta la descarga (lo hace a cada salto dentro de un video) y Node tira
+ * «Controller is already closed» como excepción sin atrapar. Aquí, cortar cierra el archivo.
+ */
+function flujo(nodo: ReturnType<typeof createReadStream>, senal: AbortSignal): ReadableStream<Uint8Array> {
+  let cerrado = false;
+  const cerrar = () => {
+    cerrado = true;
+    nodo.destroy();
+  };
+  return new ReadableStream<Uint8Array>({
+    start(ctl) {
+      nodo.on('data', (b) => {
+        if (cerrado) return;
+        try {
+          ctl.enqueue(new Uint8Array(b as Buffer));
+        } catch {
+          cerrar();
+          return;
+        }
+        if ((ctl.desiredSize ?? 1) <= 0) nodo.pause();
+      });
+      nodo.on('end', () => {
+        if (cerrado) return;
+        cerrado = true;
+        try {
+          ctl.close();
+        } catch {}
+      });
+      nodo.on('error', (e) => {
+        if (cerrado) return;
+        cerrado = true;
+        try {
+          ctl.error(e);
+        } catch {}
+      });
+      senal.addEventListener('abort', cerrar);
+    },
+    pull() {
+      nodo.resume();
+    },
+    cancel: cerrar,
+  });
 }

@@ -2,7 +2,7 @@
 // español y una frase que dice qué hace. El panel lo muestra; GLOSARIO.md lo
 // explica largo. Los valores por defecto son los de POR_DEFECTO en Python.
 
-export type Modo = 'collage' | 'secuencia' | 'cinta' | 'actos' | 'superposicion';
+export type Modo = 'collage' | 'secuencia' | 'cinta' | 'actos' | 'superposicion' | 'pulso';
 
 export const MODOS: Record<Modo, {nombre: string; frase: string}> = {
   collage: {nombre: 'Collage infinito', frase: 'Papeles nítidos que caen uno sobre otro al pulso y se quedan; la cámara se aleja mientras el cuadro se llena.'},
@@ -10,6 +10,7 @@ export const MODOS: Record<Modo, {nombre: string; frase: string}> = {
   cinta: {nombre: 'Cinta (reel en loop)', frase: 'Una columna de imágenes que sube un paso por golpe; el último cuadro empalma con el primero.'},
   actos: {nombre: 'Actos', frase: 'De una imagen a la vez al caos: cada protagonista vuela a una pared que crece; ecos, respiros y coda.'},
   superposicion: {nombre: 'Superposición', frase: 'Doble exposición pareja: las imágenes entran al pulso, se mezclan y se van.'},
+  pulso: {nombre: 'Pulso (clips)', frase: 'Para clips: cada uno ocupa una frase de la canción y salta al pulso entre sus mejores momentos; entre clips, fundido de recuerdo.'},
 };
 
 export type Parametro = {
@@ -77,6 +78,38 @@ export const PARAMETROS: Record<Modo, Parametro[]> = {
     {clave: 'golpe_camara', nombre: 'Golpe de cámara', frase: 'Empujón de zoom en cada primer tiempo, con el caos al máximo.', tipo: 'numero', min: 0, max: 0.2, paso: 0.005, defecto: 0.035},
     {clave: 'umbral_silencio', nombre: 'Umbral de respiro', frase: 'Una sección con menos energía que esto es un respiro: sin entradas.', tipo: 'numero', min: 0, max: 1, paso: 0.05, defecto: 0.35},
     {clave: 'compases_calma', nombre: 'Acto I métrico', frase: 'En la calma, las entradas caen parejas en los primeros tiempos.', tipo: 'bool', defecto: true},
+  ],
+  pulso: [
+    {clave: 'corte', nombre: 'Saltos dentro del clip', frase: 'Cada cuánto salta a otro momento del mismo clip: nunca (una toma por frase), en cada compás, en cada golpe, o según la energía (la calma no salta, el pico más).', tipo: 'opcion', opciones: ['energia', 'frase', 'compas', 'golpe'], defecto: 'energia'},
+    {clave: 'frase_compases', nombre: 'Compases por frase', frase: 'Cuántos compases dura un clip antes de pasar al siguiente (se reinicia en cada sección de la canción).', tipo: 'entero', min: 1, max: 16, paso: 1, defecto: 4},
+    {clave: 'umbral_calma', nombre: 'Umbral de calma', frase: 'Bajo esta energía la frase es calma: una toma larga, más lenta, con fundidos largos.', tipo: 'numero', min: 0, max: 1, paso: 0.05, defecto: 0.35},
+    {clave: 'umbral_pico', nombre: 'Umbral de pico', frase: 'Desde esta energía, varios saltos por compás.', tipo: 'numero', min: 0, max: 1, paso: 0.05, defecto: 0.7},
+    {clave: 'pico_por_compas', nombre: 'Saltos por compás en el pico', frase: '2 = cada dos golpes; 4 = en cada golpe.', tipo: 'entero', min: 1, max: 8, paso: 1, defecto: 2},
+    {clave: 'fundido_golpes', nombre: 'Fundido entre clips', frase: 'Golpes que dura el paso de un clip al siguiente. 0 = corte seco.', tipo: 'numero', min: 0, max: 8, paso: 0.25, defecto: 1},
+    {clave: 'fundido_calma_golpes', nombre: 'Fundido en la calma', frase: 'Golpes del paso entre clips cuando una de las dos frases es calma.', tipo: 'numero', min: 0, max: 16, paso: 0.25, defecto: 3},
+    {clave: 'fundido_dentro_golpes', nombre: 'Fundido entre momentos', frase: 'Golpes del paso entre dos momentos del mismo clip. 0 = salto seco.', tipo: 'numero', min: 0, max: 4, paso: 0.25, defecto: 0},
+    {clave: 'transicion', nombre: 'Transición entre clips', frase: 'Cómo entra un clip sobre el que se va, en lo que dura el fundido: fundido, cortina (un borde que barre), iris (un círculo que se abre desde el sujeto), empuje (lo corre), destello (un fogonazo), zoom (llega desde cerca) o persiana. Ronda las recorre todas.', tipo: 'opcion', opciones: ['fundido', 'cortina', 'iris', 'empuje', 'destello', 'zoom', 'persiana', 'ronda'], defecto: 'fundido'},
+    {clave: 'transicion_dir', nombre: 'Hacia dónde', frase: 'La dirección de la cortina, el empuje y la persiana. Alterna va a la derecha y a la izquierda.', tipo: 'opcion', opciones: ['alterna', 'derecha', 'izquierda', 'arriba', 'abajo'], defecto: 'alterna'},
+    {clave: 'mezclar_fotos', nombre: 'Mezclar fotos', frase: 'Las fotos del proyecto entran al mismo reparto que los clips, cada una con un acercamiento lento.', tipo: 'bool', defecto: false},
+    {clave: 'zoom_foto', nombre: 'Acercamiento de las fotos', frase: 'Cuánto se acerca (o se aleja) cada foto mientras está en pantalla.', tipo: 'numero', min: 0, max: 0.3, paso: 0.01, defecto: 0.08},
+    {clave: 'doble_golpes', nombre: 'Doble exposición', frase: 'En la calma, el clip que viene aparece transparente estos golpes antes de llegar. 0 = sin doble.', tipo: 'numero', min: 0, max: 16, paso: 0.5, defecto: 0},
+    {clave: 'doble_opacidad', nombre: 'Opacidad de la doble', frase: 'Cuánto se ve el clip que viene.', tipo: 'numero', min: 0, max: 1, paso: 0.05, defecto: 0.45},
+    {clave: 'estela_golpes', nombre: 'Estela', frase: 'El clip que se va se queda como un brillo que se apaga, estos golpes. 0 = sin estela.', tipo: 'numero', min: 0, max: 8, paso: 0.25, defecto: 0},
+    {clave: 'estela_opacidad', nombre: 'Opacidad de la estela', frase: 'Cuánto se ve el clip que se va.', tipo: 'numero', min: 0, max: 1, paso: 0.05, defecto: 0.35},
+    {clave: 'velocidad', nombre: 'Velocidad', frase: 'Velocidad de los clips en la calma y en el pico (1 = tiempo real). Si un clip no alcanza, va más lento.', tipo: 'par', min: 0.25, max: 2, paso: 0.05, partes: ['calma', 'pico'], defecto: [0.8, 1]},
+    {clave: 'orden', nombre: 'Orden', frase: 'Por fecha (la del teléfono), por nombre de archivo, o del más quieto al más movido.', tipo: 'opcion', opciones: ['fecha', 'nombre', 'movimiento'], defecto: 'fecha'},
+    {clave: 'encuadre', nombre: 'Encuadre', frase: 'Cubrir recorta para llenar el cuadro; contener lo deja entero con bordes; relleno pone detrás el mismo clip desenfocado; medio queda a mitad de camino (con relleno); auto elige según la forma.', tipo: 'opcion', opciones: ['auto', 'cubrir', 'contener', 'relleno', 'medio'], defecto: 'auto'},
+    {clave: 'zoom', nombre: 'Acercamiento', frase: 'Cuánto se acerca lentamente cada toma larga.', tipo: 'numero', min: 0, max: 0.2, paso: 0.005, defecto: 0.03},
+    {clave: 'frase_compases_calma', nombre: 'Compases por frase en la calma', frase: 'Frases más largas donde la música descansa. 0 = igual que el resto.', tipo: 'entero', min: 0, max: 16, paso: 1, defecto: 0},
+    {clave: 'reparto', nombre: 'Reparto', frase: 'Seguido: cada clip ocupa sus frases juntas. Ronda: los clips vuelven en orden, cada vuelta con otros momentos.', tipo: 'opcion', opciones: ['seguido', 'ronda'], defecto: 'seguido'},
+    {clave: 'borde_toma', nombre: 'Borde de la toma', frase: 'Segundos del arranque y del final de cada clip que no se usan (el pulgar en el botón). Clips hechos con IA: 0.1.', tipo: 'numero', min: 0, max: 1, paso: 0.05, defecto: 0.35},
+    {clave: 'congelar_golpes', nombre: 'Foto que despierta', frase: 'Golpes que cada clip entra congelado y apagado, antes de moverse y tomar color. 0 = no.', tipo: 'numero', min: 0, max: 8, paso: 0.5, defecto: 0},
+    {clave: 'doble_en', nombre: 'Doble exposición en', frase: 'Sólo en la calma, o en todos los cambios de clip.', tipo: 'opcion', opciones: ['calma', 'todo'], defecto: 'calma'},
+    {clave: 'dividir', nombre: 'Díptico', frase: '2 = dos clips a la vez, cada uno en su mitad (lado a lado; uno sobre otro en vertical). 1 = uno.', tipo: 'entero', min: 1, max: 2, paso: 1, defecto: 1},
+    {clave: 'escala', nombre: 'Ventana', frase: 'Tamaño del clip en el cuadro; menos de 1 lo deja como una ventana sobre el fondo (con síntesis «campo» detrás).', tipo: 'numero', min: 0.3, max: 1, paso: 0.01, defecto: 1},
+    {clave: 'sombra', nombre: 'Sombra', frase: 'Sombra del clip cuando es una ventana.', tipo: 'numero', min: 0, max: 1, paso: 0.05, defecto: 0},
+    {clave: 'espejo', nombre: 'Caleidoscopio', frase: 'El centro del clip en espejo: 2 mitades o 4 cuartos. 0 = no.', tipo: 'entero', min: 0, max: 4, paso: 2, defecto: 0},
+    {clave: 'transformados', nombre: 'Clips transformados', frase: 'Usar la variante transformada de cada clip (estela, eco, barrido, reversa…) en la calma o siempre.', tipo: 'opcion', opciones: ['no', 'calma', 'todo'], defecto: 'no'},
   ],
   superposicion: [
     {...semilla, defecto: 7},

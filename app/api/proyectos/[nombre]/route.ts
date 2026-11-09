@@ -2,9 +2,9 @@ import {escribirProyecto, leerProyecto, nombreValido} from '@/lib/proyectos';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(_req: Request, {params}: {params: Promise<{nombre: string}>}) {
+export async function GET(req: Request, {params}: {params: Promise<{nombre: string}>}) {
   const {nombre} = await params;
-  const p = leerProyecto(nombre);
+  const p = leerProyecto(nombre, new URL(req.url).searchParams.get('v'));
   if (!p) return Response.json({error: `no existe el proyecto ${nombre}`}, {status: 404});
   return Response.json(p);
 }

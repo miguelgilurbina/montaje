@@ -836,3 +836,27 @@ button:disabled {
   border-color: var(--filete-fuerte);
   margin-bottom: 20px;
 }
+
+/* Las versiones de un proyecto, arriba del reproductor. */
+.versiones { display: flex; flex-wrap: wrap; gap: 6px; align-items: baseline; margin-top: 8px; }
+.versiones a { padding: 2px 8px; border: 1px solid #2a3442; border-radius: 999px; font-size: 12px; text-decoration: none; color: inherit; }
+.versiones a.activo { border-color: #e6b43c; color: #e6b43c; }
+
+/* El veredicto en la tarjeta de un estilo: unas palabras y tres botones. */
+.veredicto { display: flex; flex-direction: column; gap: 6px; margin-top: 2px; }
+.veredicto input {
+  width: 100%; padding: 5px 8px; background: var(--fondo); border: 1px solid var(--filete); border-radius: 3px;
+  color: var(--hueso); font: inherit; font-size: 13px;
+}
+.veredicto input:focus { outline: none; border-color: var(--filete-fuerte); }
+.veredicto .botones { display: flex; flex-wrap: wrap; gap: 6px; }
+.veredicto button {
+  padding: 3px 12px; background: transparent; border: 1px solid var(--filete-fuerte); border-radius: 999px;
+  color: var(--hueso-2); font: inherit; font-size: 12px; cursor: pointer;
+}
+.veredicto button:hover:not(:disabled) { color: var(--hueso); border-color: var(--hueso-2); }
+.veredicto button:disabled { opacity: 0.5; cursor: default; }
+.veredicto button.v-aprobado.activo { border-color: var(--acento); color: var(--acento); }
+.veredicto button.v-a-medias.activo { border-color: var(--hueso); color: var(--hueso); }
+.veredicto button.v-rechazado.activo { border-color: var(--rojo); color: #e2a158; }
+.veredicto button.v-deshacer { margin-left: auto; border-style: dashed; }

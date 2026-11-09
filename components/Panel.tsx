@@ -12,7 +12,7 @@ import Formulario from './Formulario';
 import Reproductor from './Reproductor';
 import Tira, {type MomentoCfg, type SalvaCfg, type Seleccion} from './Tira';
 
-type Meta = {generado?: string; imagenes?: number};
+type Meta = {generado?: string; imagenes?: number; clips?: number};
 const ESPERA_MS = 600;
 
 const nuevoMomento = (compas: number, tipo: TipoMomento, biblioteca: Biblioteca | null): MomentoCfg => {
@@ -33,7 +33,7 @@ const nuevoMomento = (compas: number, tipo: TipoMomento, biblioteca: Biblioteca 
  * la tira donde se ponen los momentos y la ficha del elegido; a la derecha las
  * decisiones de proyecto.json como formulario. Cada cambio replanifica solo.
  */
-export default function Panel({proyectos, inicial}: {proyectos: Resumen[]; inicial: Proyecto}) {
+export default function Panel({proyectos, inicial, version = null}: {proyectos: Resumen[]; inicial: Proyecto; version?: string | null}) {
   const nombre = inicial.nombre;
   const [cfg, setCfg] = useState<Cfg>(inicial.cfg);
   const [guardado, setGuardado] = useState<Cfg>(inicial.cfg);
@@ -87,11 +87,11 @@ export default function Panel({proyectos, inicial}: {proyectos: Resumen[]; inici
   }, [consola]);
 
   const recargarTimeline = useCallback(async () => {
-    const r = await fetch(`/api/proyectos/${nombre}`, {cache: 'no-store'});
+    const r = await fetch(`/api/proyectos/${nombre}${version ? `?v=${encodeURIComponent(version)}` : ''}`, {cache: 'no-store'});
     const datos = (await r.json()) as Proyecto;
     setTimeline(datos.timeline);
     setMusica(datos.musica);
-  }, [nombre]);
+  }, [nombre, version]);
 
   const correr = useCallback(
     async (comando: string, opciones: Record<string, unknown> = {}) => {
@@ -260,11 +260,30 @@ export default function Panel({proyectos, inicial}: {proyectos: Resumen[]; inici
           <h1>{String(cfg.titulo ?? nombre)}</h1>
           <div className="dato">
             {timeline
-              ? `${timeline.ancho}×${timeline.alto} · ${timeline.fps} cps · ${(timeline.duracion / timeline.fps).toFixed(1)} s · ${meta.imagenes ?? '?'} imágenes · planificado ${meta.generado ?? '?'}`
+              ? `${timeline.ancho}×${timeline.alto} · ${timeline.fps} cps · ${(timeline.duracion / timeline.fps).toFixed(1)} s · ${meta.clips !== undefined ? `${meta.clips} clips` : `${meta.imagenes ?? '?'} imágenes`} · planificado ${meta.generado ?? '?'}`
               : 'sin timeline: planifica para ver el video'}
             {ocupado ? <span className="chip ocupado"> {ocupado}…</span> : sinGuardar ? <span className="chip"> cambios sin planificar</span> : null}
             {error && !ocupado ? <span className="chip error"> {error}</span> : null}
           </div>
+          {Object.keys((cfg.versiones as Record<string, unknown>) ?? {}).length ? (
+            <nav className="versiones">
+              <span className="dato">versiones</span>
+              <Link href={`/p/${nombre}`} className={version ? '' : 'activo'}>
+                base
+              </Link>
+              {Object.keys(cfg.versiones as Record<string, unknown>).map((v) => (
+                <Link key={v} href={`/p/${nombre}?v=${encodeURIComponent(v)}`} className={version === v ? 'activo' : ''}>
+                  {v}
+                </Link>
+              ))}
+              {version ? (
+                <span className="dato">
+                  {' '}· viendo «{version}» (timeline-{version}.json; se planifica con --version {version}). El formulario y los botones trabajan
+                  sobre la base.
+                </span>
+              ) : null}
+            </nav>
+          ) : null}
         </header>
         {timeline ? <Reproductor tl={timeline} playerRef={playerRef} /> : <div className="vacio">Sin timeline todavía.</div>}
         {duracion > 0 ? (
@@ -317,11 +336,24 @@ export default function Panel({proyectos, inicial}: {proyectos: Resumen[]; inici
         <Formulario cfg={cfg} onCambiar={cambiar} />
         <h2>Preparar</h2>
         <div className="botones">
-          <button onClick={() => correr('catalogo').then(cargarBiblioteca)} disabled={!!ocupado}>
-            Catálogo
-          </button>
+          {cfg.clips ? (
+            <button onClick={() => correr('clips')} disabled={!!ocupado} title="Copias de trabajo, curvas y hoja de los clips">
+              Analizar clips
+            </button>
+          ) : (
+            <button onClick={() => correr('catalogo').then(cargarBiblioteca)} disabled={!!ocupado}>
+              Catálogo
+            </button>
+          )}
           <button onClick={() => correr('musica').then(recargarTimeline)} disabled={!!ocupado}>
             Analizar música
+          </button>
+          <button
+            onClick={() => correr('guion')}
+            disabled={!!ocupado}
+            title="La canción en tramos, con los estilos de la galería que sirven en cada uno. Si el proyecto ya tiene GUION.md no lo toca: muestra el borrador aquí."
+          >
+            Esqueleto del guion
           </button>
         </div>
         <h2>Render</h2>
@@ -341,6 +373,20 @@ export default function Panel({proyectos, inicial}: {proyectos: Resumen[]; inici
             Render final
           </button>
         </div>
+        {Object.keys((cfg.versiones as Record<string, unknown>) ?? {}).length ? (
+          <>
+            <h2>Ejercicio</h2>
+            <div className="botones">
+              <button
+                onClick={() => correr('ejercicio')}
+                disabled={!!ocupado}
+                title="Planifica cada versión, renderiza su tramo de prueba a media resolución, saca su hoja y la mide (negro, cuadros repetidos, destellos, sonoridad)"
+              >
+                Correr todas las versiones
+              </button>
+            </div>
+          </>
+        ) : null}
         <h2>Después del render</h2>
         <div className="botones">
           <button onClick={() => correr('sonorizar')} disabled={!!ocupado}>

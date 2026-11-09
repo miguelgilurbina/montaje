@@ -14,8 +14,12 @@ const COMANDOS: Record<string, (o: Opciones) => string[]> = {
   planificar: () => [],
   musica: () => [],
   catalogo: () => [],
+  clips: () => [],
   sonorizar: () => [],
   senal: () => [],
+  guion: () => [],
+  // La vuelta de ejercicio: todas las versiones del proyecto, cada una en su tramo de prueba (a media resolución).
+  ejercicio: () => [],
   render: (o) => {
     const args: string[] = [];
     if (o.preview) args.push('--preview');
