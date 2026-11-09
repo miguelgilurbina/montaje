@@ -1,0 +1,192 @@
+{
+ "titulo": "19 · Añoranza con guion",
+ "idea": "El flujo entero con lo que salió del laboratorio de la noche: un guion en palabras (de práctica, escrito por Claude; ver GUION.md), partido en tramos por las secciones de la canción, con un estilo de la galería por tramo, en un solo video de 3:01.",
+ "biblioteca": "practica",
+ "clips": [
+  "clips",
+  "transformados"
+ ],
+ "clips_interpolar": 3,
+ "musica": "musica/La Añoranza de Natalia.wav",
+ "fundido_audio": [
+  0,
+  2
+ ],
+ "salida": {
+  "ancho": 1620,
+  "alto": 1080,
+  "fps": 24,
+  "fondo": "#07090d"
+ },
+ "montaje": {
+  "modo": "pulso",
+  "orden": "nombre",
+  "umbral_calma": 0.45,
+  "umbral_pico": 0.8,
+  "borde_toma": 0.1,
+  "zoom": 0.04,
+  "corte": "frase",
+  "frase_compases": 4,
+  "reparto": "ronda",
+  "fundido_golpes": 2,
+  "fundido_calma_golpes": 4,
+  "velocidad": [
+   0.45,
+   0.6
+  ],
+  "velocidad_min": 0.4,
+  "doble_golpes": 0,
+  "estela_golpes": 0,
+  "frase_compases_calma": null,
+  "tramos": [
+   {
+    "nombre": "las postales despiertan",
+    "desde": 0,
+    "hasta": 27.33,
+    "frase_compases": 4,
+    "congelar_golpes": 4,
+    "material": [
+     "lanchas"
+    ]
+   },
+   {
+    "nombre": "los recuerdos se atropellan",
+    "desde": 27.33,
+    "hasta": 73.63,
+    "frase_compases": 1,
+    "frase_compases_calma": 2,
+    "fundido_golpes": 0.25,
+    "fundido_calma_golpes": 1.5,
+    "velocidad": [
+     0.55,
+     0.75
+    ],
+    "velocidad_min": 0.45,
+    "material": [
+     "lanchas",
+     "playa",
+     "hamacas"
+    ]
+   },
+   {
+    "nombre": "el respiro en una ventana",
+    "desde": 73.63,
+    "hasta": 84.06,
+    "frase_compases": 4,
+    "escala": 0.62,
+    "sombra": 0.65,
+    "fundido_golpes": 2,
+    "fundido_calma_golpes": 3,
+    "material": [
+     "campo"
+    ]
+   },
+   {
+    "nombre": "el campo en doble exposición",
+    "desde": 84.06,
+    "hasta": 138.2,
+    "frase_compases": 2,
+    "doble_golpes": 4,
+    "doble_en": "todo",
+    "doble_opacidad": 0.5,
+    "fundido_golpes": 1,
+    "velocidad": [
+     0.45,
+     0.75
+    ],
+    "material": [
+     "campo"
+    ]
+   },
+   {
+    "nombre": "el silencio que se borra",
+    "desde": 138.2,
+    "hasta": 148.63,
+    "frase_compases": 4,
+    "transformados": "todo",
+    "material": [
+     "flamencos",
+     "pareja"
+    ]
+   },
+   {
+    "nombre": "vuelve el mar, como postal",
+    "desde": 148.63,
+    "hasta": 999,
+    "frase_compases": 4,
+    "transformados": "no",
+    "material": [
+     "lanchas"
+    ]
+   }
+  ]
+ },
+ "sintesis": [
+  {
+   "tipo": "cuenta",
+   "numeros": 4,
+   "desde": 0
+  },
+  {
+   "tipo": "recuerdo",
+   "grano": 0.15,
+   "vineta": 0.38,
+   "calidez": 0.04,
+   "parpadeo": 0.02,
+   "temblor": 0.7,
+   "halo": 0.1
+  },
+  {
+   "tipo": "titulo",
+   "texto": "La añoranza de Natalia",
+   "voz": "cartel",
+   "tam": 0.1,
+   "y": 0.46,
+   "desde": 4,
+   "dura": 8,
+   "letras_golpes": 3
+  },
+  {
+   "tipo": "golpe",
+   "fuerza": 0.035,
+   "cada": "compas",
+   "desde": 27.33,
+   "hasta": 73.63
+  },
+  {
+   "tipo": "campo",
+   "colores": [
+    "indigo",
+    "rubrica",
+    "ocre",
+    "electrico"
+   ],
+   "opacidad": 0.85,
+   "desde": 72.5,
+   "hasta": 85.5
+  },
+  {
+   "tipo": "tinta",
+   "oscuro": "rubrica",
+   "claro": "hueso",
+   "fuerza": 0.35,
+   "desde": 148.63
+  },
+  {
+   "tipo": "fugas",
+   "cada_compases": 4,
+   "golpes": 6,
+   "fuerza": 0.3,
+   "desde": 148.63
+  },
+  {
+   "tipo": "credito",
+   "lineas": [
+    "La añoranza de Natalia",
+    "sonando ahora"
+   ],
+   "desde": 160,
+   "dura": 8
+  }
+ ]
+}

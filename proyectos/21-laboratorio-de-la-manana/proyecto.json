@@ -1,0 +1,284 @@
+{
+ "titulo": "21 · Laboratorio de la mañana",
+ "idea": "Miguel, al despertar: «aún tenemos tiempo de hacer algo más. Revisa lo que tenemos hasta ahora y mejora lo más posible hasta las 7:59 am». Mismo material y canción que el 15. Lo nuevo del motor, cada cosa en una versión corta para la galería: transiciones entre clips (cortina, iris, empuje, destello, zoom, persiana) sobre «una toma por frase», y rótulos del guion al pulso.",
+ "biblioteca": "practica",
+ "clips": [
+  "clips",
+  "transformados"
+ ],
+ "fotos": "fotogramas",
+ "clips_interpolar": 3,
+ "musica": "musica/La Añoranza de Natalia.wav",
+ "salida": {
+  "ancho": 1620,
+  "alto": 1080,
+  "fps": 24,
+  "fondo": "#07090d"
+ },
+ "montaje": {
+  "modo": "pulso",
+  "orden": "nombre",
+  "umbral_calma": 0.45,
+  "umbral_pico": 0.8,
+  "borde_toma": 0.1,
+  "zoom": 0.04,
+  "corte": "frase",
+  "frase_compases": 2,
+  "reparto": "ronda",
+  "fundido_golpes": 2,
+  "fundido_calma_golpes": 4,
+  "velocidad": [
+   0.45,
+   0.7
+  ],
+  "velocidad_min": 0.4,
+  "doble_golpes": 0,
+  "estela_golpes": 0,
+  "frase_compases_calma": 4,
+  "fundido_dentro_golpes": 0,
+  "transicion": "fundido",
+  "transicion_dir": "alterna"
+ },
+ "versiones": {
+  "cortina": {
+   "transicion": "cortina",
+   "prueba": [
+    30,
+    47
+   ],
+   "estilo": "transicion-cortina"
+  },
+  "iris": {
+   "transicion": "iris",
+   "prueba": [
+    30,
+    47
+   ],
+   "estilo": "transicion-iris"
+  },
+  "empuje": {
+   "transicion": "empuje",
+   "prueba": [
+    30,
+    47
+   ],
+   "estilo": "transicion-empuje"
+  },
+  "destello": {
+   "transicion": "destello",
+   "fundido_golpes": 1,
+   "prueba": [
+    30,
+    47
+   ],
+   "estilo": "transicion-destello"
+  },
+  "zoom": {
+   "transicion": "zoom",
+   "fundido_golpes": 1,
+   "prueba": [
+    30,
+    47
+   ],
+   "estilo": "transicion-zoom"
+  },
+  "persiana": {
+   "transicion": "persiana",
+   "prueba": [
+    30,
+    47
+   ],
+   "estilo": "transicion-persiana"
+  },
+  "ronda": {
+   "transicion": "ronda",
+   "prueba": [
+    27,
+    62
+   ],
+   "estilo": "transiciones-en-ronda",
+   "muestra": [
+    2.5,
+    14.5
+   ]
+  },
+  "rotulos": {
+   "prueba": [
+    27,
+    48
+   ],
+   "estilo": "rotulos-del-guion",
+   "muestra": [
+    0.3,
+    11.3
+   ],
+   "sintesis": [
+    {
+     "tipo": "rotulos",
+     "voz": "oraculo",
+     "lugar": "abajo",
+     "cada": "medio",
+     "dura": 4.2,
+     "lineas": [
+      {
+       "t": 27.4,
+       "texto": "cuando entra la banda"
+      },
+      {
+       "t": 32.6,
+       "texto": "los recuerdos se atropellan"
+      },
+      {
+       "t": 37.8,
+       "texto": "cada frase de la canción, una postal"
+      },
+      {
+       "t": 43.0,
+       "texto": "y ninguna se queda quieta"
+      }
+     ]
+    }
+   ]
+  },
+  "rotulos-cartel": {
+   "prueba": [
+    27,
+    48
+   ],
+   "estilo": "rotulos-cartel",
+   "muestra": [
+    0.3,
+    11.3
+   ],
+   "transicion": "cortina",
+   "sintesis": [
+    {
+     "tipo": "rotulos",
+     "voz": "cartel",
+     "lugar": "centro",
+     "cada": "golpe",
+     "tam": 0.105,
+     "color": "oro",
+     "sombra": 0.35,
+     "dura": 3.2,
+     "lineas": [
+      [
+       27.4,
+       "a la deriva"
+      ],
+      [
+       32.6,
+       "desde el patio"
+      ],
+      [
+       37.8,
+       "las olas desde el aire"
+      ],
+      [
+       43.0,
+       "árboles sobre la arena"
+      ]
+     ]
+    }
+   ]
+  },
+  "luz": {
+   "prueba": [
+    126,
+    146
+   ],
+   "estilo": "luz-que-sigue",
+   "muestra": [
+    4.0,
+    16.0
+   ],
+   "sintesis": [
+    {
+     "tipo": "luz",
+     "brillo": [
+      0.72,
+      1.12
+     ],
+     "color": [
+      0.5,
+      1.2
+     ],
+     "golpe": 0.06
+    }
+   ]
+  },
+  "barras": {
+   "prueba": [
+    0,
+    14
+   ],
+   "estilo": "barras-de-cine",
+   "muestra": [
+    1.0,
+    12.0
+   ],
+   "sintesis": [
+    {
+     "tipo": "barras",
+     "desde": 2.6,
+     "formato": 2.39,
+     "abre_golpes": 4
+    }
+   ]
+  },
+  "rayas": {
+   "prueba": [
+    44,
+    58
+   ],
+   "estilo": "pelicula-gastada",
+   "muestra": [
+    0.5,
+    10.5
+   ],
+   "sintesis": [
+    {
+     "tipo": "rayas",
+     "rayones": 0.6,
+     "manchas": 0.6
+    },
+    {
+     "tipo": "recuerdo",
+     "grano": 0.16,
+     "vineta": 0.4,
+     "calidez": 0.14,
+     "parpadeo": 0.04,
+     "temblor": 1.0,
+     "halo": 0
+    }
+   ]
+  },
+  "mixto": {
+   "mezclar_fotos": true,
+   "zoom_foto": 0.09,
+   "transicion": "cortina",
+   "fundido_golpes": 2,
+   "tramos": [
+    {
+     "nombre": "el mar en movimiento, el campo en fotos",
+     "desde": 0,
+     "hasta": 999,
+     "material": [
+      "clip:lanchas",
+      "clip:playa",
+      "foto:campo"
+     ]
+    }
+   ],
+   "prueba": [
+    27,
+    53
+   ],
+   "estilo": "fotos-y-clips",
+   "muestra": [
+    0.5,
+    14.5
+   ]
+  }
+ }
+}

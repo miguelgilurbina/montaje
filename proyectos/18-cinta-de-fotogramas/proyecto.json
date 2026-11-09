@@ -1,0 +1,78 @@
+{
+ "titulo": "18 · Cinta de fotogramas (reel en loop)",
+ "idea": "Laboratorio de la noche: los 40 fotogramas de los clips del 15 en la cinta vertical que sube un paso por golpe y empalma consigo misma (el reel del 06), sobre doce compases de «La Añoranza de Natalia».",
+ "biblioteca": "practica",
+ "fuentes": [
+  {
+   "tipo": "carpeta",
+   "ruta": "~/Videos/montaje/practica/fotogramas"
+  }
+ ],
+ "musica": "musica/La Añoranza de Natalia.wav",
+ "tramo": [
+  27.33,
+  58.63
+ ],
+ "fase_compas": 0,
+ "fundido_audio": [
+  0.3,
+  0.3
+ ],
+ "salida": {
+  "ancho": 1080,
+  "alto": 1920,
+  "fps": 24,
+  "fondo": "#07090d"
+ },
+ "montaje": {
+  "modo": "cinta",
+  "semilla": 21,
+  "ancho": 0.84,
+  "alto_max": 0.5,
+  "sat_min": 0.1,
+  "luz": [
+   0.03,
+   0.95
+  ],
+  "una_por_generacion": false
+ },
+ "compases": [
+  {
+   "pasos": 2
+  },
+  {
+   "pasos": 2
+  },
+  {
+   "pasos": 2
+  },
+  {
+   "pasos": 2
+  },
+  {
+   "pasos": 2
+  },
+  {
+   "pasos": 2
+  },
+  {
+   "momento": "rafaga",
+   "por_compas": 8
+  },
+  {
+   "pasos": 2
+  },
+  {
+   "pasos": 2
+  },
+  {
+   "pasos": 2
+  },
+  {
+   "momento": "destacado"
+  },
+  {
+   "pasos": 2
+  }
+ ]
+}

@@ -1,0 +1,278 @@
+{
+ "titulo": "15 · Añoranza de Natalia",
+ "idea": "Primer ejercicio de práctica con clips: 20 clips de Miguel (lanchas, playa, hamacas, campo) sobre «La Añoranza de Natalia», la canción de su abuela. Pidió una mezcla de que siga la canción (cortes al pulso) y que se sienta como un recuerdo (fundidos, doble exposición, calma). Tres versiones para elegir.",
+ "biblioteca": "practica",
+ "clips": "clips",
+ "musica": "musica/La Añoranza de Natalia.wav",
+ "salida": {
+  "ancho": 1620,
+  "alto": 1080,
+  "fps": 24,
+  "fondo": "#07090d"
+ },
+ "montaje": {
+  "modo": "pulso",
+  "orden": "nombre",
+  "umbral_calma": 0.45,
+  "umbral_pico": 0.8,
+  "borde_toma": 0.1,
+  "zoom": 0.04,
+  "corte": "frase",
+  "frase_compases": 2,
+  "frase_compases_calma": 4,
+  "reparto": "ronda",
+  "fundido_golpes": 1,
+  "fundido_calma_golpes": 4,
+  "doble_golpes": 4,
+  "doble_opacidad": 0.45,
+  "estela_golpes": 1,
+  "velocidad": [
+   0.45,
+   0.75
+  ],
+  "velocidad_min": 0.4
+ },
+ "fundido_audio": [
+  0,
+  2
+ ],
+ "versiones": {
+  "a": {
+   "doble_golpes": 0,
+   "estela_golpes": 0,
+   "frase_compases_calma": null,
+   "fundido_dentro_golpes": 0,
+   "corte": "frase",
+   "frase_compases": 4,
+   "reparto": "seguido",
+   "fundido_golpes": 2,
+   "fundido_calma_golpes": 4,
+   "velocidad": [
+    0.45,
+    0.6
+   ],
+   "velocidad_min": 0.4
+  },
+  "b": {
+   "doble_golpes": 0,
+   "corte": "frase",
+   "frase_compases": 1,
+   "frase_compases_calma": 2,
+   "reparto": "ronda",
+   "fundido_golpes": 0.25,
+   "fundido_calma_golpes": 1.5,
+   "estela_golpes": 1.5,
+   "estela_opacidad": 0.35,
+   "velocidad": [
+    0.55,
+    0.75
+   ],
+   "velocidad_min": 0.45
+  },
+  "c": {
+   "corte": "frase",
+   "frase_compases": 2,
+   "frase_compases_calma": 4,
+   "reparto": "ronda",
+   "fundido_golpes": 1,
+   "fundido_calma_golpes": 4,
+   "doble_golpes": 4,
+   "doble_opacidad": 0.45,
+   "estela_golpes": 1,
+   "velocidad": [
+    0.45,
+    0.75
+   ],
+   "velocidad_min": 0.4
+  },
+  "c-recuerdo": {
+   "corte": "frase",
+   "frase_compases": 2,
+   "frase_compases_calma": 4,
+   "reparto": "ronda",
+   "fundido_golpes": 1,
+   "fundido_calma_golpes": 4,
+   "doble_golpes": 4,
+   "doble_opacidad": 0.45,
+   "estela_golpes": 1,
+   "velocidad": [
+    0.45,
+    0.75
+   ],
+   "velocidad_min": 0.4,
+   "sintesis": [
+    {
+     "tipo": "recuerdo",
+     "grano": 0.24,
+     "vineta": 0.42,
+     "calidez": 0.06,
+     "parpadeo": 0.035,
+     "temblor": 1.1,
+     "halo": 0.18
+    },
+    {
+     "tipo": "fugas",
+     "cada_compases": 8,
+     "golpes": 6,
+     "fuerza": 0.32,
+     "colores": [
+      "oro",
+      "ocre",
+      "hueso",
+      "rojo"
+     ]
+    },
+    {
+     "tipo": "polvo",
+     "motas": 55,
+     "brillo": 0.5
+    }
+   ]
+  },
+  "sola": {
+   "modo": "solo-sintesis",
+   "sintesis": [
+    {
+     "tipo": "campo",
+     "colores": [
+      "indigo",
+      "electrico",
+      "ocre",
+      "rubrica"
+     ],
+     "opacidad": 0.9
+    },
+    {
+     "tipo": "partitura",
+     "y": 0.72,
+     "alto": 0.16,
+     "opacidad": 0.85
+    },
+    {
+     "tipo": "polvo",
+     "motas": 80,
+     "brillo": 0.7
+    },
+    {
+     "tipo": "recuerdo",
+     "grano": 0.3,
+     "vineta": 0.5,
+     "calidez": 0,
+     "parpadeo": 0.03,
+     "temblor": 0,
+     "halo": 0.2
+    }
+   ]
+  },
+  "a-tinta": {
+   "doble_golpes": 0,
+   "estela_golpes": 0,
+   "frase_compases_calma": null,
+   "fundido_dentro_golpes": 0,
+   "corte": "frase",
+   "frase_compases": 4,
+   "reparto": "seguido",
+   "fundido_golpes": 2,
+   "fundido_calma_golpes": 4,
+   "velocidad": [
+    0.45,
+    0.6
+   ],
+   "velocidad_min": 0.4,
+   "sintesis": [
+    {
+     "tipo": "tinta",
+     "oscuro": "indigo",
+     "claro": "oro",
+     "fuerza": 0.85
+    }
+   ]
+  },
+  "a-calima": {
+   "doble_golpes": 0,
+   "estela_golpes": 0,
+   "frase_compases_calma": null,
+   "fundido_dentro_golpes": 0,
+   "corte": "frase",
+   "frase_compases": 4,
+   "reparto": "seguido",
+   "fundido_golpes": 2,
+   "fundido_calma_golpes": 4,
+   "velocidad": [
+    0.45,
+    0.6
+   ],
+   "velocidad_min": 0.4,
+   "sintesis": [
+    {
+     "tipo": "calima",
+     "fuerza": 10,
+     "golpe": 14
+    }
+   ]
+  },
+  "a-tv": {
+   "doble_golpes": 0,
+   "estela_golpes": 0,
+   "frase_compases_calma": null,
+   "fundido_dentro_golpes": 0,
+   "corte": "frase",
+   "frase_compases": 4,
+   "reparto": "seguido",
+   "fundido_golpes": 2,
+   "fundido_calma_golpes": 4,
+   "velocidad": [
+    0.45,
+    0.6
+   ],
+   "velocidad_min": 0.4,
+   "sintesis": [
+    {
+     "tipo": "tv",
+     "lineas": 0.28,
+     "corrimiento": 3,
+     "curva": 0.06
+    }
+   ]
+  },
+  "a-espejo": {
+   "doble_golpes": 0,
+   "estela_golpes": 0,
+   "frase_compases_calma": null,
+   "fundido_dentro_golpes": 0,
+   "corte": "frase",
+   "frase_compases": 4,
+   "reparto": "seguido",
+   "fundido_golpes": 2,
+   "fundido_calma_golpes": 4,
+   "velocidad": [
+    0.45,
+    0.6
+   ],
+   "velocidad_min": 0.4,
+   "espejo": 4
+  },
+  "a-rejilla": {
+   "doble_golpes": 0,
+   "estela_golpes": 0,
+   "frase_compases_calma": null,
+   "fundido_dentro_golpes": 0,
+   "corte": "frase",
+   "frase_compases": 4,
+   "reparto": "seguido",
+   "fundido_golpes": 2,
+   "fundido_calma_golpes": 4,
+   "velocidad": [
+    0.45,
+    0.6
+   ],
+   "velocidad_min": 0.4,
+   "rejilla": [
+    3,
+    3,
+    0.25
+   ]
+  }
+ },
+ "clips_interpolar": 3
+}

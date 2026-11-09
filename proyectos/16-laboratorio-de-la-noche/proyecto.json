@@ -1,0 +1,343 @@
+{
+ "titulo": "16 · Laboratorio de la noche",
+ "idea": "Miguel, al irse a dormir: «le saques el jugo. No tienen que ser tramos completos de la canción de 3 min. Puedes iterar y probar todos los formatos posibles. La idea es que mañana tengamos una galería surtida y nutrida. Y experiencia». Mismo material y canción que el 15; cada versión es una prueba corta para la galería, casi todas sobre la base de «una toma por frase» (la que aprobó).",
+ "biblioteca": "practica",
+ "clips": [
+  "clips",
+  "transformados"
+ ],
+ "clips_interpolar": 3,
+ "musica": "musica/La Añoranza de Natalia.wav",
+ "salida": {
+  "ancho": 1620,
+  "alto": 1080,
+  "fps": 24,
+  "fondo": "#07090d"
+ },
+ "montaje": {
+  "modo": "pulso",
+  "orden": "nombre",
+  "umbral_calma": 0.45,
+  "umbral_pico": 0.8,
+  "borde_toma": 0.1,
+  "zoom": 0.04,
+  "corte": "frase",
+  "frase_compases": 4,
+  "reparto": "seguido",
+  "fundido_golpes": 2,
+  "fundido_calma_golpes": 4,
+  "velocidad": [
+   0.45,
+   0.6
+  ],
+  "velocidad_min": 0.4,
+  "doble_golpes": 0,
+  "estela_golpes": 0,
+  "frase_compases_calma": null,
+  "fundido_dentro_golpes": 0
+ },
+ "versiones": {
+  "reel-relleno": {
+   "salida": {
+    "ancho": 1080,
+    "alto": 1920,
+    "fps": 24,
+    "fondo": "#07090d"
+   },
+   "encuadre": "relleno"
+  },
+  "reel-recorte": {
+   "salida": {
+    "ancho": 1080,
+    "alto": 1920,
+    "fps": 24,
+    "fondo": "#07090d"
+   },
+   "encuadre": "cubrir"
+  },
+  "cuadrado": {
+   "salida": {
+    "ancho": 1080,
+    "alto": 1080,
+    "fps": 24,
+    "fondo": "#07090d"
+   },
+   "encuadre": "cubrir"
+  },
+  "retrato-4-5": {
+   "salida": {
+    "ancho": 1080,
+    "alto": 1350,
+    "fps": 24,
+    "fondo": "#07090d"
+   },
+   "encuadre": "relleno"
+  },
+  "panoramico-16-9": {
+   "salida": {
+    "ancho": 1920,
+    "alto": 1080,
+    "fps": 24,
+    "fondo": "#07090d"
+   },
+   "encuadre": "cubrir"
+  },
+  "diptico": {
+   "dividir": 2
+  },
+  "foto-que-despierta": {
+   "congelar_golpes": 4
+  },
+  "ventana": {
+   "escala": 0.62,
+   "sombra": 0.65,
+   "sintesis": [
+    {
+     "tipo": "campo",
+     "colores": [
+      "indigo",
+      "rubrica",
+      "ocre",
+      "electrico"
+     ],
+     "opacidad": 0.85
+    },
+    {
+     "tipo": "polvo",
+     "motas": 40,
+     "brillo": 0.5
+    }
+   ]
+  },
+  "rampa": {
+   "corte": "frase",
+   "frase_compases": 2,
+   "frase_compases_calma": 4,
+   "reparto": "ronda",
+   "fundido_golpes": 1,
+   "fundido_calma_golpes": 4,
+   "doble_golpes": 0,
+   "doble_opacidad": 0.45,
+   "estela_golpes": 0,
+   "velocidad": [
+    0.3,
+    1.4
+   ],
+   "velocidad_min": 0.25
+  },
+  "doble-siempre": {
+   "corte": "frase",
+   "frase_compases": 2,
+   "frase_compases_calma": 4,
+   "reparto": "ronda",
+   "fundido_golpes": 1,
+   "fundido_calma_golpes": 4,
+   "doble_golpes": 4,
+   "doble_opacidad": 0.5,
+   "estela_golpes": 1,
+   "velocidad": [
+    0.45,
+    0.75
+   ],
+   "velocidad_min": 0.4,
+   "doble_en": "todo"
+  },
+  "salto-al-golpe": {
+   "corte": "golpe",
+   "frase_compases": 2,
+   "frase_compases_calma": 2,
+   "reparto": "ronda",
+   "fundido_golpes": 1,
+   "fundido_calma_golpes": 4,
+   "doble_golpes": 0,
+   "doble_opacidad": 0.45,
+   "estela_golpes": 0,
+   "velocidad": [
+    0.8,
+    1.0
+   ],
+   "velocidad_min": 0.4
+  },
+  "transformados": {
+   "transformados": "todo"
+  },
+  "tinta-rubrica-hueso": {
+   "sintesis": [
+    {
+     "tipo": "tinta",
+     "oscuro": "rubrica",
+     "claro": "hueso",
+     "fuerza": 0.9
+    }
+   ]
+  },
+  "tinta-electrico-acido": {
+   "sintesis": [
+    {
+     "tipo": "tinta",
+     "oscuro": "#0b1a3a",
+     "claro": "acido",
+     "fuerza": 0.85
+    }
+   ]
+  },
+  "postal": {
+   "sintesis": [
+    {
+     "tipo": "tinta",
+     "oscuro": "rubrica",
+     "claro": "hueso",
+     "fuerza": 0.35
+    },
+    {
+     "tipo": "recuerdo",
+     "grano": 0.2,
+     "vineta": 0.5,
+     "calidez": 0.08,
+     "parpadeo": 0.03,
+     "temblor": 0.8,
+     "halo": 0.12
+    },
+    {
+     "tipo": "fugas",
+     "cada_compases": 4,
+     "golpes": 6,
+     "fuerza": 0.3
+    }
+   ]
+  },
+  "calima-recuerdo": {
+   "sintesis": [
+    {
+     "tipo": "calima",
+     "fuerza": 9,
+     "golpe": 12
+    },
+    {
+     "tipo": "recuerdo",
+     "grano": 0.2,
+     "vineta": 0.4,
+     "calidez": 0.06,
+     "parpadeo": 0.03,
+     "temblor": 1.0,
+     "halo": 0.15
+    }
+   ]
+  },
+  "partitura-sobre-clips": {
+   "sintesis": [
+    {
+     "tipo": "partitura",
+     "y": 0.9,
+     "alto": 0.09,
+     "opacidad": 0.75
+    }
+   ]
+  },
+  "titulos": {
+   "sintesis": [
+    {
+     "tipo": "titulo",
+     "texto": "La añoranza de Natalia",
+     "voz": "cartel",
+     "tam": 0.1,
+     "y": 0.46,
+     "desde": 1.5,
+     "dura": 8,
+     "letras_golpes": 3
+    },
+    {
+     "tipo": "titulo",
+     "texto": "veinte postales y una canción",
+     "voz": "oraculo",
+     "tam": 0.045,
+     "y": 0.58,
+     "desde": 4.5,
+     "dura": 5,
+     "letras_golpes": 2,
+     "color": "oro"
+    },
+    {
+     "tipo": "credito",
+     "lineas": [
+      "La añoranza de Natalia",
+      "sonando ahora"
+     ],
+     "desde": 12,
+     "dura": 7
+    }
+   ]
+  },
+  "cuenta-y-pelicula": {
+   "sintesis": [
+    {
+     "tipo": "cuenta",
+     "numeros": 4,
+     "desde": 0
+    },
+    {
+     "tipo": "pelicula",
+     "borde": 0.07,
+     "velocidad": 1.5
+    },
+    {
+     "tipo": "recuerdo",
+     "grano": 0.22,
+     "vineta": 0.45,
+     "calidez": 0.06,
+     "parpadeo": 0.04,
+     "temblor": 1.2,
+     "halo": 0.15
+    }
+   ]
+  },
+  "onda": {
+   "sintesis": [
+    {
+     "tipo": "onda",
+     "fuerza": 60,
+     "cada_compases": 2,
+     "golpes_dura": 3
+    }
+   ]
+  },
+  "foco": {
+   "sintesis": [
+    {
+     "tipo": "foco",
+     "fuerza": 4,
+     "cada": "golpe"
+    }
+   ]
+  },
+  "golpe-de-zoom": {
+   "corte": "frase",
+   "frase_compases": 1,
+   "frase_compases_calma": 2,
+   "reparto": "ronda",
+   "fundido_golpes": 0.25,
+   "fundido_calma_golpes": 1.5,
+   "estela_golpes": 0,
+   "doble_golpes": 0,
+   "velocidad": [
+    0.55,
+    0.75
+   ],
+   "velocidad_min": 0.45,
+   "sintesis": [
+    {
+     "tipo": "golpe",
+     "fuerza": 0.035,
+     "cada": "compas"
+    }
+   ]
+  },
+  "muro": {
+   "muro": [
+    3,
+    3
+   ],
+   "muro_golpes": 4
+  }
+ }
+}

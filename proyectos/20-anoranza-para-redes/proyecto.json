@@ -1,0 +1,184 @@
+{
+ "titulo": "20 · Añoranza para redes",
+ "idea": "Laboratorio de la noche: el estribillo (doce compases) como pieza para publicar, en 4:5 (feed de Instagram) y 9:16 (reel, short), con el estilo «respira con la canción» del 15, título al pulso, crédito y textura de recuerdo suave. Para el vertical, clips con el sujeto al centro, recortados siguiéndolo. No se publica nada: `paquete` lo prepara cuando Miguel diga.",
+ "biblioteca": "practica",
+ "clips": [
+  "clips",
+  "transformados"
+ ],
+ "clips_interpolar": 3,
+ "musica": "musica/La Añoranza de Natalia.wav",
+ "tramo": [
+  27.33,
+  58.63
+ ],
+ "fase_compas": 0,
+ "fundido_audio": [
+  0.6,
+  1.5
+ ],
+ "salida": {
+  "ancho": 1080,
+  "alto": 1350,
+  "fps": 24,
+  "fondo": "#07090d"
+ },
+ "montaje": {
+  "modo": "pulso",
+  "orden": "nombre",
+  "umbral_calma": 0.45,
+  "umbral_pico": 0.8,
+  "borde_toma": 0.1,
+  "zoom": 0.04,
+  "corte": "frase",
+  "frase_compases": 2,
+  "reparto": "ronda",
+  "fundido_golpes": 1,
+  "fundido_calma_golpes": 3,
+  "doble_golpes": 0,
+  "estela_golpes": 1,
+  "velocidad": [
+   0.5,
+   0.75
+  ],
+  "velocidad_min": 0.4,
+  "fundido_inicio_golpes": 1,
+  "fundido_final_golpes": 3,
+  "tramos": [
+   {
+    "nombre": "todo",
+    "desde": 0,
+    "hasta": 999,
+    "material": [
+     "pesquero",
+     "ciclista",
+     "senora",
+     "perro",
+     "chivo",
+     "pareja"
+    ]
+   }
+  ]
+ },
+ "versiones": {
+  "4-5": {
+   "salida": {
+    "ancho": 1080,
+    "alto": 1350,
+    "fps": 24,
+    "fondo": "#07090d"
+   },
+   "encuadre": "relleno",
+   "sintesis": [
+    {
+     "tipo": "recuerdo",
+     "grano": 0.15,
+     "vineta": 0.4,
+     "calidez": 0.04,
+     "parpadeo": 0.02,
+     "temblor": 0.6,
+     "halo": 0.12
+    },
+    {
+     "tipo": "titulo",
+     "texto": "La añoranza de Natalia",
+     "voz": "cartel",
+     "tam": 0.06,
+     "y": 0.12,
+     "desde": 0.4,
+     "dura": 5.5,
+     "letras_golpes": 3
+    },
+    {
+     "tipo": "credito",
+     "lineas": [
+      "La añoranza de Natalia",
+      "sonando ahora"
+     ],
+     "desde": 21,
+     "dura": 8
+    }
+   ]
+  },
+  "9-16": {
+   "salida": {
+    "ancho": 1080,
+    "alto": 1920,
+    "fps": 24,
+    "fondo": "#07090d"
+   },
+   "encuadre": "cubrir",
+   "seguir": true,
+   "sintesis": [
+    {
+     "tipo": "recuerdo",
+     "grano": 0.15,
+     "vineta": 0.4,
+     "calidez": 0.04,
+     "parpadeo": 0.02,
+     "temblor": 0.6,
+     "halo": 0.12
+    },
+    {
+     "tipo": "titulo",
+     "texto": "La añoranza de Natalia",
+     "voz": "cartel",
+     "tam": 0.042,
+     "y": 0.14,
+     "desde": 0.4,
+     "dura": 5.5,
+     "letras_golpes": 3
+    },
+    {
+     "tipo": "credito",
+     "lineas": [
+      "La añoranza de Natalia",
+      "sonando ahora"
+     ],
+     "desde": 21,
+     "dura": 8
+    }
+   ]
+  },
+  "9-16-medio": {
+   "salida": {
+    "ancho": 1080,
+    "alto": 1920,
+    "fps": 24,
+    "fondo": "#07090d"
+   },
+   "encuadre": "medio",
+   "seguir": true,
+   "sintesis": [
+    {
+     "tipo": "recuerdo",
+     "grano": 0.15,
+     "vineta": 0.4,
+     "calidez": 0.04,
+     "parpadeo": 0.02,
+     "temblor": 0.6,
+     "halo": 0.12
+    },
+    {
+     "tipo": "titulo",
+     "texto": "La añoranza de Natalia",
+     "voz": "cartel",
+     "tam": 0.042,
+     "y": 0.14,
+     "desde": 0.4,
+     "dura": 5.5,
+     "letras_golpes": 3
+    },
+    {
+     "tipo": "credito",
+     "lineas": [
+      "La añoranza de Natalia",
+      "sonando ahora"
+     ],
+     "desde": 21,
+     "dura": 8
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,32 @@
+{
+ "version": 4,
+ "modo": "pulso",
+ "proyecto": "20-anoranza-para-redes",
+ "ancho": 1080,
+ "alto": 1920,
+ "fps": 24,
+ "fondo": "#07090d",
+ "duracion": 752,
+ "audio": {"src":"musica/La Añoranza de Natalia.wav","desde":27.33,"hasta":58.63,"fundido":[0.6,1.5]},
+ "meta": {"generado":"2026-11-09T07:13:49","bpm":92.29,"clips":20,"version":"9-16-medio","parametros":{"corte":"frase","frase_compases":2,"umbral_calma":0.45,"umbral_pico":0.8,"pico_por_compas":2,"fundido_golpes":1,"fundido_calma_golpes":3,"fundido_dentro_golpes":0.0,"doble_golpes":0,"doble_opacidad":0.45,"estela_golpes":1,"estela_opacidad":0.35,"velocidad":[0.5,0.75],"velocidad_min":0.4,"orden":"nombre","encuadre":"medio","zoom":0.04,"max_por_clip":3,"reparto":"ronda","frase_compases_calma":null,"borde_toma":0.1,"espejo":0,"rejilla":null,"congelar_golpes":0.0,"doble_en":"calma","dividir":1,"escala":1.0,"sombra":0.0,"transformados":null,"seguir":true,"muro":null,"muro_golpes":4,"fundido_inicio_golpes":1,"fundido_final_golpes":3,"transicion":"fundido","transicion_dir":"alterna","mezclar_fotos":false,"zoom_foto":0.08,"modo":"pulso","tramos":[{"nombre":"todo","desde":0,"hasta":999,"material":["pesquero","ciclista","senora","perro","chivo","pareja"]}]}},
+ "capas": [
+  {"id":"natalia-01-lanchas-pesquero-contraluz#0","img":"proxies/natalia-01-lanchas-pesquero-contraluz.mp4","video":{"desde":1.542,"velocidad":0.5,"fuente":[768,512],"relleno":true},"ini":0,"fin":172,"entrada":16,"salida":0,"x":714.6,"y":960.0,"ancho":1763.6,"alto":1175.8,"opacidad":1,"zoom":[1,1.04],"deriva":[-128.6,0.0],"mezcla":"normal","borde":0,"seccion":0},
+  {"id":"natalia-12-campo-ciclista-casa-azul#1","img":"proxies/natalia-12-campo-ciclista-casa-azul.mp4","video":{"desde":1.2,"velocidad":0.507,"fuente":[768,512],"relleno":true},"ini":125,"fin":203,"entrada":47,"salida":0,"x":453.8,"y":960.0,"ancho":1763.6,"alto":1175.8,"opacidad":1,"zoom":[1,1.0217],"deriva":[92.2,0.0],"mezcla":"normal","borde":0,"seccion":1},
+  {"id":"natalia-14-campo-chivo-casa-de-tejas#2","img":"proxies/natalia-14-campo-chivo-casa-de-tejas.mp4","video":{"desde":1.0,"velocidad":0.609,"fuente":[768,512],"relleno":true},"ini":187,"fin":329,"entrada":16,"salida":0,"x":561.7,"y":960.0,"ancho":1763.6,"alto":1175.8,"opacidad":1,"zoom":[1,1.0394],"deriva":[-74.7,0.0],"mezcla":"normal","borde":0,"seccion":2},
+  {"id":"natalia-16-campo-pareja-a-caballo-luna#3","img":"proxies/natalia-16-campo-pareja-a-caballo-luna.mp4","video":{"desde":1.612,"velocidad":0.598,"fuente":[768,512],"relleno":true},"ini":313,"fin":454,"entrada":16,"salida":0,"x":337.2,"y":960.0,"ancho":1763.6,"alto":1175.8,"opacidad":1,"zoom":[1,1.0392],"deriva":[67.1,0.0],"mezcla":"normal","borde":0,"seccion":3},
+  {"id":"natalia-17-campo-senora-en-la-puerta#4","img":"proxies/natalia-17-campo-senora-en-la-puerta.mp4","video":{"desde":1.2,"velocidad":0.568,"fuente":[768,512],"relleno":true},"ini":438,"fin":579,"entrada":16,"salida":0,"x":490.2,"y":960.0,"ancho":1763.6,"alto":1175.8,"opacidad":1,"zoom":[1,1.0392],"deriva":[56.2,0.0],"mezcla":"normal","borde":0,"seccion":4},
+  {"id":"natalia-18-campo-perro-casa-de-barro#5","img":"proxies/natalia-18-campo-perro-casa-de-barro.mp4","video":{"desde":0.5,"velocidad":0.545,"fuente":[768,512],"relleno":true},"ini":563,"fin":704,"entrada":16,"salida":0,"x":464.6,"y":960.0,"ancho":1763.6,"alto":1175.8,"opacidad":1,"zoom":[1,1.0392],"deriva":[-9.7,0.0],"mezcla":"normal","borde":0,"seccion":5},
+  {"id":"natalia-01-lanchas-pesquero-contraluz#6","img":"proxies/natalia-01-lanchas-pesquero-contraluz.mp4","video":{"desde":0.5,"velocidad":0.553,"fuente":[768,512],"relleno":true},"ini":688,"fin":752,"entrada":16,"salida":47,"x":662.3,"y":960.0,"ancho":1763.6,"alto":1175.8,"opacidad":1,"zoom":[1,1.0178],"deriva":[48.8,0.0],"mezcla":"normal","borde":0,"seccion":6},
+  {"id":"natalia-01-lanchas-pesquero-contraluz#estela-0","img":"proxies/natalia-01-lanchas-pesquero-contraluz.mp4","video":{"desde":4.146,"velocidad":0.373,"fuente":[768,512]},"ini":125,"fin":188,"entrada":47,"salida":16,"x":621.1,"y":960.0,"ancho":1763.6,"alto":1175.8,"opacidad":0.35,"zoom":[1.0291,1.0291],"deriva":[0,0],"mezcla":"screen","borde":0,"seccion":0},
+  {"id":"natalia-12-campo-ciclista-casa-azul#estela-1","img":"proxies/natalia-12-campo-ciclista-casa-azul.mp4","video":{"desde":2.51,"velocidad":0.507,"fuente":[768,512]},"ini":187,"fin":219,"entrada":16,"salida":16,"x":527.1,"y":960.0,"ancho":1763.6,"alto":1175.8,"opacidad":0.35,"zoom":[1.0172,1.0172],"deriva":[0,0],"mezcla":"screen","borde":0,"seccion":1},
+  {"id":"natalia-14-campo-chivo-casa-de-tejas#estela-2","img":"proxies/natalia-14-campo-chivo-casa-de-tejas.mp4","video":{"desde":4.197,"velocidad":0.609,"fuente":[768,512]},"ini":313,"fin":345,"entrada":16,"salida":16,"x":495.4,"y":960.0,"ancho":1763.6,"alto":1175.8,"opacidad":0.35,"zoom":[1.035,1.035],"deriva":[0,0],"mezcla":"screen","borde":0,"seccion":2},
+  {"id":"natalia-16-campo-pareja-a-caballo-luna#estela-3","img":"proxies/natalia-16-campo-pareja-a-caballo-luna.mp4","video":{"desde":4.727,"velocidad":0.299,"fuente":[768,512]},"ini":438,"fin":470,"entrada":16,"salida":16,"x":396.7,"y":960.0,"ancho":1763.6,"alto":1175.8,"opacidad":0.35,"zoom":[1.0348,1.0348],"deriva":[0,0],"mezcla":"screen","borde":0,"seccion":3},
+  {"id":"natalia-17-campo-senora-en-la-puerta#estela-4","img":"proxies/natalia-17-campo-senora-en-la-puerta.mp4","video":{"desde":4.158,"velocidad":0.568,"fuente":[768,512]},"ini":563,"fin":595,"entrada":16,"salida":16,"x":540.0,"y":960.0,"ancho":1763.6,"alto":1175.8,"opacidad":0.35,"zoom":[1.0348,1.0348],"deriva":[0,0],"mezcla":"screen","borde":0,"seccion":4},
+  {"id":"natalia-18-campo-perro-casa-de-barro#estela-5","img":"proxies/natalia-18-campo-perro-casa-de-barro.mp4","video":{"desde":3.339,"velocidad":0.545,"fuente":[768,512]},"ini":688,"fin":720,"entrada":16,"salida":16,"x":456.0,"y":960.0,"ancho":1763.6,"alto":1175.8,"opacidad":0.35,"zoom":[1.0348,1.0348],"deriva":[0,0],"mezcla":"screen","borde":0,"seccion":5}
+ ],
+ "sintesis": [
+  {"tipo":"recuerdo","ini":0,"fin":752,"fundido":15,"grano":0.15,"vineta":0.4,"calidez":0.04,"parpadeo":0.02,"temblor":0.6,"halo":0.12,"semilla":7},
+  {"tipo":"titulo","ini":16,"fin":148,"fundido":18,"texto":"La añoranza de Natalia","voz":"cartel","tam":0.042,"x":0.5,"y":0.14,"alinear":"centro","color":"#eee6d4","letras":[16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58]},
+  {"tipo":"credito","ini":517,"fin":709,"fundido":14,"lineas":["La añoranza de Natalia","sonando ahora"],"color":"#e6b43c"}
+ ]
+}

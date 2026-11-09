@@ -1,0 +1,53 @@
+{
+ "titulo": "17 · Fotogramas",
+ "idea": "Parte del laboratorio de la noche: el cuadro más nítido de cada clip del 15 (dos por clip, 40 fotos) en las técnicas de imágenes ya aprobadas (collage infinito con carrusel, la pared de actos, la cinta del reel), para ver si sirven con este material.",
+ "biblioteca": "practica",
+ "fuentes": [
+  {
+   "tipo": "carpeta",
+   "ruta": "~/Videos/montaje/practica/fotogramas"
+  }
+ ],
+ "musica": "musica/La Añoranza de Natalia.wav",
+ "salida": {
+  "ancho": 1620,
+  "alto": 1080,
+  "fps": 24,
+  "fondo": "#07090d"
+ },
+ "montaje": {
+  "modo": "collage",
+  "semilla": 3
+ },
+ "momentos": [
+  {
+   "compas": 10,
+   "tipo": "rafaga",
+   "por_compas": 8
+  },
+  {
+   "compas": 16,
+   "tipo": "destacado"
+  }
+ ],
+ "versiones": {
+  "collage": {
+   "modo": "collage",
+   "semilla": 3
+  },
+  "actos": {
+   "modo": "actos",
+   "semilla": 7
+  },
+  "cinta": {
+   "modo": "cinta",
+   "semilla": 21,
+   "salida": {
+    "ancho": 1080,
+    "alto": 1920,
+    "fps": 24,
+    "fondo": "#07090d"
+   }
+  }
+ }
+}
