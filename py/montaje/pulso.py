@@ -47,6 +47,7 @@ proyecto.json:
       "borde_toma": 0.35,            # segundos del arranque y final de cada toma que no se usan
       "espejo": 4,                   # caleidoscopio: 2 mitades o 4 cuartos en espejo (0 = no)
       "rejilla": [3, 3, 0.25],       # mosaico de tiempo: columnas, filas, segundos de atraso por celda
+                                     # con "material_en_orden": true en el tramo, los clips entran en el orden de esa lista
       "tramos": [                    # el guion: cada tramo cambia perillas entre dos segundos
         {"nombre": "abre", "desde": 0, "hasta": 27, "frase_compases": 4, "congelar_golpes": 4, "material": ["lanchas"]},
         {"nombre": "pleno", "desde": 27, "hasta": 74, "frase_compases": 1, "fundido_golpes": 0.25}
@@ -152,6 +153,11 @@ def _es_material(c: dict, palabra: str) -> bool:
     if palabra.startswith("clip:"):
         return not c.get("foto") and palabra[5:] in c["id"]
     return palabra in c["id"]
+
+
+def _en_orden(grupo: list[dict], material: list[str]) -> list[dict]:
+    """Los clips en el orden que dice la lista del guion: cada uno, en el lugar de la primera palabra que lo nombra."""
+    return sorted(grupo, key=lambda c: min((i for i, pal in enumerate(material) if _es_material(c, pal)), default=len(material)))
 
 
 def _intercalar(lista: list[dict]) -> list[dict]:
@@ -281,36 +287,9 @@ def _velocidad(e: float, prm: dict) -> float:
     return round(float(calma + (pico - calma) * u), 3)
 
 
-def planificar(p: Proyecto) -> None:
-    prm = {**POR_DEFECTO, **p.cfg.get("montaje", {})}
-    if prm["corte"] not in CORTES:
-        salir(f"corte desconocido: {prm['corte']} (hay: {', '.join(CORTES)})")
-    catalogo = catalogo_clips.cargar(p)
-    # Las fotos del catálogo entran sólo si el montaje las pide: sin eso, sumarle fotos a un proyecto no le cambia nada.
-    todos = _ordenar([c for c in catalogo if not c["src"].startswith("transformados/") and (prm["mezclar_fotos"] or not c.get("foto"))], prm["orden"])
-    # Las variantes transformadas de cada clip (estela, eco, barrido…), por si se piden.
-    variantes: dict[str, list[dict]] = {}
-    for c in catalogo:
-        if c["src"].startswith("transformados/"):
-            base = next((o["id"] for o in todos if c["id"].startswith(o["id"] + "-")), None)
-            if base:
-                variantes.setdefault(base, []).append(c)
-    if not todos:
-        salir("el catálogo no tiene clips propios (sólo transformados): `clips` del proyecto tiene que incluir la carpeta de los originales")
-    m = musica.cargar(p)
-
-    # El lienzo: el de proyecto.json o, si no dice, el de la mayoría de los clips.
-    verticales = sum(c["ratio"] < 0.9 for c in todos)
-    por_defecto = {"ancho": 1080, "alto": 1920} if verticales > len(todos) / 2 else {"ancho": 1920, "alto": 1080}
-    out = {**por_defecto, "fps": 30, "fondo": "#07090d", **p.cfg.get("salida", {})}
-    W, H, fps = out["ancho"], out["alto"], out["fps"]
-    golpe_s = 60 / m["bpm"]
-
-    compases = _compases(m)
-    if prm["muro"]:
-        _muro(p, prm, todos, m, out, golpe_s)
-        return
-
+def frases_del_guion(m: dict, prm: dict, compases: list[dict]):
+    """La canción en frases según el guion: cada frase es un clip (una toma). Devuelve las frases (listas de
+    compases), en qué tramo cae cada compás y las perillas que valen en él. La usan `planificar` y `tomas`."""
     tramos_guion = prm.get("tramos") or []
     for tr in tramos_guion:
         # Lo que se escribe a mano: una palabra suelta en `material` vale como lista de una, y un corte que no existe no pasa callado.
@@ -341,6 +320,40 @@ def planificar(p: Proyecto) -> None:
     for k, tr in enumerate(tramos_guion):
         if not any(tramo_de(f[0]) == k for f in frases):
             print(f"aviso: el tramo «{tr.get('nombre', k + 1)}» ({tr.get('desde', 0):g}–{tr.get('hasta', m['duracion']):g} s) no alcanza a tener un compás propio: no vale en ningún lado")
+    return frases, tramo_de, prm_compas
+
+
+def planificar(p: Proyecto) -> None:
+    prm = {**POR_DEFECTO, **p.cfg.get("montaje", {})}
+    if prm["corte"] not in CORTES:
+        salir(f"corte desconocido: {prm['corte']} (hay: {', '.join(CORTES)})")
+    catalogo = catalogo_clips.cargar(p)
+    # Las fotos del catálogo entran sólo si el montaje las pide: sin eso, sumarle fotos a un proyecto no le cambia nada.
+    todos = _ordenar([c for c in catalogo if not c["src"].startswith("transformados/") and (prm["mezclar_fotos"] or not c.get("foto"))], prm["orden"])
+    # Las variantes transformadas de cada clip (estela, eco, barrido…), por si se piden.
+    variantes: dict[str, list[dict]] = {}
+    for c in catalogo:
+        if c["src"].startswith("transformados/"):
+            base = next((o["id"] for o in todos if c["id"].startswith(o["id"] + "-")), None)
+            if base:
+                variantes.setdefault(base, []).append(c)
+    if not todos:
+        salir("el catálogo no tiene clips propios (sólo transformados): `clips` del proyecto tiene que incluir la carpeta de los originales")
+    m = musica.cargar(p)
+
+    # El lienzo: el de proyecto.json o, si no dice, el de la mayoría de los clips.
+    verticales = sum(c["ratio"] < 0.9 for c in todos)
+    por_defecto = {"ancho": 1080, "alto": 1920} if verticales > len(todos) / 2 else {"ancho": 1920, "alto": 1080}
+    out = {**por_defecto, "fps": 30, "fondo": "#07090d", **p.cfg.get("salida", {})}
+    W, H, fps = out["ancho"], out["alto"], out["fps"]
+    golpe_s = 60 / m["bpm"]
+
+    compases = _compases(m)
+    if prm["muro"]:
+        _muro(p, prm, todos, m, out, golpe_s)
+        return
+
+    frases, tramo_de, prm_compas = frases_del_guion(m, prm, compases)
     # Menos frases que clips: se parten las más enérgicas por la mitad mientras se pueda.
     # Si el guion dice el material de cada tramo, manda él: no se parte ni se deja afuera nada.
     con_material = any("material" in tr for tr in prm.get("tramos") or [])
@@ -369,6 +382,8 @@ def planificar(p: Proyecto) -> None:
         for frase in frases:
             material = prm_compas(frase[0]).get("material")
             grupo = [c for c in usados if not material or any(_es_material(c, pal) for pal in material)] or usados
+            if material and prm_compas(frase[0]).get("material_en_orden"):
+                grupo = _en_orden(grupo, material)
             if prm["mezclar_fotos"]:
                 grupo = _intercalar(grupo)
             clave = ",".join(material or [])

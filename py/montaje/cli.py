@@ -10,6 +10,7 @@ import sys
 import tempfile
 from pathlib import Path
 
+from . import clips, por_tramos
 from .rutas import RAIZ, Proyecto, leer_json, salir
 
 
@@ -40,6 +41,7 @@ def _publico(p: Proyecto, tl: dict) -> Path:
     apunta fuera de la carpeta (404). En el disco no ocupan nada aparte.
     """
     rutas: set[str] = set()
+    _faltantes: set[str] = set()
 
     def juntar(x) -> None:
         if isinstance(x, dict):
@@ -55,6 +57,8 @@ def _publico(p: Proyecto, tl: dict) -> Path:
                     # La pared de `actos` dibuja las miniaturas, que no están escritas en el timeline.
                     if x.startswith("imagenes/") and (p.medios / "miniaturas" / x[len("imagenes/"):]).is_file():
                         rutas.add("miniaturas/" + x[len("imagenes/"):])
+                elif x.startswith("proxies/") and (p.medios / "borradores" / Path(x).name).is_file():
+                    _faltantes.add(x)
             except (OSError, ValueError):  # un texto cualquiera (un título, un color) no es una ruta
                 pass
 
@@ -69,6 +73,14 @@ def _publico(p: Proyecto, tl: dict) -> Path:
             os.link(p.medios / r, enlace)
         except OSError:  # otra unidad: no queda más que copiar
             shutil.copy2(p.medios / r, enlace)
+    # La copia interpolada que todavía no existe: con su mismo nombre, el borrador. El timeline no se entera.
+    for r in sorted(_faltantes):
+        enlace = destino / r
+        enlace.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            os.link(p.medios / "borradores" / Path(r).name, enlace)
+        except OSError:
+            shutil.copy2(p.medios / "borradores" / Path(r).name, enlace)
     return destino
 
 
@@ -76,6 +88,9 @@ def cmd_render(p: Proyecto, a) -> Path:
     if not p.timeline.exists():
         salir("falta el timeline; corre primero: python montaje.py planificar " + p.nombre)
     tl = leer_json(p.timeline)
+    if not a.preview:
+        # El final va con la cámara lenta fluida: aquí se inventan los cuadros de lo que quedó en el video.
+        clips.asegurar_copias(p, {c["img"] for c in tl.get("capas", []) if "video" in c and str(c.get("img", "")).startswith("proxies/")})
     fps = tl["fps"]
     nombre = a.salida or ("preview" if a.preview else "final")
     if p.version and not a.salida:
@@ -93,7 +108,14 @@ def cmd_render(p: Proyecto, a) -> Path:
     # pesaron 1,9 GB (y 1,5 GB a CRF 21). Con grano, tasa fija: 12 Mb/s ≈ 270 MB por 3 min.
     grano = any(s.get("tipo") == "recuerdo" and s.get("grano", 0) > 0 for s in tl.get("sintesis", []))
     final = ["--video-bitrate=12M"] if grano else ["--crf=16"]
-    calidad = ["--scale=0.5", "--crf=28", "--jpeg-quality=70"] if a.preview else [*final, "--jpeg-quality=95"]
+    # La tarjeta de video dibuja el preview en la mitad de tiempo (12 s contra 23 por cada 10 s de video, medido el
+    # 2026-11-09). El final sigue en el procesador: el cielo cambia 3 de 255 y el grano cae distinto, y lo aprobado se vio así.
+    calidad = ["--scale=0.5", "--crf=28", "--jpeg-quality=70", "--gl=angle"] if a.preview else [*final, "--jpeg-quality=95"]
+    if a.preview and not rango and not por_tramos.tiene_sonido_propio(tl.get("capas")):
+        publico = _publico(p, tl) if any("video" in c for c in tl.get("capas", [])) or tl.get("sintesis") else p.medios
+        por_tramos.renderizar(p, tl, destino, publico, _remotion(), calidad)
+        print(f"→ {destino}")
+        return destino
     orden = [_remotion(), "render", "src/index.ts", "Montaje", str(destino), *_base_remotion(p), *calidad, *rango]
     print(" ".join(orden))
     subprocess.run(orden, cwd=RAIZ, check=True)
@@ -408,10 +430,25 @@ def main() -> None:
     s.add_argument("--columnas", type=int, default=5)
     s.add_argument("--filas", type=int, default=6)
 
+    nuevo("seleccion", "la mesa de selección: una muestra muda, un cuadro y las medidas de cada clip, para elegir a mano antes de editar → <biblioteca>/seleccion/")
+
     s = nuevo("revisar", "mide un render: negro, imagen quieta, cuadros repetidos, cortes, destellos por segundo y sonoridad")
     s.add_argument("video", help="nombre del archivo dentro de medios/render")
 
     nuevo("guion", "el esqueleto del guion: la canción en tramos con los estilos de la galería que sirven en cada uno → proyectos/<p>/GUION.md (si no existe)")
+
+    s = nuevo("traer", "trae de Cantera las piezas de una serie, en su orden, a la biblioteca del proyecto → <biblioteca>/cantera-<serie>/")
+    s.add_argument("--serie", required=True, help="el nombre de la serie en Cantera")
+    s.add_argument("--carpeta", help="la carpeta de la biblioteca (por defecto, cantera-<serie>)")
+    s.add_argument("--tipo", help="sólo video, imagen, audio o documento")
+
+    s = nuevo("aplicar-guion", "lleva a los tramos de proyecto.json lo que Miguel cambió en la Mesa (orden de clips, estilo, lo que pasa)")
+    s.add_argument("cambios", help="JSON con {\"T3\": {\"orden\": [...], \"estilo\": \"...\", \"pasa\": \"...\"}}")
+    s.add_argument("--version", help="los tramos de una versión de proyecto.json")
+
+    s = nuevo("tomas", "la lista de tomas que pide el guion, para producir el material antes de montar → proyectos/<p>/TOMAS.md")
+    s.add_argument("--version", help="las tomas de una versión de proyecto.json")
+    s.add_argument("--estado", action="store_true", help="qué tomas ya tienen su clip en las carpetas del proyecto")
 
     s = nuevo("ejercicio", "una vuelta de ejercicio: planifica cada versión, renderiza su tramo de prueba, saca su hoja y (con --muestra) la muestra de su estilo")
     s.add_argument("--version", nargs="+", help="sólo estas versiones (por defecto, todas las de proyecto.json)")
@@ -442,6 +479,13 @@ def main() -> None:
     s.add_argument("--cita", default="", help="lo que dijo Miguel, con sus palabras")
     s.add_argument("--via", default="chat", help="por dónde lo dio: chat o galeria")
 
+    s = sub.add_parser("transcribir", help="transcribe un audio o video en este computador: texto, subtítulos y cada palabra con su segundo → medios/transcripciones/",
+                       description="transcribe un audio o video en este computador: texto, subtítulos y cada palabra con su segundo → medios/transcripciones/")
+    s.add_argument("archivo", help="ruta al audio o video (absoluta o relativa a los medios)")
+    s.add_argument("--idioma", default="es")
+    s.add_argument("--pistas", help="nombres propios que conviene que reconozca («Paraguaná, Curiana»)")
+    s.add_argument("--cancion", action="store_true", help="es una canción: sin el filtro de voz, que toma el canto con instrumentos por ruido")
+
     s = sub.add_parser("recorrido", help="la galería de corrido: unos segundos de cada muestra con su nombre, en un video liviano → medios/estilos/recorridos/",
                        description="la galería de corrido: unos segundos de cada muestra con su nombre, en un video liviano → medios/estilos/recorridos/")
     s.add_argument("--en", help="sólo los estilos vistos en este experimento (p. ej. 21-laboratorio-de-la-manana)")
@@ -451,7 +495,20 @@ def main() -> None:
     s.add_argument("--salida", help="nombre del archivo, sin extensión")
     s.add_argument("--peso", type=float, default=28.0, help="MB como mucho (el chat acepta 30)")
 
+    sub.add_parser("aprender", help="lo aprendido de las notas de Miguel: lecciones y veredictos como datos → direccion/APRENDIDO.md",
+                   description="lo aprendido de las notas de Miguel: lecciones y veredictos como datos → direccion/APRENDIDO.md")
+
     a = ap.parse_args()
+    if a.comando == "aprender":
+        from . import aprender
+
+        aprender.escribir()
+        return
+    if a.comando == "transcribir":
+        from . import transcribir
+
+        transcribir.transcribir(a.archivo, a.idioma, a.pistas, a.cancion)
+        return
     if a.comando in ("estilos", "muestra", "recorrido", "veredicto"):
         from . import estilos
 
@@ -494,6 +551,10 @@ def main() -> None:
         musica.pista_prueba(p, a.bpm, a.duracion)
     elif a.comando == "musica":
         musica.analizar(p, a.archivo)
+    elif a.comando == "seleccion":
+        from . import seleccion
+
+        seleccion.preparar(p)
     elif a.comando == "revisar":
         from . import revisar
 
@@ -502,6 +563,18 @@ def main() -> None:
         from . import guion
 
         guion.escribir(p)
+    elif a.comando == "traer":
+        from . import traer
+
+        traer.traer(p, a.serie, a.carpeta, a.tipo)
+    elif a.comando == "aplicar-guion":
+        from . import guion
+
+        guion.aplicar_desde_mesa(p, a.cambios)
+    elif a.comando == "tomas":
+        from . import tomas
+
+        tomas.estado(p) if a.estado else tomas.escribir(p)
     elif a.comando == "planificar":
         planificar.planificar(p)
     elif a.comando == "ensamblar":

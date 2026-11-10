@@ -32,10 +32,13 @@ Cada una acepta `desde` y `hasta` (segundos del video) para ocupar sólo un tram
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 import numpy as np
 
 from . import musica
-from .rutas import Proyecto, escribir_json, leer_json, salir
+from .rutas import MEDIOS, Proyecto, escribir_json, leer_json, salir
 
 TINTAS = {"oro": "#e6b43c", "ocre": "#c36712", "rojo": "#b64924", "hueso": "#f3ead4",
           "indigo": "#26396a", "electrico": "#2154c5", "acido": "#c7c91c", "rubrica": "#8f3b26"}
@@ -165,6 +168,46 @@ def _grafico(tipo: str, prm: dict, m: dict, fps: int, ini: int, total: int) -> d
             "x": prm["x"], "y": prm["y"], "alinear": prm["alinear"], "color": TINTAS.get(prm["color"], prm["color"]), "letras": letras}
 
 
+def _segundos_srt(x: str) -> float:
+    h, mi, s = x.strip().replace(",", ".").split(":")
+    return int(h) * 3600 + int(mi) * 60 + float(s)
+
+
+def leer_srt(texto: str) -> list[dict]:
+    """Las líneas de un .srt: su segundo de entrada, el de salida y el texto (varias filas, en una)."""
+    lineas = []
+    for bloque in texto.replace("\r\n", "\n").strip().split("\n\n"):
+        filas = [f for f in bloque.split("\n") if f.strip()]
+        k = next((i for i, f in enumerate(filas) if "-->" in f), None)
+        if k is None or k + 1 >= len(filas):
+            continue
+        a, b = filas[k].split("-->")
+        lineas.append({"t": _segundos_srt(a), "fin": _segundos_srt(b), "texto": " ".join(f.strip() for f in filas[k + 1 :])})
+    return lineas
+
+
+def lineas_de_transcripcion(ruta: str) -> list[dict]:
+    """Los rótulos de lo que dejó `transcribir`, sin pasar el texto por el proyecto.
+
+    Manda el `.srt` (es el que Miguel corrige a mano: el texto y, si quiere, los segundos). El segundo de
+    cada palabra sale del `.json` hermano cuando la línea sigue empezando donde empezaba y tiene las mismas
+    palabras en número; si no, las palabras se reparten entre la entrada y la salida de la línea.
+    """
+    f = Path(ruta) if Path(ruta).is_absolute() else MEDIOS / ruta
+    srt_, json_ = f.with_suffix(".srt"), f.with_suffix(".json")
+    if not srt_.exists():
+        salir(f"rotulos: no existe {srt_} (sale de `python montaje.py transcribir`)")
+    palabras_json = json.loads(json_.read_text(encoding="utf-8")).get("rotulos", []) if json_.exists() else []
+    lineas = []
+    for l in leer_srt(srt_.read_text(encoding="utf-8")):
+        n = len(l["texto"].split())
+        par = next((j for j in palabras_json if abs(j["t"] - l["t"]) < 0.06 and len(j["tiempos"]) == n), None)
+        largo = max(0.2, l["fin"] - l["t"])
+        tiempos = par["tiempos"] if par else [l["t"] + k * largo * 0.8 / max(1, n - 1) for k in range(n)] if n > 1 else [l["t"]]
+        lineas.append({"t": l["t"], "texto": l["texto"], "tiempos": tiempos, "dura": round(largo + 0.6, 2)})
+    return lineas
+
+
 def _rotulos(prm: dict, m: dict, fps: int, total: int) -> dict | None:
     """Las frases del guion, cada una en su golpe y sus palabras en la rejilla del pulso."""
     beats = np.array(m["beats"], dtype=float)
@@ -172,6 +215,8 @@ def _rotulos(prm: dict, m: dict, fps: int, total: int) -> dict | None:
     if prm["cada"] not in ("golpe", "medio", "todo"):
         salir(f"rotulos: `cada` es golpe, medio o todo (no «{prm['cada']}»)")
     paso = {"golpe": golpe, "medio": golpe / 2, "todo": 0.0}[prm["cada"]]
+    if prm.get("transcripcion"):
+        prm = {**prm, "lineas": lineas_de_transcripcion(prm["transcripcion"])}
     crudas = sorted(({"t": l[0], "texto": l[1]} if isinstance(l, (list, tuple)) else dict(l) for l in prm["lineas"]), key=lambda l: l["t"])
     crudas = [l for l in crudas if str(l.get("texto", "")).split()]
     # Cada frase arranca en el golpe más cercano a su `t` (con `tiempos`, donde diga).

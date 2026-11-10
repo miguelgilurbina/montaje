@@ -20,10 +20,12 @@ lo aprobado). No escribe nada en proyecto.json.
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
+from . import aprender
 from . import estilos as catalogo
 from . import musica, pulso, sintesis
-from .rutas import Proyecto
+from .rutas import Proyecto, salir
 
 #: Lo que hace cada tramo en el video, en las palabras del catálogo (`PARA`).
 PAPELES = ("abrir", "cerrar", "respirar", "subir la energía", "mostrar el archivo")
@@ -107,7 +109,9 @@ def esqueleto(p: Proyecto) -> tuple[str, list[dict], dict]:
     secciones = [{**s, "ini": al_uno(s["ini"]) if i else s["ini"], "fin": al_uno(s["fin"]) if i < len(secciones) - 1 else s["fin"]}
                  for i, s in enumerate(secciones)]
     filas, tramos = [], []
-    armado: dict = {"tramos": [], "sintesis": []}
+    armado: dict = {"tramos": [], "sintesis": [], "lecciones": [], "por_tono": set()}
+    lecciones = aprender.leer()
+    tono = p.cfg.get("tono")
     for i, s in enumerate(secciones):
         en, pa = energia_de(s["energia"], calma, pico), papel(i, energias, calma, pico)
         desde, hasta = (round(s["ini"], 2) if i else 0), round(s["fin"], 2)
@@ -116,7 +120,11 @@ def esqueleto(p: Proyecto) -> tuple[str, list[dict], dict]:
         elegido = next(((e, receta_de_tramo(e)) for e in muchos if receta_de_tramo(e) is not None), None)
         usados = []
         if elegido:
-            armado["tramos"].append({"nombre": f"{pa} · {elegido[0]['id']}", "desde": desde, "hasta": hasta, **elegido[1]})
+            tramo = {"nombre": f"{pa} · {elegido[0]['id']}", "desde": desde, "hasta": hasta, **elegido[1]}
+            # Lo que Miguel enseñó (direccion/LECCIONES.json) va encima de la receta del estilo, y se dice.
+            armado["lecciones"] += [f"{u} ({desde:g}–{hasta:g} s)" for u in aprender.sobre_tramo(tramo, en, "pulso", tono, lecciones)]
+            armado["por_tono"] |= {lc["id"] for lc in aprender.faltan_por_tono(en, "pulso", tono, lecciones)}
+            armado["tramos"].append(tramo)
             usados.append(elegido[0])
             # Las capas que el estilo dice que lo acompañan (la ventana va sobre un campo de color).
             for nombre in elegido[0]["tecnica"].get("sintesis") or []:
@@ -134,6 +142,9 @@ def esqueleto(p: Proyecto) -> tuple[str, list[dict], dict]:
             sirven += " · encima: " + ", ".join(_marca(e) for e in encima)
         filas.append(f"| {i + 1} | {s['ini']:.0f}–{s['fin']:.0f} | {en} ({s['energia']:.2f}) · {pa} |  |  | {sirven} |")
         tramos.append({"nombre": f"tramo {i + 1}", "desde": desde, "hasta": hasta})
+    for lid, capa in aprender.capas(p.cfg, lecciones):
+        armado["sintesis"].append(capa)
+        armado["lecciones"].append(f"{lid} (todo el video)")
     titulo = p.cfg.get("titulo", p.nombre)
     texto = "\n".join([
         f"# {titulo} · guion",
@@ -179,8 +190,87 @@ def escribir(p: Proyecto) -> None:
             print('"sintesis": [')
             print(",\n".join("  " + json.dumps(c, ensure_ascii=False) for c in armado["sintesis"]))
             print("]")
+        for usada in armado["lecciones"]:
+            print(f"  lección · {usada}")
+        if armado["por_tono"]:
+            print("  lecciones que valdrían si proyecto.json dijera su tono (\"tono\": \"recuerdo\"): " + ", ".join(sorted(armado["por_tono"])))
         vistos: set[str] = set()
         for aviso in armado.get("ojo", []):
             if aviso.split(" (")[0] + aviso.split("): ")[1] not in vistos:  # una vez por estilo y por aviso
                 print(f"  ojo · {aviso}")
             vistos.add(aviso.split(" (")[0] + aviso.split("): ")[1])
+    for lc in aprender.consejos():
+        print(f"  consejo · {lc['regla']}")
+
+
+# ── Lo que Miguel cambia en el teléfono ────────────────────────────────────
+
+def estilo_principal(tramo: dict, estilos: dict[str, dict]) -> str | None:
+    """El estilo que arma el tramo: el primero de sus `estilos` que se puede poner por tramo."""
+    return next((i for i in tramo.get("estilos") or [] if i in estilos and receta_de_tramo(estilos[i]) is not None), None)
+
+
+def aplicar_cambios(tramos: list[dict], cambios: dict, estilos: dict[str, dict], energias: list[str], tono: str | None,
+                    lecciones: list[dict], validos: set[str] | None = None) -> list[str]:
+    """Lleva a los `tramos` lo que Miguel cambió en la Mesa: por tramo («T3»), el orden de sus clips, su estilo y lo que pasa.
+
+    Cambiar el estilo quita las perillas del estilo de antes, pone las del nuevo y vuelve a aplicar las lecciones
+    (que mandan sobre la receta: la velocidad de la banda no vuelve a subir por cambiar de transición).
+    Devuelve, en palabras, lo que cambió.
+    """
+    dicho = []
+    for clave in sorted(cambios, key=lambda c: int(c.lstrip("Tt"))):
+        c = cambios[clave]
+        k = int(clave.lstrip("Tt")) - 1
+        if not 0 <= k < len(tramos):
+            salir(f"{clave}: el guion tiene {len(tramos)} tramos")
+        tr = tramos[k]
+        nombre = f"T{k + 1} · {tr.get('nombre', '')}"
+        if "orden" in c:
+            orden = list(c["orden"])
+            if validos is not None and (fuera := [i for i in orden if i not in validos]):
+                salir(f"{nombre}: estos clips no están en la selección del proyecto: {', '.join(fuera)}")
+            # Lo que había, con los nombres completos: «mj-093» en el guion es el clip «mj-093-a-fishing-boat…».
+            antes = [i for pal in tr.get("material") or [] for i in sorted(validos or ()) if pal in i] if validos else tr.get("material")
+            if orden != antes:
+                dicho.append(f"{nombre}: {len(orden)} clips en este orden")
+            if orden != tr.get("material"):
+                tr["material"], tr["material_en_orden"] = orden, True
+        if c.get("pasa") is not None and c["pasa"].strip() and c["pasa"].strip() != tr.get("pasa"):
+            tr["pasa"] = c["pasa"].strip()
+            dicho.append(f"{nombre}: lo que pasa, en tus palabras")
+        nuevo = c.get("estilo")
+        viejo = estilo_principal(tr, estilos)
+        if nuevo and nuevo != viejo:
+            if nuevo not in estilos or receta_de_tramo(estilos[nuevo]) is None:
+                salir(f"{nombre}: «{nuevo}» no es un estilo que se pueda poner por tramo")
+            for perilla in receta_de_tramo(estilos[viejo]) or {} if viejo else {}:
+                tr.pop(perilla, None)
+            tr.update(receta_de_tramo(estilos[nuevo]))
+            tr["estilos"] = [nuevo] + [i for i in tr.get("estilos") or [] if i not in (viejo, nuevo)]
+            usadas = aprender.sobre_tramo(tr, energias[k], "pulso", tono, lecciones)
+            dicho.append(f"{nombre}: estilo {viejo or 'ninguno'} → {nuevo}" + (f" (con {', '.join(usadas)})" if usadas else ""))
+    return dicho
+
+
+def aplicar_desde_mesa(p: Proyecto, archivo: str) -> None:
+    """`aplicar-guion <p> <cambios.json>`: los cambios de la Mesa (`{"T3": {"orden": [...], "estilo": "...", "pasa": "..."}}`)."""
+    from . import clips as catalogo_clips
+    from . import tomas as lista_tomas
+
+    cambios = json.loads(Path(archivo).read_text(encoding="utf-8"))
+    ruta = p.dir / "proyecto.json"
+    cfg = json.loads(ruta.read_text(encoding="utf-8"))
+    tramos = cfg["versiones"][p.version]["tramos"] if p.version else cfg["montaje"]["tramos"]
+    estilos = {e["id"]: e for e in catalogo.leer()}
+    prm = {**pulso.POR_DEFECTO, **p.cfg.get("montaje", {})}
+    ts, _, _ = lista_tomas.lista(p)
+    energias = []
+    for k in range(len(tramos)):
+        es = [t["energia"] for t in ts if t["tramo"] == k]
+        energias.append(energia_de(sum(es) / len(es), prm["umbral_calma"], prm["umbral_pico"]) if es else "calma")
+    validos = {c["id"] for c in catalogo_clips.cargar(p)}
+    dicho = aplicar_cambios(tramos, cambios, estilos, energias, cfg.get("tono"), aprender.leer(), validos)
+    ruta.write_text(json.dumps(cfg, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    print("\n".join(dicho) if dicho else "nada cambió")
+    print(f"→ {ruta}")

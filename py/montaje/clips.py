@@ -17,6 +17,10 @@ Con eso `mejor_tramo` elige qué segundos de cada clip van en el montaje: nítid
 sin temblor, lejos del arranque y el final de la toma, y con el movimiento que pide
 la música en ese momento.
 
+Con `clips_interpolar`, `clips` hace sólo un **borrador** (`borradores/`, sin inventar cuadros) y
+las curvas salen de ahí; la copia interpolada espera al render final y sólo de lo que quedó en el
+video (`asegurar_copias`). El preview dibuja el borrador en lugar de la copia que falta.
+
 Las copias de trabajo (`proxies/`) son lo que dibuja Remotion: H.264 a 1080 como
 mucho, cuadros parejos (30 o 60 por segundo, según el original), girados como se
 ven en el teléfono, en rango normal (el HDR del teléfono se lleva a SDR: si no, se
@@ -39,12 +43,15 @@ from __future__ import annotations
 import datetime as dt
 import json
 import subprocess
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import numpy as np
 
 from .rutas import Proyecto, escribir_json, leer_json, salir
 
+#: Clips que se copian a la vez. Medido el 2026-11-09 en 16 hilos: 4 rinden 2,3 veces una sola; 8, 2,8; 12, lo mismo que 8.
+A_LA_VEZ = 8
 EXTENSIONES = {".mp4", ".mov", ".m4v", ".mkv", ".webm", ".avi", ".3gp", ".mts"}
 FOTOS = {".jpg", ".jpeg", ".png", ".webp"}
 #: Segundos que «dura» una foto para el reparto (cuánto material cuenta); en pantalla dura lo que su frase.
@@ -321,7 +328,45 @@ def de_este_proyecto(p: Proyecto, clips: list[dict]) -> list[dict]:
     cambiaba el reparto a todos los demás la próxima vez que se planificaran.
     """
     prefijos = _prefijos(p)
-    return [c for c in clips if c["src"].startswith(prefijos)] if prefijos else clips
+    propios = [c for c in clips if c["src"].startswith(prefijos)] if prefijos else clips
+    elegidos = _elegidos(p)
+    if elegidos is not None:
+        propios = [c for c in propios if _es_elegido(c["id"], c["src"].startswith("transformados/"), elegidos)]
+    return propios
+
+
+def _elegidos(p: Proyecto) -> set[str] | None:
+    """Lo que Miguel eligió en la mesa de selección (`proyectos/<p>/seleccion.json`); None si todavía no eligió."""
+    eleccion = p.dir / "seleccion.json"
+    return set(leer_json(eleccion)["elegidos"]) if eleccion.exists() else None
+
+
+def _es_elegido(ident: str, transformado: bool, elegidos: set[str]) -> bool:
+    """¿Es un clip elegido, o un transformado de uno elegido?"""
+    return ident in elegidos or (transformado and any(ident.startswith(e + "-") for e in elegidos))
+
+
+def copia_de(p: Proyecto, c: dict) -> Path:
+    """La copia que se puede usar ahora: la interpolada si ya existe; si no, su borrador."""
+    proxy = p.medios / c["proxy"]
+    return proxy if proxy.exists() or c.get("foto") else p.medio("borradores", proxy.name)
+
+
+def asegurar_copias(p: Proyecto, rutas: set[str]) -> None:
+    """Las copias interpoladas que faltan de estas `rutas` («proxies/x.mp4»): para el final, sólo lo que quedó en el video."""
+    catalogo = {c["proxy"]: c for c in leer_json(ruta_catalogo(p))["clips"] if not c.get("foto")}
+    faltan = [catalogo[r] for r in sorted(rutas) if r in catalogo and not (p.medios / r).exists()]
+    if not faltan:
+        return
+    print(f"interpolando {len(faltan)} copias, {A_LA_VEZ} a la vez…", flush=True)
+
+    def una(c: dict) -> None:
+        origen = p.medios / c["src"]
+        _hacer_proxy(origen, p.medios / c["proxy"], _sondear(origen), c["firma"][2])
+        print(f"  ✓ {c['id']}", flush=True)
+
+    with ThreadPoolExecutor(A_LA_VEZ) as pool:
+        list(pool.map(una, faltan))
 
 
 def analizar(p: Proyecto) -> Path:
@@ -330,27 +375,41 @@ def analizar(p: Proyecto) -> Path:
     archivos = sorted(f for o in origenes for f in o.iterdir() if f.is_file() and f.suffix.lower() in EXTENSIONES)
     if not archivos:
         salir(f"no hay clips en {', '.join(str(o) for o in origenes)}")
+    # Con la elección hecha, sólo lo elegido: lo demás no tiene por qué esperar su copia.
+    elegidos = _elegidos(p)
+    if elegidos is not None:
+        archivos = [f for f in archivos if _es_elegido(f.stem, f.parent.name == "transformados", elegidos)]
     destino = ruta_catalogo(p)
     previo = {c["src"]: c for c in leer_json(destino)["clips"]} if destino.exists() else {}
 
     interpolar = int(p.cfg.get("clips_interpolar", 1))
-    clips = []
-    for f in archivos:
+
+    def uno(f: Path) -> dict:
         rel = f.relative_to(p.medios).as_posix()
         # Los transformados salen de copias ya interpoladas: su copia no se interpola (y eso va en la firma).
         firma = [f.stat().st_size, int(f.stat().st_mtime), 1 if rel.startswith("transformados/") else interpolar]
         proxy = p.medio("proxies", f.stem + ".mp4")
+        borrador = p.medio("borradores", f.stem + ".mp4")
         anterior = previo.get(rel)
-        if anterior and anterior.get("firma") == firma and proxy.exists() and "cx" in anterior["curvas"]:
-            clips.append(anterior)
-            print(f"  = {f.name}")
-            continue
+        if anterior and anterior.get("firma") == firma and (proxy.exists() or borrador.exists()) and "cx" in anterior["curvas"]:
+            print(f"  = {f.name}", flush=True)
+            return anterior
         s = _sondear(f)
         print(f"  … {f.name}: {s['w']}×{s['h']}, {s['fps']:.2f} cps, {s['duracion']:.1f} s{', HDR→SDR' if s['hdr'] else ''}", flush=True)
-        if not proxy.exists() or proxy.stat().st_mtime < f.stat().st_mtime or (anterior and anterior.get("firma") != firma):
+        vencida = bool(anterior and anterior.get("firma") != firma)
+        if firma[2] > 1 and s["fps"] <= 61:
+            # Inventar cuadros es el 97 % del costo de una copia y un preview no los necesita: se hace
+            # el borrador y la copia interpolada espera al final, sólo de lo que quedó (`asegurar_copias`).
+            if proxy.exists() and (proxy.stat().st_mtime < f.stat().st_mtime or vencida):
+                proxy.unlink()
+            if not proxy.exists() and (not borrador.exists() or borrador.stat().st_mtime < f.stat().st_mtime or vencida):
+                _hacer_proxy(f, borrador, s)
+        elif not proxy.exists() or proxy.stat().st_mtime < f.stat().st_mtime or vencida:
             _hacer_proxy(f, proxy, s, firma[2])
-        sp = _sondear(proxy)
-        cur = _curvas(_cuadros(proxy, sp["w"], sp["h"]))
+        fuente = proxy if proxy.exists() else borrador
+        sp = _sondear(fuente)
+        pendiente = fuente == borrador
+        cur = _curvas(_cuadros(fuente, sp["w"], sp["h"]))
         clip = {
             "id": f.stem,
             "src": rel,
@@ -359,18 +418,23 @@ def analizar(p: Proyecto) -> Path:
             "w": sp["w"],
             "h": sp["h"],
             "ratio": round(sp["w"] / sp["h"], 4),
-            "fps": round(sp["fps"], 3),
-            "duracion": round(sp["duracion"], 3),
+            # Lo que tendrá la copia interpolada, para que el plan no cambie cuando exista: inventar cuadros
+            # le quita al clip casi dos cuadros del final (medido: 0,07 s a 24 cps).
+            "fps": round(min(120, sp["fps"] * firma[2]) if pendiente else sp["fps"], 3),
+            "duracion": round(sp["duracion"] - (2 / sp["fps"] if pendiente else 0), 3),
             "audio": s["audio"],
             "hdr": s["hdr"],
             "fecha": s["fecha"],
-            "color": _color(proxy, sp["w"], sp["h"], sp["duracion"]),
+            "color": _color(fuente, sp["w"], sp["h"], sp["duracion"]),
             "hz": HZ,
             "curvas": {k: [round(float(v), 5) for v in cur[k]] for k in ("mov", "camara", "temblor", "nit", "luz", "cx", "cy")},
             "cortes": [round(t, 2) for t in cur["cortes"]],
         }
         clip["resumen"] = _resumen(clip)
-        clips.append(clip)
+        return clip
+
+    with ThreadPoolExecutor(A_LA_VEZ) as pool:
+        clips = list(pool.map(uno, archivos))
 
     # Las fotos del proyecto, si las pide: al mismo catálogo, como clips quietos.
     rel_fotos = p.cfg.get("fotos")
@@ -393,7 +457,8 @@ def analizar(p: Proyecto) -> Path:
     clips.sort(key=lambda c: (c["fecha"] or "~", c["id"]))
     # Lo que otros experimentos de la misma biblioteca tienen en otras carpetas se queda en el catálogo.
     vistos = {c["src"] for c in clips}
-    ajenos = [c for src, c in previo.items() if src not in vistos and not src.startswith(_prefijos(p)) and (p.medios / c["proxy"]).exists()]
+    # También lo que esta elección dejó afuera: otro experimento de la biblioteca puede estar usándolo.
+    ajenos = [c for src, c in previo.items() if src not in vistos and (elegidos is not None or not src.startswith(_prefijos(p))) and copia_de(p, c).exists()]
     todos = sorted(clips + ajenos, key=lambda c: (c["fecha"] or "~", c["id"]))
     escribir_json(destino, {"generado": dt.datetime.now().isoformat(timespec="seconds"), "clips": todos})
     if ajenos:
@@ -514,7 +579,7 @@ def _hojas(p: Proyecto, clips: list[dict]) -> Path:
         for k in range(cuadros_por_fila):
             t = (k + 0.5) * c["duracion"] / cuadros_por_fila
             crudo = subprocess.run(
-                ["ffmpeg", "-v", "error", "-ss", f"{t:.3f}", "-i", str(p.medios / c["proxy"]), "-frames:v", "1",
+                ["ffmpeg", "-v", "error", "-ss", f"{t:.3f}", "-i", str(copia_de(p, c)), "-frames:v", "1",
                  "-vf", f"scale={ancho_cuadro}:{alto_cuadro}", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"],
                 capture_output=True, check=True,
             ).stdout

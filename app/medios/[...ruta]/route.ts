@@ -23,13 +23,20 @@ const TIPOS: Record<string, string> = {
 export async function GET(req: Request, {params}: {params: Promise<{ruta: string[]}>}) {
   const {ruta} = await params;
   const raiz = path.resolve(MEDIOS);
-  const archivo = path.resolve(raiz, ...ruta.map(decodeURIComponent));
+  let archivo = path.resolve(raiz, ...ruta.map(decodeURIComponent));
   if (!archivo.startsWith(raiz + path.sep)) return new Response('fuera de los medios', {status: 403});
   let st;
   try {
     st = statSync(archivo);
   } catch {
-    return new Response('no existe', {status: 404});
+    // La copia interpolada de un clip no existe hasta el render final: mientras tanto, su borrador.
+    const borrador = archivo.replace(`${path.sep}proxies${path.sep}`, `${path.sep}borradores${path.sep}`);
+    try {
+      st = statSync(borrador);
+      archivo = borrador;
+    } catch {
+      return new Response('no existe', {status: 404});
+    }
   }
   if (!st.isFile()) return new Response('no es un archivo', {status: 404});
 

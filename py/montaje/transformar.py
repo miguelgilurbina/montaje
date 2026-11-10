@@ -56,6 +56,8 @@ def transformar(p: Proyecto, efecto: str, ids: list[str] | None, fuerza: float |
     if ids and len(elegidos) != len(set(ids)):
         salir(f"no encuentro {sorted(set(ids) - {c['id'] for c in elegidos})} en el catálogo de clips")
     k = POR_DEFECTO[efecto] if fuerza is None else fuerza
+    # Un clip transformado sale de la copia interpolada, no del borrador.
+    catalogo_clips.asegurar_copias(p, {c["proxy"] for c in elegidos})
     for c in elegidos:
         origen = p.medios / c["proxy"]
         destino = p.medio("transformados", f"{c['id']}-{efecto}.mp4")

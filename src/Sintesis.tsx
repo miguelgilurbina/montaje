@@ -272,7 +272,9 @@ const Cuenta: React.FC<{tl: Timeline; s: Cuenta_; frame: number}> = ({tl, s, fra
         <line x1={W / 2} y1={0} x2={W / 2} y2={H} stroke="#1c1b19" strokeWidth={H * 0.004} />
         <circle cx={W / 2} cy={H / 2} r={r} fill="none" stroke="#e8e4da" strokeWidth={H * 0.008} />
         <circle cx={W / 2} cy={H / 2} r={r * 0.86} fill="none" stroke="#e8e4da" strokeWidth={H * 0.004} />
-        <text x={W / 2} y={H / 2 + H * 0.17} textAnchor="middle" fontSize={H * 0.48} fontFamily="Georgia, serif" fill="#141412">
+        {/* Con números de caja alta: los de Georgia son de texto (el 3 y el 4 bajan de la línea, el 1 y el 2 no) y saltaban de altura.
+            La línea de base va a media altura del dígito (0,716 de la letra en Arial), para que quede centrado en la cruz. */}
+        <text x={W / 2} y={H / 2 + H * 0.48 * 0.358} textAnchor="middle" fontSize={H * 0.48} fontFamily="Arial, Helvetica, sans-serif" fill="#141412">
           {numero}
         </text>
       </svg>

@@ -19,7 +19,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import numpy as np  # noqa: E402
 
-from montaje import clips, estilos, guion, proyector, pulso, revisar, sintesis, transformar  # noqa: E402
+from montaje import estilos as estilos_mod  # noqa: E402
+from montaje import aprender, clips, estilos, guion, por_tramos, proyector, pulso, revisar, seleccion, sintesis, tomas, transcribir, transformar  # noqa: E402
 from montaje.rutas import MEDIOS, PROYECTOS, Proyecto  # noqa: E402
 
 
@@ -340,6 +341,7 @@ def test_transformar_parte_de_los_originales():
 def test_cada_experimento_ve_sus_carpetas_del_catalogo():
     class P:  # lo justo de un Proyecto
         cfg = {"clips": ["clips", "fotos"]}
+        dir = Path("no-existe")
     todos = [{"src": "clips/a.mp4"}, {"src": "transformados/a-eco.mp4"}, {"src": "fotos/b.jpg"}, {"src": "clips-viejos/c.mp4"}]
     assert [c["src"] for c in clips.de_este_proyecto(P, todos)] == ["clips/a.mp4", "fotos/b.jpg"]
 
@@ -445,6 +447,63 @@ def test_una_variante_no_escribe_en_el_repo():
     v = cli._Variante("21-laboratorio-de-la-manana", "cortina", "fundido_golpes", 4)
     assert v.cfg["montaje"]["fundido_golpes"] == 4 and v.cfg["montaje"]["transicion"] == "cortina"
     assert RAIZ not in v.timeline.parents and v.timeline.name == "timeline-cortina-fundido_golpes-4.json"
+
+
+# ── La mesa de selección ───────────────────────────────────────────────────
+
+@pytest.mark.parametrize("texto,grupo", [
+    ("Static shot of a Curiana Canoe adrift", "historia"),
+    ("slice of life in Caracas", "ciudad"),
+    ("a fishing boat at the distance", "mar"),
+    ("still shot of a tree slowly moving", "campo"),
+    ("Spaceship going through a wormhole", "ficción"),
+    ("morbid oil vistas in Paraguana", "petróleo"),
+    ("slice of life human interaction in a stilt house", "gente"),
+    ("algo que no dice nada", "otros"),
+])
+def test_grupo_de_un_clip_por_su_nombre(texto, grupo):
+    assert seleccion.grupo_de(texto) == grupo
+
+
+def test_lo_elegido_manda_sobre_el_catalogo(tmp_path):
+    (tmp_path / "seleccion.json").write_text(json.dumps({"elegidos": ["a"]}), encoding="utf-8")
+
+    class P:
+        cfg = {"clips": ["clips", "transformados"]}
+        dir = tmp_path
+    todos = [{"id": "a", "src": "clips/a.mp4"}, {"id": "b", "src": "clips/b.mp4"},
+             {"id": "a-eco", "src": "transformados/a-eco.mp4"}, {"id": "b-eco", "src": "transformados/b-eco.mp4"}]
+    assert [c["id"] for c in clips.de_este_proyecto(P, todos)] == ["a", "a-eco"]
+
+
+# ── Transcribir ────────────────────────────────────────────────────────────
+
+def _segmento(texto, ini=0.0, paso=0.5):
+    ps = [{"p": p, "ini": round(ini + i * paso, 3), "fin": round(ini + (i + 1) * paso, 3), "prob": 0.9} for i, p in enumerate(texto.split())]
+    return {"ini": ini, "fin": ps[-1]["fin"], "texto": texto, "palabras": ps}
+
+
+def test_lineas_de_rotulos_cortan_y_guardan_cada_tiempo():
+    s = _segmento("uno dos tres cuatro cinco seis siete ocho nueve diez")
+    lineas = transcribir.lineas_de_rotulos([s], max_palabras=7)
+    assert [len(x["texto"].split()) for x in lineas] == [7, 3]
+    assert lineas[1]["t"] == 3.5 and lineas[1]["tiempos"] == [3.5, 4.0, 4.5]
+
+
+def test_lineas_de_rotulos_prefieren_la_puntuacion_sin_dejar_sueltas():
+    lineas = transcribir.lineas_de_rotulos([_segmento("vuelve el mar, despacio como una postal")])
+    assert lineas[0]["texto"] == "vuelve el mar,"
+    assert [x["texto"] for x in transcribir.lineas_de_rotulos([_segmento("vuelve el mar, ya")])] == ["vuelve el mar, ya"]
+
+
+def test_las_lineas_entran_tal_cual_en_la_capa_rotulos():
+    lineas = transcribir.lineas_de_rotulos([_segmento("hola a todos desde paraguana", ini=1.0)])
+    g = sintesis._rotulos({**sintesis.POR_DEFECTO["rotulos"], "lineas": lineas}, musica_falsa(), 24, 24 * 16)
+    assert g["lineas"][0]["palabras"][0] == ["hola", 24]  # con tiempos propios no se mueve al golpe
+
+
+def test_srt_con_su_formato():
+    assert "00:01:02,500 --> 00:01:03,000" in transcribir.srt([{"ini": 62.5, "fin": 63.0, "texto": "hola"}])
 
 
 # ── Medir un render ────────────────────────────────────────────────────────
@@ -572,6 +631,149 @@ def test_el_primer_armado_del_guion_se_puede_planificar(tmp_path, monkeypatch):
     for c in tl["capas"]:
         v = c["video"]
         assert c["fin"] > c["ini"] and v["desde"] + (c["fin"] - c["ini"]) / tl["fps"] * v["velocidad"] <= dur[c["img"]] + 1e-3, c["id"]
+
+
+def test_material_en_orden_sigue_la_lista_del_guion():
+    grupo = [{"id": "a-mar"}, {"id": "b-campo"}, {"id": "c-gente"}]
+    assert [c["id"] for c in pulso._en_orden(grupo, ["gente", "mar", "campo"])] == ["c-gente", "a-mar", "b-campo"]
+
+
+def test_lo_elegido_incluye_sus_transformados():
+    elegidos = {"natalia-01", "mj-006"}
+    assert clips._es_elegido("mj-006", False, elegidos)
+    assert not clips._es_elegido("mj-007", False, elegidos)
+    assert clips._es_elegido("natalia-01-eco", True, elegidos)
+    assert not clips._es_elegido("natalia-01-eco", False, elegidos)  # sólo si de verdad está en transformados/
+
+
+def test_por_tramos_parte_por_el_guion_y_corta_lo_largo():
+    cfg = {"montaje": {"tramos": [{"desde": 0, "hasta": 10}, {"desde": 10, "hasta": 120}]}}
+    marcas = por_tramos.bordes(cfg, 24, 120 * 24)
+    assert marcas[0] == 0 and marcas[-1] == 2880 and 240 in marcas
+    assert all(b - a <= por_tramos.LARGO_MAX * 24 for a, b in zip(marcas, marcas[1:]))
+    assert por_tramos.bordes({}, 24, 240) == [0, 240]
+
+
+def _linea_falsa() -> dict:
+    return {"ancho": 100, "alto": 100, "fps": 24, "fondo": "#000", "duracion": 480, "meta": {"generado": "hoy"}, "audio": {"src": "x"},
+            "capas": [{"id": "uno", "img": "a.mp4", "ini": 0, "fin": 240}, {"id": "dos", "img": "b.mp4", "ini": 240, "fin": 480}],
+            "sintesis": [{"tipo": "recuerdo", "ini": 0, "fin": 480, "grano": 0.1}, {"tipo": "titulo", "ini": 0, "fin": 100, "texto": "hola"}]}
+
+
+def test_por_tramos_cambiar_un_tramo_no_invalida_el_otro(tmp_path):
+    tl = _linea_falsa()
+    h = lambda t, a, b: por_tramos.huella(t, a, b, tmp_path, ["--scale=0.5"], "codigo")  # noqa: E731
+    antes = h(tl, 0, 240), h(tl, 240, 480)
+    tl["capas"][1]["img"] = "otro.mp4"
+    tl["meta"]["generado"] = "mañana"
+    assert h(tl, 0, 240) == antes[0] and h(tl, 240, 480) != antes[1]
+    tl["sintesis"][1]["texto"] = "chao"
+    assert h(tl, 0, 240) != antes[0]
+    assert h(tl, 240, 480) == h(tl, 240, 480)
+    # Otros ajustes o otro código: nada de lo guardado sirve.
+    otra = _linea_falsa()
+    assert por_tramos.huella(otra, 0, 240, tmp_path, ["--scale=1"], "codigo") != antes[0]
+    assert por_tramos.huella(otra, 0, 240, tmp_path, ["--scale=0.5"], "otro") != antes[0]
+
+
+def test_por_tramos_nota_si_el_archivo_cambia(tmp_path):
+    (tmp_path / "a.mp4").write_bytes(b"123")
+    tl = _linea_falsa()
+    antes = por_tramos.huella(tl, 0, 240, tmp_path, [], "c")
+    (tmp_path / "a.mp4").write_bytes(b"123456")
+    assert por_tramos.huella(tl, 0, 240, tmp_path, [], "c") != antes
+
+
+def test_por_tramos_no_parte_lo_que_tiene_sonido_propio():
+    assert por_tramos.tiene_sonido_propio([{"video": {"volumen": 0.4}}])
+    assert not por_tramos.tiene_sonido_propio([{"video": {"velocidad": 0.5}}, {"video": {"volumen": 0}}])
+
+
+def test_rotulos_leen_un_srt_corregido_a_mano(tmp_path):
+    srt = "1\n00:00:01,000 --> 00:00:03,500\nuno dos tres\n\n2\n00:00:05,000 --> 00:00:06,000\ncuatro\ncinco\n"
+    (tmp_path / "x.srt").write_text(srt, encoding="utf-8")
+    # El .json trae el segundo de cada palabra de la primera línea; la segunda se corrigió (otra cantidad de palabras).
+    (tmp_path / "x.json").write_text(json.dumps({"rotulos": [{"t": 1.0, "texto": "uno dos tres", "tiempos": [1.0, 1.4, 2.9]},
+                                                              {"t": 5.0, "texto": "cuatro", "tiempos": [5.0]}]}), encoding="utf-8")
+    lineas = sintesis.lineas_de_transcripcion(str(tmp_path / "x.srt"))
+    assert [l["texto"] for l in lineas] == ["uno dos tres", "cuatro cinco"]
+    assert lineas[0]["tiempos"] == [1.0, 1.4, 2.9]
+    assert lineas[1]["tiempos"][0] == 5.0 and 5.0 < lineas[1]["tiempos"][1] < 6.0
+
+
+def test_tomas_proporcion_y_movimiento():
+    assert tomas.proporcion(1620, 1080) == "3:2" and tomas.proporcion(1080, 1920) == "9:16" and tomas.proporcion(1080, 1350) == "4:5"
+    assert tomas.movimiento(0.2, 0.45, 0.8)[1] == "low" and tomas.movimiento(0.9, 0.45, 0.8)[1] == "high"
+
+
+def test_tomas_son_las_frases_del_montaje():
+    # Una toma por frase: las mismas que después monta `pulso` (si están la canción y el timeline del 22).
+    p = Proyecto("22-anoranza-con-mas-material", "lenta")
+    if not (p.salidas / "analisis" / "musica.json").exists() or not p.timeline.exists():
+        pytest.skip("faltan los medios del 22")
+    ts, _, _ = tomas.lista(p)
+    tl = json.loads(p.timeline.read_text(encoding="utf-8"))
+    principales = [c for c in tl["capas"] if "video" in c and "#" in c["id"] and c["id"].split("#")[1].isdigit()]
+    assert len(ts) == len({c["id"].split("#")[1] for c in principales})
+    assert len({t["id"] for t in ts}) == len(ts)
+
+
+LECCION_PRUEBA = {"id": "x", "cuando": {"energia": ["alta"], "modo": "pulso", "tono": ["recuerdo"]}, "perillas": {"velocidad": [0.4, 0.5]}}
+
+
+def test_una_leccion_vale_solo_donde_dice():
+    tramo = {"frase_compases": 1}
+    assert aprender.sobre_tramo(tramo, "alta", "pulso", "recuerdo", [LECCION_PRUEBA]) == ["x"] and tramo["velocidad"] == [0.4, 0.5]
+    for energia, tono in (("calma", "recuerdo"), ("alta", "fiesta"), ("alta", None)):
+        otro = {}
+        assert aprender.sobre_tramo(otro, energia, "pulso", tono, [LECCION_PRUEBA]) == [] and otro == {}
+    # Sin tono en el proyecto no se impone: se avisa.
+    assert [lc["id"] for lc in aprender.faltan_por_tono("alta", "pulso", None, [LECCION_PRUEBA])] == ["x"]
+    assert aprender.faltan_por_tono("calma", "pulso", None, [LECCION_PRUEBA]) == []
+
+
+def test_la_letra_entra_solo_si_esta_transcrita():
+    leccion = {"id": "letra", "cuando": {"letra": True}, "capa": {"tipo": "rotulos", "lugar": "centro"}}
+    assert aprender.capas({"musica": "musica/una cancion que no existe.wav"}, [leccion]) == []
+    assert aprender.nombre_de_audio("musica/La Añoranza de Natalia.wav") == "la-anoranza-de-natalia"
+
+
+def test_las_lecciones_del_repo_tienen_cita_y_regla():
+    for lc in aprender.leer():
+        assert lc["cita"] and lc["regla"] and lc["fecha"], lc["id"]
+        assert lc.get("perillas") or lc.get("capa") or lc.get("consejo"), lc["id"]
+        for k in lc.get("perillas", {}):
+            assert k in pulso.POR_DEFECTO, f"{lc['id']}: {k} no es una perilla de pulso"
+
+
+def test_comparar_veredictos():
+    est = [{"estado": "aprobado", "tecnica": {"fundido_golpes": 2}}, {"estado": "aprobado", "tecnica": {"fundido_golpes": 4}},
+           {"estado": "rechazado", "tecnica": {"fundido_golpes": 0.25}}, {"estado": "propuesta", "tecnica": {"fundido_golpes": 9}}]
+    f = aprender.comparar(est)[0]
+    assert f["perilla"] == "? · fundido_golpes" and f["aprobado"] == [2.0, 4.0] and f["otro"] == [0.25]
+
+
+def test_aplicar_lo_que_cambio_en_la_mesa():
+    estilos = {e["id"]: e for e in estilos_mod.leer()}
+    tramos = [{"nombre": "gente", "desde": 0, "hasta": 10, "transicion": "iris", "fundido_golpes": 2, "frase_compases": 2,
+               "velocidad": [0.4, 0.5], "material": ["a", "b"], "estilos": ["transicion-iris"]}]
+    leccion = {"id": "flota", "cuando": {"energia": ["media"], "modo": "pulso"}, "perillas": {"velocidad": [0.4, 0.5]}}
+    dicho = guion.aplicar_cambios(tramos, {"T1": {"orden": ["b", "a"], "estilo": "clip-por-compas", "pasa": "caras"}}, estilos,
+                                  ["media"], None, [leccion], validos={"a", "b"})
+    t = tramos[0]
+    assert t["material"] == ["b", "a"] and t["material_en_orden"] and t["pasa"] == "caras"
+    assert "transicion" not in t and t["frase_compases"] == 1 and t["estilos"][0] == "clip-por-compas"
+    assert t["velocidad"] == [0.4, 0.5]  # la lección manda sobre la receta (que trae 0,55–0,75)
+    assert len(dicho) == 3
+    with pytest.raises(SystemExit):
+        guion.aplicar_cambios(tramos, {"T1": {"orden": ["zzz"]}}, estilos, ["media"], None, [], validos={"a", "b"})
+
+
+def test_traer_nombra_la_carpeta_por_la_serie():
+    from montaje import traer
+
+    assert traer.carpeta_de("Añoranza de Natalia") == "cantera-anoranza-de-natalia"
+    assert traer.carpeta_de("  ") == "cantera-serie"
 
 
 def test_medios_fuera_del_repo():
