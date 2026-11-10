@@ -1,0 +1,499 @@
+{
+ "titulo": "22 · Añoranza con más material",
+ "idea": "Miguel, después de mirar la galería: «un vídeo así de largo. O más bien audio. Se hace muy corto usar 20 videos. Me gustaría que hiciéramos una nueva iteración del vídeo. Pero con más contenido». Eligió 34 clips desde el teléfono; el guion (propuesta de Claude, ver GUION.md) los reparte en nueve tramos con estilos aprobados, sin repetir ninguno.",
+ "tono": "recuerdo",
+ "biblioteca": "practica",
+ "clips": [
+  "clips",
+  "clips-mj"
+ ],
+ "clips_interpolar": 3,
+ "musica": "musica/La Añoranza de Natalia.wav",
+ "fundido_audio": [
+  0,
+  2
+ ],
+ "salida": {
+  "ancho": 1620,
+  "alto": 1080,
+  "fps": 24,
+  "fondo": "#07090d"
+ },
+ "montaje": {
+  "modo": "pulso",
+  "orden": "nombre",
+  "umbral_calma": 0.45,
+  "umbral_pico": 0.8,
+  "borde_toma": 0.1,
+  "zoom": 0.04,
+  "corte": "frase",
+  "frase_compases": 2,
+  "frase_compases_calma": null,
+  "reparto": "ronda",
+  "fundido_golpes": 2,
+  "fundido_calma_golpes": 3,
+  "velocidad": [
+   0.45,
+   0.6
+  ],
+  "velocidad_min": 0.4,
+  "doble_golpes": 0,
+  "estela_golpes": 0,
+  "tramos": [
+   {
+    "nombre": "el mar despierta",
+    "desde": 0,
+    "hasta": 11.66,
+    "frase_compases": 4,
+    "congelar_golpes": 4,
+    "material_en_orden": true,
+    "material": [
+     "natalia-01"
+    ],
+    "pasa": "el mar despierta; el título",
+    "estilos": [
+     "foto-que-despierta",
+     "titulo-al-pulso"
+    ]
+   },
+   {
+    "nombre": "las postales del mar",
+    "desde": 11.66,
+    "hasta": 27.33,
+    "material_en_orden": true,
+    "material": [
+     "mj-093",
+     "natalia-05",
+     "natalia-03"
+    ],
+    "pasa": "las postales del mar",
+    "estilos": [
+     "toma-por-frase"
+    ]
+   },
+   {
+    "nombre": "entra la banda: la gente",
+    "desde": 27.33,
+    "hasta": 53.41,
+    "transicion": "iris",
+    "velocidad": [
+     0.5,
+     0.7
+    ],
+    "material_en_orden": true,
+    "material": [
+     "natalia-10",
+     "mj-038",
+     "mj-006",
+     "mj-046",
+     "mj-044"
+    ],
+    "pasa": "entra la banda: la gente, cara por cara",
+    "estilos": [
+     "transicion-iris"
+    ]
+   },
+   {
+    "nombre": "la gente se atropella: hacia la ciudad",
+    "desde": 53.41,
+    "hasta": 74.28,
+    "frase_compases": 1,
+    "fundido_golpes": 0.25,
+    "fundido_calma_golpes": 1.5,
+    "estela_golpes": 1.5,
+    "velocidad": [
+     0.55,
+     0.75
+    ],
+    "velocidad_min": 0.45,
+    "material_en_orden": true,
+    "material": [
+     "mj-053",
+     "mj-069",
+     "mj-099",
+     "mj-016",
+     "mj-083",
+     "mj-049",
+     "mj-095",
+     "mj-050"
+    ],
+    "pasa": "se atropellan, del pueblo a la ciudad, hasta un hombre que mira la refinería",
+    "estilos": [
+     "clip-por-compas",
+     "golpe-de-zoom"
+    ]
+   },
+   {
+    "nombre": "el respiro",
+    "desde": 74.28,
+    "hasta": 84.71,
+    "fundido_golpes": 3,
+    "fundido_calma_golpes": 4,
+    "material_en_orden": true,
+    "material": [
+     "natalia-11",
+     "mj-070"
+    ],
+    "pasa": "el respiro",
+    "estilos": [
+     "toma-por-frase",
+     "polvo-de-luz"
+    ]
+   },
+   {
+    "nombre": "el campo en doble exposición",
+    "desde": 84.71,
+    "hasta": 126.46,
+    "doble_golpes": 4,
+    "doble_en": "todo",
+    "doble_opacidad": 0.5,
+    "fundido_golpes": 1,
+    "velocidad": [
+     0.45,
+     0.75
+    ],
+    "material_en_orden": true,
+    "material": [
+     "mj-084",
+     "natalia-14",
+     "natalia-13",
+     "natalia-12",
+     "mj-066",
+     "natalia-20",
+     "natalia-17",
+     "natalia-16"
+    ],
+    "pasa": "el campo, un recuerdo encima de otro",
+    "estilos": [
+     "doble-exposicion-siempre"
+    ]
+   },
+   {
+    "nombre": "llega el petróleo",
+    "desde": 126.46,
+    "hasta": 136.88,
+    "transicion": "destello",
+    "fundido_golpes": 1,
+    "fundido_calma_golpes": 1,
+    "material_en_orden": true,
+    "material": [
+     "mj-056",
+     "mj-048"
+    ],
+    "pasa": "cuando la banda se apaga llega el petróleo",
+    "estilos": [
+     "transicion-destello",
+     "barras-de-cine"
+    ]
+   },
+   {
+    "nombre": "el silencio",
+    "desde": 136.88,
+    "hasta": 147.31,
+    "fundido_golpes": 4,
+    "fundido_calma_golpes": 4,
+    "material_en_orden": true,
+    "material": [
+     "mj-060",
+     "mj-059"
+    ],
+    "pasa": "el silencio de la canción se queda con el petróleo",
+    "estilos": [
+     "toma-por-frase",
+     "barras-de-cine",
+     "pelicula-gastada"
+    ]
+   },
+   {
+    "nombre": "vuelve el mar",
+    "desde": 147.31,
+    "hasta": 999,
+    "frase_compases": 4,
+    "fundido_calma_golpes": 4,
+    "material_en_orden": true,
+    "material": [
+     "natalia-06",
+     "natalia-09",
+     "natalia-02"
+    ],
+    "pasa": "vuelve el mar: una orilla, el cementerio frente al agua y el mismo bote del principio",
+    "estilos": [
+     "toma-por-frase",
+     "postal",
+     "sonando-ahora"
+    ]
+   }
+  ]
+ },
+ "sintesis": [
+  {
+   "tipo": "recuerdo",
+   "grano": 0.15,
+   "vineta": 0.38,
+   "calidez": 0.04,
+   "parpadeo": 0.02,
+   "temblor": 0.7,
+   "halo": 0.1
+  },
+  {
+   "tipo": "titulo",
+   "texto": "La añoranza de Natalia",
+   "voz": "cartel",
+   "tam": 0.1,
+   "y": 0.14,
+   "desde": 3.85,
+   "dura": 7,
+   "letras_golpes": 3
+  },
+  {
+   "tipo": "golpe",
+   "fuerza": 0.035,
+   "cada": "compas",
+   "desde": 53.41,
+   "hasta": 74.28
+  },
+  {
+   "tipo": "polvo",
+   "motas": 55,
+   "brillo": 0.5,
+   "desde": 74.28,
+   "hasta": 84.71
+  },
+  {
+   "tipo": "barras",
+   "formato": 2.39,
+   "abre_golpes": 4,
+   "desde": 126.46,
+   "hasta": 147.31
+  },
+  {
+   "tipo": "rayas",
+   "rayones": 0.6,
+   "manchas": 0.6,
+   "desde": 136.88,
+   "hasta": 147.31
+  },
+  {
+   "tipo": "tinta",
+   "oscuro": "rubrica",
+   "claro": "hueso",
+   "fuerza": 0.35,
+   "desde": 147.31
+  },
+  {
+   "tipo": "fugas",
+   "cada_compases": 4,
+   "golpes": 6,
+   "fuerza": 0.3,
+   "desde": 147.31
+  },
+  {
+   "tipo": "credito",
+   "lineas": [
+    "La añoranza de Natalia",
+    "sonando ahora"
+   ],
+   "desde": 170,
+   "dura": 8
+  },
+  {
+   "tipo": "rotulos",
+   "transcripcion": "transcripciones/la-anoranza-de-natalia.srt",
+   "voz": "oraculo",
+   "lugar": "centro",
+   "tam": 0.064,
+   "sombra": 0.78
+  }
+ ],
+ "versiones": {
+  "lenta": {
+   "tramos": [
+    {
+     "nombre": "el mar despierta",
+     "desde": 0,
+     "hasta": 11.66,
+     "frase_compases": 4,
+     "congelar_golpes": 4,
+     "material_en_orden": true,
+     "material": [
+      "natalia-01-lanchas-pesquero-contraluz"
+     ],
+     "pasa": "el mar despierta; el título",
+     "estilos": [
+      "foto-que-despierta",
+      "titulo-al-pulso"
+     ]
+    },
+    {
+     "nombre": "las postales del mar",
+     "desde": 11.66,
+     "hasta": 27.33,
+     "material_en_orden": true,
+     "material": [
+      "mj-093-a-fishing-boat-at-the-distance-in-a-panoramic-vi",
+      "natalia-05-lanchas-mar-desde-el-patio",
+      "natalia-03-lanchas-lancha-amarilla"
+     ],
+     "pasa": "las postales del mar",
+     "estilos": [
+      "toma-por-frase"
+     ]
+    },
+    {
+     "nombre": "entra la banda: la gente",
+     "desde": 27.33,
+     "hasta": 53.41,
+     "transicion": "iris",
+     "velocidad": [
+      0.4,
+      0.5
+     ],
+     "material_en_orden": true,
+     "material": [
+      "natalia-10-hamacas-chinchorro-en-el-corredor",
+      "mj-038-static-shot-of-a-woman-cooking-smiling-and-wavin",
+      "mj-006-a-camera-pans-over-a-group-of-men-siting-around",
+      "mj-046-a-group-of-men-siting-around-outside-of-a-cafe-i",
+      "mj-044-women-gets-a-cigarette-from-a-pac-and-lights-it"
+     ],
+     "velocidad_min": 0.38,
+     "pasa": "entra la banda: la gente, cara por cara",
+     "estilos": [
+      "transicion-iris"
+     ]
+    },
+    {
+     "nombre": "la gente se atropella: hacia la ciudad",
+     "desde": 53.41,
+     "hasta": 74.28,
+     "frase_compases": 1,
+     "fundido_golpes": 0.25,
+     "fundido_calma_golpes": 1.5,
+     "estela_golpes": 1.5,
+     "velocidad": [
+      0.4,
+      0.5
+     ],
+     "velocidad_min": 0.38,
+     "material_en_orden": true,
+     "material": [
+      "mj-053-dolly-shot-on-a-moving-portrait-of-man-looking-t",
+      "mj-069-still-frame-of-a-panoramic-scene-with-palm-trees",
+      "mj-099-slice-of-life-in-paraguan",
+      "mj-016-life-still-in-caracas",
+      "mj-083-life-still-in-caracas-with-guacamayas",
+      "mj-049-camera-pan-following-two-birds-guacamayas-over-a",
+      "mj-095-a-man-smiling-with-his-arms-around-a-crowd-in-th",
+      "mj-050-character-walking-in-the-street-in-paraguan-with"
+     ],
+     "pasa": "se atropellan, del pueblo a la ciudad, hasta un hombre que mira la refinería",
+     "estilos": [
+      "clip-por-compas",
+      "golpe-de-zoom"
+     ]
+    },
+    {
+     "nombre": "el respiro",
+     "desde": 74.28,
+     "hasta": 84.71,
+     "fundido_golpes": 3,
+     "fundido_calma_golpes": 4,
+     "material_en_orden": true,
+     "material": [
+      "natalia-11-hamacas-casa-de-noche-hamaca-roja",
+      "mj-070-still-shot-of-a-tree-slowly-moving-with-a-gentle"
+     ],
+     "pasa": "el respiro",
+     "estilos": [
+      "toma-por-frase",
+      "polvo-de-luz"
+     ]
+    },
+    {
+     "nombre": "el campo en doble exposición",
+     "desde": 84.71,
+     "hasta": 126.46,
+     "doble_golpes": 4,
+     "doble_en": "todo",
+     "doble_opacidad": 0.5,
+     "fundido_golpes": 1,
+     "velocidad": [
+      0.4,
+      0.5
+     ],
+     "material_en_orden": true,
+     "material": [
+      "mj-084-panorama-of-a-pintoresque-scene-of-a-quintet-pla",
+      "natalia-14-campo-chivo-casa-de-tejas",
+      "natalia-13-campo-burro-entre-medanos",
+      "natalia-12-campo-ciclista-casa-azul",
+      "mj-066-slice-of-life-in-the-pennsula-of-paraguan",
+      "natalia-20-campo-flamencos",
+      "natalia-17-campo-senora-en-la-puerta",
+      "natalia-16-campo-pareja-a-caballo-luna"
+     ],
+     "velocidad_min": 0.38,
+     "pasa": "el campo, un recuerdo encima de otro",
+     "estilos": [
+      "doble-exposicion-siempre"
+     ]
+    },
+    {
+     "nombre": "llega el petróleo",
+     "desde": 126.46,
+     "hasta": 136.88,
+     "transicion": "destello",
+     "fundido_golpes": 1,
+     "fundido_calma_golpes": 1,
+     "material_en_orden": true,
+     "material": [
+      "mj-056-morbid-oil-vistas-in-paraguan",
+      "mj-048-black-oil-in-the-water"
+     ],
+     "pasa": "cuando la banda se apaga llega el petróleo",
+     "estilos": [
+      "transicion-destello",
+      "barras-de-cine"
+     ]
+    },
+    {
+     "nombre": "el silencio",
+     "desde": 136.88,
+     "hasta": 147.31,
+     "fundido_golpes": 4,
+     "fundido_calma_golpes": 4,
+     "material_en_orden": true,
+     "material": [
+      "mj-060-morbid-oil-vistas-in-paraguan-dead-coastal-ecosy",
+      "mj-059-morbid-oil-vistas-in-paraguan-dead-coastal-ecosy"
+     ],
+     "pasa": "el silencio de la canción se queda con el petróleo",
+     "estilos": [
+      "toma-por-frase",
+      "barras-de-cine",
+      "pelicula-gastada"
+     ]
+    },
+    {
+     "nombre": "vuelve el mar",
+     "desde": 147.31,
+     "hasta": 999,
+     "frase_compases": 4,
+     "fundido_calma_golpes": 4,
+     "material_en_orden": true,
+     "material": [
+      "natalia-06-playa-olas-desde-el-aire",
+      "natalia-09-playa-cementerio-frente-al-mar",
+      "natalia-02-lanchas-bote-desde-restaurante"
+     ],
+     "pasa": "vuelve el mar: una orilla, el cementerio frente al agua y el mismo bote del principio",
+     "estilos": [
+      "toma-por-frase",
+      "postal",
+      "sonando-ahora"
+     ]
+    }
+   ]
+  }
+ }
+}
