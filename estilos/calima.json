@@ -13,7 +13,7 @@
   "fuerza": 10,
   "golpe": 14
  },
- "estado": "propuesta",
+ "estado": "a medias",
  "miguel": [],
  "visto_en": [
   "15-anoranza-de-natalia"
@@ -25,5 +25,10 @@
   "de": "15-anoranza-de-natalia/render/a-calima-final-104-116.mp4",
   "desde": 1.0,
   "hasta": 11.0
+ },
+ "veredicto": {
+  "estado": "a medias",
+  "fecha": "2026-11-09",
+  "via": "galeria"
  }
 }

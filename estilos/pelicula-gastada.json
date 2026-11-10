@@ -14,7 +14,7 @@
   "manchas": 0.6,
   "con": "recuerdo"
  },
- "estado": "propuesta",
+ "estado": "aprobado",
  "miguel": [],
  "visto_en": [
   "21-laboratorio-de-la-manana"
@@ -26,5 +26,10 @@
   "de": "21-laboratorio-de-la-manana/render/rayas-final-44-58.mp4",
   "desde": 0.5,
   "hasta": 10.5
+ },
+ "veredicto": {
+  "estado": "aprobado",
+  "fecha": "2026-11-09",
+  "via": "galeria"
  }
 }

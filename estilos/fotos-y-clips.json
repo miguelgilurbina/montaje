@@ -16,7 +16,7 @@
   "zoom_foto": 0.09,
   "transicion": "cortina"
  },
- "estado": "propuesta",
+ "estado": "aprobado",
  "miguel": [],
  "visto_en": [
   "21-laboratorio-de-la-manana"
@@ -29,5 +29,10 @@
   "de": "21-laboratorio-de-la-manana/render/mixto-final-27-53.mp4",
   "desde": 0.5,
   "hasta": 14.5
+ },
+ "veredicto": {
+  "estado": "aprobado",
+  "fecha": "2026-11-09",
+  "via": "galeria"
  }
 }

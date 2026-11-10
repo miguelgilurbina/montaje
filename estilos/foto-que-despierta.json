@@ -15,7 +15,7 @@
   "frase_compases": 4,
   "congelar_golpes": 4
  },
- "estado": "propuesta",
+ "estado": "aprobado",
  "miguel": [],
  "visto_en": [
   "16-laboratorio-de-la-noche"
@@ -27,5 +27,10 @@
   "de": "16-laboratorio-de-la-noche/render/foto-que-despierta-final-44-60.mp4",
   "desde": 3.0,
   "hasta": 13.0
+ },
+ "veredicto": {
+  "estado": "aprobado",
+  "fecha": "2026-11-09",
+  "via": "galeria"
  }
 }

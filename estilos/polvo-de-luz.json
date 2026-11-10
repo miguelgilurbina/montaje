@@ -12,7 +12,7 @@
   "motas": 55,
   "brillo": 0.5
  },
- "estado": "propuesta",
+ "estado": "aprobado",
  "miguel": [],
  "visto_en": [
   "15-anoranza-de-natalia"
@@ -22,5 +22,10 @@
   "de": "15-anoranza-de-natalia/render/c-recuerdo-final.mp4",
   "desde": 152.0,
   "hasta": 162.0
+ },
+ "veredicto": {
+  "estado": "aprobado",
+  "fecha": "2026-11-09",
+  "via": "galeria"
  }
 }

@@ -20,7 +20,7 @@
   ],
   "golpe": 0.06
  },
- "estado": "propuesta",
+ "estado": "aprobado",
  "miguel": [],
  "visto_en": [
   "21-laboratorio-de-la-manana"
@@ -32,5 +32,10 @@
   "de": "21-laboratorio-de-la-manana/render/luz-final-126-146.mp4",
   "desde": 4.0,
   "hasta": 16.0
+ },
+ "veredicto": {
+  "estado": "aprobado",
+  "fecha": "2026-11-09",
+  "via": "galeria"
  }
 }

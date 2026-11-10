@@ -16,7 +16,7 @@
   "doble_en": "todo",
   "doble_opacidad": 0.5
  },
- "estado": "propuesta",
+ "estado": "aprobado",
  "miguel": [],
  "visto_en": [
   "16-laboratorio-de-la-noche"
@@ -26,5 +26,10 @@
   "de": "16-laboratorio-de-la-noche/render/doble-siempre-final-40-55.mp4",
   "desde": 2.0,
   "hasta": 12.0
+ },
+ "veredicto": {
+  "estado": "aprobado",
+  "fecha": "2026-11-09",
+  "via": "galeria"
  }
 }

@@ -14,7 +14,7 @@
   "transicion": "persiana",
   "fundido_golpes": 2
  },
- "estado": "propuesta",
+ "estado": "rechazado",
  "miguel": [],
  "visto_en": [
   "21-laboratorio-de-la-manana"
@@ -26,5 +26,10 @@
   "de": "21-laboratorio-de-la-manana/render/persiana-final-30-47.mp4",
   "desde": 0.5,
   "hasta": 10.5
+ },
+ "veredicto": {
+  "estado": "rechazado",
+  "fecha": "2026-11-09",
+  "via": "galeria"
  }
 }

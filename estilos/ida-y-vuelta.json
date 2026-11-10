@@ -12,7 +12,7 @@
   "comando": "transformar",
   "efecto": "ida-y-vuelta"
  },
- "estado": "propuesta",
+ "estado": "aprobado",
  "miguel": [],
  "visto_en": [
   "15-anoranza-de-natalia"
@@ -24,5 +24,10 @@
   "de": "15-anoranza-de-natalia/render/comparar-ida-y-vuelta.mp4",
   "desde": 0.0,
   "hasta": 10.0
+ },
+ "veredicto": {
+  "estado": "aprobado",
+  "fecha": "2026-11-09",
+  "via": "galeria"
  }
 }

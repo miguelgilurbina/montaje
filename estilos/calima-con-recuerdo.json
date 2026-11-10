@@ -15,7 +15,7 @@
    "recuerdo"
   ]
  },
- "estado": "propuesta",
+ "estado": "a medias",
  "miguel": [],
  "visto_en": [
   "16-laboratorio-de-la-noche"
@@ -25,5 +25,10 @@
   "de": "16-laboratorio-de-la-noche/render/calima-recuerdo-final-104-116.mp4",
   "desde": 1.0,
   "hasta": 11.0
+ },
+ "veredicto": {
+  "estado": "a medias",
+  "fecha": "2026-11-09",
+  "via": "galeria"
  }
 }

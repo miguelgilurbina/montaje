@@ -11,8 +11,10 @@
   "capa": "cuenta",
   "numeros": 4
  },
- "estado": "propuesta",
- "miguel": [],
+ "estado": "a medias",
+ "miguel": [
+  "los números no están correctamente alineados"
+ ],
  "visto_en": [
   "16-laboratorio-de-la-noche"
  ],
@@ -21,5 +23,10 @@
   "de": "16-laboratorio-de-la-noche/render/cuenta-y-pelicula-final-0-14.mp4",
   "desde": 0.0,
   "hasta": 6.0
+ },
+ "veredicto": {
+  "estado": "a medias",
+  "fecha": "2026-11-09",
+  "via": "galeria"
  }
 }

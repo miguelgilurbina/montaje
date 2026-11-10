@@ -15,7 +15,7 @@
   "salida": "1080x1920",
   "encuadre": "relleno"
  },
- "estado": "propuesta",
+ "estado": "aprobado",
  "miguel": [],
  "visto_en": [
   "16-laboratorio-de-la-noche"
@@ -27,5 +27,10 @@
   "de": "16-laboratorio-de-la-noche/render/reel-relleno-final-84-98.mp4",
   "desde": 1.0,
   "hasta": 11.0
+ },
+ "veredicto": {
+  "estado": "aprobado",
+  "fecha": "2026-11-09",
+  "via": "galeria"
  }
 }

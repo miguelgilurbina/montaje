@@ -15,7 +15,7 @@
   "corrimiento": 3,
   "curva": 0.06
  },
- "estado": "propuesta",
+ "estado": "aprobado",
  "miguel": [],
  "visto_en": [
   "15-anoranza-de-natalia"
@@ -25,5 +25,10 @@
   "de": "15-anoranza-de-natalia/render/a-tv-final-92-104.mp4",
   "desde": 1.0,
   "hasta": 11.0
+ },
+ "veredicto": {
+  "estado": "aprobado",
+  "fecha": "2026-11-09",
+  "via": "galeria"
  }
 }

@@ -15,7 +15,7 @@
   "claro": "hueso",
   "fuerza": 0.9
  },
- "estado": "propuesta",
+ "estado": "aprobado",
  "miguel": [],
  "visto_en": [
   "16-laboratorio-de-la-noche"
@@ -25,5 +25,10 @@
   "de": "16-laboratorio-de-la-noche/render/tinta-rubrica-hueso-final-126-138.mp4",
   "desde": 1.0,
   "hasta": 11.0
+ },
+ "veredicto": {
+  "estado": "aprobado",
+  "fecha": "2026-11-09",
+  "via": "galeria"
  }
 }

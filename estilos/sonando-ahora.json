@@ -11,7 +11,7 @@
  "tecnica": {
   "capa": "credito"
  },
- "estado": "propuesta",
+ "estado": "aprobado",
  "miguel": [],
  "visto_en": [
   "16-laboratorio-de-la-noche"
@@ -23,5 +23,10 @@
   "de": "16-laboratorio-de-la-noche/render/titulos-final-0-20.mp4",
   "desde": 11.5,
   "hasta": 19.5
+ },
+ "veredicto": {
+  "estado": "aprobado",
+  "fecha": "2026-11-09",
+  "via": "galeria"
  }
 }

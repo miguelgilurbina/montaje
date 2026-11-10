@@ -14,7 +14,7 @@
   "encuadre": "medio",
   "seguir": true
  },
- "estado": "propuesta",
+ "estado": "aprobado",
  "miguel": [],
  "visto_en": [
   "20-anoranza-para-redes"
@@ -24,5 +24,10 @@
   "de": "20-anoranza-para-redes/render/9-16-medio-final-arreglado.mp4",
   "desde": 0.0,
   "hasta": 10.0
+ },
+ "veredicto": {
+  "estado": "aprobado",
+  "fecha": "2026-11-09",
+  "via": "galeria"
  }
 }

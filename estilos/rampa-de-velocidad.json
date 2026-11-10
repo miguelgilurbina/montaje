@@ -19,7 +19,7 @@
    1.4
   ]
  },
- "estado": "propuesta",
+ "estado": "aprobado",
  "miguel": [],
  "visto_en": [
   "16-laboratorio-de-la-noche"
@@ -31,5 +31,10 @@
   "de": "16-laboratorio-de-la-noche/render/rampa-final-18-34.mp4",
   "desde": 4.0,
   "hasta": 14.0
+ },
+ "veredicto": {
+  "estado": "aprobado",
+  "fecha": "2026-11-09",
+  "via": "galeria"
  }
 }

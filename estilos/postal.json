@@ -16,7 +16,7 @@
    "fugas cada 4 compases"
   ]
  },
- "estado": "propuesta",
+ "estado": "aprobado",
  "miguel": [],
  "visto_en": [
   "16-laboratorio-de-la-noche"
@@ -26,5 +26,10 @@
   "de": "16-laboratorio-de-la-noche/render/postal-final-0-12.mp4",
   "desde": 1.0,
   "hasta": 11.0
+ },
+ "veredicto": {
+  "estado": "aprobado",
+  "fecha": "2026-11-09",
+  "via": "galeria"
  }
 }

@@ -12,9 +12,10 @@
   "modo": "cinta",
   "compases": "2 pasos por compás, ráfaga en el 7, destacado en el 11"
  },
- "estado": "pedido",
+ "estado": "a medias",
  "miguel": [
-  "interminable y muy repetible"
+  "interminable y muy repetible",
+  "yo creo que está bueno pero como transición. es decir, para pasar de una escena a otra, donde pasa el reel y la imagen siguiente se agranda."
  ],
  "visto_en": [
   "06-reel-cinta",
@@ -28,5 +29,10 @@
   "de": "18-cinta-de-fotogramas/render/final.mp4",
   "desde": 0.0,
   "hasta": 12.0
+ },
+ "veredicto": {
+  "estado": "a medias",
+  "fecha": "2026-11-09",
+  "via": "galeria"
  }
 }

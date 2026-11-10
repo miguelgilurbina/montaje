@@ -13,7 +13,7 @@
   "alto": 0.09,
   "opacidad": 0.75
  },
- "estado": "propuesta",
+ "estado": "aprobado",
  "miguel": [],
  "visto_en": [
   "16-laboratorio-de-la-noche"
@@ -25,5 +25,10 @@
   "de": "16-laboratorio-de-la-noche/render/partitura-sobre-clips-final-112-124.mp4",
   "desde": 1.0,
   "hasta": 11.0
+ },
+ "veredicto": {
+  "estado": "aprobado",
+  "fecha": "2026-11-09",
+  "via": "galeria"
  }
 }

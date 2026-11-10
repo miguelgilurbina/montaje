@@ -13,7 +13,7 @@
   "fuerza": 4,
   "cada": "golpe"
  },
- "estado": "propuesta",
+ "estado": "aprobado",
  "miguel": [],
  "visto_en": [
   "16-laboratorio-de-la-noche"
@@ -25,5 +25,10 @@
   "de": "16-laboratorio-de-la-noche/render/foco-final-84-96.mp4",
   "desde": 1.0,
   "hasta": 11.0
+ },
+ "veredicto": {
+  "estado": "aprobado",
+  "fecha": "2026-11-09",
+  "via": "galeria"
  }
 }

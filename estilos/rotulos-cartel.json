@@ -17,7 +17,7 @@
   "tam": 0.105,
   "color": "oro"
  },
- "estado": "propuesta",
+ "estado": "aprobado",
  "miguel": [],
  "visto_en": [
   "21-laboratorio-de-la-manana"
@@ -30,5 +30,10 @@
   "de": "21-laboratorio-de-la-manana/render/rotulos-cartel-final-27-48.mp4",
   "desde": 0.3,
   "hasta": 11.3
+ },
+ "veredicto": {
+  "estado": "aprobado",
+  "fecha": "2026-11-09",
+  "via": "galeria"
  }
 }

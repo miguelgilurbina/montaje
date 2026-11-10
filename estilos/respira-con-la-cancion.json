@@ -24,7 +24,7 @@
    0.75
   ]
  },
- "estado": "propuesta",
+ "estado": "aprobado",
  "miguel": [],
  "visto_en": [
   "15-anoranza-de-natalia"
@@ -34,5 +34,10 @@
   "de": "15-anoranza-de-natalia/render/c-final-arreglado.mp4",
   "desde": 4.0,
   "hasta": 16.0
+ },
+ "veredicto": {
+  "estado": "aprobado",
+  "fecha": "2026-11-09",
+  "via": "galeria"
  }
 }
