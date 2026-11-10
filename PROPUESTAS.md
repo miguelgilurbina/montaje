@@ -15,7 +15,7 @@ el recomendado.
 | # | Qué | Qué da | Qué necesita |
 |---|---|---|---|
 | E0 | **Juzgar la galería.** Hay 58 propuestas sin veredicto. `guion` ya arma un primer montaje con el primer estilo que sirve en cada tramo y prefiere lo aprobado: hoy elige casi a ciegas. | Cada «sí» o «no» mejora lo que el motor propone solo. | Media hora de Miguel en `/estilos` (o el recorrido en el teléfono y dictar). |
-| E1 | **Leer los veredictos como datos.** Con la galería juzgada, un comando que compare las recetas aprobadas contra las rechazadas, perilla por perilla (largo de frase, fundidos, velocidad, capas), y diga lo que se repite: «lo que aprobaste va lento y con fundidos de dos golpes o más». | El criterio de Miguel deja de estar sólo en su cabeza y en las citas: los valores por defecto y el esqueleto del guion se inclinan hacia lo que eligió. | Los veredictos (ahora se dan con un clic en `/estilos`). Con menos de unos veinte, lo que salga es una pista, no una regla. |
+| E1 | **Hecho en parte el 2026-11-09:** `aprender` y `direccion/LECCIONES.json` (lo que Miguel dice, con cita, entra solo al primer armado de `guion`). Falta lo que no se sabe todavía: el porqué de los «no». **Leer los veredictos como datos.** Con la galería juzgada, un comando que compare las recetas aprobadas contra las rechazadas, perilla por perilla (largo de frase, fundidos, velocidad, capas), y diga lo que se repite: «lo que aprobaste va lento y con fundidos de dos golpes o más». | El criterio de Miguel deja de estar sólo en su cabeza y en las citas: los valores por defecto y el esqueleto del guion se inclinan hacia lo que eligió. | Los veredictos (ahora se dan con un clic en `/estilos`). Con menos de unos veinte, lo que salga es una pista, no una regla. |
 | E2 | **Elegir entre dos.** En la galería, dos muestras lado a lado y una sola pregunta: ¿cuál? De muchas comparaciones sale un orden. | Juzgar sesenta tarjetas una por una cansa; comparar de a dos es rápido y da más información que sí/no. | Nada. Una tarde de trabajo en el panel. |
 | E3 | ~~Barrer una perilla.~~ **Hecho el mismo 2026-11-09:** `ejercicio --barrer fundido_golpes=0.5,1,2,4` deja las variantes lado a lado, sincronizadas, en un video. | Afinar un valor mirando, sin escribir cuatro versiones a mano. Es la forma natural de un ejercicio: «¿cuánto fundido?». | Que Miguel elija la celda. |
 | E4 | **Lo aprobado no se rompe.** La mitad ya está (2026-11-09): `py/pruebas/planes.py` planifica todas las versiones fuera del repo y dice cuáles cambian con un cambio al motor. Falta la otra mitad: guardar unos cuadros de referencia de cada estilo aprobado y compararlos, para lo que cambia en el dibujo (React) y no en el plan. | Un cambio al motor no altera un estilo aprobado sin que nadie lo note. | Nada; unos MB de cuadros en los medios. |
@@ -25,7 +25,7 @@ el recomendado.
 
 | # | Qué | Qué da | Qué necesita |
 |---|---|---|---|
-| S1 | **Voz en off y subtítulos.** Miguel graba; Whisper marca el segundo de cada palabra; el texto sale del guion, no de lo que Whisper oye. Los `rotulos` ya aceptan un tiempo por palabra: falta el oído. | El primer video con la voz de Miguel. Es lo que más cambia lo que el motor puede hacer. | **Descarga con ok:** faster-whisper y un modelo (alrededor de 1,5 GB el mediano). Una grabación de prueba. |
+| S1 | **Voz en off y subtítulos.** El oído ya está (2026-11-09): `transcribir` da el segundo de cada palabra y los `rotulos` lo aceptan. Falta alinear el texto del guion con esos tiempos y mezclar la voz con la canción. | El primer video con la voz de Miguel. Es lo que más cambia lo que el motor puede hacer. | Una grabación de prueba de Miguel. |
 | S2 | ~~Fotos y clips en el mismo montaje.~~ **Hecho el mismo 2026-11-09** (`"fotos"` + `mezclar_fotos`; ver la ficha del 21). Falta probarlo con fotos de verdad: en la práctica sólo había fotogramas de los mismos clips. | El material real de Curiana es mixto: la galería de imágenes más lo que Miguel graba. | Un puñado de fotos de la galería junto a los clips. |
 | S3 | **Igualar el color entre clips.** Llevar todos los clips hacia uno de referencia (o hacia la paleta), antes de montar. | Veinte clips de días y luces distintas se ven como una sola película. | Elegir el clip de referencia. Sin descargas (este ffmpeg ya trae lo necesario). |
 | S4 | **Cortar en el movimiento.** Elegir el punto de corte donde lo que se mueve en el clip que se va y en el que llega van hacia el mismo lado o están en el mismo lugar del cuadro (ya se mide el centro de interés y el movimiento de cada clip). | El corte se siente continuo en vez de casual: es lo que distingue un montaje de una sucesión. | Nada. Hay que probarlo con clips que tengan movimiento claro. |
@@ -47,6 +47,18 @@ casi todos (ver la ficha del 21). Quedan, sin urgencia:
 - Si la **partitura** no logra leer el espectro de la canción, esa pestaña del render se queda sin dibujarla y no avisa.
 - Los bordes de los **tramos** del guion van al compás: las capas de síntesis de un tramo conviene
   escribirlas con los mismos segundos que imprime `guion`.
+
+## Velocidad
+
+Medido el 2026-11-09. Hecho: copiar sólo lo elegido, 8 a la vez, previews sin interpolar y con la tarjeta de video, y el
+preview guardado por tramos.
+
+| Qué | Por qué | Cuánto cuesta |
+|---|---|---|
+| **RIFE para inventar los cuadros.** Con la tarjeta de video en vez de `minterpolate`. Sin medir aquí. | El final interpola en el procesador (unos 110 s por clip de 1620×1080, 27 s por uno de 768×512, y 8 a la vez rinden 2,8 veces una sola). Suele deformar menos. | **Descarga con ok** (de GitHub). Miguel decidió dejarlo para más adelante: se prueba cuando moleste la calidad de la cámara lenta. |
+
+Lo que no sirvió, para no volver a probarlo: comprimir con la tarjeta o más rápido (el tiempo no está ahí), interpolar en
+un modo menos fino, dibujar 16 cuadros a la vez y bajar a un tercio de resolución.
 
 ## El panel
 

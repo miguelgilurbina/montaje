@@ -138,3 +138,44 @@ archivo, qué comando correr) no van aquí.
   mejora lo más posible hasta las 7:59 am. Le interesa que el motor tanto en
   entrenamiento como en sinterización de videos y además propone que más podemos
   hacer para el motor»
+
+## 2026-11-09 · Veredictos desde la galería
+
+- Cuenta regresiva de proyector (`cuenta-regresiva`), a medias: «los números no están correctamente alineados»
+- Cinta de reel en loop (`cinta-reel-en-loop`), a medias: «yo creo que está bueno pero como transición. es decir, para pasar de una escena a otra, donde pasa el reel y la imagen siguiente se agranda.»
+
+## 2026-11-09 · La galería, a primera vista
+
+- Después de mirar la galería: «Estuve viendo
+  los distintos estilos de edición. No los he evaluado aún pero esta buenísimo en
+  general. Y sólo he visto un par de filtros. Pero vamos por buen camino.»
+
+## 2026-11-09 · 22 · Más material, y el motor desde el teléfono
+
+- «un vídeo así de largo. O más bien audio. Se hace muy corto usar 20 videos. Me
+  gustaría que hiciéramos una nueva iteración del vídeo. Pero con más contenido.»
+- «Otra cosa que me gustó fue que avanzaste creando títulos y subtítulos.»
+- «Aún no la armemos. Vamos primero a seleccionar. Ahí yo meteré la mano de cuales elegir.»
+- Sobre Midjourney, que venía usando desde el navegador en otra sesión: «he estado
+  haciendo series y clasificando los contenidos de Midjourney. Pero eso lo podemos
+  hacer nosotros directamente ahora.»
+- «Podríamos tener una herramienta que haga directamente transcripción de audios?»
+- «Cómo puedo llevarlo a poder controlarlo y verlo desde el cel. Y poder llevar por
+  ejemplo todo el trabajo de Midjourney a un contenedor digital donde pueda subir
+  documentos y guardarlos.»
+- «La idea es levantar una infraestructura aparte que sea interesante para este
+  proyecto que al final es un proyecto opensource.»
+- Sobre el contenedor: disco propio o S3, repo nuevo y público, y «Primero desde el desktop. Luego vemos la conexión del cel.»
+
+## 2026-11-09 · El tiempo de espera
+
+- Tras preguntar qué hacía tardar las copias: «hagamos algo, pensemos en cómo mejorar este proceso para que el tiempo
+  esperado sea razonable.»
+- Eligió en tarjetas: los previews sin interpolar (sólo al final), la tarjeta de video sólo en previews, el render
+  guardado por tramos, y RIFE para más adelante.
+
+## 2026-11-09 · 22 · El primer veredicto con nota
+
+- «Mira, de 10 le doy un 6. Tiene partes que se sincronizan muy bien, y encuentro que se nota un uso muy bueno de la galería que estamos haciendo. Pero siento que no está del todo listo. O sea quedó bien, pero no es uff, muy buen ejemplo, creo que igual es porque estamos usando material ya hecho, nada producido específicamente para este video. Pero igual creo que es buen score.»
+- Qué sincronizó mejor: «Las finales, siento que el primer tramo o la primera mitad del video no calzó al 100 con el feel porque los videos estaban en velocidad normal en muchos casos, y al final si se hicieron esos ajustes a la velocidad ya que justo la canción lleva a eso.»
+- Sobre la versión lenta: «excelente, ahora lo único que agregaría sería subtitulos de la canción en el medio.»

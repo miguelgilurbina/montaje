@@ -152,6 +152,11 @@ con cámara virtual; **«más caótico»** = la curva de caos. **«reel rápido 
 | la luz sigue a la canción | audio-reactive grade | brillo y color según la energía | `sintesis: luz` |
 | ejercicio | — | una vuelta de versiones: plan, render, hoja, muestra | `python montaje.py ejercicio` |
 | barrido de una perilla | parameter sweep | la misma base con un valor distinto en cada celda, lado a lado | `ejercicio --barrer` |
+| borrador | proxy sin interpolar | la copia de trabajo rápida con la que se hacen los previews | `clips` (carpeta `borradores/`) |
+| preview por tramos | render caching | guardar cada tramo dibujado para que corregir uno rehaga sólo ese | `render --preview` |
+| lista de tomas | shot list | lo que hay que producir para un guion, toma por toma | `python montaje.py tomas` |
+| mesa de selección | selects / logging | elegir a mano los clips antes de editar | `python montaje.py seleccion` |
+| transcribir | transcription | de un audio al texto, con el segundo de cada palabra | `python montaje.py transcribir` |
 | recorrido | showreel | la galería de corrido en un video | `python montaje.py recorrido` |
 | esqueleto del guion | — | la canción en tramos con los estilos que sirven | `python montaje.py guion` |
 | veredicto | — | sí, a medias o no, dado en la galería | `/estilos` del panel |

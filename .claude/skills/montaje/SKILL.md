@@ -68,6 +68,8 @@ Todo comando se corre desde la raíz del repo: `python montaje.py <comando> <pro
   `material` (palabras del nombre de los clips: `["campo"]`, `["lanchas"]`) dice qué
   clips entran en ese tramo, en ronda. Las capas de `sintesis` llevan `desde`/`hasta`.
   Así la tabla del guion se escribe tal cual: un estilo y un material por tramo.
+  Con `"material_en_orden": true`, la lista de `material` dice también el orden: sirve
+  para repartir a mano cada clip por su número (`["mj-093", "natalia-05"]`).
   **El borde de un tramo corta la frase al compás más cercano** (un tramo vale por
   compases enteros): conviene poner `desde`/`hasta` en un «uno» —los que imprime
   `guion`— y usar esos mismos segundos en las capas de síntesis del tramo.
@@ -105,6 +107,14 @@ Todo comando se corre desde la raíz del repo: `python montaje.py <comando> <pro
   partir de un «no» se escribe después, a mano, en `evitar`. La elegida queda `aprobado`; las
   otras `rechazado` o `a medias`, con su porqué. Después del veredicto, los
   renders del ejercicio se pueden borrar: la receta y la muestra quedan.
+- **Las lecciones** (`direccion/LECCIONES.json`): cuando Miguel dice algo que cambia cómo se arma
+  («los videos estaban en velocidad normal… la canción lleva a eso»), se escribe una lección con su
+  cita, su fecha, su regla y `cuando` vale (energía, modo, el `tono` del proyecto, si la canción tiene
+  letra). Las de `perillas` y `capa` las aplica solo el primer armado de `guion`, y lo dice; las de
+  `consejo`, las dice. Una lección de una canción de `"tono": "recuerdo"` no se impone a otra: sin
+  `tono` en proyecto.json, `guion` sólo avisa. **`aprender`** junta las lecciones, compara las
+  recetas aprobadas con las rechazadas perilla por perilla (dentro de cada técnica) y lista los «no»
+  y «a medias» sin una palabra de Miguel → `direccion/APRENDIDO.md`.
 - `python montaje.py estilos` valida el catálogo (vocabulario cerrado, experimentos
   que existen, veredictos con cita) y lo lista; la galería está en `/estilos` del panel.
 
@@ -132,8 +142,13 @@ Todo comando se corre desde la raíz del repo: `python montaje.py <comando> <pro
    por sección (imágenes, capas a la vez, vida típica). Leer el resumen: si el
    ritmo medio pasa de ~3 imágenes nuevas por segundo, el montaje es parpadeo;
    decirlo, no esconderlo.
-6. **Preview de un tramo.** `render <p> --preview --desde 20 --hasta 50`
-   (mitad de resolución). Un tramo de 30 s tarda alrededor de un minuto.
+6. **Preview.** `render <p> --preview --desde 20 --hasta 50` (un tramo, a mitad de
+   resolución) o `render <p> --preview` (todo). El preview entero se guarda **por
+   tramos** en `render/.tramos/` (`py/montaje/por_tramos.py`): cada pedazo lleva una
+   huella de sus capas, sus archivos, los ajustes y el código de `src/`, y corregir un
+   tramo redibuja sólo ese. Se dibuja con la tarjeta de video; el final, no (cambia un
+   poco el color y el grano). Medido el 2026-11-09: 3 min en 2:40, y una corrección de
+   un tramo en 17 s.
 7. **Mirar.** `hoja <p> <archivo.mp4> --cada 1` → `hojas/*.png`, y **leerlas
    con Read**. Ningún juicio sobre cómo se ve algo sin haber mirado la hoja.
    **Y medir:** `revisar <p> <archivo.mp4>` lee el render entero y cuenta lo que
@@ -183,6 +198,62 @@ Todo comando se corre desde la raíz del repo: `python montaje.py <comando> <pro
 14. **Entrega:** `ensamblar` (cortinas) y `paquete` (por red, masterizado a
     −14 LUFS y pico real −1 dBTP).
 
+### El guion desde el teléfono
+
+La **Mesa de montaje** (página privada en claude.ai; la dirección está en la memoria de Claude) tiene tres
+pestañas: **Guion** (los tramos de una versión con sus clips en orden: subir, bajar, pasar a otro tramo,
+cambiar el estilo del tramo, escribir lo que pasa), **Clips** (elegir) y **Estilos** (juzgar; los «no» sin
+porqué piden el porqué). Lo que Miguel cambia queda en la base de la página (`guion/T3`: `orden`, `estilo`,
+`pasa`). Cuando dice «listo», Claude lo lee y lo aplica:
+
+    python montaje.py aplicar-guion <p> <cambios.json> [--version v]
+
+`cambios.json` es `{"T3": {"orden": [...], "estilo": "...", "pasa": "..."}}`. Cambiar el estilo quita las
+perillas del de antes, pone las del nuevo y vuelve a aplicar las lecciones. Después: `planificar` y el
+preview por tramos (sólo se redibuja lo que cambió).
+
+### Producir el material para un guion
+
+- **`tomas <p> [--version v]`** → `proyectos/<p>/TOMAS.md`: la lista de tomas. Con la canción
+  analizada y los `tramos` del guion (cada uno con `pasa`, lo que tiene que pasar en palabras de
+  Miguel, y `estilos`, los ids de la galería), parte la canción en las mismas frases que después
+  monta `pulso` (`pulso.frases_del_guion`) y dice por cada toma: su número (`T3-02`), sus segundos,
+  la música (calma, media, alta), a qué velocidad irá en pantalla, cuántos segundos del clip se usan
+  (y si hay que extender el de Midjourney, que trae ~5,2 s), el movimiento que pide con su
+  `--motion` de Midjourney, cómo entra y lo que eso le pide a la imagen, y lo que los estilos del
+  tramo piden evitar. Lo que se ve lo decide Miguel.
+- Los clips se nombran empezando por su número («T3-02 algo.mp4») en una carpeta de `clips` del
+  proyecto; `tomas <p> --estado` dice cuáles faltan; en `tramos`, `"material": ["T3-"]`.
+- Nació del 6 de 10 del 22: «estamos usando material ya hecho, nada producido específicamente para
+  este video». El guion primero; el material, después.
+
+### Traer material de Cantera
+
+**Cantera** (`../cantera`, repo hermano y abierto) guarda y clasifica el material: series de Midjourney,
+clips, fotos, audio, documentos; `npm run dev` en esa carpeta la abre en `http://127.0.0.1:3320`.
+`python montaje.py traer <p> --serie <nombre> [--carpeta …] [--tipo video]` copia una serie, en su orden,
+a `<biblioteca>/cantera-<serie>/` («03-…», y las tomas `T3-02 …` tal cual); después se suma esa carpeta a
+`clips` y se corre `clips <p>`. Sus datos viven en `~/Videos/cantera` (o `CANTERA_DATOS`).
+
+### Elegir el material y transcribir
+
+- **`seleccion <p>`**: de cada clip de las carpetas del proyecto, una muestra muda, un cuadro fijo,
+  sus medidas y un grupo sacado del nombre. Cuando hay más clips de los que el video lleva, elige
+  Miguel. Lo elegido va a `proyectos/<p>/seleccion.json` (`{"elegidos": [ids]}`) y, desde ahí, el
+  proyecto sólo ve esos clips. Las copias interpoladas se hacen después, sólo de lo elegido.
+- **`transcribir <archivo> [--idioma es] [--pistas "Paraguaná"]`** (sin proyecto): corre en este
+  computador y deja `.txt`, `.srt` y `.json` (cada palabra con su segundo y `rotulos` listos para
+  la capa) en `<medios>/transcripciones/`. Modelo: `<medios>/modelos/faster-whisper-medium`.
+  Hoy corre en el procesador (faltan las bibliotecas de CUDA, otra descarga que no se ha pedido):
+  16 s de voz en 8 s. Se equivoca con palabras sueltas («tejas» → «Texas»): se lee antes de usar.
+  **Una canción va con `--cancion`**: sin eso, el filtro de voz toma el canto con instrumentos
+  por ruido (en la Añoranza dejaba 4 palabras de 136). El `.srt` sale en líneas cortas, las de
+  los rótulos, y es el que se corrige a mano.
+- **La letra en pantalla:** `{"tipo": "rotulos", "transcripcion": "transcripciones/<nombre>.srt"}`
+  lee las líneas del `.srt` (corregido o no) y el segundo de cada palabra del `.json` hermano. El
+  texto no se copia al proyecto ni lo escribe Claude: va del archivo al video. Sí queda dentro del
+  `timeline.json`: antes de subir un proyecto con letra al repo (público), decidirlo con Miguel.
+
 ### Clips (videos en vez de imágenes)
 
 1. `"clips": "clips"` en proyecto.json (carpeta de la biblioteca; puede ser una
@@ -210,11 +281,18 @@ Todo comando se corre desde la raíz del repo: `python montaje.py <comando> <pro
    vale igual a 24 que a 72 cps. Para usarlos: `"clips": ["clips", "transformados"]`,
    `clips <p>` y `"transformados": "calma"` (o `"todo"`) en el montaje: cada clip usa
    su variante en vez del original. Sin eso, los transformados no entran.
-6. **Cámara lenta sin trabas:** `"clips_interpolar": 3` hace las copias con cuadros
-   inventados (`minterpolate`): con 24 cps de origen, a 72. Hace falta cuando los
-   clips son más cortos que la canción (en el 15 iban a 0,33×: con 48 cps se repetía
-   uno de cada cinco cuadros; con 72, ninguno). El video sale a la cadencia del
-   material (`salida.fps: 24`): pasar 24 a 30 tironea.
+6. **Cámara lenta sin trabas:** `"clips_interpolar": 3` pide cuadros inventados
+   (`minterpolate`): con 24 cps de origen, a 72. Hace falta cuando los clips son más
+   cortos que la canción (en el 15 iban a 0,33×: con 48 cps se repetía uno de cada
+   cinco cuadros; con 72, ninguno). El video sale a la cadencia del material
+   (`salida.fps: 24`): pasar 24 a 30 tironea.
+   **Inventar cuadros es el 97 % del costo de una copia**, así que `clips` hace sólo un
+   **borrador** sin interpolar (`borradores/`) y el análisis sale de ahí. El preview
+   dibuja el borrador en lugar de la copia que falta (tironea un poco en la cámara
+   lenta) y el render final interpola, 8 a la vez, sólo lo que quedó en el video. Con
+   `seleccion.json`, `clips` sólo trabaja lo elegido. `transformar` también pide la
+   copia interpolada. El plan no cambia al interpolar: el catálogo ya anota los cuadros
+   por segundo y la duración que tendrá la copia.
 7. Más perillas de `pulso`: `congelar_golpes` (la foto que despierta: cada clip entra
    quieto y en sepia y arranca en el golpe), `dividir: 2` (díptico: cada clip con su
    pareja de la otra mitad del catálogo, lado a lado), `escala` + `sombra` (ventana:
@@ -439,10 +517,9 @@ clips a la vez y que a cada clip que entra empujando le corresponda uno que sale
 La lista larga, con lo que cuesta cada cosa y lo que necesita de Miguel, está en
 `PROPUESTAS.md`. Lo primero:
 
-- Voz en off: grabación de Miguel → Whisper (faster-whisper en la RTX 3060)
-  marca el tiempo de cada palabra; el texto de los subtítulos sale del guion,
-  no de lo que Whisper oye.
-- Subtítulos con la tipografía y las tintas del proyecto.
+- Voz en off completa: `transcribir` ya da el segundo de cada palabra y la capa `rotulos`
+  ya los acepta; falta alinear el texto del guion con esos tiempos (los subtítulos salen
+  del guion, no de lo que Whisper oye) y mezclar la voz con la canción.
 - Ambientes que sigan a las familias de imágenes (agua, desierto, ojos…) según
   sus descripciones, y una firma sonora propia de Curiana Radio.
 - Reescalado con IA (Real-ESRGAN) si las imágenes se ven blandas a 1080p.

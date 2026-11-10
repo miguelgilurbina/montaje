@@ -1,0 +1,33 @@
+{
+ "_que_es": "Lo que el motor aprendió de las notas de Miguel: cada lección con su cita, su fecha y su regla. Las de `perillas` y `capa` las aplica solas el primer armado de `guion`; las de `consejo`, las dice. Se escriben a mano cuando Miguel dice algo que cambia cómo se arma; nunca sin su cita. `python montaje.py aprender` las junta en direccion/APRENDIDO.md.",
+ "lecciones": [
+  {
+   "id": "la-banda-flota",
+   "fecha": "2026-11-09",
+   "experimento": "22-anoranza-con-mas-material",
+   "cita": "Las finales, siento que el primer tramo o la primera mitad del video no calzó al 100 con el feel porque los videos estaban en velocidad normal en muchos casos, y al final si se hicieron esos ajustes a la velocidad ya que justo la canción lleva a eso.",
+   "regla": "En una canción de recuerdo, la banda no acelera la imagen: los clips van tan lentos como en la calma, la música avanza y la imagen flota.",
+   "medido": "En el 22, gente, ciudad y campo pasaron de ×0,63–0,75 a ×0,47–0,50; sobre esa versión Miguel dijo «excelente».",
+   "cuando": {"energia": ["media", "alta"], "modo": "pulso", "tono": ["recuerdo"]},
+   "perillas": {"velocidad": [0.4, 0.5], "velocidad_min": 0.38}
+  },
+  {
+   "id": "letra-al-centro",
+   "fecha": "2026-11-09",
+   "experimento": "22-anoranza-con-mas-material",
+   "cita": "excelente, ahora lo único que agregaría sería subtitulos de la canción en el medio.",
+   "regla": "Si la canción tiene letra y ya está transcrita, la letra va al centro, palabra por palabra cuando se canta, con un halo oscuro detrás para que se lea sobre cualquier imagen.",
+   "cuando": {"letra": true},
+   "capa": {"tipo": "rotulos", "voz": "oraculo", "lugar": "centro", "tam": 0.064, "sombra": 0.78}
+  },
+  {
+   "id": "producir-para-el-guion",
+   "fecha": "2026-11-09",
+   "experimento": "22-anoranza-con-mas-material",
+   "cita": "Mira, de 10 le doy un 6. [...] creo que igual es porque estamos usando material ya hecho, nada producido específicamente para este video.",
+   "regla": "Primero el guion, después el material: con los tramos escritos, `python montaje.py tomas <p>` dice qué tomas producir antes de elegir clips de lo que ya hay.",
+   "cuando": {},
+   "consejo": true
+  }
+ ]
+}
