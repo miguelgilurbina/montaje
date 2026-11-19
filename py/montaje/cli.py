@@ -483,8 +483,15 @@ def main() -> None:
 
     s = sub.add_parser("textos", help="valida y lista la galería de textos (textos/*.json)",
                        description="valida y lista la galería de textos: estilos de letra para títulos, frases, rótulos, subtítulos y créditos")
-    s.add_argument("--familia", help="titulos, frases, rotulos o subtitulos")
+    s.add_argument("--familia", help="titulos, frases, rotulos, subtitulos o movimiento")
     s.add_argument("--estado", help="aprobado, a medias, propuesta…")
+
+    s = sub.add_parser("tipografia", help="hace una tipografía propia desde una libre de fuentes/ (hoy: apretarla a lo ancho)",
+                       description="hace una tipografía propia desde una libre de fuentes/: `apretar` multiplica todo lo horizontal (dibujo, anchos, kerning, acentos) por un factor")
+    s.add_argument("accion", choices=["apretar"])
+    s.add_argument("origen", help="el archivo dentro de fuentes/ (p. ej. archivo-black/ArchivoBlack-Regular.ttf)")
+    s.add_argument("factor", type=float, help="0,82 = el «type 3c» del cartel de Curiana")
+    s.add_argument("familia", help="el nombre de la nueva (p. ej. «Curiana Cartel»)")
 
     s = sub.add_parser("veredicto", help="anota el veredicto de Miguel sobre un estilo o un letrero (lo usa la galería del panel)",
                        description="anota el veredicto de Miguel sobre un estilo (estilos/) o un letrero (textos/): estado, fecha y, si las hay, sus palabras (también en direccion/REGISTRO.md)")
@@ -568,6 +575,11 @@ def main() -> None:
         from . import textos
 
         textos.listar(a.familia, a.estado)
+        return
+    if a.comando == "tipografia":
+        from . import tipografias
+
+        tipografias.cmd_apretar(a.origen, a.factor, a.familia)
         return
     if a.comando in ("estilos", "muestra", "recorrido", "veredicto", "comparar"):
         from . import estilos

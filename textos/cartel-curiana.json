@@ -1,16 +1,15 @@
 {
  "nombre": "Cartel de Curiana",
  "familia": "titulos",
- "frase": "La voz «cartel» de la marca: Archivo Black en mayúsculas, apretada a lo ancho (el «type 3c»), en hueso sobre la noche.",
+ "frase": "La voz «cartel» de la marca: Curiana Cartel en mayúsculas (Archivo Black apretada al 0,82, el «type 3c», hecha tipografía propia), en hueso sobre la noche.",
  "para": [
   "abrir",
   "título de pieza",
   "cortina"
  ],
- "fuente": "Archivo Black",
+ "fuente": "Curiana Cartel",
  "tamano": 0.14,
  "mayusculas": true,
- "compresion": 0.82,
  "espaciado": -0.005,
  "interlineado": 0.9,
  "color": "#eee6d4",

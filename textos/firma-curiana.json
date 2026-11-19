@@ -1,16 +1,15 @@
 {
  "nombre": "Firma de Curiana",
  "familia": "subtitulos",
- "frase": "El cierre de marca: CURIANA RADIO en el cartel apretado y, debajo, la dirección en mono, en oro.",
+ "frase": "El cierre de marca: CURIANA RADIO en Curiana Cartel y, debajo, la dirección en mono, en oro.",
  "para": [
   "cierre",
   "firma",
   "marca"
  ],
- "fuente": "Archivo Black",
+ "fuente": "Curiana Cartel",
  "tamano": 0.08,
  "mayusculas": true,
- "compresion": 0.82,
  "espaciado": 0.01,
  "color": "#eee6d4",
  "lugar": "centro",

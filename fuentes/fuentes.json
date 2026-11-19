@@ -1,8 +1,10 @@
 {
- "_": "Las tipografías del motor: libres (OFL o Apache 2.0, cada una con su licencia en su carpeta), bajadas el 2026-11-17 del repositorio de Google Fonts (github.com/google/fonts) con el ok de Miguel. Las lee el panel (/fuentes/...) y el render (planificar las pone en la carpeta pública). `peso`: el rango de la variable o el peso fijo.",
+ "_": "Las tipografías del motor: libres (OFL o Apache 2.0, cada una con su licencia en su carpeta), bajadas el 2026-11-17 del repositorio de Google Fonts (github.com/google/fonts) con el ok de Miguel; las propias (Curiana Cartel) se derivan de ellas con `python montaje.py tipografia` y siguen su licencia. Las lee el panel (/fuentes/...) y el render (planificar las pone en la carpeta pública). `peso`: el rango de la variable o el peso fijo.",
  "familias": {
   "Archivo Black": {"voz": "de palo seco, negrísima y ancha: la letra de títulos de la marca Curiana", "licencia": "OFL",
                     "archivos": [{"archivo": "archivo-black/ArchivoBlack-Regular.ttf", "peso": [400, 400], "cursiva": false}]},
+  "Curiana Cartel": {"voz": "propia: Archivo Black apretada a lo ancho al 0,82 (el «type 3c» del cartel de Curiana), hecha tipografía el 2026-11-19 con `montaje.py tipografia apretar`; derivada, OFL", "licencia": "OFL",
+                     "archivos": [{"archivo": "curiana-cartel/CurianaCartel-Regular.ttf", "peso": [400, 400], "cursiva": false}]},
   "Anton": {"voz": "condensada y alta, de cartel: grita en poco ancho", "licencia": "OFL",
             "archivos": [{"archivo": "anton/Anton-Regular.ttf", "peso": [400, 400], "cursiva": false}]},
   "Fraunces": {"voz": "serif editorial de remates blandos, con ejes de suavidad (SOFT) y de rareza (WONK)", "licencia": "OFL",
