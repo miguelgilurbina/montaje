@@ -1,10 +1,11 @@
 import Link from 'next/link';
+import Muestras from '@/components/Muestras';
 import Veredicto from '@/components/Veredicto';
-import {ESTADOS, leerEstilos, type Estilo} from '@/lib/estilos';
+import {cuantasComparaciones, ESTADOS, FAMILIAS, leerEstilos, type Estilo} from '@/lib/estilos';
 
 export const dynamic = 'force-dynamic';
 
-type Filtros = {estado?: string; para?: string; material?: string; en?: string};
+type Filtros = {estado?: string; para?: string; material?: string; en?: string; familia?: string};
 
 /** La URL de la galería con un filtro cambiado (el mismo valor otra vez lo quita). */
 function con(f: Filtros, clave: keyof Filtros, valor: string): string {
@@ -19,17 +20,33 @@ function Tecnica({t}: {t: Record<string, unknown>}) {
   return <code className="tecnica">{JSON.stringify(t)}</code>;
 }
 
+/** Lo que dijo el probador de este estilo, en una línea. */
+function EnElProbador({e}: {e: Estilo}) {
+  const p = e.probador;
+  if (e.falla) return <p className="dato probador error">probador: falló ({e.falla})</p>;
+  if (!p) return e.noSePrueba ? <p className="dato probador">probador: no se prueba · {e.noSePrueba}</p> : null;
+  const partes = [
+    p.costo ? `dibujo ×${p.costo.toLocaleString('es')} del banco` : null,
+    p.parecido === null ? 'referencia nueva' : p.cambio ? `CAMBIÓ contra su referencia (${Math.min(...p.parecido).toFixed(3)})` : 'igual a su referencia',
+    e.elecciones ? `elegido ${e.elecciones.ganadas.toLocaleString('es')} de ${e.elecciones.jugadas}` : null,
+  ].filter(Boolean);
+  return (
+    <p className={`dato probador${p.cambio ? ' error' : ''}`}>
+      probador: {partes.join(' · ')}
+      {e.estado !== 'rechazado' ? (
+        <>
+          {' · '}
+          <Link href={`/estilos/comparar?a=${e.id}`}>comparar</Link>
+        </>
+      ) : null}
+    </p>
+  );
+}
+
 function Tarjeta({e}: {e: Estilo}) {
   return (
     <article className={`estilo estado-${e.estado.replace(' ', '-')}`} id={e.id}>
-      {/* `#t=0.5`: con preload="metadata" el navegador muestra ese cuadro en vez de negro. */}
-      <div className="muestra">
-        {e.video ? (
-          <video src={`${e.video.url}#t=0.5`} controls loop playsInline preload="metadata" />
-        ) : (
-          <p className="dato">sin muestra · se corta del próximo render que lo use</p>
-        )}
-      </div>
+      <Muestras probador={e.probador?.url ?? null} video={e.video?.url ?? null} sin="sin muestra · se corta del próximo render que lo use, o con el probador" />
       <div className="cuerpo">
         <header>
           <h2>{e.nombre}</h2>
@@ -52,6 +69,7 @@ function Tarjeta({e}: {e: Estilo}) {
             ))}
           </div>
         )}
+        <EnElProbador e={e} />
         {e.evitar.length > 0 && (
           <ul className="evitar">
             {e.evitar.map((x) => (
@@ -86,14 +104,17 @@ export default async function Estilos({searchParams}: {searchParams: Promise<Fil
       (!f.estado || e.estado === f.estado) &&
       (!f.para || e.para.includes(f.para)) &&
       (!f.material || e.material === f.material) &&
-      (!f.en || e.visto_en.includes(f.en)),
+      (!f.en || e.visto_en.includes(f.en)) &&
+      (!f.familia || e.familia === f.familia),
   );
   const contar = (pred: (e: Estilo) => boolean) => todos.filter(pred).length;
   const usos = [...new Set(todos.flatMap((e) => e.para))].sort((a, b) => a.localeCompare(b, 'es'));
   const materiales = [...new Set(todos.map((e) => e.material))].sort();
   // Los experimentos, del más nuevo al más viejo: el número va adelante.
   const experimentos = [...new Set(todos.flatMap((e) => e.visto_en))].sort((a, b) => b.localeCompare(a, 'es', {numeric: true}));
-  const peso = todos.reduce((s, e) => s + (e.video?.mb ?? 0), 0);
+  const peso = todos.reduce((s, e) => s + (e.video?.mb ?? 0) + (e.probador?.mb ?? 0), 0);
+  const probados = contar((e) => e.probador !== null);
+  const elecciones = cuantasComparaciones();
 
   return (
     <div className="galeria">
@@ -104,8 +125,13 @@ export default async function Estilos({searchParams}: {searchParams: Promise<Fil
       <p className="dato">
         Cada estilo es una receta con nombre para elegir según el guion: la técnica con sus valores, para qué sirve y lo que
         dijo Miguel. Los renders de los ejercicios se borran; la receta y la muestra quedan. El veredicto se da aquí mismo:
-        sí, a medias o no, con o sin palabras. {todos.length} estilos ·
-        muestras {peso.toFixed(1)} MB.
+        sí, a medias o no, con o sin palabras. {todos.length} estilos · {probados} en el probador · muestras {peso.toFixed(1)} MB.
+      </p>
+      <p className="entrada-comparar">
+        <Link href="/estilos/comparar">Elegir entre dos →</Link>{' '}
+        <span className="dato">
+          dos estilos de la misma familia, sincronizados en el probador · {elecciones} {elecciones === 1 ? 'elección' : 'elecciones'}
+        </span>
       </p>
 
       <div className="filtros">
@@ -113,6 +139,14 @@ export default async function Estilos({searchParams}: {searchParams: Promise<Fil
         {ESTADOS.filter((s) => contar((e) => e.estado === s) > 0).map((s) => (
           <Link key={s} href={con(f, 'estado', s)} className={f.estado === s ? 'activo' : ''}>
             {s} <span className="dato">{contar((e) => e.estado === s)}</span>
+          </Link>
+        ))}
+      </div>
+      <div className="filtros">
+        <span className="dato">familia</span>
+        {FAMILIAS.filter((x) => contar((e) => e.familia === x) > 0).map((x) => (
+          <Link key={x} href={con(f, 'familia', x)} className={f.familia === x ? 'activo' : ''}>
+            {x} <span className="dato">{contar((e) => e.familia === x)}</span>
           </Link>
         ))}
       </div>

@@ -860,3 +860,101 @@ button:disabled {
 .veredicto button.v-a-medias.activo { border-color: var(--hueso); color: var(--hueso); }
 .veredicto button.v-rechazado.activo { border-color: var(--rojo); color: #e2a158; }
 .veredicto button.v-deshacer { margin-left: auto; border-style: dashed; }
+
+/* La muestra, en el probador o en su video: dos pestañas arriba a la izquierda. */
+.estilo .muestra .pestanas { position: absolute; top: 8px; left: 8px; display: flex; gap: 4px; z-index: 1; }
+.estilo .muestra .pestanas button {
+  padding: 2px 9px; background: rgba(7, 9, 13, 0.78); border: 1px solid var(--filete); border-radius: 999px;
+  color: var(--hueso-2); font: inherit; font-size: 11.5px; cursor: pointer;
+}
+.estilo .muestra .pestanas button.activo { border-color: var(--acento); color: var(--acento); }
+.estilo p.probador a { color: var(--hueso-2); text-decoration: underline; text-decoration-color: var(--filete-fuerte); }
+.estilo p.probador.error, .dato.error { color: #e2a158; }
+.galeria p.entrada-comparar { margin: 0 0 14px; }
+.galeria p.entrada-comparar a { color: var(--acento); }
+
+/* Elegir entre dos: las muestras lado a lado (una sobre otra en pantallas angostas). */
+.comparador { margin-top: 18px; display: flex; flex-direction: column; gap: 14px; }
+.comparador .lados { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+.comparador .lado {
+  margin: 0; display: flex; flex-direction: column; gap: 8px; min-width: 0;
+  background: var(--panel); border: 1px solid var(--filete); border-radius: 4px; padding: 10px;
+}
+.comparador .pantalla { position: relative; aspect-ratio: 3 / 2; max-width: 100%; background: var(--hondo); }
+.comparador .pantalla video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.comparador figcaption p { margin: 4px 0 0; color: var(--hueso-2); font-size: 13px; }
+.comparador button {
+  padding: 5px 14px; background: transparent; border: 1px solid var(--filete-fuerte); border-radius: 999px;
+  color: var(--hueso-2); font: inherit; font-size: 13px; cursor: pointer;
+}
+.comparador button:hover:not(:disabled) { color: var(--hueso); border-color: var(--hueso-2); }
+.comparador button:disabled { opacity: 0.5; cursor: default; }
+.comparador button.elegir { border-color: var(--acento); color: var(--acento); align-self: stretch; }
+.comparador .mando { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.comparador .mando button.otro { margin-left: auto; border-style: dashed; }
+
+
+/* -- La galeria de textos (/textos): los letreros en vivo -- */
+
+.probar-texto {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0 4px;
+}
+
+.probar-texto input {
+  flex: 1 1 280px;
+  min-width: 0;
+  padding: 7px 10px;
+  background: var(--hondo);
+  border: 1px solid var(--filete);
+  border-radius: 4px;
+  color: var(--hueso);
+  font: inherit;
+}
+
+.probar-texto input:focus {
+  outline: none;
+  border-color: var(--acento);
+}
+
+.probar-texto .filtros {
+  flex-basis: 100%;
+}
+
+.filtros button {
+  padding: 3px 9px;
+  background: none;
+  border: 1px solid var(--filete);
+  border-radius: 999px;
+  font: inherit;
+  font-size: 12.5px;
+  color: var(--hueso-2);
+  cursor: pointer;
+}
+
+.filtros button:hover {
+  border-color: var(--filete-fuerte);
+  color: var(--hueso);
+}
+
+.filtros button.activo {
+  border-color: var(--acento);
+  color: var(--acento);
+}
+
+h2.familia-texto {
+  margin: 30px 0 0;
+  color: var(--hueso);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.letrero .muestra {
+  display: block;
+  height: auto;
+}

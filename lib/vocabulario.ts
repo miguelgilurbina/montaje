@@ -2,7 +2,7 @@
 // español y una frase que dice qué hace. El panel lo muestra; GLOSARIO.md lo
 // explica largo. Los valores por defecto son los de POR_DEFECTO en Python.
 
-export type Modo = 'collage' | 'secuencia' | 'cinta' | 'actos' | 'superposicion' | 'pulso';
+export type Modo = 'collage' | 'secuencia' | 'cinta' | 'actos' | 'superposicion' | 'pulso' | 'planos';
 
 export const MODOS: Record<Modo, {nombre: string; frase: string}> = {
   collage: {nombre: 'Collage infinito', frase: 'Papeles nítidos que caen uno sobre otro al pulso y se quedan; la cámara se aleja mientras el cuadro se llena.'},
@@ -11,6 +11,7 @@ export const MODOS: Record<Modo, {nombre: string; frase: string}> = {
   actos: {nombre: 'Actos', frase: 'De una imagen a la vez al caos: cada protagonista vuela a una pared que crece; ecos, respiros y coda.'},
   superposicion: {nombre: 'Superposición', frase: 'Doble exposición pareja: las imágenes entran al pulso, se mezclan y se van.'},
   pulso: {nombre: 'Pulso (clips)', frase: 'Para clips: cada uno ocupa una frase de la canción y salta al pulso entre sus mejores momentos; entre clips, fundido de recuerdo.'},
+  planos: {nombre: 'Planos (guion de documental)', frase: 'Plano a plano, como un guion: cada imagen con su recorrido de cámara, sus textos y su voz; la música va debajo. Los planos se escriben en `planos` de proyecto.json.'},
 };
 
 export type Parametro = {
@@ -31,6 +32,9 @@ export type Parametro = {
 const semilla: Parametro = {clave: 'semilla', nombre: 'Semilla', frase: 'El azar del montaje. Otra semilla, otro collage con las mismas reglas.', tipo: 'entero', min: 0, max: 9999, paso: 1, defecto: 11};
 
 export const PARAMETROS: Record<Modo, Parametro[]> = {
+  planos: [
+    {clave: 'fundido', nombre: 'Fundido entre planos', frase: 'Segundos del fundido encadenado cuando un plano no dice otra cosa (0 = corte).', tipo: 'numero', min: 0, max: 2, paso: 0.1, defecto: 0.5},
+  ],
   collage: [
     semilla,
     {clave: 'umbrales', nombre: 'Umbrales de ritmo', frase: 'A qué caos el ritmo pasa de una imagen por compás a una por golpe, por corchea y por semicorchea.', tipo: 'trio', min: 0, max: 1, paso: 0.01, partes: ['golpe', 'corchea', 'semicorchea'], defecto: [0.12, 0.32, 0.6]},
@@ -109,7 +113,7 @@ export const PARAMETROS: Record<Modo, Parametro[]> = {
     {clave: 'escala', nombre: 'Ventana', frase: 'Tamaño del clip en el cuadro; menos de 1 lo deja como una ventana sobre el fondo (con síntesis «campo» detrás).', tipo: 'numero', min: 0.3, max: 1, paso: 0.01, defecto: 1},
     {clave: 'sombra', nombre: 'Sombra', frase: 'Sombra del clip cuando es una ventana.', tipo: 'numero', min: 0, max: 1, paso: 0.05, defecto: 0},
     {clave: 'espejo', nombre: 'Caleidoscopio', frase: 'El centro del clip en espejo: 2 mitades o 4 cuartos. 0 = no.', tipo: 'entero', min: 0, max: 4, paso: 2, defecto: 0},
-    {clave: 'transformados', nombre: 'Clips transformados', frase: 'Usar la variante transformada de cada clip (estela, eco, barrido, reversa…) en la calma o siempre.', tipo: 'opcion', opciones: ['no', 'calma', 'todo'], defecto: 'no'},
+    {clave: 'transformados', nombre: 'Clips transformados', frase: 'Usar la variante transformada de cada clip (estela, eco, barrido, reversa…) en la calma o siempre; con el nombre de un efecto, siempre y sólo esa.', tipo: 'opcion', opciones: ['no', 'calma', 'todo', 'estela', 'eco', 'barrido', 'lento', 'reversa', 'ida-y-vuelta'], defecto: 'no'},
   ],
   superposicion: [
     {...semilla, defecto: 7},

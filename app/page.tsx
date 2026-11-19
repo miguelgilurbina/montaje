@@ -13,6 +13,10 @@ export default function Portada() {
         <b>estilos</b>
         el catálogo: cada edición con su receta, su muestra y lo que dijo Miguel
       </Link>
+      <Link href="/textos" className="tarjeta estilos-entrada">
+        <b>textos</b>
+        la galería de letreros: títulos, frases, rótulos, subtítulos y créditos, en vivo y con tipografías libres
+      </Link>
       {proyectos.map((p) => (
         <Link key={p.nombre} href={`/p/${p.nombre}`} className="tarjeta">
           <b>{p.nombre}</b>
