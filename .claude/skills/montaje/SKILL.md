@@ -149,8 +149,10 @@ Todo comando se corre desde la raíz del repo: `python montaje.py <comando> <pro
 - **La galería de textos** (`textos/`, ver `textos/README.md`): letreros con nombre para títulos,
   frases, rótulos, subtítulos y créditos, con tipografías libres del repo (`fuentes/`). Se ven en
   vivo en `/textos` (texto propio, fondo y «quietas»), el veredicto se da ahí y `planos` los usa
-  con `"letrero": "<id>"`. `python montaje.py textos` los valida. Una tipografía nueva se baja sólo
-  con el ok de Miguel y entra con su licencia y su línea en `fuentes/fuentes.json`.
+  con `"letrero": "<id>"` (y los subtítulos con `subtitulos.letrero`, p. ej. el karaoke de la voz).
+  `python montaje.py textos` los valida. Una tipografía nueva se baja sólo con el ok de Miguel y
+  entra con su licencia y su línea en `fuentes/fuentes.json`; las propias se derivan de las libres
+  con `python montaje.py tipografia` (Curiana Cartel = Archivo Black al 0,82) y siguen su licencia.
 
 ## El flujo
 

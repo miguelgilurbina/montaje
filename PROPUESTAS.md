@@ -65,6 +65,21 @@ blanca con borde negro, cita, rótulo, subtítulo en caja) y quedaron enterrados
 |---|---|---|---|
 | T1 | ~~Tipografías libres dentro del repo.~~ **Hecho el 2026-11-17** (elección de Miguel, con su ok para la descarga): once familias en `fuentes/` con su licencia, registradas en `fuentes/fuentes.json`; incluye las de la marca (S8). | Lo que se escribe en un video deja de depender de qué hay instalado. | — |
 | T2 | ~~Cada texto, una receta.~~ **Hecho el mismo día:** `textos/<id>.json` (ver `textos/README.md`), 23 letreros en cuatro familias, en vivo en `/textos` del panel con el veredicto ahí mismo; `planos` los usa con `"letrero"`. Falta: los veredictos, y que `pulso` y los `rotulos` también los usen. | Los textos se piden por nombre. | Los veredictos de Miguel. |
+| T3 | ~~Curiana Cartel.~~ **Hecho el 2026-11-19** (elección de Miguel): Archivo Black apretada al 0,82 hecha tipografía con `montaje.py tipografia apretar` (dibujo, anchos, kerning y acentos; sin hinting; OFL, con el aviso de la original). Medida: cada glifo a menos de media unidad de 1000 del 0,82 exacto. El cartel y la firma de la galería ya la usan. | El «type 3c» sirve fuera del motor (Canva, Figma, el sitio). | — |
+| T4 | ~~Texto en movimiento.~~ **Hecho el mismo día** (elección de Miguel), siete letreros en la familia `movimiento`: la **ventana** (la imagen o el video dentro de las letras, con dos capas de mezcla) y **atravesar** una letra al salir; el **karaoke** (cada palabra se enciende cuando se dice; en `planos`, `subtitulos.letrero` lo pone en los subtítulos con los tiempos de la transcripción); el **latido** con el tempo del proyecto (medido: +6,5 % en el golpe, cada 0,6 s a 100 bpm); las letras que se **arman** y la **ola**; la máquina con **cursor**. | Los títulos y las frases se mueven con la imagen, la voz y la música. | Los veredictos de Miguel. |
+
+Lo que quedó para después, de lo que se propuso el 2026-11-19 (Miguel eligió T3 y T4 primero):
+
+| # | Qué | Qué necesita |
+|---|---|---|
+| T5 | **Letra de dial de radio:** matriz de puntos o siete segmentos, dibujada en código desde una grilla (100 % propia), para «el dato teclea». | Nada. |
+| T6 | **La letra a mano de Miguel:** una plantilla con las letras, tildes, ñ y ¿¡«», fotografiada, vectorizada y armada como tipografía. | Que Miguel llene la plantilla; **descarga con ok:** potrace para vectorizar. |
+| G6 | **Gráficos que se dibujan:** el círculo y la flecha a mano, el subrayado que se traza, la ruta que avanza en un mapa, el número que cuenta, barras y línea de tiempo (lo que pedía el documental). | Nada. |
+| G7 | **Imprenta:** tramado de puntos, registro corrido (tintas que no calzan) y papel: la voz serigráfica de las tintas del arte. | Nada. |
+| G8 | **Luz y óptica:** luces que se cuelan, viñeta, aberración cromática, destello de lente. | Nada. |
+| G9 | **Señal rota:** datamosh y píxeles ordenados por brillo (amplía `senal`). | Nada. |
+| G10 | **Recorte y collage:** la persona recortada como sticker, fotos que caen sobre una mesa. | **Descarga con ok:** un modelo que separe a la persona del fondo. |
+| G11 | **Profundidad 2.5D:** una foto que se mueve en capas, como si tuviera volumen. | **Descarga con ok:** un modelo de profundidad (~100 MB). |
 
 ## Sintetización: lo que el motor todavía no sabe
 

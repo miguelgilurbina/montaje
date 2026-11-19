@@ -18,7 +18,15 @@ repente como títulos».
 ```
 
 `planificar` pone la forma del letrero en el timeline y la lista de tipografías que usa; el render
-las copia a su carpeta pública.
+las copia a su carpeta pública. Los **subtítulos** de la voz también pueden ir con un letrero (el
+karaoke enciende cada palabra cuando se dice, con los tiempos de la transcripción):
+
+```json
+"subtitulos": {"letrero": "karaoke-voz", "correcciones": {"…": "…"}}
+```
+
+Un letrero que **late con la canción** (`"latido": {"bpm": "cancion"}`) toma el tempo del proyecto:
+`componer.bpm` o `bpm` en proyecto.json.
 
 ## Las tipografías
 
@@ -27,9 +35,18 @@ registran en `fuentes/fuentes.json` con su voz, su licencia y el rango de pesos 
 bajó Claude el 2026-11-17 del repositorio de Google Fonts, con el ok de Miguel. Una tipografía nueva
 se agrega ahí (archivo + licencia + entrada en el registro), con su ok si hay que bajarla.
 
-Las tres voces de la marca (`direccion/PALETA.md`) son la columna: **el cartel grita** (Archivo
-Black en mayúsculas, apretada a 0,82), **el oráculo susurra** (Lora cursiva) y **el dato teclea**
-(IBM Plex Mono).
+Las tres voces de la marca (`direccion/PALETA.md`) son la columna: **el cartel grita** (Curiana
+Cartel en mayúsculas), **el oráculo susurra** (Lora cursiva) y **el dato teclea** (IBM Plex Mono).
+
+**Tipografías propias.** Se hacen desde las libres con `python montaje.py tipografia`, y siguen su
+licencia (una derivada de una OFL es OFL, con el aviso de la original, y no puede usar su «Reserved
+Font Name»: Archivo Black no tiene; Lora y Plex sí). La primera, **Curiana Cartel** (2026-11-19):
+Archivo Black apretada a lo ancho al 0,82, el «type 3c» del cartel hecho archivo, así que sirve
+también fuera del motor (Canva, Figma, el sitio).
+
+```
+python montaje.py tipografia apretar archivo-black/ArchivoBlack-Regular.ttf 0.82 "Curiana Cartel"
+```
 
 ## Los campos
 
@@ -39,7 +56,7 @@ espacios en **em**: el mismo letrero se ve igual en 16:9, 9:16 o 1:1.
 | Campo | Qué es |
 |---|---|
 | `nombre`, `frase` | cómo se llama y qué es, en palabras |
-| `familia` | `titulos` · `frases` · `rotulos` · `subtitulos` |
+| `familia` | `titulos` · `frases` · `rotulos` · `subtitulos` · `movimiento` |
 | `para` | para qué sirve (lista libre: «abrir», «quien habla», «subtítulos»…) |
 | `fuente`, `peso`, `cursiva` | una familia de `fuentes/fuentes.json`; el peso dentro de su rango |
 | `variacion` | ejes de la tipografía variable (`{"SOFT": 100, "WONK": 1, "opsz": 144}` en Fraunces) |
@@ -53,8 +70,12 @@ espacios en **em**: el mismo letrero se ve igual en 16:9, 9:16 o 1:1.
 | `barra` | `{color, ancho}`: barra a la izquierda, como en los rótulos de noticiero |
 | `lugar` | `centro` · `arriba` · `abajo` · `tercio-inferior` · `arriba-izquierda` · `abajo-izquierda` · `abajo-derecha` |
 | `alineado`, `ancho`, `giro` | alineación, ancho máximo (fracción del cuadro) y giro en grados |
-| `entrada` | `{tipo, dura}`: `fundido` · `subir` · `acercar` · `desenfoque` · `maquina` (letra a letra) · `palabras` · `barrido` · `ninguna` |
-| `salida` | `{tipo, dura}`: `fundido` · `bajar` · `ninguna` |
+| `entrada` | `{tipo, dura}`: `fundido` · `subir` · `acercar` · `desenfoque` · `maquina` (letra a letra) · `palabras` · `barrido` · `armar` (cada letra llega de un lugar distinto) · `ola` (letra tras letra, subiendo) · `ninguna` |
+| `salida` | `{tipo, dura}`: `fundido` · `bajar` · `atravesar` (crece hasta que la cámara pasa por dentro de una letra) · `ninguna` |
+| `ventana` | `{fuera}`: la imagen o el video de abajo se ve sólo dentro de las letras; afuera, ese color |
+| `karaoke` | `{activa, futura, dicha}`: cada palabra se enciende cuando se dice (con la voz, en los subtítulos; si no, repartidas parejo) |
+| `latido` | `{bpm, fuerza, fase}`: crece en cada golpe y vuelve; `bpm: "cancion"` toma el tempo del proyecto |
+| `cursor` | con la entrada `maquina`, el cursor que escribe y después parpadea |
 | `secundario` | la segunda línea, con su propia letra (`arriba: true` la pone encima) |
 | `rodillo` | créditos que suben; cada fila es una línea y `rol \| nombre` va en dos letras |
 | `ejemplo` | `{texto, secundario}`: lo que muestra la galería |
