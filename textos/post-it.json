@@ -1,0 +1,38 @@
+{
+ "nombre": "Post-it",
+ "familia": "frases",
+ "frase": "Plumón negro sobre un papelito amarillo pegado de lado: como las notas de un taller sobre un mapa.",
+ "para": [
+  "frase clave",
+  "a mano",
+  "taller"
+ ],
+ "fuente": "Permanent Marker",
+ "tamano": 0.075,
+ "interlineado": 1.15,
+ "color": "#141414",
+ "caja": {
+  "color": "#ffd84a",
+  "relleno": 0.55,
+  "radio": 0.04,
+  "bloque": true
+ },
+ "giro": -3,
+ "lugar": "centro",
+ "ancho": 0.5,
+ "entrada": {
+  "tipo": "acercar",
+  "dura": 0.5
+ },
+ "salida": {
+  "tipo": "fundido",
+  "dura": 0.4
+ },
+ "ejemplo": {
+  "texto": "¡Grabar\nesta noche!"
+ },
+ "fondo": "imagen",
+ "origen": "las notas pegadas del primer documental",
+ "estado": "propuesta",
+ "miguel": []
+}

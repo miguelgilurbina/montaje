@@ -1,0 +1,39 @@
+{
+ "nombre": "Firma de Curiana",
+ "familia": "subtitulos",
+ "frase": "El cierre de marca: CURIANA RADIO en el cartel apretado y, debajo, la dirección en mono, en oro.",
+ "para": [
+  "cierre",
+  "firma",
+  "marca"
+ ],
+ "fuente": "Archivo Black",
+ "tamano": 0.08,
+ "mayusculas": true,
+ "compresion": 0.82,
+ "espaciado": 0.01,
+ "color": "#eee6d4",
+ "lugar": "centro",
+ "ancho": 0.7,
+ "secundario": {
+  "fuente": "IBM Plex Mono",
+  "tamano": 0.03,
+  "espaciado": 0.14,
+  "color": "#e6b43c"
+ },
+ "entrada": {
+  "tipo": "fundido",
+  "dura": 0.9
+ },
+ "salida": {
+  "tipo": "fundido",
+  "dura": 0.8
+ },
+ "ejemplo": {
+  "texto": "Curiana Radio",
+  "secundario": "curianaradio.com"
+ },
+ "fondo": "oscuro",
+ "estado": "propuesta",
+ "miguel": []
+}

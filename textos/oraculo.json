@@ -1,0 +1,33 @@
+{
+ "nombre": "Oráculo",
+ "familia": "frases",
+ "frase": "La voz «oráculo» de la marca: Lora en cursiva, mediana, que aparece palabra a palabra, como dicha en voz baja.",
+ "para": [
+  "frase clave",
+  "calma",
+  "voz en off"
+ ],
+ "fuente": "Lora",
+ "peso": 500,
+ "cursiva": true,
+ "tamano": 0.072,
+ "interlineado": 1.3,
+ "color": "#eee6d4",
+ "lugar": "centro",
+ "ancho": 0.68,
+ "entrada": {
+  "tipo": "palabras",
+  "dura": 1.8
+ },
+ "salida": {
+  "tipo": "fundido",
+  "dura": 0.7
+ },
+ "ejemplo": {
+  "texto": "Lo que la radio no dice\ntambién se escucha."
+ },
+ "fondo": "oscuro",
+ "origen": "direccion/PALETA.md: «el oráculo susurra»",
+ "estado": "propuesta",
+ "miguel": []
+}

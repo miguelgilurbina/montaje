@@ -1,0 +1,44 @@
+{
+ "nombre": "Lugar y fecha",
+ "familia": "rotulos",
+ "frase": "Arriba a la izquierda, en Oswald espaciada, con la fecha en mono debajo: dónde y cuándo, sin tapar a nadie.",
+ "para": [
+  "lugar",
+  "fecha",
+  "documental"
+ ],
+ "fuente": "Oswald",
+ "peso": 500,
+ "tamano": 0.036,
+ "mayusculas": true,
+ "espaciado": 0.12,
+ "color": "#eee6d4",
+ "sombra": {
+  "color": "#000000b0",
+  "desenfoque": 0.28,
+  "y": 0.04
+ },
+ "lugar": "arriba-izquierda",
+ "ancho": 0.5,
+ "secundario": {
+  "fuente": "IBM Plex Mono",
+  "tamano": 0.028,
+  "espaciado": 0.06,
+  "color": "#e6b43c"
+ },
+ "entrada": {
+  "tipo": "subir",
+  "dura": 0.6
+ },
+ "salida": {
+  "tipo": "fundido",
+  "dura": 0.4
+ },
+ "ejemplo": {
+  "texto": "Santa Ana de Coro",
+  "secundario": "12 · 10 · 2026"
+ },
+ "fondo": "imagen",
+ "estado": "propuesta",
+ "miguel": []
+}

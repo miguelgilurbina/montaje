@@ -1,0 +1,31 @@
+{
+ "_": "Las tipografías del motor: libres (OFL o Apache 2.0, cada una con su licencia en su carpeta), bajadas el 2026-11-17 del repositorio de Google Fonts (github.com/google/fonts) con el ok de Miguel. Las lee el panel (/fuentes/...) y el render (planificar las pone en la carpeta pública). `peso`: el rango de la variable o el peso fijo.",
+ "familias": {
+  "Archivo Black": {"voz": "de palo seco, negrísima y ancha: la letra de títulos de la marca Curiana", "licencia": "OFL",
+                    "archivos": [{"archivo": "archivo-black/ArchivoBlack-Regular.ttf", "peso": [400, 400], "cursiva": false}]},
+  "Anton": {"voz": "condensada y alta, de cartel: grita en poco ancho", "licencia": "OFL",
+            "archivos": [{"archivo": "anton/Anton-Regular.ttf", "peso": [400, 400], "cursiva": false}]},
+  "Fraunces": {"voz": "serif editorial de remates blandos, con ejes de suavidad (SOFT) y de rareza (WONK)", "licencia": "OFL",
+               "archivos": [{"archivo": "fraunces/Fraunces.ttf", "peso": [100, 900], "cursiva": false},
+                            {"archivo": "fraunces/Fraunces-Italic.ttf", "peso": [100, 900], "cursiva": true}]},
+  "Unbounded": {"voz": "geométrica muy ancha y redonda: moderna, de pantalla", "licencia": "OFL",
+                "archivos": [{"archivo": "unbounded/Unbounded.ttf", "peso": [200, 900], "cursiva": false}]},
+  "Caveat": {"voz": "a mano, con lápiz: notas al margen", "licencia": "OFL",
+             "archivos": [{"archivo": "caveat/Caveat.ttf", "peso": [400, 700], "cursiva": false}]},
+  "Permanent Marker": {"voz": "a mano, con plumón: post-it, cartel hecho en casa", "licencia": "Apache-2.0",
+                       "archivos": [{"archivo": "permanent-marker/PermanentMarker-Regular.ttf", "peso": [400, 400], "cursiva": false}]},
+  "Special Elite": {"voz": "máquina de escribir gastada: documento, archivo, expediente", "licencia": "Apache-2.0",
+                    "archivos": [{"archivo": "special-elite/SpecialElite-Regular.ttf", "peso": [400, 400], "cursiva": false}]},
+  "Oswald": {"voz": "condensada de rótulo: datos, lugares, fechas", "licencia": "OFL",
+             "archivos": [{"archivo": "oswald/Oswald.ttf", "peso": [200, 700], "cursiva": false}]},
+  "IBM Plex Mono": {"voz": "monoespaciada técnica: fuentes, páginas, horas, coordenadas", "licencia": "OFL",
+                    "archivos": [{"archivo": "ibm-plex-mono/IBMPlexMono-Regular.ttf", "peso": [400, 400], "cursiva": false},
+                                 {"archivo": "ibm-plex-mono/IBMPlexMono-Bold.ttf", "peso": [700, 700], "cursiva": false}]},
+  "Lora": {"voz": "serif de lectura, cálida: la letra de texto de la marca Curiana; citas", "licencia": "OFL",
+           "archivos": [{"archivo": "lora/Lora.ttf", "peso": [400, 700], "cursiva": false},
+                        {"archivo": "lora/Lora-Italic.ttf", "peso": [400, 700], "cursiva": true}]},
+  "Atkinson Hyperlegible Next": {"voz": "hecha para leerse fácil (Braille Institute): subtítulos y créditos", "licencia": "OFL",
+                                 "archivos": [{"archivo": "atkinson-hyperlegible-next/AtkinsonHyperlegibleNext.ttf", "peso": [200, 800], "cursiva": false},
+                                              {"archivo": "atkinson-hyperlegible-next/AtkinsonHyperlegibleNext-Italic.ttf", "peso": [200, 800], "cursiva": true}]}
+ }
+}

@@ -1,0 +1,38 @@
+{
+ "nombre": "Etiqueta de mapa",
+ "familia": "rotulos",
+ "frase": "Una etiqueta blanca de bordes redondos con letra azul noche, como los nombres de las islas en un mapa ilustrado.",
+ "para": [
+  "lugar",
+  "mapa",
+  "documental"
+ ],
+ "fuente": "Oswald",
+ "peso": 600,
+ "tamano": 0.034,
+ "mayusculas": true,
+ "espaciado": 0.06,
+ "color": "#12324f",
+ "caja": {
+  "color": "#fffffff0",
+  "relleno": 0.5,
+  "radio": 0.18
+ },
+ "lugar": "abajo-izquierda",
+ "ancho": 0.5,
+ "entrada": {
+  "tipo": "subir",
+  "dura": 0.5
+ },
+ "salida": {
+  "tipo": "fundido",
+  "dura": 0.4
+ },
+ "ejemplo": {
+  "texto": "Bahía de los cuentos"
+ },
+ "fondo": "mapa",
+ "origen": "los rótulos del primer documental",
+ "estado": "propuesta",
+ "miguel": []
+}

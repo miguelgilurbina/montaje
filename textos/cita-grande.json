@@ -1,0 +1,49 @@
+{
+ "nombre": "Cita grande",
+ "familia": "frases",
+ "frase": "Una cita entre comillas latinas en Fraunces cursiva blanda, con su autor debajo en mono: la palabra de otra persona.",
+ "para": [
+  "cita",
+  "documental",
+  "calma"
+ ],
+ "fuente": "Fraunces",
+ "peso": 400,
+ "cursiva": true,
+ "variacion": {
+  "SOFT": 100,
+  "opsz": 72
+ },
+ "tamano": 0.07,
+ "interlineado": 1.22,
+ "color": "#f3ead4",
+ "sombra": {
+  "color": "#000000b0",
+  "desenfoque": 0.28,
+  "y": 0.04
+ },
+ "lugar": "centro",
+ "ancho": 0.72,
+ "secundario": {
+  "fuente": "IBM Plex Mono",
+  "tamano": 0.028,
+  "mayusculas": true,
+  "espaciado": 0.16,
+  "color": "#e6b43c"
+ },
+ "entrada": {
+  "tipo": "desenfoque",
+  "dura": 1.2
+ },
+ "salida": {
+  "tipo": "fundido",
+  "dura": 0.6
+ },
+ "ejemplo": {
+  "texto": "«Nombrar también\nes decidir qué se cuenta.»",
+  "secundario": "— de un guion"
+ },
+ "fondo": "imagen",
+ "estado": "propuesta",
+ "miguel": []
+}

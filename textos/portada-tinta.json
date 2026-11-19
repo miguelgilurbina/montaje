@@ -1,0 +1,36 @@
+{
+ "nombre": "Portada en tinta",
+ "familia": "titulos",
+ "frase": "Letra negrísima en dos filas, en tinta sobre un fondo claro, con un halo blanco que la despega de la imagen.",
+ "para": [
+  "abrir",
+  "título de pieza",
+  "documental"
+ ],
+ "fuente": "Archivo Black",
+ "tamano": 0.12,
+ "interlineado": 0.98,
+ "espaciado": -0.015,
+ "color": "#141414",
+ "sombra": {
+  "color": "#ffffffee",
+  "desenfoque": 0.3
+ },
+ "lugar": "centro",
+ "ancho": 0.84,
+ "entrada": {
+  "tipo": "acercar",
+  "dura": 0.8
+ },
+ "salida": {
+  "tipo": "fundido",
+  "dura": 0.4
+ },
+ "ejemplo": {
+  "texto": "Lo que cabe\nen una radio"
+ },
+ "fondo": "mapa",
+ "origen": "la portada del primer documental (allí con Segoe UI Black, que no es libre)",
+ "estado": "propuesta",
+ "miguel": []
+}

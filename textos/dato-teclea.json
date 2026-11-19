@@ -1,0 +1,40 @@
+{
+ "nombre": "El dato teclea",
+ "familia": "rotulos",
+ "frase": "La voz «dato» de la marca: mono negrita en oro que se teclea, con su aclaración en gris azulado.",
+ "para": [
+  "dato",
+  "hora",
+  "radio"
+ ],
+ "fuente": "IBM Plex Mono",
+ "peso": 700,
+ "tamano": 0.05,
+ "espaciado": 0.02,
+ "color": "#e6b43c",
+ "lugar": "abajo-izquierda",
+ "ancho": 0.6,
+ "secundario": {
+  "fuente": "IBM Plex Mono",
+  "tamano": 0.024,
+  "mayusculas": true,
+  "espaciado": 0.18,
+  "color": "#7e93aa"
+ },
+ "entrada": {
+  "tipo": "maquina",
+  "dura": 0.9
+ },
+ "salida": {
+  "tipo": "fundido",
+  "dura": 0.4
+ },
+ "ejemplo": {
+  "texto": "88.8 · 21:40",
+  "secundario": "sonando ahora"
+ },
+ "fondo": "oscuro",
+ "origen": "direccion/PALETA.md: «el dato teclea»",
+ "estado": "propuesta",
+ "miguel": []
+}

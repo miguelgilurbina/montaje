@@ -1,0 +1,34 @@
+{
+ "nombre": "Cartel de Curiana",
+ "familia": "titulos",
+ "frase": "La voz «cartel» de la marca: Archivo Black en mayúsculas, apretada a lo ancho (el «type 3c»), en hueso sobre la noche.",
+ "para": [
+  "abrir",
+  "título de pieza",
+  "cortina"
+ ],
+ "fuente": "Archivo Black",
+ "tamano": 0.14,
+ "mayusculas": true,
+ "compresion": 0.82,
+ "espaciado": -0.005,
+ "interlineado": 0.9,
+ "color": "#eee6d4",
+ "lugar": "centro",
+ "ancho": 0.86,
+ "entrada": {
+  "tipo": "acercar",
+  "dura": 0.8
+ },
+ "salida": {
+  "tipo": "fundido",
+  "dura": 0.4
+ },
+ "ejemplo": {
+  "texto": "Señales\ndesde la radio"
+ },
+ "fondo": "oscuro",
+ "origen": "direccion/PALETA.md: «el cartel grita»",
+ "estado": "propuesta",
+ "miguel": []
+}

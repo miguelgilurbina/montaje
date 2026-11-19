@@ -1,0 +1,36 @@
+{
+ "nombre": "Fuente y página",
+ "familia": "rotulos",
+ "frase": "Chica, en mono, abajo a la derecha: de dónde sale lo que se muestra (autor, año, página).",
+ "para": [
+  "cita",
+  "fuente",
+  "documental"
+ ],
+ "fuente": "IBM Plex Mono",
+ "tamano": 0.026,
+ "espaciado": 0.02,
+ "color": "#3a4654",
+ "caja": {
+  "color": "#ffffffd9",
+  "relleno": 0.45,
+  "radio": 0.1
+ },
+ "lugar": "abajo-derecha",
+ "ancho": 0.4,
+ "entrada": {
+  "tipo": "fundido",
+  "dura": 0.5
+ },
+ "salida": {
+  "tipo": "fundido",
+  "dura": 0.4
+ },
+ "ejemplo": {
+  "texto": "Autora (2024, p. 12)"
+ },
+ "fondo": "claro",
+ "origen": "las citas del primer documental",
+ "estado": "propuesta",
+ "miguel": []
+}

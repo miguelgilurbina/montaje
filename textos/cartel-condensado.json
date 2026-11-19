@@ -1,0 +1,37 @@
+{
+ "nombre": "Cartel condensado",
+ "familia": "titulos",
+ "frase": "Anton en mayúsculas, alta y angosta, en el oro de arena: un cartel de calle que grita en poco ancho.",
+ "para": [
+  "abrir",
+  "redes",
+  "energía alta"
+ ],
+ "fuente": "Anton",
+ "tamano": 0.22,
+ "mayusculas": true,
+ "espaciado": 0.01,
+ "interlineado": 0.92,
+ "color": "#e6b43c",
+ "sombra": {
+  "color": "#000000b0",
+  "desenfoque": 0.28,
+  "y": 0.04
+ },
+ "lugar": "centro",
+ "ancho": 0.9,
+ "entrada": {
+  "tipo": "subir",
+  "dura": 0.5
+ },
+ "salida": {
+  "tipo": "fundido",
+  "dura": 0.4
+ },
+ "ejemplo": {
+  "texto": "Al aire"
+ },
+ "fondo": "imagen",
+ "estado": "propuesta",
+ "miguel": []
+}

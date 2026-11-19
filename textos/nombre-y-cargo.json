@@ -1,0 +1,46 @@
+{
+ "nombre": "Nombre y cargo",
+ "familia": "rotulos",
+ "frase": "En el tercio inferior, con una barra de oro: el nombre de quien habla y, debajo, quién es. Entra barriendo.",
+ "para": [
+  "quien habla",
+  "entrevista",
+  "documental"
+ ],
+ "fuente": "Atkinson Hyperlegible Next",
+ "peso": 700,
+ "tamano": 0.046,
+ "color": "#eee6d4",
+ "sombra": {
+  "color": "#000000b0",
+  "desenfoque": 0.28,
+  "y": 0.04
+ },
+ "barra": {
+  "color": "#e6b43c",
+  "ancho": 0.12
+ },
+ "lugar": "tercio-inferior",
+ "ancho": 0.6,
+ "secundario": {
+  "fuente": "Atkinson Hyperlegible Next",
+  "peso": 400,
+  "tamano": 0.03,
+  "color": "#c6cfd9"
+ },
+ "entrada": {
+  "tipo": "barrido",
+  "dura": 0.6
+ },
+ "salida": {
+  "tipo": "fundido",
+  "dura": 0.4
+ },
+ "ejemplo": {
+  "texto": "Nombre Apellido",
+  "secundario": "Locutora de Curiana Radio"
+ },
+ "fondo": "imagen",
+ "estado": "propuesta",
+ "miguel": []
+}

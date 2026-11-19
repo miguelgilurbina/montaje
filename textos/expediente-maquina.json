@@ -1,0 +1,31 @@
+{
+ "nombre": "Expediente a máquina",
+ "familia": "titulos",
+ "frase": "Máquina de escribir gastada que se teclea letra a letra, alineada a la izquierda: archivo, documento, expediente.",
+ "para": [
+  "abrir",
+  "documental",
+  "archivo"
+ ],
+ "fuente": "Special Elite",
+ "tamano": 0.075,
+ "interlineado": 1.25,
+ "color": "#141414",
+ "lugar": "centro",
+ "alineado": "izquierda",
+ "ancho": 0.7,
+ "entrada": {
+  "tipo": "maquina",
+  "dura": 1.8
+ },
+ "salida": {
+  "tipo": "fundido",
+  "dura": 0.4
+ },
+ "ejemplo": {
+  "texto": "Expediente n.º 7\nLo que quedó en el archivo"
+ },
+ "fondo": "claro",
+ "estado": "propuesta",
+ "miguel": []
+}

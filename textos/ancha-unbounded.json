@@ -1,0 +1,38 @@
+{
+ "nombre": "Ancha de pantalla",
+ "familia": "titulos",
+ "frase": "Unbounded muy ancha y redonda, en mayúsculas espaciadas, que entra barriendo: moderna, de interfaz.",
+ "para": [
+  "abrir",
+  "redes",
+  "energía alta"
+ ],
+ "fuente": "Unbounded",
+ "peso": 800,
+ "tamano": 0.085,
+ "mayusculas": true,
+ "espaciado": 0.03,
+ "interlineado": 1.05,
+ "color": "#f3ead4",
+ "sombra": {
+  "color": "#000000b0",
+  "desenfoque": 0.28,
+  "y": 0.04
+ },
+ "lugar": "centro",
+ "ancho": 0.86,
+ "entrada": {
+  "tipo": "barrido",
+  "dura": 0.7
+ },
+ "salida": {
+  "tipo": "fundido",
+  "dura": 0.4
+ },
+ "ejemplo": {
+  "texto": "Laboratorio\nde la noche"
+ },
+ "fondo": "imagen",
+ "estado": "propuesta",
+ "miguel": []
+}

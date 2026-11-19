@@ -1,0 +1,40 @@
+{
+ "nombre": "Subtítulo con contorno",
+ "familia": "subtitulos",
+ "frase": "Sin caja: blanca con un borde negro fino. Tapa menos la imagen; pide fondos no muy cargados.",
+ "para": [
+  "subtítulos",
+  "voz en off",
+  "redes"
+ ],
+ "fuente": "Atkinson Hyperlegible Next",
+ "peso": 700,
+ "tamano": 0.044,
+ "interlineado": 1.25,
+ "color": "#ffffff",
+ "contorno": {
+  "color": "#000000",
+  "ancho": 0.07
+ },
+ "sombra": {
+  "color": "#00000080",
+  "desenfoque": 0.15,
+  "y": 0.04
+ },
+ "lugar": "abajo",
+ "ancho": 0.8,
+ "entrada": {
+  "tipo": "fundido",
+  "dura": 0.12
+ },
+ "salida": {
+  "tipo": "fundido",
+  "dura": 0.12
+ },
+ "ejemplo": {
+  "texto": "Así se ve un subtítulo de prueba,\nen dos filas como máximo."
+ },
+ "fondo": "imagen",
+ "estado": "propuesta",
+ "miguel": []
+}

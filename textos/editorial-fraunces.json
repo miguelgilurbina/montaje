@@ -1,0 +1,45 @@
+{
+ "nombre": "Editorial blanda",
+ "familia": "titulos",
+ "frase": "Fraunces en su tamaño de cartel, con los remates blandos y la rareza encendidas; debajo, un dato en mono espaciada.",
+ "para": [
+  "abrir",
+  "pieza de autor",
+  "calma"
+ ],
+ "fuente": "Fraunces",
+ "peso": 600,
+ "variacion": {
+  "SOFT": 100,
+  "WONK": 1,
+  "opsz": 144
+ },
+ "tamano": 0.16,
+ "interlineado": 1.0,
+ "color": "#eee6d4",
+ "lugar": "centro",
+ "ancho": 0.8,
+ "secundario": {
+  "fuente": "IBM Plex Mono",
+  "tamano": 0.028,
+  "mayusculas": true,
+  "espaciado": 0.22,
+  "color": "#7e93aa"
+ },
+ "entrada": {
+  "tipo": "desenfoque",
+  "dura": 1.1
+ },
+ "salida": {
+  "tipo": "fundido",
+  "dura": 0.6
+ },
+ "ejemplo": {
+  "texto": "La añoranza",
+  "secundario": "un video de Curiana Radio"
+ },
+ "fondo": "oscuro",
+ "origen": "direccion/PALETA.md: Fraunces es el arte editorial (Simulador, JAI Sounds)",
+ "estado": "propuesta",
+ "miguel": []
+}

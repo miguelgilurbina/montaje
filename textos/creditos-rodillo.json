@@ -1,0 +1,39 @@
+{
+ "nombre": "Créditos que suben",
+ "familia": "subtitulos",
+ "frase": "El rollo final: cada rol en mono espaciada de oro, cada nombre en letra legible debajo; sube de abajo hacia arriba.",
+ "para": [
+  "créditos",
+  "cierre"
+ ],
+ "fuente": "Atkinson Hyperlegible Next",
+ "peso": 600,
+ "tamano": 0.042,
+ "interlineado": 1.2,
+ "color": "#eee6d4",
+ "lugar": "centro",
+ "ancho": 0.7,
+ "rodillo": true,
+ "secundario": {
+  "fuente": "IBM Plex Mono",
+  "tamano": 0.026,
+  "mayusculas": true,
+  "espaciado": 0.18,
+  "color": "#e6b43c"
+ },
+ "entrada": {
+  "tipo": "ninguna",
+  "dura": 0.1
+ },
+ "salida": {
+  "tipo": "ninguna",
+  "dura": 0.1
+ },
+ "ejemplo": {
+  "texto": "Realización | Nombre Apellido\nMontaje | Nombre Apellido\nMúsica | composición original\nTipografías | libres (OFL y Apache 2.0)\n\nCuriana Radio · 2026"
+ },
+ "fondo": "oscuro",
+ "origen": "el rodillo del primer documental",
+ "estado": "propuesta",
+ "miguel": []
+}

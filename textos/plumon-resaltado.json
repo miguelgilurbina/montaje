@@ -1,0 +1,35 @@
+{
+ "nombre": "Resaltado con plumón",
+ "familia": "frases",
+ "frase": "Escrita a lápiz y subrayada con plumón amarillo, un poco torcida: una nota al margen que se volvió importante.",
+ "para": [
+  "frase clave",
+  "a mano",
+  "taller"
+ ],
+ "fuente": "Caveat",
+ "peso": 700,
+ "tamano": 0.11,
+ "interlineado": 1.05,
+ "color": "#141414",
+ "resaltado": {
+  "color": "#ffd84acc"
+ },
+ "giro": -2,
+ "lugar": "centro",
+ "ancho": 0.74,
+ "entrada": {
+  "tipo": "palabras",
+  "dura": 1.2
+ },
+ "salida": {
+  "tipo": "fundido",
+  "dura": 0.4
+ },
+ "ejemplo": {
+  "texto": "esto no estaba\nen el plan"
+ },
+ "fondo": "claro",
+ "estado": "propuesta",
+ "miguel": []
+}

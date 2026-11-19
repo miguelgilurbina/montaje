@@ -1,0 +1,31 @@
+{
+ "nombre": "Una palabra al golpe",
+ "familia": "frases",
+ "frase": "Una sola palabra enorme, en oro, que aparece y se va de corte: para cortar al pulso de la canción.",
+ "para": [
+  "golpe",
+  "pulso",
+  "energía alta"
+ ],
+ "fuente": "Anton",
+ "tamano": 0.3,
+ "mayusculas": true,
+ "interlineado": 0.9,
+ "color": "#e6b43c",
+ "lugar": "centro",
+ "ancho": 0.9,
+ "entrada": {
+  "tipo": "ninguna",
+  "dura": 0.1
+ },
+ "salida": {
+  "tipo": "ninguna",
+  "dura": 0.1
+ },
+ "ejemplo": {
+  "texto": "Ahora"
+ },
+ "fondo": "oscuro",
+ "estado": "propuesta",
+ "miguel": []
+}
