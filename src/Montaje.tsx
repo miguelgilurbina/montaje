@@ -11,6 +11,7 @@ import {
   staticFile,
   useCurrentFrame,
 } from 'remotion';
+import {Planos} from './Planos';
 import {CapaSintesis, escalaPelicula, filtroDe, golpeDeZoom, temblorDe} from './Sintesis';
 import type {Capa, CapaVideo, ClaveCamara, Eco, Momento, Pieza, Timeline} from './tipos';
 
@@ -53,6 +54,7 @@ export const Montaje: React.FC<Timeline> = (tl) => {
       {defs}
       {/* Sin temblor ni filtro el contenido va suelto, como siempre: un div con transform o filter cambiaría cómo se mezclan las capas. */}
       <Contenido temblor={temblor} filtro={filtro}>
+        {tl.planos?.length ? <Planos tl={tl} frame={frame} /> : null}
         {tl.collage && tl.camara?.length ? <CollageInfinito tl={tl} frame={frame} /> : null}
         {tl.cinta ? <CintaInfinita tl={tl} frame={frame} /> : null}
         {(tl.momentos ?? []).map((mo) =>

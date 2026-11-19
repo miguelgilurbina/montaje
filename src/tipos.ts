@@ -451,7 +451,7 @@ export type Timeline = {
   version: number;
   /** Prefijo de URL para los archivos de la biblioteca cuando lo dibuja el panel (no el render). */
   base?: string;
-  modo?: 'superposicion' | 'actos' | 'collage' | 'cinta' | 'secuencia' | 'pulso' | 'solo-sintesis';
+  modo?: 'superposicion' | 'actos' | 'collage' | 'cinta' | 'secuencia' | 'pulso' | 'solo-sintesis' | 'planos';
   proyecto: string;
   ancho: number;
   alto: number;
@@ -470,7 +470,138 @@ export type Timeline = {
   momentos?: Momento[];
   logo?: Logo;
   sintesis?: Sintesis[];
+  /** Modo planos: el video contado plano a plano, como un guion de documental (ver Planos.tsx). */
+  planos?: Plano[];
+  /** Textos que cruzan varios planos (los de una serie de fotos): en cuadros del video. */
+  textos?: TextoPlano[];
+  /** Los subtítulos de la voz, en cuadros del video (una o dos filas, separadas por \n). */
+  subtitulos?: {ini: number; fin: number; texto: string}[];
+  /** Las tipografías de fuentes/ que usan sus letreros (rutas dentro de fuentes/): el render las pone en la carpeta pública. */
+  fuentes?: string[];
   capas: Capa[];
+};
+
+/** Cómo entra un letrero: de a poco, subiendo, acercándose, enfocándose, letra a letra, palabra a palabra o barrido. */
+export type EntradaLetrero = 'fundido' | 'subir' | 'acercar' | 'desenfoque' | 'maquina' | 'palabras' | 'barrido' | 'ninguna';
+export type LugarLetrero = 'centro' | 'arriba' | 'abajo' | 'tercio-inferior' | 'arriba-izquierda' | 'abajo-izquierda' | 'abajo-derecha';
+
+/** Una línea de letra: la tipografía y su forma (los tamaños, en fracción del alto del cuadro; los espacios, en em). */
+export type LetraLetrero = {
+  /** Una familia de fuentes/fuentes.json (o del sistema, si no está ahí). */
+  fuente: string;
+  peso?: number;
+  cursiva?: boolean;
+  /** Ejes de la tipografía variable, p. ej. {SOFT: 100, WONK: 1} en Fraunces. */
+  variacion?: Record<string, number>;
+  tamano: number;
+  mayusculas?: boolean;
+  espaciado?: number;
+  interlineado?: number;
+  color: string;
+  /** Aprieta la letra a lo ancho (0,82 = el «type 3c» del cartel de Curiana: la compresión es la identidad). */
+  compresion?: number;
+};
+
+/**
+ * Un estilo de la galería de textos (textos/<id>.json), tal como lo dibuja Letrero.tsx: la letra, su
+ * contorno, sombra, caja o resaltado, dónde va y cómo entra y sale.
+ */
+export type EstiloTexto = LetraLetrero & {
+  id: string;
+  /** Borde de la letra (ancho en em), por detrás del relleno: la letra no adelgaza. */
+  contorno?: {color: string; ancho: number};
+  sombra?: {color: string; desenfoque: number; y?: number};
+  /** Una caja detrás de cada fila (relleno en em; el color puede traer transparencia, #000000b3); con `bloque`, una sola caja para todo el texto (un papel). */
+  caja?: {color: string; relleno: number; radio?: number; bloque?: boolean};
+  /** Plumón detrás de la parte baja de cada fila. */
+  resaltado?: {color: string};
+  /** Una barra vertical a la izquierda del bloque (ancho en em), como en los rótulos de noticiero. */
+  barra?: {color: string; ancho: number};
+  alineado?: 'izquierda' | 'centro' | 'derecha';
+  lugar: LugarLetrero;
+  /** Ancho máximo del bloque, en fracción del ancho del cuadro. */
+  ancho?: number;
+  /** El bloque, girado (grados): lo escrito a mano o pegado no queda derecho. */
+  giro?: number;
+  entrada?: {tipo: EntradaLetrero; dura: number};
+  salida?: {tipo: 'fundido' | 'bajar' | 'ninguna'; dura: number};
+  /** La segunda línea (el cargo bajo el nombre, el rol sobre el nombre en los créditos). */
+  secundario?: LetraLetrero & {arriba?: boolean};
+  /** Créditos que suben: cada fila del texto es una línea; «rol | nombre» pone el rol con la letra secundaria. */
+  rodillo?: boolean;
+};
+
+/**
+ * Un encuadre de la cámara sobre una imagen, en fracciones de la imagen: el centro (x, y) y el
+ * ancho que ocupa la pantalla. `null` = la imagen entera, sin recortar (contenida).
+ */
+export type Encuadre = [number, number, number] | null;
+
+/** Un rectángulo de la imagen en fracciones: [x0, y0, x1, y1]. */
+export type Zona = [number, number, number, number];
+
+export type EfectoPlano =
+  /** Todo en gris menos `zona` (una elipse inscrita en ella), desde `ini` (cuadros del plano). */
+  | {tipo: 'gris_fuera'; zona: Zona; ini: number; dura: number}
+  /** La imagen entera en gris. */
+  | {tipo: 'gris'; ini: number; dura: number}
+  /** Un marcador amarillo que barre `zona` de izquierda a derecha. */
+  | {tipo: 'resaltar'; zona: Zona; ini: number; dura: number; color?: string}
+  /** Una línea que tacha `zona`. */
+  | {tipo: 'tachar'; zona: Zona; ini: number; dura: number}
+  /** Islas que no están: contornos punteados con su pregunta, una tras otra. */
+  | {tipo: 'islas_fantasma'; islas: {x: number; y: number; ancho: number; texto: string}[]; ini: number; cada: number}
+  /** El contorno de una silueta humana, sin rasgos. */
+  | {tipo: 'silueta'; x: number; y: number; alto: number; ini: number; dura: number}
+  /** Una isla nueva, dibujada a mano: el trazo avanza y después se rellena. */
+  | {tipo: 'isla_nueva'; x: number; y: number; ancho: number; ini: number; dura: number; semilla?: number};
+
+export type TextoPlano = {
+  texto: string;
+  /** titulo: grande al centro · rotulo: abajo a la izquierda, como las etiquetas del mapa · cita: la fuente, abajo a la derecha · frase: al centro, en cursiva · aviso: lo que falta (sólo en un borrador). */
+  estilo: 'portada' | 'titulo' | 'rotulo' | 'cita' | 'frase' | 'aviso';
+  /** Cuadros desde el comienzo del plano. */
+  ini: number;
+  fin: number;
+  /** oscuro: letra oscura (sobre el mapa claro) · claro: letra clara (sobre fotos o negro). */
+  tono?: 'oscuro' | 'claro' | 'contorno';
+  /** arriba: arriba a la izquierda (sobre un video que ya trae subtítulos abajo y su logo arriba a la derecha). */
+  lugar?: 'arriba';
+  /** Un estilo de la galería de textos, ya resuelto por planificar (con él, `estilo`, `tono` y `lugar` no cuentan). */
+  letrero?: EstiloTexto;
+  /** La segunda línea del letrero (el cargo, la fecha, el rol). */
+  secundario?: string;
+};
+
+export type Plano = {
+  id: string;
+  /** El número del plano en el guion. */
+  n: number | string;
+  ini: number;
+  fin: number;
+  /** Cuadros del fundido de entrada (0 = corte). El plano anterior sigue debajo hasta que éste termina de entrar. */
+  entrada: number;
+  /** La imagen (o el clip, con `video`); sin imagen, un fondo liso de `color`. */
+  img?: string;
+  fuente?: [number, number];
+  color?: string;
+  video?: {desde: number; volumen?: number};
+  /** Un velo negro encima de la imagen (0 a 1): para que un título se lea sobre un video. */
+  velo?: number;
+  /**
+   * Cómo entra sobre el plano anterior, en sus `entrada` cuadros (sin esto, fundido): las mismas transiciones de la
+   * galería que en `pulso` (cortina, iris, empuje, destello, zoom). `dir`: hacia dónde avanza; `centro`: el del iris,
+   * en fracciones de la pantalla.
+   */
+  transicion?: {tipo: 'cortina' | 'iris' | 'empuje' | 'destello' | 'zoom'; dir: [number, number]; centro?: [number, number]};
+  /** En sus últimos `cuadros`, el plano que entra con empuje lo corre hacia `dir` hasta sacarlo. */
+  empujada?: {cuadros: number; dir: [number, number]};
+  /** La cámara: encuadres en cuadros del plano; entre uno y otro se mueve suave. */
+  camara: {t: number; e: Encuadre}[];
+  efectos?: EfectoPlano[];
+  textos?: TextoPlano[];
+  /** Créditos que suben de abajo hacia arriba durante todo el plano. */
+  rodillo?: string[];
 };
 
 export const TIMELINE_VACIO: Timeline = {
