@@ -66,6 +66,29 @@ un estilo, y el disco no se llena con ejercicios.
 Los estilos de los experimentos 01 a 11 no tienen muestra porque sus renders ya
 se borraron; se corta la suya del próximo render que los use.
 
+## El probador: el mismo banco para todos (2026-11-10)
+
+Las muestras de arriba salieron de renders distintos, con otro material y otra canción:
+no se comparan una al lado de la otra. Por eso Miguel eligió el **probador**: un banco fijo
+(`proyectos/probador/proyecto.json`; hoy, ocho clips, cuatro fotos y 8 compases de La Añoranza)
+donde cada estilo hace **otra** muestra, en `~/Videos/montaje/estilos/probador/<id>.mp4`.
+
+```
+python montaje.py probar --armar          # el banco
+python montaje.py probar --todos          # la galería entera (lo que no cambió no se redibuja)
+python montaje.py probar transicion-iris  # uno
+```
+
+En la galería cada tarjeta muestra las dos («en el probador» y «en su video») y una línea
+con lo que dijo el probador: cuánto tarda en dibujarse contra el banco solo, si se parece
+a su referencia y cuántas veces lo eligió Miguel entre dos. Las de un estilo que el banco
+todavía no sabe probar dicen por qué. **Elegir entre dos** (`/estilos/comparar`) pone dos
+de la misma familia lado a lado, sincronizados, y anota la elección en
+`direccion/COMPARACIONES.json`.
+
+El probador prueba **la receta**: si una muestra del probador no se parece a la de su
+video, a la receta le falta algo que el video tenía, y conviene escribirlo en `tecnica`.
+
 ## El guion, en palabras
 
 Miguel escribe el guion como un guion normal, en `proyectos/<p>/GUION.md`:

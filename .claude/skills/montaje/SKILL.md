@@ -22,6 +22,10 @@ archivo (o lo pide en el chat) y lo ve en el Studio.
 | Salidas | `~/Videos/montaje/NN-nombre/` (`analisis/musica.json render/ hojas/`) | propias de cada experimento: ninguno pisa a otro |
 | Estilos | `montaje/estilos/<id>.json` (receta, uso, veredicto) | el catálogo para elegir según el guion: va a git |
 | Muestras de estilos | `~/Videos/montaje/estilos/<id>.mp4` (segundos livianos) | lo que queda de un ejercicio cuando se borran sus salidas; **no van al repo** (es público) |
+| El probador | `montaje/proyectos/probador/proyecto.json` (el banco: clips, fotos, tramo de canción, textos) y su biblioteca `~/Videos/montaje/probador/` (vínculos duros a la de práctica) | el mismo material para todos los estilos; no es un experimento |
+| Muestras del probador | `~/Videos/montaje/estilos/probador/` (`<id>.mp4`, `ref/<id>-<n>.png`, `registro.json`) | comparables entre sí; **no van al repo** |
+| Elecciones entre dos | `montaje/direccion/COMPARACIONES.json` | lo que eligió Miguel: va a git |
+| Galería de textos | `montaje/textos/<id>.json` (letreros) y `montaje/fuentes/` (tipografías libres con su licencia, registro en `fuentes.json`) | va a git; sin muestras: el panel las dibuja en vivo (`/textos`) |
 | Esta skill | `~/.claude/skills/montaje/` | disponible desde cualquier proyecto |
 
 ## Dirección: leerla antes de empezar
@@ -96,6 +100,31 @@ Todo comando se corre desde la raíz del repo: `python montaje.py <comando> <pro
   números, palabras (`transicion=cortina,iris,empuje`) o sí/no. Los timelines de un
   barrido viven en las salidas (`barridos/`), no en el repo. Es la forma de afinar
   un valor con Miguel: se le manda el video y elige una celda.
+- **El probador** (`probar`, desde el 2026-11-10): cada estilo hace su muestra en **el
+  mismo banco**: los mismos clips, las mismas fotos y el mismo tramo de canción (hoy, ocho
+  clips, cuatro fotos y 8 compases de La Añoranza, de la calma a la banda; lo dice `banco` en
+  `proyectos/probador/proyecto.json`). Todas las muestras
+  empiezan con el mismo clip y suenan igual: se comparan de verdad, hasta lado a lado.
+  `probar --armar` arma el banco (vínculos a la biblioteca de práctica; el análisis de la
+  canción es el de la canción entera, cortado: no correr `analizar` sobre el probador);
+  `probar <id> …` o `probar --todos` lo corre (lo que no cambió no se vuelve a dibujar);
+  `--rehacer` dibuja de nuevo aunque esté guardado; `--fijar` acepta los cuadros de ahora
+  como referencia. Se prueba **la receta tal como está escrita** en `estilos/<id>.json`, la
+  misma que usa `guion`: si la muestra del probador no se parece a la de su video, a la
+  receta le falta algo. Lo que la receta sólo dice en palabras (`con`: «tinta rubrica/hueso
+  0.35») sale de la versión del experimento que hizo su muestra; los textos (título,
+  rótulos, crédito), del banco, nunca los de Miguel. Deja la muestra, tres **cuadros de
+  referencia** y, en `registro.json`, cuánto tardó en dibujarse (y cuántas veces lo que
+  tarda el banco solo, `toma-por-frase`), cuánto se parece a su referencia y por qué no se
+  probó. Una misma medida varía hasta un tercio de una vez a otra: vale la menor con el
+  mismo código, y una diferencia de menos de un tercio entre dos estilos es ruido. Todavía no prueba los modos de fotos (collage, secuencia, cinta, actos,
+  superposición), los momentos ni los comandos que van sobre un render terminado.
+- **Elegir entre dos** (`/estilos/comparar` en el panel): dos estilos de la misma familia
+  (transiciones, efectos de tiempo, filtros y texturas, textos y gráficos, formatos,
+  montajes), sincronizados en el probador, y una pregunta: ¿cuál? Con un clic o con las
+  flechas (← → y ↓ para iguales). Queda en `direccion/COMPARACIONES.json`
+  (`python montaje.py comparar <a> <b> --gana <a|b|igual>` hace lo mismo desde el chat);
+  `guion` desempata entre dos igual de buenos con lo que Miguel eligió más veces.
 - **`recorrido [--en <experimento>] [--estado …]`** junta unos segundos de cada
   muestra, con su nombre, en un video de menos de 28 MB para mandar por chat.
 - **El veredicto se da en la galería** (`/estilos`): «sí», «a medias», «no» y unas
@@ -117,6 +146,11 @@ Todo comando se corre desde la raíz del repo: `python montaje.py <comando> <pro
   y «a medias» sin una palabra de Miguel → `direccion/APRENDIDO.md`.
 - `python montaje.py estilos` valida el catálogo (vocabulario cerrado, experimentos
   que existen, veredictos con cita) y lo lista; la galería está en `/estilos` del panel.
+- **La galería de textos** (`textos/`, ver `textos/README.md`): letreros con nombre para títulos,
+  frases, rótulos, subtítulos y créditos, con tipografías libres del repo (`fuentes/`). Se ven en
+  vivo en `/textos` (texto propio, fondo y «quietas»), el veredicto se da ahí y `planos` los usa
+  con `"letrero": "<id>"`. `python montaje.py textos` los valida. Una tipografía nueva se baja sólo
+  con el ok de Miguel y entra con su licencia y su línea en `fuentes/fuentes.json`.
 
 ## El flujo
 
@@ -280,7 +314,8 @@ a `<biblioteca>/cantera-<serie>/` («03-…», y las tomas `T3-02 …` tal cual)
    temporal, cámara lenta suave, reversa, boomerang); la fuerza va en segundos, así
    vale igual a 24 que a 72 cps. Para usarlos: `"clips": ["clips", "transformados"]`,
    `clips <p>` y `"transformados": "calma"` (o `"todo"`) en el montaje: cada clip usa
-   su variante en vez del original. Sin eso, los transformados no entran.
+   su variante en vez del original. Con el nombre de un efecto (`"transformados": "eco"`),
+   siempre y sólo esa variante. Sin eso, los transformados no entran.
 6. **Cámara lenta sin trabas:** `"clips_interpolar": 3` pide cuadros inventados
    (`minterpolate`): con 24 cps de origen, a 72. Hace falta cuando los clips son más
    cortos que la canción (en el 15 iban a 0,33×: con 48 cps se repetía uno de cada
@@ -304,7 +339,8 @@ a `<biblioteca>/cantera-<serie>/` («03-…», y las tomas `T3-02 …` tal cual)
    entre clips: `fundido`, `cortina` (un borde blando que barre), `iris` (se abre
    desde el centro de interés del clip que llega), `empuje` (lo corre), `destello`
    (un fogonazo que tapa el cambio), `zoom` (llega desde cerca), `persiana`, o
-   `ronda` (todas, una por cambio); `transicion_dir`: `derecha`, `izquierda`,
+   `ronda` (una por cambio, todas menos las que Miguel rechazó en la galería: la persiana
+   salió de la ronda el 2026-11-10; pedida por su nombre sigue andando); `transicion_dir`: `derecha`, `izquierda`,
    `arriba`, `abajo` o `alterna`. El primer clip siempre sale del negro. Para juzgar
    una transición la hoja tiene que ir cuadro a cuadro (`hoja --cada 0.0834`): a un
    cuadro por segundo no se ve.
@@ -425,6 +461,24 @@ integrado a `http://localhost:3310` con el panel ya corriendo. Ambos recargan so
   aparecen **ecos** (copias de la pared, escaladas, giradas y desfasadas en el
   tiempo: montaje sobre montaje); la **coda** se aleja hasta mostrar el archivo
   entero. Una sola curva, `caos(t)` (avance × energía), gobierna todo.
+- **`planos`** (`py/montaje/planos.py`, `src/Planos.tsx`) — **para un guion con voz en off**,
+  como un documental (nació el 2026-11-17 con el primer documental). `planos` en
+  proyecto.json es la lista de tomas: cada plano dura lo suyo, lleva una imagen o un clip
+  (sólo su tramo, del tamaño que pide su encuadre) o un fondo liso, y una `camara` de
+  encuadres `[cx, cy, ancho]` en fracciones de la imagen (`null` = entera). Encima,
+  `efectos` en coordenadas de la imagen (`gris`, `gris_fuera`, `resaltar`, `tachar`,
+  `islas_fantasma`, `silueta`, `isla_nueva`) y `textos` en pantalla: los estilos propios
+  (`portada`, `titulo`, `rotulo`, `cita`, `frase`) o un `letrero` de la galería de textos.
+  `imgs` hace una serie dentro del plano; `transicion` usa las de la galería (cortina,
+  iris, empuje, destello, zoom); `rodillo`, los créditos. El sonido se mezcla en Python
+  en una pista: la `voz` de cada plano (`{archivo, desde}`), la música bajo la voz y el
+  sonido de los clips con `volumen` (las cuñas). Los subtítulos salen de la transcripción
+  de cada voz (`subtitulos.correcciones` para lo que Whisper entendió mal) y quedan
+  también en `subtitulos.srt`, para que quien habla los revise **antes** del render.
+  La voz se prepara con `limpiar-voz` (ruidos de boca, arranques que suben de golpe) y
+  se acorta con `voz.editar` (cortes, pausas, velocidad): devuelve el mapa de tiempos
+  con el que se reacomodan los planos del tramo (D2 en PROPUESTAS: falta el comando).
+  Renderizar en calidad final el tramo más pesado apenas esté armado (D4).
 
 ## Vocabulario
 
@@ -480,6 +534,13 @@ Si una versión que no tenía que cambiar aparece en la lista, el arreglo está 
 cambia el plan de una versión cuya muestra está en la galería, la muestra se rehace
 con su mismo tramo y sus mismos segundos (están en `muestra` del estilo).
 
+**La otra mitad, los cuadros:** un cambio en el dibujo (`src/`, React) no cambia el plan.
+`probar --todos` dibuja cada estilo en el banco y compara tres cuadros con su referencia
+(SSIM, 1 = idéntico; desde 0,98 es «igual»). Lo que el código no tocó sale del caché de
+pedazos y da 1. Si dice **CAMBIÓ**, se mira la muestra: si el cambio era el buscado,
+`probar <id> --fijar`; si no, el arreglo está mal. Si cambia la receta de un estilo, su
+referencia se renueva sola (eso no es un cambio del motor).
+
 Una segunda mirada independiente al código (un agente que sólo lee y prueba, sin
 tocar nada) encontró quince defectos en la tanda de la noche y nueve en la de la
 mañana que las hojas no mostraban: vale la pena después de cada tanda larga.
@@ -517,9 +578,9 @@ clips a la vez y que a cada clip que entra empujando le corresponda uno que sale
 La lista larga, con lo que cuesta cada cosa y lo que necesita de Miguel, está en
 `PROPUESTAS.md`. Lo primero:
 
-- Voz en off completa: `transcribir` ya da el segundo de cada palabra y la capa `rotulos`
-  ya los acepta; falta alinear el texto del guion con esos tiempos (los subtítulos salen
-  del guion, no de lo que Whisper oye) y mezclar la voz con la canción.
+- Voz en off: hecha en el modo `planos` (2026-11-17). Falta comprobar la voz limpia
+  palabra por palabra (D1) y el reacomodo como comando (D2); y en `pulso`, que los
+  rótulos usen los letreros de la galería de textos.
 - Ambientes que sigan a las familias de imágenes (agua, desierto, ojos…) según
   sus descripciones, y una firma sonora propia de Curiana Radio.
 - Reescalado con IA (Real-ESRGAN) si las imágenes se ven blandas a 1080p.

@@ -16,23 +16,68 @@ el recomendado.
 |---|---|---|---|
 | E0 | **Juzgar la galería.** Hay 58 propuestas sin veredicto. `guion` ya arma un primer montaje con el primer estilo que sirve en cada tramo y prefiere lo aprobado: hoy elige casi a ciegas. | Cada «sí» o «no» mejora lo que el motor propone solo. | Media hora de Miguel en `/estilos` (o el recorrido en el teléfono y dictar). |
 | E1 | **Hecho en parte el 2026-11-09:** `aprender` y `direccion/LECCIONES.json` (lo que Miguel dice, con cita, entra solo al primer armado de `guion`). Falta lo que no se sabe todavía: el porqué de los «no». **Leer los veredictos como datos.** Con la galería juzgada, un comando que compare las recetas aprobadas contra las rechazadas, perilla por perilla (largo de frase, fundidos, velocidad, capas), y diga lo que se repite: «lo que aprobaste va lento y con fundidos de dos golpes o más». | El criterio de Miguel deja de estar sólo en su cabeza y en las citas: los valores por defecto y el esqueleto del guion se inclinan hacia lo que eligió. | Los veredictos (ahora se dan con un clic en `/estilos`). Con menos de unos veinte, lo que salga es una pista, no una regla. |
-| E2 | **Elegir entre dos.** En la galería, dos muestras lado a lado y una sola pregunta: ¿cuál? De muchas comparaciones sale un orden. | Juzgar sesenta tarjetas una por una cansa; comparar de a dos es rápido y da más información que sí/no. | Nada. Una tarde de trabajo en el panel. |
+| E2 | ~~Elegir entre dos.~~ **Hecho el 2026-11-10** sobre el probador: `/estilos/comparar` pone dos de la misma familia lado a lado, sincronizados, y anota la elección en `direccion/COMPARACIONES.json`; `guion` desempata con eso. Falta que Miguel elija: con pocas elecciones el orden es una pista. | Juzgar sesenta tarjetas una por una cansa; comparar de a dos es rápido y da más información que sí/no. | Unos minutos de Miguel en el panel. |
 | E3 | ~~Barrer una perilla.~~ **Hecho el mismo 2026-11-09:** `ejercicio --barrer fundido_golpes=0.5,1,2,4` deja las variantes lado a lado, sincronizadas, en un video. | Afinar un valor mirando, sin escribir cuatro versiones a mano. Es la forma natural de un ejercicio: «¿cuánto fundido?». | Que Miguel elija la celda. |
-| E4 | **Lo aprobado no se rompe.** La mitad ya está (2026-11-09): `py/pruebas/planes.py` planifica todas las versiones fuera del repo y dice cuáles cambian con un cambio al motor. Falta la otra mitad: guardar unos cuadros de referencia de cada estilo aprobado y compararlos, para lo que cambia en el dibujo (React) y no en el plan. | Un cambio al motor no altera un estilo aprobado sin que nadie lo note. | Nada; unos MB de cuadros en los medios. |
+| E4 | ~~Lo aprobado no se rompe.~~ **Hecho:** el plan, con `py/pruebas/planes.py` (2026-11-09); el dibujo, con los cuadros de referencia del probador (2026-11-10): `probar --todos` compara tres cuadros de cada estilo con los suyos. | Un cambio al motor no altera un estilo aprobado sin que nadie lo note. | Nada. |
 | E5 | **El ejercicio desde el panel.** El botón que corre la vuelta ya está (2026-11-09) y muestra la salida con las medidas; falta que el panel muestre las versiones y sus hojas una al lado de la otra. | Miguel puede lanzar y mirar un ejercicio sin Claude. | Nada. |
+
+## Las galerías de efectos, transiciones y filtros (2026-11-10)
+
+Miguel preguntó «cómo podríamos seguir optimizando y expandiendo nuestras galerías de
+efectos, transiciones y filtros» y eligió **el probador** (hecho, ver E2 y E4) y **sacar la
+persiana de la ronda** (hecho: la ronda salta lo rechazado). Lo que se midió ese día: de los
+estilos de la galería, casi todos se vieron en un solo experimento; las transiciones existen
+sólo en `pulso`; para la calma sólo hay fundido; sus «a medias» de la cinta («está bueno pero
+como transición») y de la doble exposición («igual en todos lados») apuntan a usarlas como
+paso entre escenas. Lo que quedó para después, en el orden en que se propuso:
+
+| # | Qué | Qué da | Qué necesita |
+|---|---|---|---|
+| G1 | **Transiciones en todo.** En los modos de fotos (collage, secuencia, cinta) y entre tramos, no sólo entre clips de `pulso`. Nuevas: la cinta que pasa y agranda la imagen siguiente (idea de Miguel), la doble exposición pasajera, el fundido por luz (lo claro de la imagen nueva aparece primero) y el desenfoque que cruza, para la calma; el quemado de película para la familia del recuerdo; el barrido para la energía alta. | La calma deja de tener una sola forma de cambiar de imagen, y las fotos de la galería de Curiana tienen las mismas transiciones que los clips. | Nada; se prueban en el probador. |
+| G2 | **Filtros con LUT.** El formato estándar de corrección de color (`.cube`); este ffmpeg ya trae `lut3d`. Se pueden escribir en código desde la paleta (`direccion/PALETA.md`), sin bajar nada. Junto con S3 (igualar el color entre clips). | Tintas más finas que el duotono, y cualquier corrección hecha en otro editor entra al motor. | Nada (una LUT de afuera, con su ok). |
+| G3 | **Efectos de tiempo.** Congelar la imagen en el golpe, repetir unos cuadros en el golpe, el paso de cuadro (verse a 12 cuadros por segundo, como película vieja). Este ffmpeg trae `framestep` y `tblend`. | Más gestos al pulso sin cortar, y uno de película vieja que va con el recuerdo. | Nada. |
+| G4 | **Lo que choca, para el motor.** Hoy los `evitar` lo dicen en prosa (el empuje sobre fantasmas, las manchas sobre rótulos chicos). Escrito como dato, `guion` avisa cuando un armado los junta. | El primer armado no propone combinaciones que ya se vio que no funcionan. | Nada. |
+| G5 | **El probador con fotos de verdad.** El banco prueba sobre clips; sus fotos son fotogramas. Con unas fotos de la galería de Curiana y su catálogo de imágenes, entran los modos de fotos (collage, secuencia, cinta, actos, superposición) y los momentos. | Los estilos de fotos se comparan como los de clips. | Unas fotos de la galería de Curiana. |
+
+## Lo que dejó el primer documental (2026-11-17)
+
+Un video de cinco minutos con voz en off, contado plano a plano desde un guion ajeno (proyecto privado: su carpeta
+no entra al repo). Salió en pocos días y quedó bien; nacieron el modo `planos` y `py/montaje/voz.py`. Lo que
+funcionó: el guion como lista de planos; cada plano colgado de las palabras de la transcripción, de modo que
+regrabar una voz entera o acelerarla reacomoda todo solo; revisar en el panel y renderizar sólo al final. Lo que
+haría distinto, como propuestas:
+
+| # | Qué | Qué da | Qué necesita |
+|---|---|---|---|
+| D1 | **Comprobar la voz limpia.** Volver a transcribir la voz después de `limpiar-voz` y `editar` y compararla palabra por palabra con la original: avisa si una palabra perdió una sílaba (pasó: la compuerta se comió el arranque de una palabra y lo encontró el oído de Miguel, no las medidas). | Lo que hoy depende de escuchar entero, el motor lo señala con el segundo exacto. | Nada. |
+| D2 | **El reacomodo como comando.** `voz.editar` ya devuelve el mapa de tiempos (viejo → nuevo); el reacomodo de los planos de cada tramo (duración, cámara, efectos, textos, series) vivió en un script del proyecto. Como comando, cortar una frase o cambiar la velocidad es una línea en `proyecto.json`. | El límite de duración se ajusta sin escribir código. | Nada. |
+| D3 | **Las mezclas viejas se borran.** Cada mezcla lleva su huella y ninguna se borraba: en una semana se juntaron 19 de cinco minutos (1,8 GB). `planificar` debería dejar sólo la mezcla y los derivados que el timeline usa; Remotion, además, deja una carpeta de temporales por render en `%TEMP%`. | El disco no se llena con versiones que nadie va a abrir. | Nada. |
+| D4 | **El final, probado el primer día.** El render final se cayó dos veces al terminar: buscaba un catálogo de clips que el modo no tiene, y dos planos del mismo video 4K que se cruzaban pasaron la espera del compositor. Ya arreglado (los planos de video usan sólo su tramo, del tamaño que pide su encuadre); la lección es renderizar en calidad final el tramo más pesado apenas esté armado. | Las sorpresas salen al principio y no la noche de la entrega. | Nada. |
+| D5 | **Los subtítulos a quien habla, antes del render.** `planificar` ya escribe el `.srt`: mandarlo a revisar apenas está la voz, porque una palabra dudosa termina incrustada. | Los subtítulos los corrige quien sabe qué dijo. | Que el autor lea el `.srt`. |
+
+## La galería de textos (2026-11-17)
+
+Miguel: «hacer una galería de textos con fonts, con estilos, de forma que tengamos algo base propio para la galería,
+para usar como de repente como títulos». En el documental se inventaron cinco estilos sobre la marcha (portada, frase
+blanca con borde negro, cita, rótulo, subtítulo en caja) y quedaron enterrados en el código.
+
+| # | Qué | Qué da | Qué necesita |
+|---|---|---|---|
+| T1 | ~~Tipografías libres dentro del repo.~~ **Hecho el 2026-11-17** (elección de Miguel, con su ok para la descarga): once familias en `fuentes/` con su licencia, registradas en `fuentes/fuentes.json`; incluye las de la marca (S8). | Lo que se escribe en un video deja de depender de qué hay instalado. | — |
+| T2 | ~~Cada texto, una receta.~~ **Hecho el mismo día:** `textos/<id>.json` (ver `textos/README.md`), 23 letreros en cuatro familias, en vivo en `/textos` del panel con el veredicto ahí mismo; `planos` los usa con `"letrero"`. Falta: los veredictos, y que `pulso` y los `rotulos` también los usen. | Los textos se piden por nombre. | Los veredictos de Miguel. |
 
 ## Sintetización: lo que el motor todavía no sabe
 
 | # | Qué | Qué da | Qué necesita |
 |---|---|---|---|
-| S1 | **Voz en off y subtítulos.** El oído ya está (2026-11-09): `transcribir` da el segundo de cada palabra y los `rotulos` lo aceptan. Falta alinear el texto del guion con esos tiempos y mezclar la voz con la canción. | El primer video con la voz de Miguel. Es lo que más cambia lo que el motor puede hacer. | Una grabación de prueba de Miguel. |
+| S1 | ~~Voz en off y subtítulos.~~ **Hecho el 2026-11-17** con el primer documental (ver abajo): el modo `planos`, `limpiar-voz`, `voz.editar` y los subtítulos desde la transcripción. Falta el video con la voz de Miguel. | Es lo que más cambió lo que el motor puede hacer. | — |
 | S2 | ~~Fotos y clips en el mismo montaje.~~ **Hecho el mismo 2026-11-09** (`"fotos"` + `mezclar_fotos`; ver la ficha del 21). Falta probarlo con fotos de verdad: en la práctica sólo había fotogramas de los mismos clips. | El material real de Curiana es mixto: la galería de imágenes más lo que Miguel graba. | Un puñado de fotos de la galería junto a los clips. |
 | S3 | **Igualar el color entre clips.** Llevar todos los clips hacia uno de referencia (o hacia la paleta), antes de montar. | Veinte clips de días y luces distintas se ven como una sola película. | Elegir el clip de referencia. Sin descargas (este ffmpeg ya trae lo necesario). |
 | S4 | **Cortar en el movimiento.** Elegir el punto de corte donde lo que se mueve en el clip que se va y en el que llega van hacia el mismo lado o están en el mismo lugar del cuadro (ya se mide el centro de interés y el movimiento de cada clip). | El corte se siente continuo en vez de casual: es lo que distingue un montaje de una sucesión. | Nada. Hay que probarlo con clips que tengan movimiento claro. |
 | S5 | **Saber dónde hay una cara.** El recorte a vertical hoy sigue «lo que se mueve y tiene detalle»; con un detector de caras y personas, sigue a la persona y nunca la corta, y los rótulos no caen encima. | Los verticales para redes salen bien sin mirar clip por clip. | **Descarga con ok:** un detector liviano (decenas de MB). |
 | S6 | **Estabilizar lo que tiembla.** Este ffmpeg ya trae `vidstab`. Los clips que pasen de un umbral de temblor se estabilizan al hacer la copia de trabajo. | Los clips del teléfono caminando dejan de marear en cámara lenta. | Clips que tiemblen: los veinte de la práctica casi no tiemblan (medido), así que no hay con qué probarlo. |
 | S7 | **El sonido de los clips.** Dejar el mar o el viento del clip por debajo de la canción, bajando cuando la canción sube. | El video respira: no es sólo imagen con música encima. | Clips con sonido que valga. Claude no oye: los niveles se miden y el oído es de Miguel. |
-| S8 | **Las letras de la marca.** Archivo Black y Lora no están instaladas; títulos y rótulos salen con reemplazos (Bahnschrift, Georgia). | Los textos se ven como Curiana. | **Descarga con ok:** las dos fuentes de Google Fonts (licencia abierta, menos de 1 MB). |
+| S8 | **Las letras de la marca.** Archivo Black y Lora no están instaladas; títulos y rótulos salen con reemplazos (Bahnschrift, Georgia). Pasa a la galería de textos (T1): las dos van en ese juego. | Los textos se ven como Curiana. | Ver T1. |
 | S9 | **Zonas seguras por red.** Mostrar en el panel dónde Instagram y TikTok tapan el cuadro (nombre, botones, descripción) y avisar si un rótulo o un sujeto cae ahí. | Lo que se publica no queda tapado por la interfaz de la red. | Nada. |
 
 ## Lo que quedó anotado de las revisiones del motor
@@ -71,4 +116,4 @@ un modo menos fino, dibujar 16 cuadros a la vez y bajar a un tercio de resoluci�
 
 1. **Los veredictos** de la galería (lo hace Miguel, con el clic): sin eso E1 no tiene datos y el motor sigue eligiendo a ciegas entre propuestas.
 2. **Un ejercicio con material mixto de verdad** (clips de Miguel más fotos de la galería): S2 ya está hecho y sólo se probó con fotogramas.
-3. **S1, la voz:** es el cambio más grande; necesita el sí para la descarga y una grabación.
+3. **La galería de textos** (T1, T2): lo que Miguel pidió después del primer documental.

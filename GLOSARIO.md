@@ -164,3 +164,13 @@ con cámara virtual; **«más caótico»** = la curva de caos. **«reel rápido 
 | acercamiento lento de una foto | Ken Burns effect | la foto se acerca (o se aleja) y se desliza mientras está en pantalla | `zoom_foto` |
 | revisar | QC (quality control) | medir un render: negro, cuadros repetidos, destellos, sonoridad | `python montaje.py revisar` |
 | destellos por segundo | flash rate | fogonazos en un segundo; más de tres no se publica | lo cuenta `revisar` |
+
+## Lo del probador (2026-11-10)
+
+| En español | En inglés | Qué es | Dónde se mueve |
+|---|---|---|---|
+| probador, banco de pruebas | test bench | el mismo material para todos los estilos, para que las muestras se comparen | `python montaje.py probar` |
+| cuadro de referencia | golden frame, reference frame | un cuadro guardado con el que se compara el de mañana para saber si algo cambió | `ref/` del probador |
+| parecido (SSIM) | structural similarity | cuánto se parecen dos imágenes en forma y luz, de 0 a 1 | lo mide `probar` |
+| elegir entre dos | pairwise comparison, A/B | mostrar dos y preguntar cuál; de muchas elecciones sale un orden | `/estilos/comparar` |
+| prueba de regresión visual | visual regression test | volver a dibujar lo aprobado y comparar, para que un cambio no lo rompa sin aviso | `probar --todos` |
