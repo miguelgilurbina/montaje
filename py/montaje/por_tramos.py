@@ -18,6 +18,7 @@ import json
 import math
 import shutil
 import subprocess
+import time
 from pathlib import Path
 
 from .rutas import RAIZ, Proyecto
@@ -108,6 +109,11 @@ def _coser(p: Proyecto, tl: dict, piezas: list[Path], destino: Path) -> None:
     lista.unlink()
 
 
+#: Lo que midió el último `renderizar`: cuántos pedazos dibujó y cuánto tardó en prepararlos y en dibujarlos
+#: (el probador lo usa para saber cuánto cuesta cada estilo, sin la preparación, que es igual para todos).
+medidas: dict = {}
+
+
 def renderizar(p: Proyecto, tl: dict, destino: Path, publico: Path, remotion: str, ajustes: list[str]) -> None:
     """El preview entero: dibuja los pedazos que no estén guardados y los cose en `destino`."""
     guardados = p.salida("render", ".tramos", "x").parent
@@ -125,7 +131,9 @@ def renderizar(p: Proyecto, tl: dict, destino: Path, publico: Path, remotion: st
         # Una sola preparación para todos: por pedazo costaría varios segundos cada uno.
         paquete = p.salida("render", ".paquete", "x").parent
         shutil.rmtree(paquete, ignore_errors=True)
+        t0 = time.time()
         subprocess.run([remotion, "bundle", "src/index.ts", f"--out-dir={paquete}", f"--public-dir={publico}", "--log=error"], cwd=RAIZ, check=True)
+        t1 = time.time()
         for k, (a, b, f) in enumerate(faltan, 1):
             print(f"  dibujando {k}/{len(faltan)}: {a / tl['fps']:.1f}–{b / tl['fps']:.1f} s", flush=True)
             temporal = f.with_suffix(".tmp.mp4")
@@ -136,5 +144,7 @@ def renderizar(p: Proyecto, tl: dict, destino: Path, publico: Path, remotion: st
                 print("  (falló; una vez más)", flush=True)
                 subprocess.run(orden, cwd=RAIZ, check=True)
             temporal.replace(f)
+        medidas.update(paquete_s=round(t1 - t0, 1), dibujo_s=round(time.time() - t1, 1))
         shutil.rmtree(paquete, ignore_errors=True)
+    medidas["dibujados"] = len(faltan)
     _coser(p, tl, piezas, destino)

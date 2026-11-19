@@ -25,7 +25,7 @@ def _base_remotion(p: Proyecto) -> list[str]:
     if not p.timeline.exists():
         salir("falta el timeline; corre primero: python montaje.py planificar " + p.nombre)
     tl = leer_json(p.timeline)
-    if any("video" in c for c in tl.get("capas", [])) or tl.get("sintesis"):
+    if any("video" in c for c in [*tl.get("capas", []), *tl.get("planos", [])]) or tl.get("sintesis") or tl.get("fuentes"):
         return [f"--props={p.timeline}", f"--public-dir={_publico(p, tl)}",
                 # Los clips: sin tope, la caché de cuadros del compositor crece hasta quedarse sin memoria.
                 "--offthreadvideo-cache-size-in-bytes=1500000000"]
@@ -73,6 +73,15 @@ def _publico(p: Proyecto, tl: dict) -> Path:
             os.link(p.medios / r, enlace)
         except OSError:  # otra unidad: no queda más que copiar
             shutil.copy2(p.medios / r, enlace)
+    # Las tipografías de los letreros viven en el repo (fuentes/), no en la biblioteca: Letrero.tsx las pide a la carpeta pública.
+    for f in tl.get("fuentes", []):
+        origen = RAIZ / "fuentes" / f
+        if not origen.is_file():
+            salir(f"falta la tipografía fuentes/{f}")
+        enlace = destino / "fuentes" / f
+        enlace.parent.mkdir(parents=True, exist_ok=True)
+        # Copia y no vínculo: el repo vive en OneDrive, que no se lleva bien con vínculos duros a sus archivos. Pesan poco.
+        shutil.copy2(origen, enlace)
     # La copia interpolada que todavía no existe: con su mismo nombre, el borrador. El timeline no se entera.
     for r in sorted(_faltantes):
         enlace = destino / r
@@ -472,9 +481,14 @@ def main() -> None:
     s.add_argument("--hasta", type=float, required=True)
     s.add_argument("--alto", type=int, default=540, help="alto en píxeles (no agranda)")
 
-    s = sub.add_parser("veredicto", help="anota el veredicto de Miguel sobre un estilo (lo usa la galería del panel)",
-                       description="anota el veredicto de Miguel sobre un estilo: estado, fecha y, si las hay, sus palabras (también en direccion/REGISTRO.md)")
-    s.add_argument("estilo", help="id del estilo")
+    s = sub.add_parser("textos", help="valida y lista la galería de textos (textos/*.json)",
+                       description="valida y lista la galería de textos: estilos de letra para títulos, frases, rótulos, subtítulos y créditos")
+    s.add_argument("--familia", help="titulos, frases, rotulos o subtitulos")
+    s.add_argument("--estado", help="aprobado, a medias, propuesta…")
+
+    s = sub.add_parser("veredicto", help="anota el veredicto de Miguel sobre un estilo o un letrero (lo usa la galería del panel)",
+                       description="anota el veredicto de Miguel sobre un estilo (estilos/) o un letrero (textos/): estado, fecha y, si las hay, sus palabras (también en direccion/REGISTRO.md)")
+    s.add_argument("estilo", help="id del estilo o del letrero")
     s.add_argument("estado", help="aprobado, a medias, rechazado, o propuesta para deshacer")
     s.add_argument("--cita", default="", help="lo que dijo Miguel, con sus palabras")
     s.add_argument("--via", default="chat", help="por dónde lo dio: chat o galeria")
@@ -498,7 +512,48 @@ def main() -> None:
     sub.add_parser("aprender", help="lo aprendido de las notas de Miguel: lecciones y veredictos como datos → direccion/APRENDIDO.md",
                    description="lo aprendido de las notas de Miguel: lecciones y veredictos como datos → direccion/APRENDIDO.md")
 
+    s = sub.add_parser("limpiar-voz", help="la voz en off sin ruidos de boca entre palabras y con nivel parejo (usa la transcripción) → <archivo>-limpia.wav",
+                       description="la voz en off sin ruidos de boca entre palabras y con nivel parejo: chasquidos fuera, lo que no es palabra más bajo, "
+                                   "normalizada (ver py/montaje/voz.py). Antes: transcribir el mismo archivo")
+    s.add_argument("archivo", help="la grabación (absoluta o relativa a los medios)")
+    s.add_argument("--salida", help="dónde dejarla (por defecto, <archivo>-limpia.wav al lado)")
+    s.add_argument("--transcripcion", help="el .json de transcribir (por defecto, transcripciones/<nombre>.json)")
+    s.add_argument("--atenuar", type=float, default=30.0, help="dB que baja lo que no es palabra")
+    s.add_argument("--hueco", type=float, default=0.09, help="segundos: huecos más cortos dentro de una frase no se tocan")
+
+    s = sub.add_parser("comparar", help="anota cuál de dos estilos eligió Miguel al verlos lado a lado (lo usa la galería del panel)",
+                       description="anota cuál de dos estilos eligió Miguel al verlos lado a lado en el probador → direccion/COMPARACIONES.json")
+    s.add_argument("a", help="id de un estilo")
+    s.add_argument("b", help="id del otro")
+    s.add_argument("--gana", required=True, help="el id del que eligió, o igual")
+    s.add_argument("--via", default="chat", help="por dónde lo dio: chat o galeria")
+
+    s = sub.add_parser("probar", help="el probador: cada estilo hace su muestra en el mismo banco (mismos clips, misma canción) → medios/estilos/probador/",
+                       description="el probador: cada estilo hace su muestra en el mismo banco (mismos clips, misma canción), deja cuadros de "
+                                   "referencia y mide lo que tarda → medios/estilos/probador/ (ver py/montaje/probador.py)")
+    s.add_argument("estilos", nargs="*", help="ids de los estilos (sin ninguno, hace falta --todos o --armar)")
+    s.add_argument("--todos", action="store_true", help="toda la galería; lo que no cambió no se vuelve a dibujar")
+    s.add_argument("--armar", action="store_true", help="arma (o completa) el banco desde la biblioteca que dice proyectos/probador")
+    s.add_argument("--fijar", action="store_true", help="los cuadros de ahora pasan a ser la referencia")
+    s.add_argument("--rehacer", action="store_true", help="se vuelven a dibujar aunque estén guardados (para medir otra vez, o ver si sale igual)")
+
     a = ap.parse_args()
+    if a.comando == "limpiar-voz":
+        from . import voz
+
+        voz.limpiar(a.archivo, a.salida, a.transcripcion, a.atenuar, a.hueco)
+        return
+    if a.comando == "probar":
+        from . import probador
+
+        if a.armar:
+            probador.armar()
+        if a.estilos or a.todos:
+            if probador.probar(a.estilos or None, a.fijar, a.rehacer):
+                raise SystemExit(1)
+        elif not a.armar:
+            salir("¿qué estilos? Dilos por su id, o --todos (o --armar para el banco)")
+        return
     if a.comando == "aprender":
         from . import aprender
 
@@ -509,10 +564,19 @@ def main() -> None:
 
         transcribir.transcribir(a.archivo, a.idioma, a.pistas, a.cancion)
         return
-    if a.comando in ("estilos", "muestra", "recorrido", "veredicto"):
+    if a.comando == "textos":
+        from . import textos
+
+        textos.listar(a.familia, a.estado)
+        return
+    if a.comando in ("estilos", "muestra", "recorrido", "veredicto", "comparar"):
         from . import estilos
 
-        if a.comando == "veredicto":
+        if a.comando == "comparar":
+            import json
+
+            print(json.dumps(estilos.comparar(a.a, a.b, a.gana, a.via), ensure_ascii=False))
+        elif a.comando == "veredicto":
             import json
 
             e = estilos.veredicto(a.estilo, a.estado, a.cita, a.via)

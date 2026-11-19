@@ -61,6 +61,7 @@ proyecto.json:
 from __future__ import annotations
 
 import datetime as dt
+import functools
 import math
 
 import numpy as np
@@ -70,6 +71,7 @@ from . import musica
 from .planificar import audio_de, escribir
 from .rutas import Proyecto, salir
 from .secuencia import _compases
+from .transformar import EFECTOS as EFECTOS_TRANSFORMAR
 
 POR_DEFECTO = {
     "corte": "energia",
@@ -122,23 +124,35 @@ TRANSICIONES = ("fundido", "cortina", "iris", "empuje", "destello", "zoom", "per
 DIRECCIONES = {"derecha": [1, 0], "izquierda": [-1, 0], "abajo": [0, 1], "arriba": [0, -1]}
 
 
+@functools.lru_cache(maxsize=1)
+def en_ronda() -> tuple[str, ...]:
+    """Las transiciones que recorre la `ronda`: todas menos las que Miguel rechazó en la galería
+    (el estilo `transicion-<tipo>`). La persiana entraba a la ronda aunque la había rechazado (2026-11-10)."""
+    from . import estilos
+
+    rechazadas = {e["id"].removeprefix("transicion-") for e in estilos.leer()
+                  if e["id"].startswith("transicion-") and e.get("estado") == "rechazado"}
+    return tuple(t for t in TRANSICIONES[1:] if t not in rechazadas) or TRANSICIONES[1:]
+
+
 def _transicion(prm: dict, n: int) -> tuple[str, list[int]] | None:
     """La transición del `n`-ésimo cambio de clip: (tipo, hacia dónde). None = fundido.
 
-    `ronda` las recorre todas, una por cambio; `alterna` va a la derecha y a la izquierda.
+    `ronda` recorre las que no están rechazadas, una por cambio; `alterna` va a la derecha y a la izquierda.
     """
     tipo = prm["transicion"]
     if tipo == "ronda":
-        tipo = TRANSICIONES[1:][n % (len(TRANSICIONES) - 1)]
+        tipo = en_ronda()[n % len(en_ronda())]
     if tipo not in TRANSICIONES:
         salir(f"transicion desconocida: {tipo} (hay: {', '.join(TRANSICIONES)}, ronda)")
     if tipo == "fundido":
         return None
     d = prm["transicion_dir"]
     if d == "alterna":
-        # En ronda hay seis tipos: si el lado dependiera sólo de `n`, cada tipo saldría siempre para el
-        # mismo lado. Cada vuelta de la ronda empieza por el otro.
-        vuelta = n // (len(TRANSICIONES) - 1) if prm["transicion"] == "ronda" else 0
+        # En una ronda de un número par de tipos, si el lado dependiera sólo de `n`, cada tipo saldría
+        # siempre para el mismo lado: cada vuelta empieza por el otro. Con un número impar ya cambia solo.
+        k = len(en_ronda())
+        vuelta = n // k if prm["transicion"] == "ronda" and k % 2 == 0 else 0
         d = ("derecha", "izquierda")[(n + vuelta) % 2]
     if d not in DIRECCIONES:
         salir(f"transicion_dir desconocida: {d} (hay: {', '.join(DIRECCIONES)}, alterna)")
@@ -409,9 +423,14 @@ def planificar(p: Proyecto) -> None:
         tramos = _segmentos(compases, frase, pf)
         e_frase = float(np.mean([compases[i]["e"] for i in frase]))
         calma = e_frase < pf["umbral_calma"]
-        # Clips transformados: en la calma (o siempre), la variante en vez del original.
-        if pf["transformados"] not in (None, "no", False) and variantes.get(c["id"]) and (calma or pf["transformados"] == "todo"):
-            c = variantes[c["id"]][fi % len(variantes[c["id"]])]
+        # Clips transformados: en la calma (o siempre), la variante en vez del original. Con el nombre de
+        # un efecto («eco»), siempre y sólo esa variante: así se ve un efecto solo (lo usa el probador).
+        tf = pf["transformados"]
+        opciones = variantes.get(c["id"], [])
+        if tf in EFECTOS_TRANSFORMAR:
+            opciones = [v for v in opciones if v["id"].endswith("-" + tf)]
+        if tf not in (None, "no", False) and opciones and (calma or tf == "todo" or tf in EFECTOS_TRANSFORMAR):
+            c = opciones[fi % len(opciones)]
         # Se compara el archivo que de verdad se ve: pasar de un clip a su variante transformada también es un cambio.
         nuevo_clip = c["id"] != anterior_id
         anterior_id = c["id"]

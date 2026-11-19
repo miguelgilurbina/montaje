@@ -144,7 +144,14 @@ def test_transicion_fundido_no_deja_marca():
     assert pulso._transicion({"transicion": "fundido", "transicion_dir": "alterna"}, 0) is None
 
 
-def test_transicion_ronda_las_recorre_y_alterna():
+def _galeria_de_transiciones(monkeypatch, rechazadas: set[str]) -> None:
+    falsos = [{"id": f"transicion-{t}", "estado": "rechazado" if t in rechazadas else "aprobado"} for t in pulso.TRANSICIONES[1:]]
+    monkeypatch.setattr(estilos, "leer", lambda: falsos)
+    pulso.en_ronda.cache_clear()
+
+
+def test_transicion_ronda_las_recorre_y_alterna(monkeypatch):
+    _galeria_de_transiciones(monkeypatch, set())
     prm = {"transicion": "ronda", "transicion_dir": "alterna"}
     seis = len(pulso.TRANSICIONES) - 1
     tipos = [pulso._transicion(prm, n)[0] for n in range(seis)]
@@ -154,6 +161,19 @@ def test_transicion_ronda_las_recorre_y_alterna():
     for n in range(seis):
         assert pulso._transicion(prm, n)[0] == pulso._transicion(prm, n + seis)[0]
         assert pulso._transicion(prm, n)[1] != pulso._transicion(prm, n + seis)[1]
+    pulso.en_ronda.cache_clear()
+
+
+def test_transicion_ronda_salta_lo_rechazado(monkeypatch):
+    _galeria_de_transiciones(monkeypatch, {"persiana"})
+    prm = {"transicion": "ronda", "transicion_dir": "alterna"}
+    tipos = [pulso._transicion(prm, n)[0] for n in range(20)]
+    assert "persiana" not in tipos and set(tipos) == set(pulso.TRANSICIONES[1:]) - {"persiana"}
+    # Con cinco (impar), cada tipo igual cambia de lado de una vuelta a la otra.
+    assert pulso._transicion(prm, 0)[1] != pulso._transicion(prm, 5)[1]
+    # La persiana sola, pedida por su nombre, sigue valiendo: lo rechazado no se borra, sólo no entra solo.
+    assert pulso._transicion({"transicion": "persiana", "transicion_dir": "derecha"}, 0)[0] == "persiana"
+    pulso.en_ronda.cache_clear()
     # Una sola transición alterna en cada cambio.
     una = {"transicion": "cortina", "transicion_dir": "alterna"}
     assert [pulso._transicion(una, n)[1] for n in range(3)] == [[1, 0], [-1, 0], [1, 0]]
@@ -779,3 +799,172 @@ def test_traer_nombra_la_carpeta_por_la_serie():
 def test_medios_fuera_del_repo():
     # La regla de la casa: lo pesado vive fuera de OneDrive.
     assert "OneDrive" not in str(MEDIOS)
+
+
+# ── El probador ────────────────────────────────────────────────────────────
+
+def _cancion_entera() -> dict:
+    """Una canción de mentira a 120 BPM: un golpe cada 0,5 s, el primero del compás en 0, 2, 4…; calma y después la banda."""
+    beats = [round(0.5 * i, 3) for i in range(80)]
+    return {"archivo": "musica/x.wav", "tramo": [0, 40.0], "duracion": 40.0, "bpm": 120.0, "golpes_intro": 0, "beats": beats,
+            "energia": [0.3 if t < 20 else 0.8 for t in beats], "fase_compas": 0, "primeros_tiempos": beats[::4],
+            "secciones": [{"beat_ini": 0, "beat_fin": 40, "ini": 0.0, "fin": 20.0, "energia": 0.3},
+                          {"beat_ini": 40, "beat_fin": 80, "ini": 20.0, "fin": 40.0, "energia": 0.8}]}
+
+
+def test_probador_corta_la_cancion_en_el_tramo_sin_reanalizarla():
+    from montaje import probador
+
+    # Escrito a mano, con dos decimales, cae cerca del primer tiempo: se ajusta a él.
+    m = probador.cortar(_cancion_entera(), 15.99, 24.01)
+    assert m["tramo"] == [16.0, 24.0] and m["duracion"] == 8.0
+    assert m["beats"][0] == 0.0 and m["primeros_tiempos"] == [0.0, 2.0, 4.0, 6.0] and m["fase_compas"] == 0
+    # La energía es la de la canción entera: la calma sigue siendo calma (analizar sólo el tramo la normalizaría).
+    assert m["energia"][0] == 0.3 and m["energia"][-1] == 0.8
+    assert [(s["ini"], s["fin"]) for s in m["secciones"]] == [(0.0, 4.0), (4.0, 8.0)]
+    assert m["secciones"][0]["beat_fin"] == m["secciones"][1]["beat_ini"] == 8
+
+
+def _banco() -> dict:
+    return {"salida": {"ancho": 1620, "alto": 1080, "fps": 24}, "textos": {"titulo": "Banco", "rotulos": ["uno", "dos"], "credito": ["la canción", "sonando ahora"]}}
+
+
+def test_probador_arma_la_receta_de_cada_tecnica(monkeypatch):
+    from montaje import probador
+
+    m = probador.cortar(_cancion_entera(), 16, 24)
+    monkeypatch.setattr(probador, "_su_video", lambda e: {"sintesis": [
+        {"tipo": "tinta", "oscuro": "rubrica", "claro": "hueso", "fuerza": 0.35, "desde": 120},
+        {"tipo": "titulo", "texto": "lo que escribió Miguel", "tam": 0.1, "desde": 1.5}]})
+    cfg = _banco()
+    # Un estilo de pulso: sus perillas y su lienzo; lo que no es perilla (el modo, las notas) no pasa.
+    r, _ = probador.receta({"tecnica": {"modo": "pulso", "frase_compases": 4, "salida": "1080x1920", "nota": "x"}}, cfg, m)
+    assert r["montaje"] == {"frase_compases": 4} and r["salida"]["ancho"] == 1080 and r["salida"]["alto"] == 1920
+    # Una capa: lo de su video, encima lo de la receta; las que acompañan en palabras toman sus valores de su video.
+    r, _ = probador.receta({"tecnica": {"capa": "recuerdo", "grano": 0.3, "con": ["tinta rubrica/hueso 0.35", "nada"]}}, cfg, m)
+    tipos = [c["tipo"] for c in r["sintesis"]]
+    assert tipos == ["recuerdo", "tinta"] and r["sintesis"][0]["grano"] == 0.3
+    tinta = r["sintesis"][1]
+    assert tinta["oscuro"] == "rubrica" and tinta["fuerza"] == 0.35 and "desde" not in tinta  # el segundo 120 de su video no cabe
+    # El texto es el del banco, nunca el de Miguel; el segundo en que entra, si cabe, se queda.
+    r, _ = probador.receta({"tecnica": {"capa": "titulo", "letras_golpes": 3}}, cfg, m)
+    assert r["sintesis"][0]["texto"] == "Banco" and r["sintesis"][0]["desde"] == 1.5 and r["sintesis"][0]["tam"] == 0.1
+    r, _ = probador.receta({"tecnica": {"capa": "rotulos", "cada": "golpe"}}, cfg, m)
+    assert r["sintesis"][0]["lineas"] == [[2.0, "uno"], [6.0, "dos"]]
+    # Un efecto de tiempo: transformar los clips del banco y usar sólo esa variante.
+    r, _ = probador.receta({"tecnica": {"comando": "transformar", "efecto": "eco", "fuerza": 0.6}}, cfg, m)
+    assert r["montaje"] == {"transformados": "eco"} and r["transformar"] == ["eco", 0.6]
+    # Lo que el banco todavía no sabe probar dice por qué.
+    for tecnica in ({"modo": "collage"}, {"momento": "rafaga"}, {"comando": "sincronizar"}, {"comando": "senal"}):
+        r, motivo = probador.receta({"tecnica": tecnica}, cfg, m)
+        assert r is None and motivo
+
+
+def test_probador_todas_las_recetas_de_la_galeria_se_arman_o_dicen_por_que():
+    from montaje import probador
+
+    m = probador.cortar(_cancion_entera(), 16, 24)
+    for e in estilos_mod.leer():
+        r, motivo = probador.receta(e, _banco(), m)
+        assert (r is None) == bool(motivo), e["id"]
+        if r:
+            assert all(c["tipo"] in sintesis.POR_DEFECTO for c in r["sintesis"]), e["id"]
+            assert all(k in pulso.POR_DEFECTO or k == "modo" for k in r["montaje"]), e["id"]
+
+
+def test_transformados_con_el_nombre_de_un_efecto_usa_solo_esa_variante():
+    # La perilla acepta los mismos nombres que `transformar`: el probador muestra un efecto solo.
+    assert set(transformar.EFECTOS) <= set(pulso.EFECTOS_TRANSFORMAR)
+
+
+def test_elegir_entre_dos_hace_un_orden_que_no_se_apura():
+    t = estilos.puntajes([{"a": "x", "b": "y", "gana": "x"}, {"a": "x", "b": "z", "gana": "x"}, {"a": "y", "b": "z", "gana": "igual"}])
+    assert t["x"]["ganadas"] == 2 and t["x"]["jugadas"] == 2 and t["x"]["puntaje"] == 0.75
+    assert t["y"]["puntaje"] == t["z"]["puntaje"] == round(1.5 / 4, 3)
+    # Con dos elecciones nadie llega a 1: dos no hacen un orden.
+    assert max(v["puntaje"] for v in t.values()) < 1
+
+
+def test_comparar_anota_y_valida(tmp_path, monkeypatch):
+    monkeypatch.setattr(estilos, "COMPARACIONES", tmp_path / "COMPARACIONES.json")
+    monkeypatch.setattr(estilos, "ESTILOS", tmp_path)
+    for x in ("a", "b"):
+        (tmp_path / f"{x}.json").write_text("{}", encoding="utf-8")
+    estilos.comparar("a", "b", "b", via="galeria")
+    assert estilos.comparaciones()[0]["gana"] == "b" and estilos.comparaciones()[0]["via"] == "galeria"
+    for malo in (("a", "a", "a"), ("a", "b", "c"), ("a", "zzz", "a")):
+        with pytest.raises(SystemExit):
+            estilos.comparar(*malo)
+
+
+# ── La galería de textos ──────────────────────────────────────────────────
+
+def test_tipografias_del_registro_existen_con_su_licencia():
+    from montaje import textos
+
+    for familia, f in textos.registro().items():
+        carpetas = {Path(a["archivo"]).parent for a in f["archivos"]}
+        for a in f["archivos"]:
+            assert (textos.FUENTES / a["archivo"]).is_file(), a["archivo"]
+            assert a["peso"][0] <= a["peso"][1]
+        # Libres: cada carpeta lleva su licencia al lado.
+        assert all(any((textos.FUENTES / c / n).is_file() for n in ("OFL.txt", "LICENSE.txt")) for c in carpetas), familia
+
+
+def test_galeria_de_textos_valida_y_usa_todas_las_tipografias():
+    from montaje import textos
+
+    todos = textos.leer()
+    assert len(todos) >= 20
+    assert {e["familia"] for e in todos} == set(textos.FAMILIAS)
+    malos = {e["id"]: textos.errores(e) for e in todos if textos.errores(e)}
+    assert not malos, malos
+    usadas = {x["fuente"] for e in todos for x in (e, e.get("secundario") or {}) if x.get("fuente")}
+    assert usadas == set(textos.registro())
+
+
+def test_letrero_avisa_lo_que_no_existe():
+    from montaje import textos
+
+    base = {"nombre": "x", "familia": "titulos", "frase": "x", "para": ["abrir"], "fuente": "Lora", "tamano": 0.1, "color": "#ffffff",
+            "lugar": "centro", "ejemplo": {"texto": "x"}, "fondo": "oscuro", "estado": "propuesta", "miguel": []}
+    assert textos.errores(base) == []
+    assert any("no está en fuentes" in m for m in textos.errores({**base, "fuente": "Comic Sans"}))
+    assert any("peso 900" in m for m in textos.errores({**base, "peso": 900}))  # Lora llega a 700
+    assert any("cursiva" in m for m in textos.errores({**base, "fuente": "Anton", "cursiva": True}))
+    assert any("lugar" in m for m in textos.errores({**base, "lugar": "en todas partes"}))
+    assert any("tamano" in m for m in textos.errores({**base, "tamano": 2}))
+
+
+def test_planos_resuelve_el_letrero_y_pide_sus_tipografias():
+    from montaje import planos, textos
+
+    t = planos.texto_a_timeline(1, {"texto": "Hola", "letrero": "nombre-y-cargo", "secundario": "quien habla"}, 3, 90)
+    assert t["ini"] == 3 and t["fin"] == 90 and t["secundario"] == "quien habla"
+    e = t["letrero"]
+    assert e["id"] == "nombre-y-cargo" and e["fuente"] == "Atkinson Hyperlegible Next"
+    # Al timeline va sólo la forma, no lo de la galería.
+    assert "nombre" not in e and "ejemplo" not in e and "estado" not in e
+    archivos = textos.archivos([e])
+    assert "atkinson-hyperlegible-next/AtkinsonHyperlegibleNext.ttf" in archivos and "ibm-plex-mono/IBMPlexMono-Regular.ttf" not in archivos
+    # Sin letrero, siguen los estilos propios del modo.
+    assert "letrero" not in planos.texto_a_timeline(1, {"texto": "x", "estilo": "cita"}, 0, 10)
+    with pytest.raises(SystemExit):
+        planos.texto_a_timeline(1, {"texto": "x", "letrero": "no-existe"}, 0, 10)
+
+
+def test_el_veredicto_llega_a_los_letreros(tmp_path, monkeypatch):
+    from montaje import textos
+
+    (tmp_path / "estilos").mkdir()
+    (tmp_path / "textos").mkdir()
+    monkeypatch.setattr(estilos, "ESTILOS", tmp_path / "estilos")
+    monkeypatch.setattr(textos, "TEXTOS", tmp_path / "textos")
+    (tmp_path / "textos" / "un-letrero.json").write_text(json.dumps({"nombre": "Uno", "estado": "propuesta", "miguel": []}), encoding="utf-8")
+    estilos.veredicto("un-letrero", "aprobado", via="galeria")
+    e = json.loads((tmp_path / "textos" / "un-letrero.json").read_text(encoding="utf-8"))
+    assert e["estado"] == "aprobado" and e["veredicto"]["via"] == "galeria"
+    # El mismo nombre en las dos galerías no se adivina: se avisa.
+    (tmp_path / "estilos" / "un-letrero.json").write_text("{}", encoding="utf-8")
+    with pytest.raises(SystemExit):
+        estilos.veredicto("un-letrero", "rechazado")

@@ -27,7 +27,8 @@ Configuración en proyecto.json:
       "tonalidad": "re mayor",      # «la menor», «fa# mayor»…
       "progresion": "I V vi IV",    # grados; en menor: "i VI III VII"
       "archivo": "audio/compuesta.wav",
-      "semilla": 3
+      "semilla": 3,
+      "capas": ["pad", "arpegio", "bajo"]   # opcional: qué suena (por defecto, todo)
     }
 """
 
@@ -190,7 +191,11 @@ def componer(p: Proyecto, duracion: float | None = None) -> tuple[np.ndarray, di
     # Niveles de cada capa (pico, dB), espacio y color.
     nivel = {"pad": -15, "arpegio": -13, "bajo": -11, "bombo": -11, "toque": -21, "charles": -24, "maraca": -26}
     mezcla = np.zeros((n, 2))
+    # `capas` elige qué suena: bajo una voz en off, sin percusión (["pad", "arpegio", "bajo"]).
+    elegidas = set(cfg.get("capas") or capas)
     for k, y in capas.items():
+        if k not in elegidas:
+            continue
         y = _normalizar(y) * 10 ** (nivel[k] / 20)
         if k == "arpegio":
             y = _eco(y, golpe * 0.75, 3, 0.35)

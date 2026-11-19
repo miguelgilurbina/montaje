@@ -190,10 +190,14 @@ def _planificar_modo(p: Proyecto) -> None:
         pulso.planificar(p)
     elif modo == "solo-sintesis":
         _solo_sintesis(p)
+    elif modo == "planos":
+        from . import planos
+
+        planos.planificar(p)
     elif modo == "superposicion":
         _superposicion(p)
     else:
-        salir(f"modo de montaje desconocido: {modo} (hay: superposicion, actos, collage, cinta, secuencia, pulso, solo-sintesis)")
+        salir(f"modo de montaje desconocido: {modo} (hay: superposicion, actos, collage, cinta, secuencia, pulso, solo-sintesis, planos)")
 
 
 def _solo_sintesis(p: Proyecto) -> None:
@@ -344,7 +348,7 @@ def _superposicion(p: Proyecto) -> None:
         )
 
 
-LISTAS_POR_LINEA = ("capas", "piezas", "ecos", "camara", "luz", "actos", "sintesis")
+LISTAS_POR_LINEA = ("capas", "piezas", "ecos", "camara", "luz", "actos", "sintesis", "planos", "textos")
 
 
 def escribir(ruta, timeline: dict) -> None:

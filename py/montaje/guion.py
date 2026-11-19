@@ -60,7 +60,9 @@ def candidatos(estilos: list[dict], papel_: str, energia: str, material: str, ba
     misma = lambda e: e["energia"] in (energia, "sigue")  # noqa: E731
     orden = list(catalogo.ESTADOS)
     sirven = [e for e in estilos if e["estado"] != "rechazado" and e["material"] in (material, "cualquiera", "mixto") and (para(e) or misma(e))]
-    sirven.sort(key=lambda e: (not para(e), orden.index(e["estado"]), not misma(e), e["id"]))
+    # Entre dos igual de buenos, el que Miguel eligió más veces al verlos lado a lado (`comparar`).
+    gana = catalogo.puntajes()
+    sirven.sort(key=lambda e: (not para(e), orden.index(e["estado"]), not misma(e), -gana.get(e["id"], {}).get("puntaje", 0.5), e["id"]))
     es_capa = lambda e: "capa" in e["tecnica"] or "comando" in e["tecnica"]  # noqa: E731
     return [e for e in sirven if not es_capa(e)][:bases], [e for e in sirven if es_capa(e)][:capas]
 

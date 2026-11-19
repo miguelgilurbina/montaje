@@ -1,0 +1,97 @@
+{
+ "titulo": "Probador · el mismo banco para todos los estilos",
+ "idea": "Miguel eligió el 2026-11-10 «El probador»: un banco fijo (los mismos clips, unas fotos y el mismo trozo de canción) donde cada estilo de la galería hace su muestra, para compararlas lado a lado, guardar cuadros de referencia y medir lo que tarda cada estilo en dibujarse. No es un experimento: es la mesa de pruebas. Lo arma y lo corre `python montaje.py probar` (ver py/montaje/probador.py).",
+ "nota": "El banco se arma con vínculos a la biblioteca de práctica: ocho de los 34 clips que Miguel eligió para el 22 (de quietos a muy movidos, de día y de noche, con caras y con palmeras), cuatro fotogramas de otros clips como fotos y el paso de la calma a la banda de La Añoranza. Los clips entran en el orden de `banco.clips` (el tramo «el banco»); las fotos, sólo donde un estilo las pide. Para otro banco, cambiar `banco` y correr `probar --armar`.",
+ "biblioteca": "probador",
+ "clips": [
+  "clips",
+  "clips-mj",
+  "transformados"
+ ],
+ "clips_interpolar": 3,
+ "fotos": "fotogramas",
+ "musica": "musica/La Añoranza de Natalia.wav",
+ "tramo": [
+  16.88,
+  37.76
+ ],
+ "salida": {
+  "ancho": 1620,
+  "alto": 1080,
+  "fps": 24,
+  "fondo": "#07090d"
+ },
+ "montaje": {
+  "modo": "pulso",
+  "orden": "nombre",
+  "umbral_calma": 0.45,
+  "umbral_pico": 0.8,
+  "borde_toma": 0.1,
+  "zoom": 0.04,
+  "corte": "frase",
+  "frase_compases": 4,
+  "reparto": "seguido",
+  "fundido_golpes": 2,
+  "fundido_calma_golpes": 4,
+  "velocidad": [
+   0.45,
+   0.6
+  ],
+  "velocidad_min": 0.4,
+  "doble_golpes": 0,
+  "estela_golpes": 0,
+  "fundido_inicio_golpes": 0,
+  "fundido_final_golpes": 0,
+  "tramos": [
+   {
+    "nombre": "el banco",
+    "desde": 0,
+    "hasta": 20.88,
+    "material": [
+     "natalia-06-playa-olas-desde-el-aire",
+     "mj-038-static-shot-of-a-woman-cooking-smiling-and-wavin",
+     "natalia-11-hamacas-casa-de-noche-hamaca-roja",
+     "mj-069-still-frame-of-a-panoramic-scene-with-palm-trees",
+     "natalia-16-campo-pareja-a-caballo-luna",
+     "mj-053-dolly-shot-on-a-moving-portrait-of-man-looking-t",
+     "natalia-02-lanchas-bote-desde-restaurante",
+     "mj-049-camera-pan-following-two-birds-guacamayas-over-a",
+     "foto:"
+    ],
+    "material_en_orden": true
+   }
+  ]
+ },
+ "textos": {
+  "titulo": "Curiana Radio",
+  "rotulos": [
+   "la misma canción",
+   "los mismos clips",
+   "otro estilo"
+  ],
+  "credito": [
+   "La añoranza de Natalia",
+   "sonando ahora"
+  ]
+ },
+ "banco": {
+  "de": "practica",
+  "clips": [
+   "natalia-06-playa-olas-desde-el-aire",
+   "mj-038-static-shot-of-a-woman-cooking-smiling-and-wavin",
+   "natalia-11-hamacas-casa-de-noche-hamaca-roja",
+   "mj-069-still-frame-of-a-panoramic-scene-with-palm-trees",
+   "natalia-16-campo-pareja-a-caballo-luna",
+   "mj-053-dolly-shot-on-a-moving-portrait-of-man-looking-t",
+   "natalia-02-lanchas-bote-desde-restaurante",
+   "mj-049-camera-pan-following-two-birds-guacamayas-over-a"
+  ],
+  "fotos": [
+   "natalia-01-lanchas-pesquero-contraluz-1",
+   "natalia-12-campo-ciclista-casa-azul-1",
+   "natalia-14-campo-chivo-casa-de-tejas-1",
+   "natalia-20-campo-flamencos-1"
+  ],
+  "musica": "musica/La Añoranza de Natalia.wav"
+ }
+}

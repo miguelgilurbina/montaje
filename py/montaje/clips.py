@@ -354,7 +354,10 @@ def copia_de(p: Proyecto, c: dict) -> Path:
 
 def asegurar_copias(p: Proyecto, rutas: set[str]) -> None:
     """Las copias interpoladas que faltan de estas `rutas` («proxies/x.mp4»): para el final, sólo lo que quedó en el video."""
-    catalogo = {c["proxy"]: c for c in leer_json(ruta_catalogo(p))["clips"] if not c.get("foto")}
+    if not rutas:
+        # Un video sin clips del catálogo (modo planos: sus videos van directo de la biblioteca) no tiene catálogo que leer.
+        return
+    catalogo ={c["proxy"]: c for c in leer_json(ruta_catalogo(p))["clips"] if not c.get("foto")}
     faltan = [catalogo[r] for r in sorted(rutas) if r in catalogo and not (p.medios / r).exists()]
     if not faltan:
         return

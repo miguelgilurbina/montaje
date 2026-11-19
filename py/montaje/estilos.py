@@ -204,11 +204,16 @@ def veredicto(id_: str, estado: str, cita: str = "", via: str = "chat") -> dict:
     import datetime as dt
     import re
 
-    if not re.fullmatch(r"[a-z0-9][a-z0-9-]*", id_) or not (ESTILOS / f"{id_}.json").exists():
-        salir(f"no existe el estilo «{id_}»")
+    from .textos import TEXTOS
+
+    # Un estilo de estilos/ o un letrero de la galería de textos: el mismo veredicto para los dos.
+    rutas = [d / f"{id_}.json" for d in (ESTILOS, TEXTOS)] if re.fullmatch(r"[a-z0-9][a-z0-9-]*", id_) else []
+    rutas = [r for r in rutas if r.exists()]
+    if len(rutas) != 1:
+        salir(f"no existe el estilo «{id_}»" if not rutas else f"«{id_}» está en estilos/ y en textos/: cambiar uno de nombre")
     if estado not in ESTADOS:
         salir(f"estado desconocido: {estado} (hay: {', '.join(ESTADOS)})")
-    ruta = ESTILOS / f"{id_}.json"
+    ruta = rutas[0]
     e = json.loads(ruta.read_text(encoding="utf-8"))
     palabras = limpiar_cita(cita)
     fecha = dt.date.today().isoformat()
@@ -231,6 +236,52 @@ def veredicto(id_: str, estado: str, cita: str = "", via: str = "chat") -> dict:
         # Los saltos de línea, como estaban.
         registro.write_bytes((texto.replace("\n", "\r\n") if "\r\n" in crudo else texto).encode("utf-8"))
     return e
+
+
+# ── Elegir entre dos ──────────────────────────────────────────────────────
+
+COMPARACIONES = RAIZ / "direccion" / "COMPARACIONES.json"
+
+
+def comparaciones() -> list[dict]:
+    return json.loads(COMPARACIONES.read_text(encoding="utf-8")) if COMPARACIONES.exists() else []
+
+
+def comparar(a: str, b: str, gana: str, via: str = "chat") -> dict:
+    """Anota cuál de dos estilos eligió Miguel al verlos lado a lado en el probador (`gana`: uno de los
+    dos o «igual»). Juzgar sesenta tarjetas una por una cansa; elegir entre dos es rápido, y de muchas
+    elecciones sale un orden (`puntajes`) que `guion` usa para desempatar entre lo aprobado.
+
+        python montaje.py comparar transicion-iris transicion-cortina --gana transicion-iris
+    """
+    import datetime as dt
+
+    for x in (a, b):
+        if not (ESTILOS / f"{x}.json").exists():
+            salir(f"no existe el estilo «{x}»")
+    if a == b:
+        salir("se compara un estilo con otro, no consigo mismo")
+    if gana not in (a, b, "igual"):
+        salir(f"`--gana` es {a}, {b} o igual")
+    lista = comparaciones()
+    nueva = {"a": a, "b": b, "gana": gana, "fecha": dt.datetime.now().isoformat(timespec="seconds"), "via": via}
+    lista.append(nueva)
+    escribir_json(COMPARACIONES, lista)
+    return nueva
+
+
+def puntajes(lista: list[dict] | None = None) -> dict[str, dict]:
+    """De las elecciones, cuánto gana cada estilo: `ganadas`, `jugadas` y `puntaje` (entre 0 y 1; con
+    pocas comparaciones se queda cerca de la mitad: dos elecciones no hacen un orden)."""
+    tabla: dict[str, dict] = {}
+    for c in comparaciones() if lista is None else lista:
+        for x in (c["a"], c["b"]):
+            t = tabla.setdefault(x, {"ganadas": 0.0, "jugadas": 0})
+            t["jugadas"] += 1
+            t["ganadas"] += 1.0 if c["gana"] == x else 0.5 if c["gana"] == "igual" else 0.0
+    for t in tabla.values():
+        t["puntaje"] = round((t["ganadas"] + 1) / (t["jugadas"] + 2), 3)
+    return tabla
 
 
 # ── El recorrido: la galería de corrido ────────────────────────────────────
