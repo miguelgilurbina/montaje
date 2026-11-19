@@ -11,13 +11,16 @@ const FPS = 30;
 
 /** Cuánto dura la muestra: lo que tarda en entrar, más tiempo para leerla; los créditos, lo que tarda el rollo. */
 function segundos(l: Letrero): number {
-  if (l.estilo.rodillo) return 9;
-  return Math.max(3.5, (l.estilo.entrada?.dura ?? 0.5) + 2.6);
+  const e = l.estilo;
+  if (e.rodillo) return 9;
+  // El karaoke reparte sus palabras en lo que dura: unas 2,5 por segundo, como se habla.
+  if (e.karaoke) return Math.max(4, l.ejemplo.texto.split(/\s+/).filter(Boolean).length * 0.42 + 1.6);
+  return Math.max(3.5, (e.entrada?.dura ?? 0.5) + 2.6 + (e.salida?.tipo === 'atravesar' ? e.salida.dura : 0));
 }
 
-/** El cuadro donde el letrero ya entró entero y todavía no se va (los créditos, a mitad del rollo). */
+/** El cuadro donde el letrero ya entró entero y todavía no se va (los créditos, a mitad del rollo; el karaoke, a mitad de la frase). */
 function cuadroLeido(l: Letrero): number {
-  if (l.estilo.rodillo) return Math.round(segundos(l) * 0.45 * FPS);
+  if (l.estilo.rodillo || l.estilo.karaoke) return Math.round(segundos(l) * 0.5 * FPS);
   return Math.round((0.3 + (l.estilo.entrada?.dura ?? 0.5) + 0.6) * FPS);
 }
 

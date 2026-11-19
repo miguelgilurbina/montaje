@@ -8,19 +8,20 @@ import type {EstiloTexto} from '@/src/tipos';
 
 export const TEXTOS = path.join(RAIZ, 'textos');
 
-export type FamiliaTexto = 'titulos' | 'frases' | 'rotulos' | 'subtitulos';
+export type FamiliaTexto = 'titulos' | 'frases' | 'rotulos' | 'subtitulos' | 'movimiento';
 export const FAMILIAS_TEXTO: Record<FamiliaTexto, string> = {
   titulos: 'títulos y portadas',
   frases: 'frases destacadas',
   rotulos: 'rótulos y citas',
   subtitulos: 'subtítulos y créditos',
+  movimiento: 'texto en movimiento',
 };
 
 /** Lo que dibuja Letrero.tsx (el resto de la receta es de la galería). Igual que DIBUJO en py/montaje/textos.py. */
 const DIBUJO = [
   'fuente', 'peso', 'cursiva', 'variacion', 'tamano', 'mayusculas', 'espaciado', 'interlineado', 'color', 'compresion',
   'contorno', 'sombra', 'caja', 'resaltado', 'barra', 'alineado', 'lugar', 'ancho', 'giro', 'entrada', 'salida',
-  'secundario', 'rodillo',
+  'secundario', 'rodillo', 'ventana', 'karaoke', 'latido', 'cursor',
 ] as const;
 
 export type Letrero = {
