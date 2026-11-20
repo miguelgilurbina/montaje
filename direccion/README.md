@@ -11,6 +11,7 @@ decisión de estilo; Miguel la corrige cuando algo no es así.
 | [PALETA.md](PALETA.md) | colores, tipografía y logo en pantalla |
 | [MOTIVOS.md](MOTIVOS.md) | los recursos que vuelven (collage, carrusel, sello, salvapantallas, cortinas…) y dónde viven en el código |
 | [REFERENCIAS.md](REFERENCIAS.md) | lo que miramos y qué tomamos de cada cosa |
+| [ANALOGO.md](ANALOGO.md) | el video analógico: cómo era la señal y qué le hacía cada aparato, con sus fuentes (la mesa analógica) |
 | [SONIDO.md](SONIDO.md) | la música, los efectos y la masterización |
 | [REGISTRO.md](REGISTRO.md) | lo que dijo Miguel, con sus palabras y en orden |
 

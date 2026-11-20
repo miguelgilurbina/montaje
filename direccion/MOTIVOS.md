@@ -20,6 +20,7 @@ el veredicto completo (también lo rechazado) están en el catálogo de
 | **Loop sin costura** | el último cuadro empalma con el primero | pedido (06) | `modo: cinta` |
 | **Barrido** | la cámara salta de golpe a otra zona del collage | propuesta (04, 05) | `barrido` |
 | **La señal** | la transmisión se rompe en las transiciones (color separado, filas desgarradas, nieve, la imagen rueda) y vuelve limpia en el golpe; nunca sobre una imagen protagonista | propuesta (10), idea de Miguel («Video Glitch») | `senal` |
+| **La mesa analógica** | el archivo visto como lo vio la casa: una cinta VHS, una antena, un televisor de tubo; los defectos salen de la señal simulada (NTSC-M), no se pintan; en ventanas, nunca sobre una imagen protagonista | propuesta (24), desde la idea de Miguel («Video Glitch») | `analogo` |
 | **La radio en el sonido** | estática AM y silbido de sintonía en el silencio; los rebotes del logo afinados a la canción | propuesta (09) | `sonorizar` |
 
 ## Por hacer (propuestas)

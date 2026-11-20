@@ -174,3 +174,28 @@ con cámara virtual; **«más caótico»** = la curva de caos. **«reel rápido 
 | parecido (SSIM) | structural similarity | cuánto se parecen dos imágenes en forma y luz, de 0 a 1 | lo mide `probar` |
 | elegir entre dos | pairwise comparison, A/B | mostrar dos y preguntar cuál; de muchas elecciones sale un orden | `/estilos/comparar` |
 | prueba de regresión visual | visual regression test | volver a dibujar lo aprobado y comparar, para que un cambio no lo rompa sin aviso | `probar --todos` |
+
+## La mesa analógica (2026-11-20)
+
+| En español | En inglés | Qué es | Dónde se mueve |
+|---|---|---|---|
+| señal compuesta | composite video, CVBS | luma y color en un solo cable: el color montado en una subportadora de 3,58 MHz | entre aparatos de `analogo` |
+| puntos que caminan | dot crawl | el color que se cuela en la luma: un damero que se mueve por los bordes de color | sale de `codificar`/`decodificar` |
+| arcoíris, color falso | rainbow, cross-color | el detalle fino de luma que el televisor lee como color | ídem |
+| filtro de muesca / de peine | notch / comb filter | cómo el televisor separa el color de la luma: el barato corta una banda; el fino resta la línea anterior | `pantalla.decodificador`, `captura` |
+| color rebajado | color-under | el VHS graba el color en una banda angosta y baja: por eso se corre | `cinta` |
+| cambio de cabezal | head switching noise | la costura abajo, donde un cabezal le pasa la cinta al otro | `cinta.cabezal` |
+| tracking | tracking error | los cabezales fuera de la pista: una franja de ruido | `cinta.tracking` |
+| base de tiempo | time base error, jitter, flagging, skew | las líneas que tiemblan y se tuercen porque la cinta no corre pareja | `cinta.temblor` |
+| dropout | dropout | una raya blanca donde a la cinta le falta óxido | `cinta.desgaste` |
+| generación | generation loss | copia de una copia: cada pasada suma ruido y quita detalle | `cinta.generaciones` |
+| corrector de base de tiempo | TBC | el aparato que endereza las líneas | `tbc` |
+| fantasma | ghosting, multipath | la señal rebotada que llega después: la imagen repetida, corrida a la derecha | `antena.fantasma` |
+| nieve | snow | el ruido de una señal débil; con la señal muy baja, el color se apaga | `antena.nieve` |
+| barra del zumbido | hum bar | la red eléctrica (60 Hz) contra los 59,94 campos: una barra que sube despacio | `antena.zumbido` |
+| máscara de fósforos | aperture grille, shadow mask, slot mask | las franjas o puntos de color del vidrio del televisor | `pantalla.mascara` |
+| colorizador | colorizer | el brillo convertido en colores, como en los sintetizadores de video | `colorizador` |
+| relieve de barrido | Rutt/Etra scan processor | cada línea levantada según su brillo | `relieve` |
+| wobbulator | wobbulator | bobinas que hacen ondular el barrido (Paik y Abe) | `iman.ondas` |
+| realimentación | video feedback | la cámara que mira su propio monitor | `realimentacion` |
+| cola de cometa | comet tail, image lag | lo claro que deja estela en una cámara de tubo | `camara.estela` |

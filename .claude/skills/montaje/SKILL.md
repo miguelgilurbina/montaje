@@ -211,6 +211,19 @@ Todo comando se corre desde la raíz del repo: `python montaje.py <comando> <pro
     con su sonido; nunca sobre una imagen protagonista. `geq` no recorta: cada
     canal va con `clip(…, 0, 255)`. Mirar las hojas de cada ventana (`hoja
     --desde --hasta --cada 0.0667`).
+    **Mesa analógica** (`analogo <video o foto> --cadena <estilo>`, `py/montaje/analogo.py`,
+    desde el 2026-11-20): el video pasado por aparatos simulados en su señal NTSC —`camara`,
+    `osd`, `cinta` (VHS con sus formatos, copias, desgaste, tracking), `antena`, `tbc`,
+    `colorizador`, `iman`, `relieve` (Rutt/Etra), `realimentacion` y `pantalla` (el
+    tubo, siempre al final)—; los defectos salen de la física, no se pintan. Las cadenas
+    con nombre son estilos con `comando: analogo` (`analogo --cadenas`) y el probador
+    las prueba sobre el banco. `--ventana a b` (repetible) la deja sólo en esos
+    segundos, con `--fundido`: **nunca sobre una imagen protagonista**. `--comparar
+    a,b --en 2,5` deja una hoja lado a lado; `--recorrido a,b` un video con cada una
+    sobre el mismo tramo y su nombre, para mirar en el teléfono. La pantalla se ve de
+    verdad a 1080: bajo ~1,25 pixeles por línea las líneas y la máscara se apagan (a
+    540 el tubo sale sin líneas, a propósito). Las referencias y por qué cada perilla
+    es como es: `direccion/ANALOGO.md`.
 12. **Música propia y videos de afuera:** `componer <p>` escribe una canción
     neutra en código (afinada, al tempo, sin derechos); `musicalizar <p>` le pone
     una pista a un video que ya existe sin tocar la imagen (compone primero si
@@ -494,6 +507,10 @@ el parámetro que la mueve. Hablar con esas palabras; si Miguel usa una propia
 - Render de un tramo de 30 s: ~20 s en la calma, ~70 s en el acto III, y en el
   pico del caos ~15 s por cada segundo de video (cientos de piezas + ecos).
 - Para decidir, renderizar tramos; el video completo, en segundo plano.
+- `analogo` (medido el 2026-11-20 en el i7-11800H): un proceso hace ~2 cuadros por segundo
+  con cinta + pantalla a 1620×1080 (la cinta sola, ~7); en paralelo no pasa de ~5 (los
+  núcleos bajan de frecuencia y la memoria se comparte). Un minuto de video a 1080 con
+  pantalla: unos 5 minutos.
 
 ## timeline.json
 

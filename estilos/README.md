@@ -13,7 +13,7 @@ material y experimento (`en`: lo que salió de un ejercicio o de una noche). Des
 
 | Capa | Qué es | Dónde vive |
 |---|---|---|
-| **Técnica** | lo que el motor sabe hacer: un modo (`collage`, `secuencia`, `pulso`…), un momento (`rafaga`, `destacado`…), un comando (`sincronizar`, `transformar`…) o una capa hecha en código (`recuerdo`, `fugas`…) | el código, `py/montaje/` |
+| **Técnica** | lo que el motor sabe hacer: un modo (`collage`, `secuencia`, `pulso`…), un momento (`rafaga`, `destacado`…), un comando (`sincronizar`, `transformar`, `analogo`: una cadena de aparatos analógicos, ver `direccion/ANALOGO.md`…) o una capa hecha en código (`recuerdo`, `fugas`…) | el código, `py/montaje/` |
 | **Estilo** | una técnica con sus valores, un nombre, para qué sirve, con qué material, y el veredicto de Miguel | aquí, un archivo por estilo |
 | **Guion** | el video partido en tramos, cada uno con lo que tiene que pasar y su estilo | el proyecto de cada video (`GUION.md`) |
 

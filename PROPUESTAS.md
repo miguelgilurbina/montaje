@@ -77,9 +77,28 @@ Lo que quedó para después, de lo que se propuso el 2026-11-19 (Miguel eligió 
 | G6 | **Gráficos que se dibujan:** el círculo y la flecha a mano, el subrayado que se traza, la ruta que avanza en un mapa, el número que cuenta, barras y línea de tiempo (lo que pedía el documental). | Nada. |
 | G7 | **Imprenta:** tramado de puntos, registro corrido (tintas que no calzan) y papel: la voz serigráfica de las tintas del arte. | Nada. |
 | G8 | **Luz y óptica:** luces que se cuelan, viñeta, aberración cromática, destello de lente. | Nada. |
-| G9 | **Señal rota:** datamosh y píxeles ordenados por brillo (amplía `senal`). | Nada. |
+| G9 | **Señal rota:** datamosh y píxeles ordenados por brillo (amplía `senal`). El lado analógico (cinta, antena, sincronismo perdido) se hizo el 2026-11-20 en la mesa analógica (ver abajo). | Nada. |
 | G10 | **Recorte y collage:** la persona recortada como sticker, fotos que caen sobre una mesa. | **Descarga con ok:** un modelo que separe a la persona del fondo. |
 | G11 | **Profundidad 2.5D:** una foto que se mueve en capas, como si tuviera volumen. | **Descarga con ok:** un modelo de profundidad (~100 MB). |
+
+## La mesa analógica (2026-11-20)
+
+Miguel, antes de dormir: «Busca referencias para alteración de vídeo análogo y trabaja en implementar eso en el
+proyecto. Sigue tu intuición». **Hecho esa noche:** `py/montaje/analogo.py` simula la señal NTSC aparato por
+aparato (cámara, letreros del aparato, cinta VHS, antena, TBC, colorizador, imán, relieve Rutt/Etra,
+realimentación, televisor de tubo), con quince cadenas en la galería (`propuesta`, experimento 24) y sus
+referencias en `direccion/ANALOGO.md`. Amplía G9 por el lado analógico (el datamosh y los píxeles ordenados son
+digitales y siguen pendientes). Lo que queda, en el orden en que lo haría:
+
+| # | Qué | Qué da | Qué necesita |
+|---|---|---|---|
+| A1 | **Juzgar las quince** en `/estilos` (filtro «en 24-mesa-analogica») o en el recorrido a 1080. | Saber cuáles son de Curiana y cuáles sobran; los «a medias» dicen qué perilla mover. | Unos minutos de Miguel. |
+| A2 | **El sonido de la cinta.** El audio lineal del VHS: banda de 100 Hz a 10 kHz (menos en EP), el silbido, el *wow* y *flutter* (la velocidad que tiembla, la misma base de tiempo de la imagen) y los dropouts que hunden el nivel; el HiFi, más limpio. | Imagen y sonido pasan por la misma cinta. | Nada; Claude no oye: se mide, el oído es de Miguel. |
+| A3 | **Película.** Super 8 y 16 mm con lo que dicen las referencias: grano según la luz, *gate weave* lento, el halo rojo de las altas luces, el cian que se va primero (dominante roja), la cadencia de 18 cuadros. La galería ya tiene `recuerdo`, `rayas` y `pelicula` como capas; esto sería un aparato `pelicula` en la misma mesa. | El archivo familiar en película, no sólo en video. | Nada. |
+| A4 | **Ventanas desde el guion.** Hoy las ventanas se dan a mano (`--ventana`); que una capa del guion diga «este tramo, en la cinta de la casa» y `render` pase sólo esos segundos por la cadena. | El analógico como un estilo más del guion, sin comandos aparte. | Nada. |
+| A5 | **Entrelazado y pausa.** Los dos campos de cada cuadro (el peinado cuando algo se mueve) y la pausa del VCR (un campo repetido con su barra de ruido). | Dos gestos más de la cinta; la pausa sirve al pulso, como congelar en el golpe (G3). | Nada. |
+| A6 | **Más rápido.** La pantalla a 1080 es lo que más pesa (~0,3 s por cuadro). En la tarjeta de video (un shader) sería tiempo real. | Previews de 1080 con tubo en segundos. | Nada para probar; quizá una biblioteca (con ok). |
+| A7 | **Una captura de verdad.** Si Miguel tiene una cinta, un VCR o un televisor de tubo: grabar unos segundos (la cinta reproducida, la pantalla filmada) y ajustar las perillas contra eso. | La mejor referencia posible; lo que las fuentes no dicen (ver «Lo que no se pudo verificar» en `direccion/ANALOGO.md`). | El aparato y unos minutos. |
 
 ## Sintetización: lo que el motor todavía no sabe
 
@@ -105,6 +124,10 @@ casi todos (ver la ficha del 21). Quedan, sin urgencia:
   también mira el área que parpadea y el rojo saturado. Sirve de alarma, no de certificado.
 - Los **rótulos** se dibujan con las letras de reemplazo (ver S8) y no saben de zonas seguras (S9).
 - Si la **partitura** no logra leer el espectro de la canción, esa pestaña del render se queda sin dibujarla y no avisa.
+- **`hoja --cada`** no toma el cuadro del segundo que escribe en cada celda: con `--desde 4.5 --cada 6` sobre un
+  video cosido de piezas de 6 s, las celdas cayeron al comienzo de cada pieza (visto el 2026-11-20 en el recorrido
+  de la mesa analógica; con `ffmpeg -ss` directo, los cuadros caen donde deben). Usa el filtro `fps=1/cada`; habría
+  que sacar cada cuadro por su segundo.
 - Los bordes de los **tramos** del guion van al compás: las capas de síntesis de un tramo conviene
   escribirlas con los mismos segundos que imprime `guion`.
 

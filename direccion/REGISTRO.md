@@ -179,3 +179,8 @@ archivo, qué comando correr) no van aquí.
 - «Mira, de 10 le doy un 6. Tiene partes que se sincronizan muy bien, y encuentro que se nota un uso muy bueno de la galería que estamos haciendo. Pero siento que no está del todo listo. O sea quedó bien, pero no es uff, muy buen ejemplo, creo que igual es porque estamos usando material ya hecho, nada producido específicamente para este video. Pero igual creo que es buen score.»
 - Qué sincronizó mejor: «Las finales, siento que el primer tramo o la primera mitad del video no calzó al 100 con el feel porque los videos estaban en velocidad normal en muchos casos, y al final si se hicieron esos ajustes a la velocidad ya que justo la canción lleva a eso.»
 - Sobre la versión lenta: «excelente, ahora lo único que agregaría sería subtitulos de la canción en el medio.»
+
+## 2026-11-20 · La mesa analógica (24)
+
+- Antes de dormir: «Busca referencias para alteración de vídeo análogo y trabaja en implementar eso en el proyecto.
+  Yo voy a dormir. Sigue tu intuición».

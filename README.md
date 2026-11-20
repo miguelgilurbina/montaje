@@ -25,7 +25,7 @@ canción ───musica────▶ musica.json   ├─planificar─▶ tim
                                               Studio / chat / a mano          hoja ▼  (lo que mira el agente)
                                                                              hojas/*.png
                                                                                   │
-                                  sonorizar (efectos) · senal (glitch) · ensamblar (cortinas) · paquete (redes)
+                                  sonorizar (efectos) · senal (glitch) · analogo (cinta, antena, tubo) · ensamblar (cortinas) · paquete (redes)
 ```
 
 ## Qué sabe hacer
@@ -65,6 +65,12 @@ canción ───musica────▶ musica.json   ├─planificar─▶ tim
   afinados a la tónica (`sonorizar`), fallas de transmisión en las transiciones
   (`senal`), cortinas con su propio audio (`ensamblar`), paquete por red social
   masterizado a −14 LUFS (`paquete`).
+- **Mesa analógica** (`analogo`): un video o una foto pasado por aparatos simulados en su señal
+  NTSC —la cámara de video, la cinta VHS (formatos, copias de copias, tracking, desgaste, con su
+  sonido), la antena (nieve, fantasmas, interferencia, sincronismo perdido), el corrector de base
+  de tiempo, el video arte (colorizador, imán de Paik, relieve Rutt/Etra, realimentación) y el
+  televisor de tubo—. Los defectos salen de cómo se codificaba el color y de lo que cada aparato
+  le hacía; las referencias, en `direccion/ANALOGO.md`.
 
 ## Requisitos
 
