@@ -62,7 +62,7 @@ ESTADOS = {
 }
 MODOS = {"collage", "secuencia", "cinta", "actos", "superposicion", "pulso", "solo-sintesis"}
 MOMENTOS = {"destacado", "rafaga", "barrido", "video"}
-COMANDOS = {"sincronizar", "senal", "sonorizar", "ensamblar", "musicalizar", "transformar", "proyector"}
+COMANDOS = {"sincronizar", "senal", "sonorizar", "ensamblar", "musicalizar", "transformar", "proyector", "analogo"}
 #: Capas hechas en código que van encima de un montaje (`sintesis` en el timeline).
 CAPAS = {"recuerdo", "fugas", "polvo", "partitura", "campo", "tinta", "calima", "tv", "titulo", "credito", "cuenta", "pelicula", "onda", "foco", "golpe", "rotulos", "luz", "barras", "rayas"}
 CAMPOS = ["nombre", "frase", "para", "material", "energia", "dura", "tecnica", "estado", "miguel", "visto_en", "evitar"]
@@ -116,6 +116,14 @@ def errores(e: dict) -> list[str]:
         validos = {"modo": MODOS, "momento": MOMENTOS, "comando": COMANDOS, "capa": CAPAS}[k]
         if t[k] not in validos:
             mal.append(f"`tecnica.{k}`: «{t[k]}» no es {' / '.join(sorted(validos))}")
+    if isinstance(t, dict) and t.get("comando") == "analogo":
+        from . import analogo
+
+        if "cadena" not in t:
+            mal.append("`tecnica.cadena`: la lista de aparatos (ver py/montaje/analogo.py)")
+        else:
+            cadena = {"aparatos": t["cadena"], **{k: t[k] for k in ("captura",) if k in t}}
+            mal += [f"`tecnica.cadena`: {m}" for m in analogo.errores(cadena)]
     mal += [f"`visto_en`: no existe el experimento «{p}»" for p in e["visto_en"] if not (PROYECTOS / p / "proyecto.json").exists()]
     return mal
 

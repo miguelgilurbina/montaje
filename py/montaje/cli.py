@@ -535,6 +535,27 @@ def main() -> None:
     s.add_argument("--gana", required=True, help="el id del que eligió, o igual")
     s.add_argument("--via", default="chat", help="por dónde lo dio: chat o galeria")
 
+    s = sub.add_parser("analogo", help="la mesa analógica: un video o una foto pasado por aparatos simulados en su señal (cinta VHS, antena, TBC, televisor de tubo…) → <entrada>-<cadena>.mp4",
+                       description="la mesa analógica: un video o una foto pasado por una cadena de aparatos simulados en su señal NTSC "
+                                   "(cámara, cinta VHS, antena, TBC, colorizador, imán, relieve Rutt/Etra, realimentación, televisor de tubo). "
+                                   "Ver py/montaje/analogo.py y direccion/ANALOGO.md")
+    s.add_argument("entrada", nargs="?", help="el video o la foto (ruta absoluta o dentro de los medios)")
+    s.add_argument("--cadena", help="un estilo de la galería con `comando: analogo`, o la cadena en JSON")
+    s.add_argument("--salida", help="dónde dejarla (por defecto, <entrada>-<cadena>.mp4 al lado)")
+    s.add_argument("--desde", type=float, help="segundo inicial")
+    s.add_argument("--hasta", type=float, help="segundo final")
+    s.add_argument("--segundos", type=float, default=6.0, help="una foto: cuánto dura el video")
+    s.add_argument("--alto", type=int, help="alto de la salida (por defecto, el de la entrada)")
+    s.add_argument("--ventana", nargs=2, type=float, action="append", metavar=("DESDE", "HASTA"),
+                   help="la cadena sólo entra en esos segundos (se repite para varias)")
+    s.add_argument("--fundido", type=float, default=0.5, help="segundos de entrada y salida de cada ventana")
+    s.add_argument("--hilos", type=int, help="procesos a la vez (por defecto, los núcleos menos dos, hasta 12)")
+    s.add_argument("--comparar", help="cadenas separadas por coma: una hoja con un cuadro de cada una, lado a lado")
+    s.add_argument("--en", default="1,3,5", help="los segundos de la hoja de --comparar, separados por coma")
+    s.add_argument("--recorrido", help="cadenas separadas por coma: un video con cada una sobre el mismo tramo "
+                                       "(desde --desde, --segundos cada una), con su nombre; primero, tal cual")
+    s.add_argument("--cadenas", action="store_true", help="lista las cadenas de la galería")
+
     s = sub.add_parser("probar", help="el probador: cada estilo hace su muestra en el mismo banco (mismos clips, misma canción) → medios/estilos/probador/",
                        description="el probador: cada estilo hace su muestra en el mismo banco (mismos clips, misma canción), deja cuadros de "
                                    "referencia y mide lo que tarda → medios/estilos/probador/ (ver py/montaje/probador.py)")
@@ -549,6 +570,11 @@ def main() -> None:
         from . import voz
 
         voz.limpiar(a.archivo, a.salida, a.transcripcion, a.atenuar, a.hueco)
+        return
+    if a.comando == "analogo":
+        from . import analogo
+
+        analogo.cmd(a)
         return
     if a.comando == "probar":
         from . import probador

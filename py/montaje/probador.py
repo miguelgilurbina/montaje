@@ -36,6 +36,7 @@ import os
 import re
 import shutil
 import subprocess
+import time
 from pathlib import Path
 
 from . import clips as catalogo_clips
@@ -252,6 +253,10 @@ def receta(e: dict, cfg: dict, m: dict) -> tuple[dict | None, str]:
         # El proyector suena donde hay película: la de su video (la tira, la cuenta).
         cine = [capa(tipo) for tipo in ("pelicula", "cuenta") if tipo in fuentes] or [capa("pelicula")]
         return {"montaje": {}, "sintesis": cine, "proyector": float(t.get("nivel", 16))}, ""
+    if comando == "analogo":
+        # El banco tal cual, pasado después por la cadena de aparatos (como se usa: sobre un render).
+        cadena = {"aparatos": t["cadena"], **{k: t[k] for k in ("captura", "semilla") if k in t}}
+        return {"montaje": {}, "sintesis": [], "analogo": cadena}, ""
     if comando == "sincronizar":
         return None, POR_QUE_NO["sincronizar"]
     if comando:
@@ -419,12 +424,22 @@ def probar(ids: list[str] | None, fijar: bool = False, rehacer: bool = False) ->
                 render, dibujo, nuevas = dibujar(p)
             calentado = calentado or bool(nuevas)
             dibujado = bool(nuevas)
+            dibujo_del_banco = render
             if r.get("proyector") is not None:
                 proyector.proyector(p, render.name, r["proyector"])
                 render = render.with_name(render.stem + "-proyector.mp4")
+            if r.get("analogo") is not None:
+                from . import analogo
+
+                t0 = time.time()
+                sale = render.with_name(render.stem + "-analogo.mp4")
+                analogo.procesar(render, sale, r["analogo"], callado=True)
+                render = sale
+                # Lo que cuesta un estilo analógico es su cadena, no el banco (que sale guardado).
+                dibujo, dibujado = time.time() - t0, True
             muestra = DESTINO / f"{id_}.mp4"
             _muestra(render, muestra)
-            intermedios = {render, render.with_name(render.stem.removesuffix("-proyector") + ".mp4")}
+            intermedios = {render, dibujo_del_banco}
             # Si cambió la receta, la referencia vieja no sirve para juzgar al motor: se renueva.
             receta_nueva = bool(anterior.get("receta")) and anterior["receta"] != huella_receta(r)
             valores = referencia(id_, render, fijar or receta_nueva)
@@ -435,7 +450,9 @@ def probar(ids: list[str] | None, fijar: bool = False, rehacer: bool = False) ->
             codigo = por_tramos.huella_codigo()[:12]
             # Una misma medida varía hasta un tercio de una vez a otra: vale la menor con el mismo código
             # (lo que el estilo cuesta de verdad, sin lo que el computador estaba haciendo al lado).
-            if dibujado and anterior.get("dibujo_s") and anterior.get("codigo") == codigo and anterior.get("receta") == huella_receta(r):
+            # (No para las cadenas analógicas: su código no entra en la huella, y un motor más lento quedaría escondido.)
+            if (dibujado and not r.get("analogo") and anterior.get("dibujo_s") and anterior.get("codigo") == codigo
+                    and anterior.get("receta") == huella_receta(r)):
                 dibujo = min(dibujo, anterior["dibujo_s"])
             entrada = {"fecha": ahora, "receta": huella_receta(r), "lienzo": f"{tl['ancho']}x{tl['alto']}",
                        "segundos": round(tl["duracion"] / tl["fps"], 2), "mb": round(muestra.stat().st_size / 1e6, 2),
