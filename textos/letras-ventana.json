@@ -1,0 +1,35 @@
+{
+ "nombre": "Letras ventana",
+ "familia": "movimiento",
+ "frase": "La imagen (o el video) se ve sólo dentro de las letras, sobre la noche; al final la cámara atraviesa la I y se abre a la imagen entera.",
+ "para": [
+  "abrir",
+  "título de pieza",
+  "sobre fotos",
+  "sobre video"
+ ],
+ "fuente": "Curiana Cartel",
+ "tamano": 0.36,
+ "mayusculas": true,
+ "interlineado": 0.9,
+ "color": "#eee6d4",
+ "ventana": {
+  "fuera": "#07090d"
+ },
+ "lugar": "centro",
+ "ancho": 0.92,
+ "entrada": {
+  "tipo": "acercar",
+  "dura": 1.0
+ },
+ "salida": {
+  "tipo": "atravesar",
+  "dura": 1.3
+ },
+ "ejemplo": {
+  "texto": "Curiana"
+ },
+ "fondo": "imagen",
+ "estado": "propuesta",
+ "miguel": []
+}

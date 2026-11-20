@@ -1,0 +1,38 @@
+{
+ "nombre": "Letras que se arman",
+ "familia": "movimiento",
+ "frase": "Cada letra llega desde un lugar distinto, girada y chica, y encaja en su sitio: el título se arma solo.",
+ "para": [
+  "abrir",
+  "título de pieza",
+  "energía alta"
+ ],
+ "fuente": "Unbounded",
+ "peso": 800,
+ "tamano": 0.1,
+ "mayusculas": true,
+ "espaciado": 0.03,
+ "interlineado": 1.05,
+ "color": "#eee6d4",
+ "sombra": {
+  "color": "#000000b0",
+  "desenfoque": 0.28,
+  "y": 0.04
+ },
+ "lugar": "centro",
+ "ancho": 0.86,
+ "entrada": {
+  "tipo": "armar",
+  "dura": 1.5
+ },
+ "salida": {
+  "tipo": "fundido",
+  "dura": 0.4
+ },
+ "ejemplo": {
+  "texto": "Se arma\nla señal"
+ },
+ "fondo": "imagen",
+ "estado": "propuesta",
+ "miguel": []
+}

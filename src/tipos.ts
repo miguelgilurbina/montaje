@@ -474,15 +474,23 @@ export type Timeline = {
   planos?: Plano[];
   /** Textos que cruzan varios planos (los de una serie de fotos): en cuadros del video. */
   textos?: TextoPlano[];
-  /** Los subtítulos de la voz, en cuadros del video (una o dos filas, separadas por \n). */
-  subtitulos?: {ini: number; fin: number; texto: string}[];
+  /**
+   * Los subtítulos de la voz, en cuadros del video (una o dos filas, separadas por \n). `palabras`: cuándo se dice cada
+   * palabra del texto ([ini, fin] en cuadros del video), para el karaoke.
+   */
+  subtitulos?: {ini: number; fin: number; texto: string; palabras?: [number, number][]}[];
+  /** Con esto, los subtítulos se dibujan con un letrero de la galería de textos (p. ej. el karaoke) en vez de la caja de siempre. */
+  subtitulos_letrero?: EstiloTexto;
   /** Las tipografías de fuentes/ que usan sus letreros (rutas dentro de fuentes/): el render las pone en la carpeta pública. */
   fuentes?: string[];
   capas: Capa[];
 };
 
-/** Cómo entra un letrero: de a poco, subiendo, acercándose, enfocándose, letra a letra, palabra a palabra o barrido. */
-export type EntradaLetrero = 'fundido' | 'subir' | 'acercar' | 'desenfoque' | 'maquina' | 'palabras' | 'barrido' | 'ninguna';
+/**
+ * Cómo entra un letrero: de a poco, subiendo, acercándose, enfocándose, letra a letra, palabra a palabra, barrido, con
+ * las letras que se arman desde todas partes o en una ola.
+ */
+export type EntradaLetrero = 'fundido' | 'subir' | 'acercar' | 'desenfoque' | 'maquina' | 'palabras' | 'barrido' | 'armar' | 'ola' | 'ninguna';
 export type LugarLetrero = 'centro' | 'arriba' | 'abajo' | 'tercio-inferior' | 'arriba-izquierda' | 'abajo-izquierda' | 'abajo-derecha';
 
 /** Una línea de letra: la tipografía y su forma (los tamaños, en fracción del alto del cuadro; los espacios, en em). */
@@ -524,11 +532,20 @@ export type EstiloTexto = LetraLetrero & {
   /** El bloque, girado (grados): lo escrito a mano o pegado no queda derecho. */
   giro?: number;
   entrada?: {tipo: EntradaLetrero; dura: number};
-  salida?: {tipo: 'fundido' | 'bajar' | 'ninguna'; dura: number};
+  /** atravesar: el letrero crece hasta que la cámara pasa por dentro de una letra (con `ventana`, se abre a la imagen). */
+  salida?: {tipo: 'fundido' | 'bajar' | 'atravesar' | 'ninguna'; dura: number};
   /** La segunda línea (el cargo bajo el nombre, el rol sobre el nombre en los créditos). */
   secundario?: LetraLetrero & {arriba?: boolean};
   /** Créditos que suben: cada fila del texto es una línea; «rol | nombre» pone el rol con la letra secundaria. */
   rodillo?: boolean;
+  /** La imagen (o el video) de abajo se ve sólo dentro de las letras; afuera, el color `fuera`. */
+  ventana?: {fuera: string};
+  /** Cada palabra se enciende cuando se dice: `activa` la que suena, `futura` las que vienen, `dicha` las que ya pasaron. */
+  karaoke?: {activa: string; futura?: string; dicha?: string};
+  /** Late con el golpe: crece un poco en cada pulso (`bpm`, o «cancion» para el tempo del proyecto) y vuelve. */
+  latido?: {bpm: number | 'cancion'; fuerza: number; fase?: number};
+  /** Con la entrada a máquina, el cursor que escribe y después parpadea. */
+  cursor?: boolean;
 };
 
 /**

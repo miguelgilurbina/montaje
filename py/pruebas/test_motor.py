@@ -968,3 +968,59 @@ def test_el_veredicto_llega_a_los_letreros(tmp_path, monkeypatch):
     (tmp_path / "estilos" / "un-letrero.json").write_text("{}", encoding="utf-8")
     with pytest.raises(SystemExit):
         estilos.veredicto("un-letrero", "rechazado")
+
+
+def test_apretar_una_tipografia_aprieta_todo_lo_horizontal(tmp_path):
+    from fontTools.ttLib import TTFont
+
+    from montaje import tipografias
+
+    origen = tipografias.FUENTES / "archivo-black" / "ArchivoBlack-Regular.ttf"
+    destino = tmp_path / "prueba" / "Prueba-Regular.ttf"
+    tipografias.apretar(origen, destino, 0.5, "Prueba Angosta", "de prueba")
+    o, n = TTFont(origen), TTFont(destino)
+    assert n["name"].getDebugName(1) == "Prueba Angosta" and n["name"].getDebugName(6) == "PruebaAngosta-Regular"
+    assert "Archivo Black" in n["name"].getDebugName(0)  # el aviso de la original sigue
+    for g in ("A", "W", "space", "Aacute"):
+        assert abs(n["hmtx"][g][0] - o["hmtx"][g][0] * 0.5) <= 0.5
+    # El alto no cambia; el ancho sí.
+    assert n["glyf"]["H"].yMax == o["glyf"]["H"].yMax and abs(n["glyf"]["H"].xMax - o["glyf"]["H"].xMax * 0.5) <= 1
+    assert "fpgm" not in n  # sin el hinting de la original
+
+
+def test_curiana_cartel_es_archivo_black_al_082():
+    from fontTools.ttLib import TTFont
+
+    from montaje import textos
+
+    familias = textos.registro()
+    assert "Curiana Cartel" in familias
+    o = TTFont(textos.FUENTES / "archivo-black" / "ArchivoBlack-Regular.ttf")
+    n = TTFont(textos.FUENTES / familias["Curiana Cartel"]["archivos"][0]["archivo"])
+    assert all(abs(n["hmtx"][g][0] - o["hmtx"][g][0] * 0.82) <= 0.5 for g in o.getGlyphOrder())
+    assert (textos.FUENTES / "curiana-cartel" / "OFL.txt").is_file()
+
+
+def test_el_latido_toma_el_tempo_del_proyecto():
+    from montaje import textos
+
+    e = textos.estilo("latido-golpe", bpm=96)
+    assert e["latido"]["bpm"] == 96.0
+    with pytest.raises(SystemExit):
+        textos.estilo("latido-golpe")  # late con la canción y no hay tempo
+
+
+def test_los_subtitulos_saben_cuando_se_dice_cada_palabra(tmp_path, monkeypatch):
+    import types
+
+    from montaje import planos, rutas
+
+    (tmp_path / "transcripciones").mkdir()
+    palabras = [{"p": " Hola", "ini": 0.5, "fin": 0.9}, {"p": " radio.", "ini": 1.0, "fin": 1.4}]
+    (tmp_path / "transcripciones" / "voz-1.json").write_text(json.dumps({"segmentos": [{"palabras": palabras}]}), encoding="utf-8")
+    monkeypatch.setattr(rutas, "MEDIOS", tmp_path)
+    p = types.SimpleNamespace(cfg={})
+    subs = planos.subtitulos(p, [{"voz": {"archivo": "voz/voz-1-limpia.wav", "desde": 0.0}}], [(10.0, 20.0)])
+    assert len(subs) == 1 and subs[0]["texto"] == "Hola radio."
+    # El plano empieza en el segundo 10: las palabras se corren con él.
+    assert subs[0]["palabras"] == [(10.5, 10.9), (11.0, 11.4)]

@@ -121,12 +121,18 @@ def derivado_video(p: Proyecto, rel: str, desde: float, dura: float, ancho_min: 
     return destino.relative_to(p.medios).as_posix(), [ancho, alto]
 
 
-def texto_a_timeline(n, t: dict, ini: int, fin: int) -> dict:
+def tempo(p: Proyecto) -> float | None:
+    """El tempo del proyecto, para los letreros que laten «con la canción»: el de la música compuesta o `bpm`."""
+    return (p.cfg.get("componer") or {}).get("bpm") or p.cfg.get("bpm")
+
+
+def texto_a_timeline(n, t: dict, ini: int, fin: int, bpm: float | None = None) -> dict:
     """Un texto en cuadros. Con `letrero`, un estilo de la galería de textos (textos/<id>.json, se dibuja con
-    Letrero.tsx); si no, uno de los estilos propios del modo (`estilo`, con su `tono` y su `lugar`)."""
+    Letrero.tsx; `bpm`, para el que late con la canción); si no, uno de los estilos propios del modo (`estilo`, con
+    su `tono` y su `lugar`)."""
     if t.get("letrero"):
         return {"texto": t["texto"], "estilo": t.get("estilo", "titulo"), "ini": ini, "fin": fin,
-                "letrero": galeria_textos.estilo(t["letrero"]), **({"secundario": t["secundario"]} if t.get("secundario") else {})}
+                "letrero": galeria_textos.estilo(t["letrero"], bpm), **({"secundario": t["secundario"]} if t.get("secundario") else {})}
     if t.get("estilo") not in ESTILOS:
         salir(f"plano {n}: estilo de texto desconocido «{t.get('estilo')}» (hay: {', '.join(sorted(ESTILOS))}; "
               "o un `letrero` de la galería de textos)")
@@ -176,7 +182,7 @@ def plano_a_timeline(p: Proyecto, pl: dict, n_cuadros: int, ini: int, entrada: i
         efectos.append(x)
     if efectos:
         salida["efectos"] = efectos
-    textos = [texto_a_timeline(pl["n"], t, a(t.get("desde", 0)), a(t.get("hasta", 1))) for t in pl.get("textos") or []]
+    textos = [texto_a_timeline(pl["n"], t, a(t.get("desde", 0)), a(t.get("hasta", 1)), tempo(p)) for t in pl.get("textos") or []]
     if pl.get("falta"):
         textos.append({"texto": f"FALTA · {pl['falta']}", "estilo": "aviso", "ini": 0, "fin": n_cuadros})
     if textos:
@@ -248,7 +254,9 @@ def subtitulos(p: Proyecto, planos: list[dict], marcas: list[tuple[float, float]
             texto = " ".join(w["p"].strip() for w in grupo)
             for mal, bien in correcciones.items():
                 texto = texto.replace(mal, bien)
-            salida.append({"t": round(grupo[0]["ini"] + corrimiento, 3), "fin": round(grupo[-1]["fin"] + corrimiento + 0.3, 3), "texto": texto})
+            salida.append({"t": round(grupo[0]["ini"] + corrimiento, 3), "fin": round(grupo[-1]["fin"] + corrimiento + 0.3, 3), "texto": texto,
+                           # Cuándo se dice cada palabra (si una corrección cambia cuántas son, el karaoke las reparte).
+                           "palabras": [(round(w["ini"] + corrimiento, 3), round(w["fin"] + corrimiento, 3)) for w in grupo]})
             grupo.clear()
 
         for w in palabras:
@@ -404,7 +412,7 @@ def planificar(p: Proyecto) -> None:
             # Los textos de la serie, en cuadros del video: siguen encima mientras las fotos se cortan.
             for t in pl.get("textos") or []:
                 textos.append(texto_a_timeline(pl["n"], t, ini + round(float(t.get("desde", 0)) * n_cuadros),
-                                               ini + round(float(t.get("hasta", 1)) * n_cuadros)))
+                                               ini + round(float(t.get("hasta", 1)) * n_cuadros), tempo(p)))
     # La música compuesta dura lo que el video: si el largo cambió, se compone de nuevo.
     if p.cfg.get("componer"):
         ruta = p.medios / p.cfg["musica"]
@@ -434,11 +442,19 @@ def planificar(p: Proyecto) -> None:
         "meta": {"planos": len(planos), "segundos": round(total, 2)},
         "planos": lista,
         **({"textos": textos} if textos else {}),
-        **({"subtitulos": [{"ini": round(s["t"] * fps), "fin": round(s["fin"] * fps), "texto": s["texto"]} for s in subs]} if subs else {}),
+        # Cada subtítulo con el cuadro en que se dice cada palabra: para el karaoke (relativos al subtítulo).
+        **({"subtitulos": [{"ini": round(s["t"] * fps), "fin": round(s["fin"] * fps), "texto": s["texto"],
+                            "palabras": [[round(a * fps) - round(s["t"] * fps), round(b * fps) - round(s["t"] * fps)] for a, b in s["palabras"]]}
+                           for s in subs]} if subs else {}),
         "capas": [],
     }
+    # Los subtítulos con un letrero de la galería (`subtitulos.letrero`), p. ej. el karaoke de la voz.
+    de_subs = (p.cfg.get("subtitulos") or {}).get("letrero")
+    if de_subs and subs:
+        tl["subtitulos_letrero"] = galeria_textos.estilo(de_subs, tempo(p))
     # Las tipografías de los letreros: el render las pone en su carpeta pública (cli._publico).
-    fuentes = galeria_textos.archivos([t["letrero"] for t in [*textos, *(t for x in lista for t in x.get("textos", []))] if t.get("letrero")])
+    usados = [t["letrero"] for t in [*textos, *(t for x in lista for t in x.get("textos", []))] if t.get("letrero")]
+    fuentes = galeria_textos.archivos(usados + ([tl["subtitulos_letrero"]] if tl.get("subtitulos_letrero") else []))
     if fuentes:
         tl["fuentes"] = fuentes
     escribir(p.timeline, tl)

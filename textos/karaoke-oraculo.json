@@ -1,0 +1,37 @@
+{
+ "nombre": "Oráculo palabra a palabra",
+ "familia": "movimiento",
+ "frase": "Una frase grande en Lora cursiva que aparece tenue y se va encendiendo con la voz, palabra por palabra, como leída en voz baja.",
+ "para": [
+  "frase clave",
+  "voz en off",
+  "calma"
+ ],
+ "fuente": "Lora",
+ "peso": 500,
+ "cursiva": true,
+ "tamano": 0.07,
+ "interlineado": 1.3,
+ "color": "#eee6d4",
+ "karaoke": {
+  "activa": "#fff6e0",
+  "futura": "#eee6d433",
+  "dicha": "#eee6d4"
+ },
+ "lugar": "centro",
+ "ancho": 0.7,
+ "entrada": {
+  "tipo": "fundido",
+  "dura": 0.5
+ },
+ "salida": {
+  "tipo": "fundido",
+  "dura": 0.6
+ },
+ "ejemplo": {
+  "texto": "Lo que la radio no dice\ntambién se escucha."
+ },
+ "fondo": "oscuro",
+ "estado": "propuesta",
+ "miguel": []
+}

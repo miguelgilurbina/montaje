@@ -1,0 +1,32 @@
+{
+ "nombre": "Máquina con cursor",
+ "familia": "movimiento",
+ "frase": "Mono que se teclea con su cursor y, al terminar, el cursor parpadea: una terminal, un mensaje que llega, el dato en vivo.",
+ "para": [
+  "dato",
+  "radio",
+  "archivo"
+ ],
+ "fuente": "IBM Plex Mono",
+ "tamano": 0.052,
+ "interlineado": 1.3,
+ "color": "#eee6d4",
+ "lugar": "centro",
+ "alineado": "izquierda",
+ "ancho": 0.7,
+ "cursor": true,
+ "entrada": {
+  "tipo": "maquina",
+  "dura": 1.8
+ },
+ "salida": {
+  "tipo": "fundido",
+  "dura": 0.4
+ },
+ "ejemplo": {
+  "texto": "> sintonizando 88.8…\n> señal encontrada"
+ },
+ "fondo": "oscuro",
+ "estado": "propuesta",
+ "miguel": []
+}

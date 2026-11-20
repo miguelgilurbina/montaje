@@ -37,13 +37,29 @@ export const Planos: React.FC<{tl: Timeline; frame: number}> = ({tl, frame}) => 
     ))}
     {(tl.subtitulos ?? [])
       .filter((s) => frame >= s.ini && frame < s.fin)
-      .map((s) => (
-        <Subtitulo key={s.ini} texto={s.texto} H={tl.alto} />
-      ))}
+      .map((s) =>
+        // Con `subtitulos.letrero`, el de la galería de textos (el karaoke enciende cada palabra cuando se dice).
+        tl.subtitulos_letrero ? (
+          <Letrero
+            key={s.ini}
+            e={tl.subtitulos_letrero}
+            texto={s.texto}
+            palabras={s.palabras}
+            f={frame - s.ini}
+            dura={s.fin - s.ini}
+            fps={tl.fps}
+            W={tl.ancho}
+            H={tl.alto}
+            enPanel={Boolean(tl.base)}
+          />
+        ) : (
+          <Subtitulo key={s.ini} texto={s.texto} H={tl.alto} />
+        ),
+      )}
   </AbsoluteFill>
 );
 
-/** El subtítulo de la voz: abajo al centro, letra blanca sobre una caja oscura, como los del video del encuentro. */
+/** El subtítulo de la voz: abajo al centro, letra blanca sobre una caja oscura. */
 const Subtitulo: React.FC<{texto: string; H: number}> = ({texto, H}) => {
   const k = H / 1080;
   return (

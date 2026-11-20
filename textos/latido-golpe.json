@@ -1,0 +1,36 @@
+{
+ "nombre": "Latido al golpe",
+ "familia": "movimiento",
+ "frase": "Una palabra en Anton que crece de golpe en cada pulso y vuelve, como un parlante. En un video late con el tempo del proyecto.",
+ "para": [
+  "golpe",
+  "pulso",
+  "energía alta",
+  "redes"
+ ],
+ "fuente": "Anton",
+ "tamano": 0.26,
+ "mayusculas": true,
+ "interlineado": 0.9,
+ "color": "#e6b43c",
+ "latido": {
+  "bpm": "cancion",
+  "fuerza": 0.07
+ },
+ "lugar": "centro",
+ "ancho": 0.9,
+ "entrada": {
+  "tipo": "acercar",
+  "dura": 0.3
+ },
+ "salida": {
+  "tipo": "fundido",
+  "dura": 0.4
+ },
+ "ejemplo": {
+  "texto": "Al pulso"
+ },
+ "fondo": "oscuro",
+ "estado": "propuesta",
+ "miguel": []
+}

@@ -30,16 +30,18 @@ FAMILIAS = {
     "frases": "frases destacadas",
     "rotulos": "rótulos y citas",
     "subtitulos": "subtítulos y créditos",
+    # Elegida por Miguel el 2026-11-19: la ventana, atravesar una letra, el karaoke, el latido, las letras que se arman.
+    "movimiento": "texto en movimiento",
 }
 LUGARES = {"centro", "arriba", "abajo", "tercio-inferior", "arriba-izquierda", "abajo-izquierda", "abajo-derecha"}
-ENTRADAS = {"fundido", "subir", "acercar", "desenfoque", "maquina", "palabras", "barrido", "ninguna"}
-SALIDAS = {"fundido", "bajar", "ninguna"}
+ENTRADAS = {"fundido", "subir", "acercar", "desenfoque", "maquina", "palabras", "barrido", "armar", "ola", "ninguna"}
+SALIDAS = {"fundido", "bajar", "atravesar", "ninguna"}
 FONDOS = {"oscuro", "claro", "imagen", "mapa"}
 ALINEADOS = {"izquierda", "centro", "derecha"}
 #: Lo que va al timeline (la forma). El resto (nombre, frase, ejemplo, veredicto…) es de la galería.
 DIBUJO = ["fuente", "peso", "cursiva", "variacion", "tamano", "mayusculas", "espaciado", "interlineado", "color", "compresion",
           "contorno", "sombra", "caja", "resaltado", "barra", "alineado", "lugar", "ancho", "giro", "entrada", "salida",
-          "secundario", "rodillo"]
+          "secundario", "rodillo", "ventana", "karaoke", "latido", "cursor"]
 CAMPOS = ["nombre", "familia", "frase", "para", "fuente", "tamano", "color", "lugar", "ejemplo", "fondo", "estado", "miguel"]
 
 
@@ -113,11 +115,22 @@ def errores(e: dict, familias: dict | None = None) -> list[str]:
     mal += _letra(e, "", familias)
     if e.get("secundario"):
         mal += _letra(e["secundario"], "`secundario`: ", familias)
+    if e.get("latido"):
+        bpm = e["latido"].get("bpm")
+        if bpm != "cancion" and not (isinstance(bpm, (int, float)) and 30 <= bpm <= 240):
+            mal.append(f"`latido.bpm`: un tempo de 30 a 240, o «cancion» para el del proyecto (no {bpm})")
+        if not isinstance(e["latido"].get("fuerza"), (int, float)) or not 0 < e["latido"]["fuerza"] <= 0.5:
+            mal.append("`latido.fuerza`: cuánto crece en el golpe, de 0 a 0,5")
+    if e.get("ventana") and not str(e["ventana"].get("fuera", "")).startswith("#"):
+        mal.append("`ventana.fuera`: el color de afuera de las letras, en #rrggbb")
+    if e.get("karaoke") and not str(e["karaoke"].get("activa", "")).startswith("#"):
+        mal.append("`karaoke.activa`: el color de la palabra que suena, en #rrggbb")
     return mal
 
 
-def estilo(id_: str) -> dict:
-    """El estilo listo para el timeline: sólo su forma (lo que dibuja Letrero.tsx), con su id."""
+def estilo(id_: str, bpm: float | None = None) -> dict:
+    """El estilo listo para el timeline: sólo su forma (lo que dibuja Letrero.tsx), con su id. Un `latido` con el
+    tempo «cancion» toma `bpm`, el del proyecto."""
     ruta = TEXTOS / f"{id_}.json"
     if not ruta.exists():
         hay = ", ".join(e["id"] for e in leer())
@@ -126,7 +139,12 @@ def estilo(id_: str) -> dict:
     mal = errores(e)
     if mal:
         salir(f"textos/{id_}.json: " + "; ".join(mal))
-    return {"id": id_, **{k: e[k] for k in DIBUJO if k in e}}
+    forma = {"id": id_, **{k: e[k] for k in DIBUJO if k in e}}
+    if forma.get("latido", {}).get("bpm") == "cancion":
+        if not bpm:
+            salir(f"el letrero «{id_}» late con la canción y el proyecto no tiene tempo (`componer.bpm` o `bpm` en proyecto.json)")
+        forma["latido"] = {**forma["latido"], "bpm": float(bpm)}
+    return forma
 
 
 def archivos(estilos: list[dict]) -> list[str]:

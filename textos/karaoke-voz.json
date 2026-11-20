@@ -1,0 +1,42 @@
+{
+ "nombre": "Karaoke de la voz",
+ "familia": "movimiento",
+ "frase": "Subtítulo en caja donde cada palabra se enciende en oro cuando se dice: las que vienen, más tenues. Sigue los tiempos de la voz.",
+ "para": [
+  "subtítulos",
+  "voz en off",
+  "redes",
+  "accesible"
+ ],
+ "fuente": "Atkinson Hyperlegible Next",
+ "peso": 600,
+ "tamano": 0.044,
+ "interlineado": 1.35,
+ "color": "#ffffff",
+ "caja": {
+  "color": "#000000b8",
+  "relleno": 0.38,
+  "radio": 0.12
+ },
+ "karaoke": {
+  "activa": "#e6b43c",
+  "futura": "#ffffff8c",
+  "dicha": "#ffffff"
+ },
+ "lugar": "abajo",
+ "ancho": 0.8,
+ "entrada": {
+  "tipo": "fundido",
+  "dura": 0.12
+ },
+ "salida": {
+  "tipo": "fundido",
+  "dura": 0.12
+ },
+ "ejemplo": {
+  "texto": "Así se enciende cada palabra\njusto cuando la voz la dice."
+ },
+ "fondo": "imagen",
+ "estado": "propuesta",
+ "miguel": []
+}
