@@ -1,0 +1,34 @@
+{
+ "nombre": "Cinta gastada",
+ "frase": "Una cinta en EP muy usada: el tracking se pierde abajo y a ratos sube, rayas blancas donde falta óxido y arrugas que hacen saltar la imagen. El sonido pasa por la misma cinta: banda angosta, silbido, el temblor de la velocidad, y se hunde en cada arruga.",
+ "para": [
+  "transición",
+  "subir la energía"
+ ],
+ "material": "cualquiera",
+ "energia": "alta",
+ "dura": "unos compases",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "cinta",
+    "formato": "EP",
+    "desgaste": 0.8,
+    "tracking": 0.7,
+    "arrugas": 3,
+    "sonido": "lineal"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "24-mesa-analogica"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide",
+  "un tramo largo: cansa; va mejor en ventanas cortas",
+  "si la canción tiene que oírse limpia: la cinta le quita agudos y le suma silbido (Claude no oye; se midió, el oído es de Miguel)"
+ ]
+}

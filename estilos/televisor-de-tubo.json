@@ -1,0 +1,29 @@
+{
+ "nombre": "Televisor de tubo",
+ "frase": "Lo que sea, en un televisor de tubo: líneas de barrido que engordan en lo claro, la rejilla de fósforos, el vidrio curvo con sus esquinas, el resplandor y el blanco azulado de 9300 K.",
+ "para": [
+  "mostrar el archivo",
+  "respirar",
+  "cerrar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo o el video entero",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "pantalla"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "24-mesa-analogica"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide",
+  "salidas chicas: bajo unos 1100 px de ancho la máscara y las líneas se apagan (a esa distancia no se distinguen); se ve a 1080"
+ ]
+}

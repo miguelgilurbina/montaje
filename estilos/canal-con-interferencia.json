@@ -1,0 +1,48 @@
+{
+ "nombre": "Canal con interferencia",
+ "frase": "Un canal con interferencia: rayas diagonales que se mueven, dos fantasmas y la barra del zumbido de la red que sube despacio por la pantalla.",
+ "para": [
+  "abrir",
+  "transición"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "antena",
+    "nieve": 0.04,
+    "fantasma": [
+     [
+      0.6,
+      0.2
+     ],
+     [
+      3.5,
+      0.12
+     ]
+    ],
+    "interferencia": [
+     [
+      2.3,
+      0.035
+     ]
+    ],
+    "zumbido": 0.06
+   },
+   {
+    "aparato": "pantalla"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "24-mesa-analogica"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

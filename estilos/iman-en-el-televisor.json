@@ -1,0 +1,32 @@
+{
+ "nombre": "Imán en el televisor",
+ "frase": "Un imán junto al tubo (el «Magnet TV» de Nam June Paik, 1965): la imagen se tuerce alrededor de un punto que se pasea, y ahí el color se corre de tono.",
+ "para": [
+  "transición",
+  "subir la energía"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "unos compases",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "iman",
+    "fuerza": 0.9,
+    "radio": 0.3
+   },
+   {
+    "aparato": "pantalla"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "24-mesa-analogica"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

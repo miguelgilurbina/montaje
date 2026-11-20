@@ -1,0 +1,28 @@
+{
+ "nombre": "Colorizador de tintas",
+ "frase": "El colorizador de un sintetizador de video: el brillo se vuelve las tintas de Curiana (noche, índigo, eléctrico, ocre, oro, hueso) en seis bandas planas.",
+ "para": [
+  "presentar la marca",
+  "transición"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "unos compases",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "colorizador",
+    "bandas": 6
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "24-mesa-analogica"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

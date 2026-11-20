@@ -1,0 +1,33 @@
+{
+ "nombre": "Copia de copia",
+ "frase": "La tercera copia de una copia en LP: cada pasada suma ruido y le quita detalle, y el color se despega de la forma. El sonido pasa por la misma cinta: la pista lineal, casi mono, con su silbido y su temblor.",
+ "para": [
+  "mostrar el archivo",
+  "respirar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "cinta",
+    "formato": "LP",
+    "generaciones": 3,
+    "desgaste": 0.35,
+    "sonido": "lineal"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "24-mesa-analogica"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide",
+  "rostros que tienen que reconocerse: a la tercera copia se pierden",
+  "si la canción tiene que oírse limpia: la cinta le quita agudos y le suma silbido (Claude no oye; se midió, el oído es de Miguel)"
+ ]
+}

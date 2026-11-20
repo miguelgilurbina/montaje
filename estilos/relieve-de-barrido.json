@@ -1,0 +1,38 @@
+{
+ "nombre": "Relieve de barrido",
+ "frase": "El procesador de barrido Rutt/Etra: cada línea se levanta según su brillo y la imagen se vuelve un relieve de líneas doradas sobre la noche.",
+ "para": [
+  "abrir",
+  "transición",
+  "subir la energía"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "unos compases",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "relieve"
+   },
+   {
+    "aparato": "colorizador",
+    "tintas": [
+     "#07090d",
+     "#c36712",
+     "#e6b43c",
+     "#f3ead4"
+    ]
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "24-mesa-analogica"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide",
+  "material quieto y plano: el relieve vive del movimiento y del contraste"
+ ]
+}

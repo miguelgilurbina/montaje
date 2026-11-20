@@ -1,0 +1,49 @@
+{
+ "nombre": "Cámara de los 90",
+ "frase": "La cámara de video de la familia: la fecha y la hora grabadas abajo, una columna clara sobre cada luz fuerte, los blancos que se queman y el color que se corre cuando cambia la luz.",
+ "para": [
+  "mostrar el archivo",
+  "abrir"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "camara"
+   },
+   {
+    "aparato": "osd",
+    "textos": [
+     {
+      "texto": "{hora}",
+      "lugar": "abajo-derecha",
+      "fila": 1
+     },
+     {
+      "texto": "{fecha}",
+      "lugar": "abajo-derecha"
+     }
+    ],
+    "fecha": "1994-10-12",
+    "hora": "19:42:00"
+   },
+   {
+    "aparato": "cinta",
+    "formato": "SP",
+    "desgaste": 0.2
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "24-mesa-analogica"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide",
+  "la fecha es inventada: si el material tiene la suya, se pone la de verdad (`fecha`)"
+ ]
+}

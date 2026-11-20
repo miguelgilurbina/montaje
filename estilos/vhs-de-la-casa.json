@@ -1,0 +1,30 @@
+{
+ "nombre": "VHS de la casa",
+ "frase": "Como una cinta de la casa digitalizada: el color corrido hacia la derecha, los bordes con su halo claro, vetas de color en lo liso, las líneas que tiemblan y la costura del cambio de cabezal abajo.",
+ "para": [
+  "mostrar el archivo",
+  "respirar",
+  "abrir"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo o el video entero",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "cinta",
+    "formato": "SP",
+    "desgaste": 0.15
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "24-mesa-analogica"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

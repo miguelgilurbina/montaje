@@ -1,0 +1,23 @@
+{
+ "titulo": "24 · La mesa analógica",
+ "idea": "Miguel, 2026-11-20, antes de dormir: «Busca referencias para alteración de vídeo análogo y trabaja en implementar eso en el proyecto. Yo voy a dormir. Sigue tu intuición». Viene de su flujo «Video Glitch» (2026-10-12): un aparato que rompe la señal y un TBC que la estabiliza. Aquí la señal NTSC se simula aparato por aparato (cámara, cinta, antena, TBC, procesadores de video arte, televisor de tubo) y los defectos salen de esa física. El motor es py/montaje/analogo.py; las referencias, direccion/ANALOGO.md.",
+ "biblioteca": "probador",
+ "nota": "No tiene montaje propio: las cadenas se prueban sobre el banco del probador (sus muestras en /estilos) y sobre un clip del banco a 1080 para mirar de cerca (`python montaje.py analogo … --recorrido`). Las cadenas viven en estilos/ con `comando: analogo`.",
+ "cadenas": [
+  "vhs-de-la-casa",
+  "copia-de-copia",
+  "cinta-gastada",
+  "cinta-con-tbc",
+  "camara-de-los-90",
+  "camara-de-tubo",
+  "antena-lejana",
+  "canal-con-interferencia",
+  "se-pierde-la-senal",
+  "televisor-de-tubo",
+  "vhs-en-el-televisor",
+  "iman-en-el-televisor",
+  "relieve-de-barrido",
+  "tunel-de-video",
+  "colorizador-de-tintas"
+ ]
+}

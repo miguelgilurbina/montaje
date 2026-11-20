@@ -1,0 +1,32 @@
+{
+ "nombre": "VHS en el televisor",
+ "frase": "La cinta de la casa vista en el televisor de tubo: el VHS con su color corrido y su costura abajo, dentro del vidrio curvo.",
+ "para": [
+  "mostrar el archivo",
+  "respirar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo o el video entero",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "cinta",
+    "formato": "SP",
+    "desgaste": 0.2
+   },
+   {
+    "aparato": "pantalla"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "24-mesa-analogica"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

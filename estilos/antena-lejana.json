@@ -1,0 +1,38 @@
+{
+ "nombre": "Antena lejana",
+ "frase": "La señal que llega de lejos, en un televisor de tubo: nieve de colores, un fantasma corrido a la derecha y el color que va y viene cuando la señal baja.",
+ "para": [
+  "abrir",
+  "transición",
+  "presentar la marca"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "antena",
+    "nieve": 0.13,
+    "fantasma": [
+     [
+      1.2,
+      0.25
+     ]
+    ]
+   },
+   {
+    "aparato": "pantalla"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "24-mesa-analogica"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}
