@@ -1,0 +1,42 @@
+{
+ "nombre": "Videollamada que se corta",
+ "frase": "La conexión mala: poquitos cuadros que llegan cuando pueden, la imagen hecha bloques, y paquetes perdidos que dejan manchas de colores que se arrastran hasta que llega un cuadro entero.",
+ "para": [
+  "transición",
+  "destacar"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "unos segundos",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "sensor",
+    "resolucion": [
+     320,
+     240
+    ],
+    "cuadros": 10,
+    "irregular": 0.7,
+    "ruido": 0.6,
+    "rango": 0.5,
+    "encuadre": "llenar"
+   },
+   {
+    "aparato": "compresion",
+    "calidad": 0.1,
+    "gop": 60,
+    "errores": 0.6
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

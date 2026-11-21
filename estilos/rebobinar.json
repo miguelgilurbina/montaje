@@ -1,0 +1,34 @@
+{
+ "nombre": "Rebobinar",
+ "frase": "La imagen corre hacia atrás, rápido, entre dos barras de ruido que suben, con el color que se pierde y el ◀◀ arriba: volver a un recuerdo.",
+ "para": [
+  "transición",
+  "mostrar el archivo"
+ ],
+ "material": "cualquiera",
+ "energia": "alta",
+ "dura": "un segundo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "cinta",
+    "formato": "SP",
+    "desgaste": 0.2
+   },
+   {
+    "aparato": "casetera",
+    "rebobinar": 4.0
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "si el clip es corto: lo que se ve hacia atrás es lo que ya pasó, unos segundos antes",
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

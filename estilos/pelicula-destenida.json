@@ -1,0 +1,32 @@
+{
+ "nombre": "Película desteñida",
+ "frase": "Una copia de color que envejeció: el cian y el amarillo se fueron y quedó el rojo magenta, con poco contraste, más polvo y rayas que duran.",
+ "para": [
+  "mostrar el archivo",
+  "respirar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "pelicula",
+    "formato": "16mm",
+    "emulsion": "ektachrome",
+    "desvanecido": 0.85,
+    "polvo": 1.6,
+    "rayas": 1.2
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

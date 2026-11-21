@@ -1,0 +1,34 @@
+{
+ "nombre": "Foto con fecha",
+ "frase": "La foto de la cámara de rollo de bolsillo: grano fino, colores de laboratorio y la fecha naranja abajo a la derecha, en siete segmentos inclinados.",
+ "para": [
+  "mostrar el archivo",
+  "presentar la marca"
+ ],
+ "material": "fotos",
+ "energia": "calma",
+ "dura": "una foto",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "pelicula",
+    "formato": "16mm",
+    "cuadros": 0,
+    "fecha": "'94 10 12",
+    "vaiven": 0.0,
+    "polvo": 0.3,
+    "rayas": 0.0
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "una foto que ya tiene fecha",
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

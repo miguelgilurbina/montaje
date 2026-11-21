@@ -1,0 +1,37 @@
+{
+ "nombre": "Estrobo de la consola",
+ "frase": "A ratos la consola retiene la imagen y la suelta a golpes: el movimiento entrecortado de los videos de boda y de los programas de baile de los 90.",
+ "para": [
+  "subir la energía",
+  "destacar"
+ ],
+ "material": "cualquiera",
+ "energia": "alta",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "consola",
+    "efecto": "estrobo",
+    "cuando": "a ratos",
+    "por_minuto": 6.0,
+    "dura": 2.0,
+    "cada": 5
+   },
+   {
+    "aparato": "cinta",
+    "formato": "SP",
+    "desgaste": 0.2
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

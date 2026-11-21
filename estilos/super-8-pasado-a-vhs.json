@@ -1,0 +1,34 @@
+{
+ "nombre": "Super 8 pasado a VHS",
+ "frase": "La película de la familia que alguien pasó a cassette: el grano y el paso a saltitos de la película, y encima el color corrido y el temblor de la cinta.",
+ "para": [
+  "mostrar el archivo",
+  "respirar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo o el video entero",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "pelicula",
+    "polvo": 0.6,
+    "rayas": 0.3
+   },
+   {
+    "aparato": "cinta",
+    "formato": "LP",
+    "desgaste": 0.25
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

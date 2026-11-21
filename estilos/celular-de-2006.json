@@ -1,0 +1,46 @@
+{
+ "nombre": "Celular de 2006",
+ "frase": "El video de un celular con cámara: 176 × 144 pixeles con barras a los lados, 15 cuadros por segundo con saltos, bloques que se arrastran cuando algo se mueve, ruido en lo oscuro, lo que se mueve torcido y el sonido de teléfono.",
+ "para": [
+  "mostrar el archivo",
+  "abrir",
+  "destacar"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "sensor",
+    "resolucion": [
+     176,
+     144
+    ],
+    "cuadros": 15,
+    "irregular": 0.3,
+    "ruido": 0.9,
+    "rango": 0.7,
+    "balance": 0.3,
+    "detalle": 0.6,
+    "aliasing": 0.6,
+    "rodar": 0.6,
+    "sonido": "celular"
+   },
+   {
+    "aparato": "compresion",
+    "calidad": 0.22,
+    "gop": 30
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

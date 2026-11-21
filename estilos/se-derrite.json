@@ -1,0 +1,32 @@
+{
+ "nombre": "Se derrite",
+ "frase": "El datamosh: el códec deja de corregir y sólo mueve lo que ya tenía. En cada corte la imagen de antes se derrite con el movimiento de la nueva, hasta que llega un cuadro entero (cada tres segundos).",
+ "para": [
+  "transición",
+  "destacar",
+  "subir la energía"
+ ],
+ "material": "cualquiera",
+ "energia": "alta",
+ "dura": "unos segundos",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "compresion",
+    "calidad": 0.55,
+    "gop": 90,
+    "residuo": 0.0
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "las caras: se borran y se mezclan",
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

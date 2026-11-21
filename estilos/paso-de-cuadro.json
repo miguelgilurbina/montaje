@@ -1,0 +1,21 @@
+{
+ "nombre": "Paso de cuadro",
+ "frase": "El clip a la mitad de cuadros por segundo (cada cuadro dura dos): el movimiento a saltitos de la película vieja o del stop motion.",
+ "para": [
+  "respirar",
+  "mostrar el archivo"
+ ],
+ "material": "clips",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "modo": "pulso",
+  "paso_de_cuadro": 2
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": []
+}

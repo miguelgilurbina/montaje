@@ -1,0 +1,36 @@
+{
+ "nombre": "Ocho milímetros en blanco y negro",
+ "frase": "El 8 mm más viejo: blanco y negro reversible, grano grueso, el cuadro que baila y parpadea, polvo, rayas y de vez en cuando un pelo en la ventanilla.",
+ "para": [
+  "mostrar el archivo",
+  "abrir"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "pelicula",
+    "formato": "8mm",
+    "emulsion": "blanco-y-negro",
+    "cuadros": 16,
+    "grano": 1.3,
+    "parpadeo": 0.9,
+    "vaiven": 1.5,
+    "polvo": 1.4,
+    "rayas": 1.0,
+    "pelo": 2.0
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

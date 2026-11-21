@@ -1,0 +1,45 @@
+{
+ "nombre": "Webcam",
+ "frase": "La cámara de la computadora de los 2000: 320 × 240, pocos cuadros y a saltos, mucho ruido, el blanco azulado, la exposición que tarda y se pasa cuando cambia la luz, y el zumbido del USB en el sonido.",
+ "para": [
+  "mostrar el archivo",
+  "respirar"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "sensor",
+    "resolucion": [
+     320,
+     240
+    ],
+    "cuadros": 12,
+    "irregular": 0.4,
+    "ruido": 1.2,
+    "exposicion": 0.8,
+    "balance": 0.6,
+    "tinte": "azul",
+    "rango": 0.6,
+    "detalle": 0.3,
+    "sonido": "webcam"
+   },
+   {
+    "aparato": "compresion",
+    "calidad": 0.35,
+    "gop": 40
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

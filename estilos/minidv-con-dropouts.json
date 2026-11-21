@@ -1,0 +1,41 @@
+{
+ "nombre": "MiniDV con dropouts",
+ "frase": "La cámara de la familia de los 2000: limpia y nítida, en 4:3, hasta que la cinta tiene un pliegue y aparecen rectángulos con colores equivocados o con un pedazo del cuadro anterior.",
+ "para": [
+  "mostrar el archivo",
+  "transición"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "sensor",
+    "resolucion": [
+     720,
+     480
+    ],
+    "ruido": 0.3,
+    "detalle": 0.5,
+    "rango": 0.4,
+    "aliasing": 0.0
+   },
+   {
+    "aparato": "compresion",
+    "modo": "dv",
+    "calidad": 0.85,
+    "errores": 0.5
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

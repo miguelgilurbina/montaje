@@ -1,0 +1,36 @@
+{
+ "nombre": "Llave de la consola",
+ "frase": "Donde la imagen es oscura se ve lo que la consola guardó hace unos segundos: dos tiempos encimados. Se nota cuando la escena cambia; sobre una toma quieta, casi nada.",
+ "para": [
+  "respirar",
+  "transición"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "consola",
+    "efecto": "llave",
+    "memoria": 4.0,
+    "umbral": 0.35
+   },
+   {
+    "aparato": "cinta",
+    "formato": "SP",
+    "desgaste": 0.2
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "tomas largas y quietas: no se nota",
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

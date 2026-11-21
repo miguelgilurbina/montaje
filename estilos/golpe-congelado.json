@@ -1,0 +1,24 @@
+{
+ "nombre": "Golpe congelado",
+ "frase": "En el uno de cada compás la imagen se queda quieta medio golpe y sigue: el pulso se ve como un parpadeo del tiempo, sin cortar.",
+ "para": [
+  "subir la energía",
+  "destacar"
+ ],
+ "material": "clips",
+ "energia": "media",
+ "dura": "un tramo",
+ "tecnica": {
+  "modo": "pulso",
+  "congelar_golpe": 0.5,
+  "congelar_cada": "compas"
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "la calma: el golpe se nota como un error"
+ ]
+}

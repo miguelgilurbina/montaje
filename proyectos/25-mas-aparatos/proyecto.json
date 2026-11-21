@@ -1,0 +1,35 @@
+{
+ "titulo": "25 · Más aparatos: la película, lo digital, la casetera, la consola y el tiempo",
+ "idea": "Miguel, 2026-11-21: «acumulemos más efectos antes de evaluar lo que ya hiciste. Que más podemos hacer?», y «Dale» a lo recomendado: la película (Super 8, 8 mm, 16 mm) y lo digital temprano (el celular, la webcam, la cámara de bolsillo, la MiniDV, el códec y su datamosh) como aparatos de la mesa analógica, y los gestos de tiempo al pulso (G3: congelar en el golpe, tartamudeo, paso de cuadro). Los motores: py/montaje/pelicula.py, py/montaje/digital.py y `tiempo_de_toma` en py/montaje/pulso.py.",
+ "biblioteca": "probador",
+ "nota": "No tiene montaje propio: los estilos se prueban sobre el banco del probador (sus muestras en /estilos) y, los de la mesa, sobre el banco a 1080 para mirar de cerca (`python montaje.py analogo … --recorrido`).",
+ "cadenas": [
+  "super-8-de-la-familia",
+  "super-8-escaneado",
+  "pelicula-destenida",
+  "ocho-milimetros-en-blanco-y-negro",
+  "super-8-con-el-filtro-puesto",
+  "super-8-pasado-a-vhs",
+  "foto-con-fecha",
+  "celular-de-2006",
+  "webcam",
+  "camara-de-bolsillo",
+  "minidv-con-dropouts",
+  "videollamada-que-se-corta",
+  "se-derrite",
+  "pausa-del-vhs",
+  "rebobinar",
+  "vhs-que-arranca",
+  "mosaico-de-la-consola",
+  "estrobo-de-la-consola",
+  "multi-de-la-consola",
+  "pintura-de-la-consola",
+  "llave-de-la-consola",
+  "video-de-boda"
+ ],
+ "tiempo": [
+  "golpe-congelado",
+  "tartamudeo",
+  "paso-de-cuadro"
+ ]
+}

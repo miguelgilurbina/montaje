@@ -1,0 +1,35 @@
+{
+ "nombre": "Pausa del VHS",
+ "frase": "Alguien aprieta pausa: la imagen queda quieta pero de un solo campo (los bordes en serrucho), temblando, con la barra de ruido abajo y el ‖ arriba; después sigue.",
+ "para": [
+  "destacar",
+  "respirar",
+  "mostrar el archivo"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "cinta",
+    "formato": "SP",
+    "desgaste": 0.2
+   },
+   {
+    "aparato": "casetera",
+    "pausa": 4.0,
+    "entrelazado": 0.5
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

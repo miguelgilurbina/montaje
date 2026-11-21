@@ -1,0 +1,33 @@
+{
+ "nombre": "VHS que arranca",
+ "frase": "La pantalla azul de la casetera, el ▶ PLAY y la imagen que entra con el ruido del tracking: para abrir un video como si alguien pusiera la cinta.",
+ "para": [
+  "abrir",
+  "presentar la marca"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "los primeros segundos",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "cinta",
+    "formato": "SP",
+    "desgaste": 0.2
+   },
+   {
+    "aparato": "casetera",
+    "inicio": 2.0
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

@@ -1,0 +1,43 @@
+{
+ "nombre": "Cámara de bolsillo",
+ "frase": "El modo video de una cámara de fotos de los 2000: la columna clara que deja una luz en el sensor, el borde morado de lo que se quema, los bordes muy afilados y el color cuadriculado del JPEG.",
+ "para": [
+  "mostrar el archivo",
+  "respirar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "sensor",
+    "resolucion": [
+     320,
+     240
+    ],
+    "cuadros": 15,
+    "mancha": 1.0,
+    "franja": 1.0,
+    "rango": 0.8,
+    "detalle": 0.8,
+    "ruido": 0.5,
+    "sonido": "camara"
+   },
+   {
+    "aparato": "compresion",
+    "modo": "jpeg",
+    "calidad": 0.5
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

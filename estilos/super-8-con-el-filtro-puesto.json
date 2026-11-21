@@ -1,0 +1,30 @@
+{
+ "nombre": "Super 8 con el filtro puesto",
+ "frase": "El error clásico: la película de luz de ampolleta filmada adentro con el filtro naranja de la cámara puesto. Todo sale naranja, cálido y un poco oscuro.",
+ "para": [
+  "respirar",
+  "mostrar el archivo"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "pelicula",
+    "balance": "naranja",
+    "exposicion": -0.3,
+    "polvo": 0.6
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

@@ -1,0 +1,70 @@
+{
+ "nombre": "Video de boda",
+ "frase": "El video de los 90 que hacía un camarógrafo contratado: la cámara con su fecha y su hora, el mosaico y el estrobo de la consola a ratos, grabado en VHS y con el entrelazado de la casetera.",
+ "para": [
+  "mostrar el archivo",
+  "abrir",
+  "respirar"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un tramo o el video entero",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "camara",
+    "ruido": 0.4
+   },
+   {
+    "aparato": "consola",
+    "efecto": "mosaico",
+    "cuando": "a ratos",
+    "por_minuto": 2.5,
+    "dura": 1.4,
+    "bloque": 20
+   },
+   {
+    "aparato": "consola",
+    "efecto": "estrobo",
+    "cuando": "a ratos",
+    "por_minuto": 3.0,
+    "dura": 1.8,
+    "cada": 5
+   },
+   {
+    "aparato": "osd",
+    "textos": [
+     {
+      "texto": "{hora}",
+      "lugar": "abajo-derecha",
+      "fila": 1
+     },
+     {
+      "texto": "{fecha}",
+      "lugar": "abajo-derecha"
+     }
+    ],
+    "fecha": "1996-12-21",
+    "hora": "20:15:00"
+   },
+   {
+    "aparato": "cinta",
+    "formato": "SP",
+    "desgaste": 0.2
+   },
+   {
+    "aparato": "casetera",
+    "entrelazado": 0.4
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

@@ -1,0 +1,24 @@
+{
+ "nombre": "Tartamudeo",
+ "frase": "En los golpes fuertes el clip repite tres veces el pedacito que empieza en el golpe (un cuarto de golpe): el tartamudeo de los videos de música.",
+ "para": [
+  "subir la energía"
+ ],
+ "material": "clips",
+ "energia": "alta",
+ "dura": "un tramo de energía alta",
+ "tecnica": {
+  "modo": "pulso",
+  "tartamudeo": 3,
+  "tartamudeo_golpes": 0.25,
+  "tartamudeo_cada": "pico"
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "clips casi quietos: no se nota"
+ ]
+}

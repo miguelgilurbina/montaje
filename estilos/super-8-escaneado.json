@@ -1,0 +1,32 @@
+{
+ "nombre": "Super 8 escaneado",
+ "frase": "La tira entera como sale de un escáner: el cuadro con sus esquinas redondas, la perforación al lado, un pedazo de los cuadros vecinos arriba y abajo, y la luz del escáner por fuera. Todo baila junto.",
+ "para": [
+  "mostrar el archivo",
+  "abrir",
+  "cerrar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "pelicula",
+    "marco": "escaneo",
+    "polvo": 1.0,
+    "rayas": 0.5
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "si el video tiene que llenar el cuadro: aquí la imagen queda chica, dentro de la tira",
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

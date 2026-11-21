@@ -1,0 +1,37 @@
+{
+ "nombre": "Mosaico de la consola",
+ "frase": "El efecto de la consola de mezcla de los 90 que el operador aprieta a ratos: la imagen se hace cuadrados grandes y vuelve. Grabado en cinta.",
+ "para": [
+  "transición",
+  "destacar"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "consola",
+    "efecto": "mosaico",
+    "cuando": "a ratos",
+    "por_minuto": 5.0,
+    "dura": 1.5,
+    "bloque": 24
+   },
+   {
+    "aparato": "cinta",
+    "formato": "SP",
+    "desgaste": 0.2
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

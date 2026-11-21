@@ -1,0 +1,31 @@
+{
+ "nombre": "Super 8 de la familia",
+ "frase": "La película casera: Kodachrome contrastado y de colores densos, el grano que hierve, el cuadro que baila un poco, 18 cuadros por segundo (el paso a saltitos), polvo, alguna raya y el quemado cuando arranca la cámara.",
+ "para": [
+  "mostrar el archivo",
+  "respirar",
+  "abrir"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo o el video entero",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "pelicula",
+    "polvo": 0.8,
+    "rayas": 0.4,
+    "quemado": 1.5
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}
