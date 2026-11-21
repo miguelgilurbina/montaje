@@ -468,6 +468,73 @@ def test_la_casetera_arranca_desde_donde_empieza_la_salida():
     assert sale[2] > sale[0] + 60
 
 
+# ── La lente ───────────────────────────────────────────────────────────────
+
+def _sol(h: int = 180, w: int = 320, cy: int = 40, cx: int = 260) -> np.ndarray:
+    img = np.full((h, w, 3), 20, np.uint8)
+    y, x = np.mgrid[0:h, 0:w]
+    img[((y - cy) ** 2 + (x - cx) ** 2) < 10 ** 2] = 255
+    return img
+
+
+def test_el_barril_curva_las_rectas():
+    img = np.full((180, 320, 3), 20, np.uint8)
+    img[20:23] = 255   # una recta horizontal cerca del borde de arriba
+    sale = np.clip(correr([{"aparato": "lente", "barril": 1.0}], [img])[0][..., 1].astype(float) - 30, 0, None)
+    fila = lambda x: float((np.arange(180) * sale[:, x]).sum() / sale[:, x].sum())  # noqa: E731
+    # El barril agranda el centro: en el medio la recta se aleja del centro (sube) más que en las orillas.
+    assert fila(20) - fila(160) > 3
+
+
+def test_la_aberracion_separa_los_colores_en_el_borde():
+    img = np.full((180, 320, 3), 20, np.uint8)
+    img[:, 296:300] = 255   # una raya vertical cerca del borde derecho
+    def centro(fila: np.ndarray, c: int) -> float:
+        v = np.clip(fila[:, c] - 30, 0, None)
+        return float((np.arange(320) * v).sum() / v.sum())
+
+    sale = correr([{"aparato": "lente", "aberracion": 2.0}], [img])[0][90].astype(float)
+    assert centro(sale, 0) > centro(sale, 2) + 2   # el rojo sale más afuera que el azul
+    medio = img.copy()
+    medio[:] = 20
+    medio[:, 158:162] = 255
+    al_centro = correr([{"aparato": "lente", "aberracion": 2.0}], [medio])[0][90].astype(float)
+    assert abs(centro(al_centro, 0) - centro(al_centro, 2)) < 0.3   # al centro, nada
+
+
+def test_el_destello_cae_del_otro_lado_del_centro():
+    sol = _sol()
+    sin = correr([{"aparato": "lente"}], [sol])[0].astype(float)
+    con = correr([{"aparato": "lente", "destello": 1.5}], [sol])[0].astype(float)
+    opuesto = (con - sin)[110:170, 20:120].mean()   # del otro lado del centro, abajo a la izquierda
+    vecino = (con - sin)[110:170, 200:300].mean()   # abajo a la derecha: fuera de la línea
+    assert opuesto > 2 and opuesto > 1.5 * vecino
+
+
+def test_la_raya_anamorfica_es_horizontal_y_azul():
+    sol = _sol()
+    sin = correr([{"aparato": "lente"}], [sol])[0].astype(float)
+    con = correr([{"aparato": "lente", "raya": 1.5}], [sol])[0].astype(float)
+    lado = (con - sin)[38:43, 170:240]
+    arriba = (con - sin)[100:110, 255:265]
+    assert lado[..., 2].mean() > 8 and lado[..., 2].mean() > lado[..., 0].mean() + 3 and arriba.mean() < 1
+
+
+def test_el_foco_al_pulso_se_va_en_el_golpe_y_vuelve():
+    musica = {"beats": [1.0, 2.0], "primeros_tiempos": [1.0], "energia": [0.5, 0.5], "bpm": 60.0}
+    pasos, captura, s = A.preparar([{"aparato": "lente", "foco_al_pulso": 3.0}])
+    img = gris_azar(4)
+
+    def nitidez(t: float) -> float:
+        ctx = A.Contexto(s, 30, H, W)
+        ctx.musica, ctx.k, ctx.t = musica, int(t * 30), t
+        return float(np.abs(np.diff(A.procesar_cuadro(img, pasos, captura, ctx).astype(float), axis=1)).mean())
+    assert nitidez(1.02) < 0.7 * nitidez(1.9)
+    with pytest.raises(SystemExit):
+        A._sin_golpes(pasos, None)
+    assert A.calentar(pasos, 30) == 0
+
+
 # ── El tiempo al pulso ─────────────────────────────────────────────────────
 
 def test_los_gestos_de_tiempo_caen_en_los_golpes():

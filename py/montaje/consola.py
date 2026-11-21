@@ -46,19 +46,7 @@ def necesita_golpes(pasos: list[tuple[str, dict]]) -> bool:
 
 
 def _al_pulso(ctx, p: dict) -> float | None:
-    """¿Está prendido en este instante? En qué parte va (0 a 1) desde el último golpe elegido, o None."""
-    from .pulso import _golpes_de
-
-    m = ctx.musica
-    clave = ("golpes", p["golpes_cada"])
-    if clave not in ctx.estado:
-        ctx.estado[clave] = np.asarray(_golpes_de(m, p["golpes_cada"]), float)
-    golpes = ctx.estado[clave]
-    i = int(np.searchsorted(golpes, ctx.t, side="right")) - 1
-    if i < 0:
-        return None
-    u = (ctx.t - golpes[i]) / (p["dura_golpes"] * 60 / m["bpm"])
-    return u if u < 1 else None
+    return A.al_pulso(ctx, p["golpes_cada"], p["dura_golpes"])
 
 
 def errores(nombre: str, a: dict) -> list[str]:

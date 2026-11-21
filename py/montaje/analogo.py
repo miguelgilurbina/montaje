@@ -970,10 +970,10 @@ def _imagen() -> dict:
     de mezcla: su `APARATOS`) y los de señal que no están aquí (la casetera: su `SENAL`)."""
     global _IMAGEN
     if _IMAGEN is None:
-        from . import casetera, consola, digital, pelicula, proyeccion
+        from . import casetera, consola, digital, optica, pelicula, proyeccion
 
         _IMAGEN = {}
-        for m in (pelicula, proyeccion, digital, consola, casetera):
+        for m in (optica, pelicula, proyeccion, digital, consola, casetera):
             _IMAGEN.update(getattr(m, "APARATOS", {}))
             APARATOS.update(getattr(m, "SENAL", {}))
             POR_DEFECTO.update(m.POR_DEFECTO)
@@ -1388,10 +1388,28 @@ def musica_de(proyecto: str) -> dict:
 
 
 def _sin_golpes(pasos, musica) -> None:
-    from . import consola
+    _imagen()
+    if musica is None and any(getattr(m, "necesita_golpes", lambda _: False)(pasos) for m in _MODULOS_IMAGEN):
+        salir("la cadena va al pulso y no tiene los golpes: --golpes <proyecto> (el de la canción del video)")
 
-    if musica is None and consola.necesita_golpes(pasos):
-        salir("la consola va al pulso y no tiene los golpes: --golpes <proyecto> (el de la canción del video)")
+
+def al_pulso(ctx: Contexto, cada: str, dura_golpes: float) -> float | None:
+    """¿Hay un golpe sonando? En qué parte va (0 a 1) desde el último golpe elegido (`cada`: el uno de cada compás,
+    cada golpe o los picos), durante `dura_golpes` golpes; o None. Lo usan los aparatos que van al pulso."""
+    from .pulso import _golpes_de
+
+    m = ctx.musica
+    if not m:
+        return None
+    clave = ("golpes", cada)
+    if clave not in ctx.estado:
+        ctx.estado[clave] = np.asarray(_golpes_de(m, cada), float)
+    golpes = ctx.estado[clave]
+    i = int(np.searchsorted(golpes, ctx.t, side="right")) - 1
+    if i < 0:
+        return None
+    u = (ctx.t - golpes[i]) / (dura_golpes * 60 / m["bpm"])
+    return u if u < 1 else None
 
 
 def ruta_entrada(texto: str) -> Path:
