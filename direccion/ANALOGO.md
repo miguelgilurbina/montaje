@@ -122,14 +122,107 @@ de alto) muestran el tubo sin líneas; se ve de verdad a 1080.
   el motor está escrito desde la descripción de lo que hacen, no copiado.
 - **El filtro `noise` de ffmpeg** repite una tabla fija y no tiene correlación a lo largo de la línea: no sirve
   para ruido de cinta. El ruido se genera en numpy, con su espectro.
-- **Película** (Super 8, 16 mm: grano según la luz, *gate weave*, halo rojo, el cian que se va primero): la
-  galería ya tiene `recuerdo`, `rayas` y `pelicula`; lo que aporta la referencia está anotado en
-  `PROPUESTAS.md` (A3).
+- **Los códecs de verdad** (ffmpeg trae H.263, MJPEG y DV): pasar la imagen por ellos daría artefactos
+  auténticos, pero no se pueden encadenar con los demás aparatos ni procesar en pedazos sin costura, y el
+  datamosh y los errores que se arrastran piden tocar el códec por dentro. El de `digital.py` es propio y chico
+  (ver abajo).
+
+## La película (2026-11-21)
+
+Miguel, el 2026-11-21: «acumulemos más efectos antes de evaluar lo que ya hiciste». La película estaba en la
+galería sólo como capas pintadas encima (`recuerdo`, `rayas`, `pelicula`); el aparato `pelicula`
+(`py/montaje/pelicula.py`, experimento 25) la simula en la emulsión, con el mismo criterio de la mesa.
+
+| Lo que se ve | Por qué | En el motor (`pelicula`) |
+|---|---|---|
+| El paso a saltitos | el Super 8 casero se filmaba a **18 cuadros por segundo** (la velocidad de fábrica; 24, 25 y 36 eran las otras): a 30 del video, cada cuadro de película dura dos o uno (2, 2, 1…) | `cuadros` (18 por defecto); cada cuadro de película se repite tal cual, grano incluido |
+| Todo naranja (o azul) | la película de luz artificial («tipo A», tungsteno) se usaba de día con el **filtro 85** naranja de la cámara, que se quita adentro: si no, todo sale naranja | `balance`: `naranja` (el filtro olvidado adentro), `azul` (la de tungsteno de día sin filtro) |
+| Un halo rojo alrededor de las luces | la luz más fuerte atraviesa la emulsión, rebota en la base y vuelve a la capa de más abajo, la sensible al rojo; la capa antihalo no alcanza a frenarla | `halo`: el exceso de lo claro, desenfocado ancho, sobre todo al rojo |
+| La copia que se pone roja | en las copias de color Eastmancolor envejecidas se va primero el cian, después el amarillo; el magenta es el más estable: queda rojo magenta, y con menos contraste. El Kodachrome, en cambio, casi no se destiñe a oscuras | `desvanecido`: la densidad de cada tinte baja con su propia velocidad |
+| El cuadro que baila | el Super 8 no tiene uña de registro y la placa de presión del cartucho sujeta poco: el cuadro se mueve en la ventanilla | `vaiven` [sin verificar la medida: no se encontró en píxeles; es un punto de partida mirado en las hojas] |
+| La tira en el escaneo | el cuadro de cámara del Super 8 mide **5,69 × 4,22 mm**, el paso entre cuadros 4,234 mm (0,1667″); la perforación, 0,91 × 1,14 mm (0,036 × 0,045″), con el cuadro centrado en ella; la tira, 7,976 mm | `marco: escaneo` (las medidas de la tira); `ventanilla` (sólo el cuadro, con esquinas redondas) |
+| Los primeros cuadros quemados | al cargar un cartucho quedan expuestos unos 7 cuadros; que la cámara queme el arranque de cada toma (el motor todavía no llega a su velocidad) es lo que cuenta quien filma, [sin verificar] en una fuente | `quemado`: arranques sobreexpuestos y velos naranjas que entran por un borde |
+
+Además: el **grano** va en la densidad, del tamaño que le toca al formato (un grumo de ~14 µm [sin verificar] se ve
+más grande en un cuadro chico) y con la ley de Selwyn para el desvío; la **curva** de la reversible es
+contrastada, hunde los negros y dobla las luces sin recortarlas; el **polvo** es negro en la reversible proyectada
+(y claros los rasguños de la emulsión); el **pelo** está en la ventanilla y no baila con la imagen; la **fecha**
+naranja en siete segmentos es la de las cámaras de rollo de bolsillo (para las fotos). Las granularidades de cada
+emulsión y el tamaño del grumo son puntos de partida [sin verificar].
+
+[Wikipedia: Super 8 film](https://en.wikipedia.org/wiki/Super_8_film) ·
+[Kodak Super 8 Camera, guía](https://www.kodak.com/content/pdfs/KODAK-SUPER-8-Camera-getting-started-guide-EN.pdf) ·
+[Rewind Photo Lab: filtro 85 y película tungsteno](https://help.rewindphotolab.com.au/en-US/super-8-filters-and-cartridge-notches-1948336) ·
+[Wikipedia: Anti-halation backing](https://en.wikipedia.org/wiki/Anti-halation_backing) ·
+[Dehancer: la halación](https://blog.dehancer.com/articles/halation/) ·
+[Brian Pritchard: el desteñido de la película](https://brianpritchard.com/wp/british-motion-picture-laboratories/fading-of-motion-picture-film/) ·
+[National Film Preservation Foundation](https://www.filmpreservation.org/preservation-basics/color-dye-fading) ·
+[filmkorn: normas del Super 8](https://www.filmkorn.org/super8data/database/articles_list/super8_fotmat_standards.htm) ·
+[Wikipedia: Film perforations](https://en.wikipedia.org/wiki/Film_perforations) ·
+[bolex repair: el vaivén del 8 mm](https://bolexrepair.blogspot.com/2011/07/bolex-pressure-plate-mod.html)
+
+## Lo digital temprano (2026-11-21)
+
+Después del VHS vino lo digital barato. Dos aparatos en `py/montaje/digital.py`: el `sensor` (la cámara) y la
+`compresion` (el códec), escritos aquí: los códecs de la época eran transformadas del coseno en bloques de 8×8,
+y uno chico en numpy alcanza para que los artefactos salgan de verdad.
+
+| Lo que se ve | Por qué | En el motor |
+|---|---|---|
+| El celular: chico y a saltos | los celulares con cámara grababan **3GP**: H.263 o MPEG-4 a 176 × 144 (QCIF), unos **15 cuadros por segundo** y decenas de kb/s (H.263 nivel 10: hasta 15 cuadros y 64 kb/s), con audio **AMR-NB** de 4,75 a 12,2 kb/s; las cifras de un aparato real son anecdóticas | `sensor` (`resolucion`, `cuadros`, `irregular`) y `compresion: mpeg` con poca `calidad` |
+| Bloques que se arrastran | entre cuadros clave el códec manda sólo lo que cambió; con pocos bits, lo chico se vuelve cero y el bloque viejo se queda; en el cuadro clave la imagen «revienta» de nuevo | el cuantizador de zona muerta de los códecs de movimiento; `gop` |
+| Manchas de colores que se arrastran | un paquete perdido deja basura en la referencia, y el error viaja con el movimiento hasta el próximo cuadro clave | `compresion.errores` en `mpeg` |
+| El datamosh | si se quita el cuadro clave (en un corte), el códec mueve la imagen vieja con el movimiento de la nueva | `residuo` bajo |
+| La MiniDV que se pliega | los **dropouts** de DV son rectángulos de unos **32 píxeles** de ancho con colores equivocados que no copian nada del cuadro, o lo que el reproductor puso del cuadro de al lado; vienen en una zona; los causan pliegues y daños de la cinta | `compresion: dv` (color 4:1:1, macrobloques de 32 × 8) con `errores` |
+| La columna clara, el borde morado | el CCD rebalsa en una columna con una luz fuerte; el borde morado de lo quemado era el de las cámaras de bolsillo [sin verificar en una fuente leída] | `sensor.mancha`, `sensor.franja` |
+
+[Wikipedia: 3GP and 3G2](https://en.wikipedia.org/wiki/3GP_and_3G2) ·
+[Wikipedia: H.263](https://en.wikipedia.org/wiki/H.263) ·
+[ffmpeg: muestras de 3GP de teléfonos](https://samples.ffmpeg.org/mobileVideo_3gp/) ·
+[Adam Wilt: defectos de DV por la cinta](https://adamwilt.com/pix-defects.html) ·
+[AV Artifact Atlas: DV dropout](https://www.avartifactatlas.com/artifacts/dv_dropout.html) ·
+[DV Rescue: artefactos](https://mipops.github.io/dvrescue/sections/artifacts.html) ·
+las tablas de cuantización son las del anexo K de la norma JPEG.
+
+**El sonido:** el micrófono del celular deja la banda del habla telefónica (300–3400 Hz; AMR-NB muestrea a 8 kHz),
+el control automático de ganancia sube el ruido en los silencios, y la ley μ en 8 bits pone el grano; la webcam
+suma el zumbido de la tierra del USB. La ley μ es un parecido, no el AMR: [sin verificar] cuánto se le parece al
+oído. Claude no oye: se mide, el oído es de Miguel.
+
+## La casetera y la consola de mezcla (2026-11-21)
+
+Dos aparatos más, de la sala de la casa y de la sala de edición:
+
+- **La casetera** (`casetera`, `py/montaje/casetera.py`, de señal): la **pausa** (la imagen quieta de un solo
+  campo, con los bordes en serrucho, temblando, con la barra de ruido donde los cabezales leen entre pistas),
+  **rebobinar** (la imagen hacia atrás entre barras que suben, el color que se va), **el arranque** (la pantalla
+  azul de la casetera sin señal, ▶ PLAY y la imagen que entra con el tracking) y el **entrelazado** (dos campos de
+  instantes distintos: lo que se mueve se peina). Ya estaba anotado como sin verificar: las barras de la pausa y
+  del avance, el azul de cada marca y sus letreros; los letreros van en inglés, como en las de la época.
+- **La consola de mezcla de los 90** (`consola`, `py/montaje/consola.py`, de imagen: era digital por dentro). El
+  Panasonic WJ-MX50 de los videos de boda y los canales locales tenía memoria de cuadro y botones para estrobo,
+  cuadro quieto, mosaico, negativo, pintura (posterizado), mono, **multi** (la pantalla en 1/4, 1/9 o 1/16), estela,
+  y una sincronía que disparaba los efectos con la música. En el motor: `mosaico`, `estrobo`, `multi`, `pintura`,
+  `negativo` y `llave` (lo oscuro muestra lo que la memoria guardó hace unos segundos), `siempre` o `a ratos`.
+  [Manual del WJ-MX50](https://www.manualsdir.com/manuals/652668/panasonic-wj-mx50.html) ·
+  [Studio 1 Productions: preguntas sobre el MX50](https://studio1productions.com/Articles/MX50QA.htm)
+
+La sincronía con la música del MX50 es lo mismo que el modo `pulso` hace con los golpes: la consola al pulso
+quedó como propuesta (M8 en `PROPUESTAS.md`).
+
+## Los gestos de tiempo al pulso (2026-11-21)
+
+No son aparatos sino del modo `pulso` (G3 en `PROPUESTAS.md`): la imagen quieta medio golpe en el uno de cada
+compás, el pedacito del golpe repetido (el tartamudeo de los videos de música) y el paso de cuadro (cada cuadro
+dura dos: el movimiento a saltos de la película vieja y del stop motion). Se calculan en `pulso.tiempo_de_toma`
+desde los golpes de la canción y el render los aplica con `Freeze` de Remotion, sin gastar material del clip.
 
 ## Lo que no se pudo verificar
 
 La amplitud de los fantasmas, el SNR del VHS en dB, el largo y la frecuencia reales de los dropouts, las barras
 de la pausa y del avance rápido, el estilo de los letreros de cada marca de VCR, el *weave* del Super 8, el
-pitch de la máscara y los tiempos del P22. Los valores del motor para eso son puntos de partida ajustados
+pitch de la máscara y los tiempos del P22; de la película, cuánto baila el cuadro, el tamaño del grumo de grano y
+la granularidad de cada emulsión; de lo digital, el borde morado de las cámaras de bolsillo y cuánto se parece al
+AMR la voz del celular. Los valores del motor para eso son puntos de partida ajustados
 mirando las hojas: si Miguel tiene una cinta, un VCR o un televisor de tubo, una captura de verdad es la mejor
 referencia que podemos tener.

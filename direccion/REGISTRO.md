@@ -184,3 +184,8 @@ archivo, qué comando correr) no van aquí.
 
 - Antes de dormir: «Busca referencias para alteración de vídeo análogo y trabaja en implementar eso en el proyecto.
   Yo voy a dormir. Sigue tu intuición».
+
+## 2026-11-21 · Más aparatos (25)
+
+- Al volver, antes de juzgar las quince: «acumulemos más efectos antes de evaluar lo que ya hiciste. Que más podemos
+  hacer ?». De un menú de nueve (aparatos de la mesa, otras familias, el tiempo): «Dale» a lo recomendado.

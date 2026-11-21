@@ -199,3 +199,35 @@ con cámara virtual; **«más caótico»** = la curva de caos. **«reel rápido 
 | wobbulator | wobbulator | bobinas que hacen ondular el barrido (Paik y Abe) | `iman.ondas` |
 | realimentación | video feedback | la cámara que mira su propio monitor | `realimentacion` |
 | cola de cometa | comet tail, image lag | lo claro que deja estela en una cámara de tubo | `camara.estela` |
+
+## La película y lo digital (2026-11-21)
+
+| En español | En inglés | Qué es | Dónde se mueve |
+|---|---|---|---|
+| película reversible | reversal film (Kodachrome, Ektachrome) | la que sale en positivo, sin copia: la de las películas caseras | `pelicula.emulsion` |
+| paso a saltitos | 18 fps cadence, judder | 18 cuadros de película en 30 del video: cada uno dura dos o uno | `pelicula.cuadros` |
+| vaivén | gate weave | el cuadro que baila en la ventanilla (el Super 8 no tiene uña de registro) | `pelicula.vaiven` |
+| halo rojo | halation | la luz fuerte que rebota en la base y vuelve a la capa del rojo | `pelicula.halo` |
+| desteñido | dye fading | los tintes que se van con los años: en la copia de color, el cian primero (queda rojo) | `pelicula.desvanecido` |
+| densidad | density | lo que la película frena la luz (−log₁₀ de lo que deja pasar): ahí viven el grano y los tintes | `_en_la_densidad` |
+| velo, quemado | fogging, flash frames | la luz que se cuela al principio y al final del rollo; los cuadros sobreexpuestos al arrancar | `pelicula.quemado` |
+| filtro 85 | Wratten 85 | el naranja de la cámara para usar de día la película de luz artificial | `pelicula.balance` |
+| escaneo con la tira | overscan, full-gate scan | el cuadro con su perforación y los vecinos, como sale del escáner | `pelicula.marco` |
+| QCIF | QCIF | 176 × 144: el video de los celulares | `sensor.resolucion` |
+| obturador rodante | rolling shutter | el sensor que lee línea por línea: lo que se mueve sale inclinado | `sensor.rodar` |
+| mancha vertical | CCD smear | la columna clara que deja una luz fuerte en un CCD | `sensor.mancha` |
+| borde morado | purple fringing | el morado alrededor de lo que se quema | `sensor.franja` |
+| cuadro clave, GOP | keyframe, I-frame, GOP | el cuadro que el códec guarda entero; entre dos, sólo lo que cambió | `compresion.gop` |
+| bloques | blocking, macroblocks | la imagen en cuadraditos cuando faltan bits | `compresion.calidad` |
+| datamosh | datamosh | sin cuadro clave, el códec mueve la imagen vieja con el movimiento de la nueva | `compresion.residuo` |
+| dropout digital | DV dropout | rectángulos con colores equivocados o con un pedazo del cuadro de al lado | `compresion.errores` (`dv`) |
+| campo, entrelazado | field, interlace, combing | cada cuadro de video eran dos campos (las líneas pares y las impares) de instantes distintos: lo que se mueve se peina | `casetera.entrelazado` |
+| pausa de un campo | field still | la pausa de la casetera: la mitad de las líneas, repetidas, con la barra de ruido | `casetera.pausa` |
+| memoria de cuadro | frame store, frame synchronizer | lo que guardaba la consola de mezcla para sus efectos | `consola` |
+| estrobo | strobe | la imagen retenida que salta a golpes | `consola.efecto` |
+| multi | multi-picture | la pantalla partida en 4, 9 o 16 que se llena con momentos distintos | `consola.efecto` |
+| posterizado | paint, posterization | cada color en pocos escalones, como un afiche | `consola.efecto` (`pintura`) |
+| llave de luma | luma key | donde la imagen es oscura (o clara), se ve otra | `consola.efecto` (`llave`) |
+| golpe congelado | freeze frame | la imagen quieta en el golpe | `pulso.congelar_golpe` |
+| tartamudeo | stutter edit | el pedacito del golpe repetido | `pulso.tartamudeo` |
+| paso de cuadro | step printing, frame step | cada cuadro dura dos: el movimiento a saltos | `pulso.paso_de_cuadro` |

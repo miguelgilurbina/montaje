@@ -224,6 +224,21 @@ Todo comando se corre desde la raíz del repo: `python montaje.py <comando> <pro
     verdad a 1080: bajo ~1,25 pixeles por línea las líneas y la máscara se apagan (a
     540 el tubo sale sin líneas, a propósito). Las referencias y por qué cada perilla
     es como es: `direccion/ANALOGO.md`.
+    Desde el 2026-11-21 la mesa tiene también **aparatos de imagen**: `pelicula`
+    (Super 8, 8 mm, 16 mm: la curva de la reversible, el grano en la densidad, el halo
+    rojo, el vaivén, los 18 cuadros, polvo, rayas, pelos, quemado, desteñido, la
+    ventanilla o el escaneo con la perforación, la fecha naranja; `py/montaje/pelicula.py`)
+    y lo digital temprano, `sensor` y `compresion` (el celular, la webcam, la cámara de
+    bolsillo, la MiniDV; un códec propio en bloques con cuadro clave, errores que se
+    arrastran y datamosh con `residuo` bajo; `py/montaje/digital.py`). Se mezclan con los
+    de señal en la misma cadena (`[pelicula, cinta, pantalla]`: el Super 8 pasado a VHS).
+    El códec se calienta desde su cuadro clave: `gop` alarga cada pedazo. También la
+    `casetera` (de señal: pausa, rebobinar, el arranque en azul con PLAY, el entrelazado;
+    `py/montaje/casetera.py`) y la `consola` de mezcla de los 90 (de imagen: mosaico,
+    estrobo, multi, pintura, negativo, llave, `siempre` o `a ratos`; `py/montaje/consola.py`).
+    **Gestos de tiempo** (en `pulso`, 2026-11-21): `congelar_golpe`, `tartamudeo` y
+    `paso_de_cuadro`, colgados de `compas`, `golpe` o `pico` (`_cada`); el render los
+    aplica con `Freeze` sin gastar material (`tiempo_de_toma` → `video.tiempo`).
 12. **Música propia y videos de afuera:** `componer <p>` escribe una canción
     neutra en código (afinada, al tempo, sin derechos); `musicalizar <p>` le pone
     una pista a un video que ya existe sin tocar la imagen (compone primero si

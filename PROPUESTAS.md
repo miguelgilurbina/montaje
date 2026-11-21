@@ -35,7 +35,7 @@ paso entre escenas. Lo que quedó para después, en el orden en que se propuso:
 |---|---|---|---|
 | G1 | **Transiciones en todo.** En los modos de fotos (collage, secuencia, cinta) y entre tramos, no sólo entre clips de `pulso`. Nuevas: la cinta que pasa y agranda la imagen siguiente (idea de Miguel), la doble exposición pasajera, el fundido por luz (lo claro de la imagen nueva aparece primero) y el desenfoque que cruza, para la calma; el quemado de película para la familia del recuerdo; el barrido para la energía alta. | La calma deja de tener una sola forma de cambiar de imagen, y las fotos de la galería de Curiana tienen las mismas transiciones que los clips. | Nada; se prueban en el probador. |
 | G2 | **Filtros con LUT.** El formato estándar de corrección de color (`.cube`); este ffmpeg ya trae `lut3d`. Se pueden escribir en código desde la paleta (`direccion/PALETA.md`), sin bajar nada. Junto con S3 (igualar el color entre clips). | Tintas más finas que el duotono, y cualquier corrección hecha en otro editor entra al motor. | Nada (una LUT de afuera, con su ok). |
-| G3 | **Efectos de tiempo.** Congelar la imagen en el golpe, repetir unos cuadros en el golpe, el paso de cuadro (verse a 12 cuadros por segundo, como película vieja). Este ffmpeg trae `framestep` y `tblend`. | Más gestos al pulso sin cortar, y uno de película vieja que va con el recuerdo. | Nada. |
+| G3 | ~~Efectos de tiempo.~~ **Hecho el 2026-11-21** (experimento 25): en `pulso`, `congelar_golpe`, `tartamudeo` y `paso_de_cuadro`, colgados del uno de cada compás, de cada golpe o de los golpes de más energía (`_cada`); el render los aplica con `Freeze` sin gastar material. Estilos `golpe-congelado`, `tartamudeo`, `paso-de-cuadro`. | Más gestos al pulso sin cortar, y uno de película vieja que va con el recuerdo. | Los veredictos de Miguel. |
 | G4 | **Lo que choca, para el motor.** Hoy los `evitar` lo dicen en prosa (el empuje sobre fantasmas, las manchas sobre rótulos chicos). Escrito como dato, `guion` avisa cuando un armado los junta. | El primer armado no propone combinaciones que ya se vio que no funcionan. | Nada. |
 | G5 | **El probador con fotos de verdad.** El banco prueba sobre clips; sus fotos son fotogramas. Con unas fotos de la galería de Curiana y su catálogo de imágenes, entran los modos de fotos (collage, secuencia, cinta, actos, superposición) y los momentos. | Los estilos de fotos se comparan como los de clips. | Unas fotos de la galería de Curiana. |
 
@@ -77,7 +77,7 @@ Lo que quedó para después, de lo que se propuso el 2026-11-19 (Miguel eligió 
 | G6 | **Gráficos que se dibujan:** el círculo y la flecha a mano, el subrayado que se traza, la ruta que avanza en un mapa, el número que cuenta, barras y línea de tiempo (lo que pedía el documental). | Nada. |
 | G7 | **Imprenta:** tramado de puntos, registro corrido (tintas que no calzan) y papel: la voz serigráfica de las tintas del arte. | Nada. |
 | G8 | **Luz y óptica:** luces que se cuelan, viñeta, aberración cromática, destello de lente. | Nada. |
-| G9 | **Señal rota:** datamosh y píxeles ordenados por brillo (amplía `senal`). El lado analógico (cinta, antena, sincronismo perdido) se hizo el 2026-11-20 en la mesa analógica (ver abajo). | Nada. |
+| G9 | **Señal rota:** píxeles ordenados por brillo (amplía `senal`). El lado analógico (cinta, antena, sincronismo perdido) se hizo el 2026-11-20 en la mesa analógica, y el datamosh el 2026-11-21 (el códec de `digital.py` con `residuo` bajo: estilo `se-derrite`). | Nada. |
 | G10 | **Recorte y collage:** la persona recortada como sticker, fotos que caen sobre una mesa. | **Descarga con ok:** un modelo que separe a la persona del fondo. |
 | G11 | **Profundidad 2.5D:** una foto que se mueve en capas, como si tuviera volumen. | **Descarga con ok:** un modelo de profundidad (~100 MB). |
 
@@ -93,12 +93,30 @@ digitales y siguen pendientes). Lo que queda, en el orden en que lo haría:
 | # | Qué | Qué da | Qué necesita |
 |---|---|---|---|
 | A1 | **Juzgar las quince** en `/estilos` (filtro «en 24-mesa-analogica») o en el recorrido a 1080. | Saber cuáles son de Curiana y cuáles sobran; los «a medias» dicen qué perilla mover. | Unos minutos de Miguel. |
-| A2 | **El sonido de la cinta.** El audio lineal del VHS: banda de 100 Hz a 10 kHz (menos en EP), el silbido, el *wow* y *flutter* (la velocidad que tiembla, la misma base de tiempo de la imagen) y los dropouts que hunden el nivel; el HiFi, más limpio. | Imagen y sonido pasan por la misma cinta. | Nada; Claude no oye: se mide, el oído es de Miguel. |
-| A3 | **Película.** Super 8 y 16 mm con lo que dicen las referencias: grano según la luz, *gate weave* lento, el halo rojo de las altas luces, el cian que se va primero (dominante roja), la cadencia de 18 cuadros. La galería ya tiene `recuerdo`, `rayas` y `pelicula` como capas; esto sería un aparato `pelicula` en la misma mesa. | El archivo familiar en película, no sólo en video. | Nada. |
+| A2 | ~~El sonido de la cinta.~~ **Hecho la misma noche** (`cinta.sonido`: `lineal` o `hifi`). | Imagen y sonido pasan por la misma cinta. | El oído de Miguel. |
+| A3 | ~~Película.~~ **Hecho el 2026-11-21** (experimento 25): el aparato `pelicula` (Super 8, 8 mm, 16 mm), con siete estilos; y lo digital temprano (`sensor`, `compresion`), con seis. | El archivo familiar en película, no sólo en video. | Los veredictos de Miguel. |
 | A4 | **Ventanas desde el guion.** Hoy las ventanas se dan a mano (`--ventana`); que una capa del guion diga «este tramo, en la cinta de la casa» y `render` pase sólo esos segundos por la cadena. | El analógico como un estilo más del guion, sin comandos aparte. | Nada. |
 | A5 | **Entrelazado y pausa.** Los dos campos de cada cuadro (el peinado cuando algo se mueve) y la pausa del VCR (un campo repetido con su barra de ruido). | Dos gestos más de la cinta; la pausa sirve al pulso, como congelar en el golpe (G3). | Nada. |
 | A6 | **Más rápido.** La pantalla a 1080 es lo que más pesa (~0,3 s por cuadro). En la tarjeta de video (un shader) sería tiempo real. | Previews de 1080 con tubo en segundos. | Nada para probar; quizá una biblioteca (con ok). |
 | A7 | **Una captura de verdad.** Si Miguel tiene una cinta, un VCR o un televisor de tubo: grabar unos segundos (la cinta reproducida, la pantalla filmada) y ajustar las perillas contra eso. | La mejor referencia posible; lo que las fuentes no dicen (ver «Lo que no se pudo verificar» en `direccion/ANALOGO.md`). | El aparato y unos minutos. |
+
+## Más aparatos (2026-11-21)
+
+Miguel, al volver: «acumulemos más efectos antes de evaluar lo que ya hiciste. Que más podemos hacer?». De un menú
+de nueve dijo «Dale» a lo recomendado: la película, lo digital temprano y el tiempo al pulso; después siguieron la
+casetera y la consola de mezcla (hecho, experimento 25: veinticinco estilos en `propuesta`). Lo que quedó del menú,
+y lo que apareció haciendo:
+
+| # | Qué | Qué da | Qué necesita |
+|---|---|---|---|
+| M1 | **Juzgar las veinticinco** junto con las quince de la mesa (A1): `/estilos`, filtros «en 25-mas-aparatos» y «en 24-mesa-analogica». | Saber qué se queda antes de seguir sumando. | Unos minutos de Miguel. |
+| M2 | ~~La casetera~~ (y A5). **Hecho el mismo día**: `casetera` con pausa, rebobinar, el arranque en azul con PLAY y el entrelazado; estilos `pausa-del-vhs`, `rebobinar`, `vhs-que-arranca`. Falta el sonido de la pausa y del rebobinado. | Gestos de la cinta que sirven al pulso. | Los veredictos de Miguel. |
+| M3 | ~~La consola de mezcla de los 90.~~ **Hecho el mismo día**: `consola` con mosaico, estrobo, multi, pintura, negativo y llave, siempre o a ratos; seis estilos, entre ellos `video-de-boda` (cámara, consola, fecha, cinta y casetera). Las cortinillas con borde de color quedan para `pulso` (son transiciones). | Efectos y transiciones a la vez, de la época del VHS. | Los veredictos de Miguel. |
+| M8 | **La consola al pulso**: el MX50 disparaba sus efectos con la música; aquí, que la consola los dispare en los golpes de la canción (hoy van `a ratos`, al azar). Necesita que la mesa sepa de los golpes (una capa de `pulso` con la cadena, o los golpes pasados a `analogo`). | Los efectos de la consola en el tiempo de la canción. | Nada. |
+| M4 | **El proyector en la pared**: la película proyectada y filmada: la mancha de luz al centro, la textura de la pared, el trapecio, el parpadeo del obturador. | El Super 8 visto como se veía en la casa. | Nada. |
+| M5 | **El 35 mm de las fotos**: un formato `35mm` (hoy `foto-con-fecha` usa el grano del 16 mm) y el negativo con su copia de laboratorio (otra curva y otro color). | Las fotos de la galería en papel de laboratorio. | Nada. |
+| M6 | **El sonido de la película**: el Super 8 sonoro (la banda magnética, con su temblor) y el traqueteo del proyector cuando hay `pelicula` en la cadena. | Imagen y sonido de la misma máquina. | El oído de Miguel. |
+| M7 | Lo que no entró del menú: **luz y óptica** (G8), **imprenta** (G7), **píxeles ordenados** (G9). | — | Nada. |
 
 ## Sintetización: lo que el motor todavía no sabe
 
