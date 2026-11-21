@@ -239,8 +239,10 @@ Todo comando se corre desde la raíz del repo: `python montaje.py <comando> <pro
     `py/montaje/consola.py`), y el `proyector` en la pared (`py/montaje/proyeccion.py`:
     la mancha de luz, el trapecio, la pared o la sábana; va después de `pelicula`). La
     película tiene `formato: 35mm` con negativos de laboratorio (`kodak-gold`,
-    `fuji-superia`) y `sonido` (`magnetico`, `proyector`). Lo que va **al pulso** necesita
-    los golpes: `analogo … --golpes <proyecto>` (el probador pasa los del banco).
+    `fuji-superia`) y `sonido` (`magnetico`, `proyector`). La `lente` (`py/montaje/optica.py`,
+    al principio de la cadena): aberración cromática, barril u ojo de pez, destello con
+    fantasmas, raya anamórfica, niebla, suciedad, viñeta y el foco al pulso. Lo que va **al
+    pulso** necesita los golpes: `analogo … --golpes <proyecto>` (el probador pasa los del banco).
     **Gestos de tiempo** (en `pulso`, 2026-11-21): `congelar_golpe`, `tartamudeo` y
     `paso_de_cuadro`, colgados de `compas`, `golpe` o `pico` (`_cada`); el render los
     aplica con `Freeze` sin gastar material (`tiempo_de_toma` → `video.tiempo`).

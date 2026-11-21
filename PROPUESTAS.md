@@ -76,7 +76,7 @@ Lo que quedó para después, de lo que se propuso el 2026-11-19 (Miguel eligió 
 | T6 | **La letra a mano de Miguel:** una plantilla con las letras, tildes, ñ y ¿¡«», fotografiada, vectorizada y armada como tipografía. | Que Miguel llene la plantilla; **descarga con ok:** potrace para vectorizar. |
 | G6 | **Gráficos que se dibujan:** el círculo y la flecha a mano, el subrayado que se traza, la ruta que avanza en un mapa, el número que cuenta, barras y línea de tiempo (lo que pedía el documental). | Nada. |
 | G7 | **Imprenta:** tramado de puntos, registro corrido (tintas que no calzan) y papel: la voz serigráfica de las tintas del arte. | Nada. |
-| G8 | **Luz y óptica:** luces que se cuelan, viñeta, aberración cromática, destello de lente. | Nada. |
+| G8 | ~~Luz y óptica.~~ **Hecho el 2026-11-21** en la mesa: el aparato `lente` (aberración, barril, destello, raya anamórfica, niebla, suciedad, foco al pulso, viñeta). Las luces que se cuelan ya estaban (`fugas`). | Nada. |
 | G9 | **Señal rota:** píxeles ordenados por brillo (amplía `senal`). El lado analógico (cinta, antena, sincronismo perdido) se hizo el 2026-11-20 en la mesa analógica, y el datamosh el 2026-11-21 (el códec de `digital.py` con `residuo` bajo: estilo `se-derrite`). | Nada. |
 | G10 | **Recorte y collage:** la persona recortada como sticker, fotos que caen sobre una mesa. | **Descarga con ok:** un modelo que separe a la persona del fondo. |
 | G11 | **Profundidad 2.5D:** una foto que se mueve en capas, como si tuviera volumen. | **Descarga con ok:** un modelo de profundidad (~100 MB). |
@@ -105,12 +105,12 @@ digitales y siguen pendientes). Lo que queda, en el orden en que lo haría:
 Miguel, al volver: «acumulemos más efectos antes de evaluar lo que ya hiciste. Que más podemos hacer?». De un menú
 de nueve dijo «Dale» a lo recomendado: la película, lo digital temprano y el tiempo al pulso; después siguieron la
 casetera y la consola de mezcla, y con «Seguir acumulando» el proyector, el 35 mm, el sonido de la película y la
-consola al pulso (hecho, experimento 25: treinta y un estilos en `propuesta`). Lo que quedó del menú, y lo que
-apareció haciendo:
+consola al pulso, y con «Luz y óptica» la lente (hecho, experimento 25: treinta y ocho estilos en `propuesta`).
+Lo que quedó del menú, y lo que apareció haciendo:
 
 | # | Qué | Qué da | Qué necesita |
 |---|---|---|---|
-| M1 | **Juzgar las treinta y una** junto con las quince de la mesa (A1): `/estilos`, filtros «en 25-mas-aparatos» y «en 24-mesa-analogica». | Saber qué se queda antes de seguir sumando. | Unos minutos de Miguel. |
+| M1 | **Juzgar las treinta y ocho** junto con las quince de la mesa (A1): `/estilos`, filtros «en 25-mas-aparatos» y «en 24-mesa-analogica». | Saber qué se queda antes de seguir sumando. | Unos minutos de Miguel. |
 | M2 | ~~La casetera~~ (y A5). **Hecho el mismo día**: `casetera` con pausa, rebobinar, el arranque en azul con PLAY y el entrelazado; estilos `pausa-del-vhs`, `rebobinar`, `vhs-que-arranca`. Falta el sonido de la pausa y del rebobinado. | Gestos de la cinta que sirven al pulso. | Los veredictos de Miguel. |
 | M3 | ~~La consola de mezcla de los 90.~~ **Hecho el mismo día**: `consola` con mosaico, estrobo, multi, pintura, negativo y llave, siempre o a ratos; seis estilos, entre ellos `video-de-boda` (cámara, consola, fecha, cinta y casetera). Las cortinillas con borde de color quedan para `pulso` (son transiciones). | Efectos y transiciones a la vez, de la época del VHS. | Los veredictos de Miguel. |
 | M8 | ~~La consola al pulso.~~ **Hecho**: `cuando: "al pulso"` con `golpes_cada` y `dura_golpes`; la mesa recibe los golpes con `--golpes <proyecto>` (el probador pasa los del banco); estilo `consola-al-pulso`. Lo siguiente sería lo mismo para la casetera (la pausa en el golpe). | Los efectos de la consola en el tiempo de la canción. | Los veredictos de Miguel. |
@@ -118,7 +118,7 @@ apareció haciendo:
 | M4 | ~~El proyector en la pared.~~ **Hecho el mismo día** (Miguel: «Seguir acumulando»): el aparato `proyector` (la mancha de luz, el trapecio, la pared o la sábana, el foco, el latido, el cuarto oscuro); estilos `pelicula-en-la-pared`, `pelicula-en-la-sabana`. | El Super 8 visto como se veía en la casa. | Los veredictos de Miguel. |
 | M5 | ~~El 35 mm de las fotos.~~ **Hecho**: `formato: 35mm` y los negativos `kodak-gold` y `fuji-superia`; estilos `foto-de-laboratorio`, `foto-de-laboratorio-fuji`, y `foto-con-fecha` pasó al 35 mm. Falta probarlos con fotos de verdad (el banco es de clips: G5). | Las fotos de la galería en papel de laboratorio. | Unas fotos de la galería de Curiana. |
 | M6 | ~~El sonido de la película.~~ **Hecho**: `pelicula.sonido` (`magnetico`, `proyector`); estilo `super-8-sonoro`, y las dos películas proyectadas llevan el traqueteo. | Imagen y sonido de la misma máquina. | El oído de Miguel. |
-| M7 | Lo que no entró del menú: **luz y óptica** (G8), **imprenta** (G7), **píxeles ordenados** (G9). | — | Nada. |
+| M7 | Lo que no entró del menú: ~~luz y óptica~~ (G8, **hecho el mismo día** con su elección: el aparato `lente` y siete estilos), **imprenta** (G7), **píxeles ordenados** (G9). | — | Nada. |
 
 ## Sintetización: lo que el motor todavía no sabe
 

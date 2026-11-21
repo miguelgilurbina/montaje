@@ -231,6 +231,33 @@ Miguel eligió seguir acumulando. Tres cosas más alrededor de la película:
   y `proyector` (el traqueteo del proyector debajo del audio: un golpecito por cuadro de película y el motor, el
   mismo sintetizador del comando `proyector`).
 
+## La lente (2026-11-21)
+
+Miguel eligió en tarjetas «Luz y óptica». El aparato `lente` (`py/montaje/optica.py`, de imagen) simula lo que el
+vidrio le hace a la luz, en luz lineal:
+
+| Lo que se ve | Por qué | En el motor (`lente`) |
+|---|---|---|
+| Los bordes en rojo y azul | la **aberración cromática lateral**: el aumento cambia con el color, así que cada color sale a otra escala; las franjas crecen del centro a las esquinas, en los bordes tangenciales | `aberracion`: cada color a su escala (corregirla es reescalar los canales: simularla, lo mismo al revés) |
+| Fantasmas de colores | la luz fuerte rebota entre las superficies; en una lente simétrica, cada fantasma cae en la línea que va de la luz al centro, muchas veces del otro lado; tiene la forma del diafragma y el color del antirreflejo (que sólo es bueno en una longitud de onda: verdes, morados, rojos) | `destello`: la luz que brilla, escalada alrededor del centro (negativo: del otro lado) y desenfocada, con su tinte; un velo que lava el contraste |
+| La raya azul | las lentes anamórficas estiran el destello de lado | `raya` |
+| La lente empañada | el vidrio que difunde: lo claro se derrama, los negros suben | `niebla`, `suciedad` (las manchas sólo se ven en el velo) |
+| El ojo de pez | el barril fuerte de un gran angular; el de los videos de skate era la Sony VX1000 (MiniDV, tres CCD) con el ojo de pez Century Optics, desde fines de los 90 | `barril` (y el estilo `video-de-skate`: lente, sensor de 720 × 480 y DV) |
+
+La lente va al principio de la cadena (antes de la película, del sensor o de la cámara). Sus fantasmas salen de lo
+que brilla en el video: en un material oscuro casi no se ven, porque en un video el sol ya está recortado en el
+blanco. Las posiciones, los tamaños y los colores de los fantasmas son puntos de partida [sin verificar en una
+lente concreta].
+
+[MIT, fotografía computacional: el destello](https://people.csail.mit.edu/fredo/comp-photo-book/09-optics-lenses-and-aberration-correction-09-glare-suppression.html) ·
+[Fstoppers: la física del destello](https://fstoppers.com/education/lens-flare-and-incredible-physics-modern-lenses-903821) ·
+[Zeiss: los reflejos en las lentes](https://lenspire.zeiss.com/photo/app/uploads/2022/02/technical-article-about-the-reduction-of-reflections-for-camera-lenses.pdf) ·
+[Wikipedia: Lens flare](https://en.wikipedia.org/wiki/Lens_flare) ·
+[Imatest: aberración cromática](https://www.imatest.com/imaging/chromatic-aberration/) ·
+[DxOMark: aberración lateral](https://www.dxomark.com/glossary/lateral-chromatic-aberration/) ·
+[Engadget: la VX1000 y el video de skate](https://www.engadget.com/sony-vx1000-defined-the-skate-video-130032368.html) ·
+[Red Bull: las cámaras del skate](https://www.redbull.com/us-en/evolution-of-video-cameras-in-skateboarding)
+
 ## Los gestos de tiempo al pulso (2026-11-21)
 
 No son aparatos sino del modo `pulso` (G3 en `PROPUESTAS.md`): la imagen quieta medio golpe en el uno de cada
