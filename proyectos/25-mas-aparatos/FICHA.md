@@ -15,7 +15,9 @@ pudo verificar, están en [`direccion/ANALOGO.md`](../../direccion/ANALOGO.md) (
 temprano», «Los gestos de tiempo»).
 
 Con eso hecho y mandado (el recorrido y el video de los gestos de tiempo), siguió lo que había dicho que venía si
-no me frenaba: **la casetera** y **la consola de mezcla de los 90** (M2 y M3).
+no me frenaba: **la casetera** y **la consola de mezcla de los 90** (M2 y M3). Con los 25 commiteados y subidos
+(con su ok), Miguel eligió en tarjetas **«Seguir acumulando»**: el proyector en la pared, el 35 mm de las fotos, el
+sonido de la película y la consola al pulso (M4, M5, M6, M8).
 
 ## Material
 
@@ -54,7 +56,17 @@ experimento 24 para las hojas y para medir. Nada se bajó.
   `tartamudeo`, `paso-de-cuadro`). Después, **nueve más**: tres de la casetera (`pausa-del-vhs`, `rebobinar`,
   `vhs-que-arranca`) y seis de la consola (`mosaico-de-la-consola`, `estrobo-de-la-consola`,
   `multi-de-la-consola`, `pintura-de-la-consola`, `llave-de-la-consola` y `video-de-boda`, que junta la cámara con
-  su fecha, el mosaico y el estrobo a ratos, la cinta y el entrelazado).
+  su fecha, el mosaico y el estrobo a ratos, la cinta y el entrelazado). Y con «Seguir acumulando», **seis más**:
+  `pelicula-en-la-pared`, `pelicula-en-la-sabana`, `super-8-sonoro`, `foto-de-laboratorio`,
+  `foto-de-laboratorio-fuji` y `consola-al-pulso`; `foto-con-fecha` pasó al 35 mm de laboratorio.
+- **`py/montaje/proyeccion.py`**, el aparato `proyector`: la imagen en la pared (o en la sábana, o en una
+  pantalla), con la mancha de luz, el trapecio, el foco, el latido del obturador y el cuarto oscuro. Lo que no
+  cambia de un cuadro a otro (dónde cae cada pixel, la textura, los pliegues) se calcula una vez.
+- **La película** suma el `formato: 35mm` y dos negativos de laboratorio (`kodak-gold`, `fuji-superia`), y
+  `sonido` (`magnetico`, `proyector`, con el sintetizador del comando `proyector`).
+- **La consola al pulso**: la mesa recibe los golpes de la canción (`musica_de`, `--golpes <proyecto>`; el
+  probador pasa los del banco) y la consola prende sus efectos en el uno de cada compás, en cada golpe o en los
+  picos. Sin golpes, la cadena se detiene y dice qué falta.
 - **`py/pruebas/test_pelicula_digital.py`**: la cadencia de 18 cuadros, el cuadro repetido con su grano, el gris
   medio en su lugar, la copia desteñida que tira al rojo, el halo rojo, la ventanilla, el blanco y negro, la
   película y lo digital sin costura entre pedazos, las capturas perdidas, el celular con barras, la calidad del
@@ -99,6 +111,27 @@ hallazgo. Lo que encontró, ya arreglado y con su prueba:
 - Menores: el códec antes de un sensor veía la captura del cuadro anterior; `busqueda` con decimales y una
   `semilla` negativa pasaban la validación; las perillas nuevas de `pulso` no se validaban.
 
+## La tercera mirada
+
+Otra revisión independiente, sobre la casetera, la consola, el proyector, el 35 mm, el sonido de la película y la
+consola al pulso. Lo que encontró, ya arreglado y con su prueba:
+
+- **Las memorias encadenadas dejaban costura** (la grave): el calentamiento tomaba la mayor de las memorias de la
+  cadena, pero encadenadas se suman. Con el estrobo de la consola antes de la pausa de la casetera, la pausa
+  guardaba un cuadro que el estrobo, todavía frío, había hecho distinto: en un video de verdad, la costura se veía
+  en el primer cuadro de un pedazo. Ahora el calentamiento suma, aparato por aparato.
+- **Un multi grande pasaba la validación y después el render se detenía** con un consejo que no venía al caso, y
+  el rebobinado por defecto no andaba en videos de 50 o 60 cuadros por segundo. Ahora la cadena se rechaza al
+  validarla, con el consejo del aparato que se pasa (cada módulo tiene el suyo), y en 50/60 el final de un
+  rebobinado largo se queda en lo más viejo que se puede recordar.
+- **El traqueteo del proyector no seguía a la película**: con `cuadros: 0` la imagen iba a 30 y el traqueteo a 18.
+  Ahora suena a los cuadros que se ven.
+- Menores: la pantalla azul de la casetera contaba desde el segundo de la entrada y no desde donde empieza la
+  salida (con `--desde`, no aparecía), y unas pocas muestras de audio por la cinta salían a un volumen absurdo.
+
+Los recorridos que se mandaron antes de estos arreglos pueden tener esa costura en algún cuadro suelto; las
+muestras del probador se redibujaron.
+
 ## Lo que salió (mirado en hojas)
 
 - **La película** (hojas a 540 y recortes al 100 % a 1080): el Kodachrome contrastado y saturado, el Ektachrome
@@ -113,6 +146,10 @@ hallazgo. Lo que encontró, ya arreglado y con su prueba:
   entra con el tracking; el mosaico, el multi en nueve. La pintura salía gris (escalonar la luz y el color por
   separado lo apagaba): ahora escalona cada canal, con el color un poco subido. La llave casi no se ve en el banco,
   porque la memoria guarda la misma escena: se nota cuando la escena cambia (lo dice su frase).
+- **El proyector y el 35 mm** (hoja a 540): la película en trapecio, más clara al centro y cálida, en la pared
+  de revoque o en la sábana (los pliegues se notan en los bordes torcidos más que en la sombra, sobre una imagen
+  oscura); el cuarto salía gris claro y ahora queda casi negro, con un poco de luz rebotada cerca de la imagen. El
+  Kodak Gold cálido con la fecha naranja, el Fuji más verde.
 - **Velocidad**, a 1620×1080 en este computador: Super 8 ~5 cuadros/s, el escaneo ~6,5, el celular ~11, la
   MiniDV ~11, el Super 8 pasado a VHS y visto en el tubo ~2,6.
 
@@ -131,3 +168,7 @@ banco a 1080 por cadena). Las muestras de la galería, en `~/Videos/montaje/esti
   es más barato y es lo correcto (el telecine repite el mismo cuadro, grano incluido).
 - El códec propio se calienta desde su cuadro clave: con un `gop` largo, cada pedazo procesa muchos cuadros antes
   de empezar; por eso los pedazos se alargan cuando el calentamiento es largo.
+- Lo que tiene memoria se prueba también encadenado: cada aparato solo no dejaba costura, y juntos sí. La
+  prueba de la costura va con dos aparatos con memoria, uno detrás del otro.
+- Una segunda y una tercera mirada (agentes que sólo leen y prueban) encontraron 12 defectos reales en un día de
+  trabajo; ninguno se veía en las hojas.

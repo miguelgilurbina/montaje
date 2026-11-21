@@ -1,6 +1,6 @@
 {
  "nombre": "Foto con fecha",
- "frase": "La foto de la cámara de rollo de bolsillo: grano fino, colores de laboratorio y la fecha naranja abajo a la derecha, en siete segmentos inclinados.",
+ "frase": "La foto de la cámara de rollo de bolsillo, copiada en el laboratorio: grano fino, el color cálido del negativo en papel y la fecha naranja abajo a la derecha, en siete segmentos inclinados.",
  "para": [
   "mostrar el archivo",
   "presentar la marca"
@@ -13,12 +13,13 @@
   "cadena": [
    {
     "aparato": "pelicula",
-    "formato": "16mm",
+    "formato": "35mm",
     "cuadros": 0,
-    "fecha": "'94 10 12",
     "vaiven": 0.0,
-    "polvo": 0.3,
-    "rayas": 0.0
+    "polvo": 0.2,
+    "rayas": 0.0,
+    "emulsion": "kodak-gold",
+    "fecha": "'94 10 12"
    }
   ]
  },

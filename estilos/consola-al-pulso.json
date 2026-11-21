@@ -1,0 +1,46 @@
+{
+ "nombre": "Consola al pulso",
+ "frase": "La consola de mezcla tocada con la canción: el mosaico en el uno de cada compás (un golpe de largo) y el estrobo en los golpes más fuertes, grabado en cinta. Como la sincronía con la música de las consolas de los 90.",
+ "para": [
+  "subir la energía",
+  "destacar"
+ ],
+ "material": "cualquiera",
+ "energia": "alta",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "consola",
+    "efecto": "mosaico",
+    "cuando": "al pulso",
+    "golpes_cada": "compas",
+    "dura_golpes": 1.0,
+    "bloque": 24
+   },
+   {
+    "aparato": "consola",
+    "efecto": "estrobo",
+    "cuando": "al pulso",
+    "golpes_cada": "pico",
+    "dura_golpes": 0.5,
+    "cada": 4
+   },
+   {
+    "aparato": "cinta",
+    "formato": "SP",
+    "desgaste": 0.2
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "sin canción: necesita los golpes (`--golpes <proyecto>`)",
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

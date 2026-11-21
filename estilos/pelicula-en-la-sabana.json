@@ -1,0 +1,37 @@
+{
+ "nombre": "Película en la sábana",
+ "frase": "La misma película proyectada en una sábana colgada: los pliegues tuercen la imagen y la sombrean, la trama de la tela se ve en lo claro.",
+ "para": [
+  "mostrar el archivo",
+  "respirar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "pelicula",
+    "polvo": 0.8,
+    "rayas": 0.4,
+    "sonido": "proyector"
+   },
+   {
+    "aparato": "proyector",
+    "pared": "sabana",
+    "trapecio": 0.1,
+    "foco": 0.9
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "si el video tiene que llenar el cuadro",
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

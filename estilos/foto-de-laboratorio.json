@@ -1,0 +1,33 @@
+{
+ "nombre": "Foto de laboratorio",
+ "frase": "La foto del rollo de farmacia revelada en el laboratorio de una hora: el negativo copiado en papel, cálido, con poco contraste y negros que no llegan a negro.",
+ "para": [
+  "mostrar el archivo",
+  "respirar"
+ ],
+ "material": "fotos",
+ "energia": "calma",
+ "dura": "una foto",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "pelicula",
+    "formato": "35mm",
+    "cuadros": 0,
+    "vaiven": 0.0,
+    "polvo": 0.2,
+    "rayas": 0.0,
+    "emulsion": "kodak-gold"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

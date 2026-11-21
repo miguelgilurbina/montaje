@@ -1,0 +1,33 @@
+{
+ "nombre": "Foto de laboratorio (Fuji)",
+ "frase": "La misma copia de laboratorio con el negativo de los verdes: el follaje más vivo, la piel menos cálida.",
+ "para": [
+  "mostrar el archivo",
+  "respirar"
+ ],
+ "material": "fotos",
+ "energia": "calma",
+ "dura": "una foto",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "pelicula",
+    "formato": "35mm",
+    "cuadros": 0,
+    "vaiven": 0.0,
+    "polvo": 0.2,
+    "rayas": 0.0,
+    "emulsion": "fuji-superia"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

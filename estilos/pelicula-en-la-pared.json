@@ -1,0 +1,35 @@
+{
+ "nombre": "Película en la pared",
+ "frase": "El Super 8 de la familia proyectado en la pared de la sala con la luz apagada: la imagen en trapecio, más clara al centro y cálida, la textura del revoque, el cuarto oscuro alrededor y el traqueteo del proyector debajo de la música.",
+ "para": [
+  "mostrar el archivo",
+  "abrir",
+  "cerrar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "pelicula",
+    "polvo": 0.8,
+    "rayas": 0.4,
+    "sonido": "proyector"
+   },
+   {
+    "aparato": "proyector"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "si el video tiene que llenar el cuadro: la imagen queda dentro de la pared",
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}
