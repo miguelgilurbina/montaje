@@ -14,7 +14,10 @@ se encadena con la cámara antes y con la cinta después, como en la sala de edi
 - `llave`: donde la imagen es oscura (bajo `umbral`) se ve lo que la memoria guardó hace un rato (cada `memoria`
   segundos guarda un cuadro): dos tiempos encimados.
 
-`cuando`: `siempre`, o `a ratos` (`por_minuto` veces, de `dura` segundos), como un operador que aprieta el botón.
+`cuando`: `siempre`, `a ratos` (`por_minuto` veces, de `dura` segundos, como un operador que aprieta el botón) o
+`al pulso`: en los golpes de la canción (`golpes_cada`: el uno de cada compás, cada golpe o los picos), durante
+`dura_golpes` golpes; como la sincronía con la música del MX50. Al pulso necesita los golpes: `analogo --golpes
+<proyecto>` (el probador pasa los del banco).
 """
 
 from __future__ import annotations
@@ -29,13 +32,33 @@ EFECTOS = ("mosaico", "estrobo", "multi", "pintura", "negativo", "llave")
 
 POR_DEFECTO = {
     "consola": {"efecto": "mosaico", "cuando": "siempre", "por_minuto": 4.0, "dura": 2.0, "bloque": 16, "cada": 4,
-                "celdas": 3, "niveles": 4, "umbral": 0.35, "memoria": 4.0},
+                "celdas": 3, "niveles": 4, "umbral": 0.35, "memoria": 4.0, "golpes_cada": "compas", "dura_golpes": 1.0},
 }
 RANGOS = {
-    "consola": {"efecto": EFECTOS, "cuando": ("siempre", "a ratos"), "por_minuto": (0, 60), "dura": (0.2, 10),
+    "consola": {"efecto": EFECTOS, "cuando": ("siempre", "a ratos", "al pulso"), "por_minuto": (0, 60), "dura": (0.2, 10),
                 "bloque": (2, 96), "cada": (1, 60), "celdas": (2, 4), "niveles": (2, 12), "umbral": (0, 1),
-                "memoria": (0.5, 7)},
+                "memoria": (0.5, 7), "golpes_cada": ("compas", "golpe", "pico"), "dura_golpes": (0.1, 8)},
 }
+
+
+def necesita_golpes(pasos: list[tuple[str, dict]]) -> bool:
+    return any(nombre == "consola" and p["cuando"] == "al pulso" for nombre, p in pasos)
+
+
+def _al_pulso(ctx, p: dict) -> float | None:
+    """¿Está prendido en este instante? En qué parte va (0 a 1) desde el último golpe elegido, o None."""
+    from .pulso import _golpes_de
+
+    m = ctx.musica
+    clave = ("golpes", p["golpes_cada"])
+    if clave not in ctx.estado:
+        ctx.estado[clave] = np.asarray(_golpes_de(m, p["golpes_cada"]), float)
+    golpes = ctx.estado[clave]
+    i = int(np.searchsorted(golpes, ctx.t, side="right")) - 1
+    if i < 0:
+        return None
+    u = (ctx.t - golpes[i]) / (p["dura_golpes"] * 60 / m["bpm"])
+    return u if u < 1 else None
 
 
 def errores(nombre: str, a: dict) -> list[str]:
@@ -46,11 +69,15 @@ def errores(nombre: str, a: dict) -> list[str]:
     return mal
 
 
-def calentar(pasos: list[tuple[str, dict]], fps: float) -> int:
-    """El estrobo guarda su cuadro; el multi, sus celdas; la llave, su memoria."""
+CONSEJO = {"consola": "baja `celdas` o `cada` del multi, `cada` del estrobo o la `memoria` de la llave"}
+
+
+def calentar(pasos: list[tuple[str, dict]], fps: float, solo: int | None = None) -> int:
+    """El estrobo guarda su cuadro; el multi, sus celdas; la llave, su memoria. Con `solo`, sólo el aparato de ese
+    lugar de la cadena."""
     n = 0
-    for nombre, p in pasos:
-        if nombre != "consola":
+    for i, (nombre, p) in enumerate(pasos):
+        if nombre != "consola" or (solo is not None and i != solo):
             continue
         if p["efecto"] == "estrobo":
             n = max(n, p["cada"] + 1)
@@ -119,8 +146,8 @@ def consola(img: np.ndarray, p: dict, ctx) -> np.ndarray:
         if est.get("n") != n or est.get("forma") != img.shape:
             est.update(n=n, forma=img.shape, memoria=img.copy())
     u = None
-    if p["cuando"] == "a ratos":
-        u = A.evento(semilla, "consola", ctx.t, p["por_minuto"], p["dura"])
+    if p["cuando"] != "siempre":
+        u = A.evento(semilla, "consola", ctx.t, p["por_minuto"], p["dura"]) if p["cuando"] == "a ratos" else _al_pulso(ctx, p)
         if u is None:
             return img.copy()
     if efecto == "mosaico":

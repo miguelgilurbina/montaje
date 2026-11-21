@@ -110,7 +110,7 @@ def test_la_pelicula_sin_costura_entre_pedazos():
 # ── Lo digital ─────────────────────────────────────────────────────────────
 
 def test_el_sensor_captura_a_sus_cuadros_y_pierde_algunas():
-    p = {**A.POR_DEFECTO["sensor"], "cuadros": 15, "irregular": 1.0}
+    p = {**D.POR_DEFECTO["sensor"], "cuadros": 15, "irregular": 1.0}
     ctx = A.Contexto(3, 30, H, W)
     capturas = []
     for k in range(400):
@@ -187,7 +187,7 @@ def test_lo_digital_sin_costura_entre_pedazos():
 def test_el_microfono_del_celular_corta_los_agudos():
     sr = A.SR_AUDIO
     t = np.arange(sr * 2) / sr
-    p = {**A.POR_DEFECTO["sensor"], "sonido": "celular"}
+    p = {**D.POR_DEFECTO["sensor"], "sonido": "celular"}
     nivel = {}
     for f in (1000, 6000):
         x = np.stack([0.3 * np.sin(2 * np.pi * f * t)] * 2, axis=1).astype(np.float32)
@@ -233,7 +233,7 @@ def test_el_sensor_irregular_no_se_cae_en_el_primer_cuadro():
 
 def test_el_escaneo_cabe_en_una_salida_vertical_o_cuadrada():
     for h, w in ((320, 180), (200, 200)):
-        for formato in P.FORMATOS:
+        for formato in (f for f, d in P.FORMATOS.items() if "tira_mm" in d):
             sale = correr([{"aparato": "pelicula", "marco": "escaneo", "formato": formato}], [azar(1, h, w)])[0]
             assert sale.shape == (h, w, 3)
 
@@ -364,6 +364,108 @@ def test_la_llave_y_el_multi_sin_costura():
     for aparato in ({"aparato": "consola", "efecto": "llave", "memoria": 0.5},
                     {"aparato": "consola", "efecto": "multi", "celdas": 3, "cada": 2}):
         assert _sin_costura([aparato], cuadros, 25) == []
+
+
+# ── El proyector, el 35 mm, el sonido de la película, la consola al pulso ──
+
+def test_el_proyector_pone_la_imagen_en_la_pared_oscura():
+    sale = correr([{"aparato": "proyector", "pared": "pantalla", "parpadeo": 0.0}], [gris(0.8, 180, 320)])[0].astype(float)
+    assert sale[:4, :4].mean() < 15 and sale[-4:, -4:].mean() < 15        # el cuarto, casi negro
+    centro = sale[80:100, 150:170].mean()
+    assert centro > 120 and centro > sale[40:50, 60:70].mean()           # la mancha de luz: más claro al centro
+    assert sale[90, 160, 0] > sale[90, 160, 2]                          # la ampolleta es cálida
+
+
+def test_el_trapecio_abre_la_imagen_arriba():
+    sale = correr([{"aparato": "proyector", "trapecio": 0.25, "pared": "pantalla"}], [gris(0.9, 180, 320)])[0]
+    filas = [np.nonzero(sale[y, :, 1] > 40)[0] for y in (40, 140)]
+    assert filas[0].max() - filas[0].min() > filas[1].max() - filas[1].min() + 10
+
+
+def test_el_35_mm_es_quieto_y_su_negativo_no_llega_a_negro():
+    cadena = [{"aparato": "pelicula", "formato": "35mm", "emulsion": "kodak-gold", "cuadros": 0, "vaiven": 0.0, "grano": 0.0,
+               "polvo": 0.0, "rayas": 0.0, "parpadeo": 0.0, "halo": 0.0, "vineta": 0.0}]
+    negro = correr(cadena, [gris(0.0)])[0].mean()
+    reversible = correr([{"aparato": "pelicula", **QUIETA}], [gris(0.0)])[0].mean()
+    assert negro > reversible + 1
+    assert A.errores([{"aparato": "pelicula", "formato": "35mm", "marco": "escaneo"}])
+
+
+def test_el_sonido_de_la_pelicula():
+    sr = A.SR_AUDIO
+    t = np.arange(sr * 2) / sr
+    tono = np.stack([0.3 * np.sin(2 * np.pi * 9000 * t)] * 2, axis=1).astype(np.float32)
+    p = {**P.POR_DEFECTO["pelicula"], "sonido": "magnetico"}
+    assert np.sqrt(np.mean(P.sonido("pelicula", tono, p, 1, 0.0, sr, 0) ** 2)) < 0.5 * np.sqrt(np.mean(tono ** 2))
+    silencio = np.zeros((sr * 2, 2), np.float32)
+    con = P.sonido("pelicula", silencio, {**p, "sonido": "proyector"}, 1, 0.0, sr, 0)
+    assert con.shape == silencio.shape and 0 < np.sqrt(np.mean(con ** 2)) < 0.01   # el traqueteo, bajito
+    assert P.sonido("pelicula", tono, {**p, "sonido": "ninguno"}, 1, 0.0, sr, 0) is tono
+
+
+def test_la_consola_al_pulso_prende_en_los_golpes():
+    musica = {"beats": [0.5 * i for i in range(20)], "primeros_tiempos": [2.0 * i for i in range(5)],
+              "energia": [0.5] * 20, "bpm": 120.0}
+    pasos, captura, s = A.preparar([{"aparato": "consola", "efecto": "negativo", "cuando": "al pulso",
+                                     "golpes_cada": "compas", "dura_golpes": 1.0}])
+    ctx = A.Contexto(s, 30, H, W)
+    ctx.musica = musica
+    img = gris_azar(3)
+    prendido = []
+    for k in range(0, 150):
+        ctx.k, ctx.t = k, k / 30
+        prendido.append(not np.array_equal(A.procesar_cuadro(img, pasos, captura, ctx), img))
+    # El uno de cada compás (0, 2, 4 s), medio segundo (un golpe a 120) cada vez.
+    assert prendido[0] and prendido[14] and not prendido[16] and prendido[60] and not prendido[80]
+    with pytest.raises(SystemExit):
+        A._sin_golpes(pasos, None)
+
+
+# ── Lo que encontró la segunda revisión (2026-11-21) ───────────────────────
+
+def test_las_memorias_encadenadas_se_suman_y_no_dejan_costura():
+    cuadros = [np.roll(gris_azar(2, 48, 64), 3 * n, axis=1) for n in range(226)]
+    cadena = {"aparatos": [{"aparato": "consola", "efecto": "estrobo", "cada": 8},
+                           {"aparato": "casetera", "pausa": 20.0, "pausa_dura": 0.5}], "semilla": 1}
+    pasos, _, _ = A.preparar(cadena)
+    assert A.calentar(pasos, 30) == 9 + 17
+    assert _sin_costura(cadena, cuadros, 200, cada=6) == []
+    cadena = {"aparatos": [{"aparato": "casetera", "rebobinar": 20.0, "rebobinar_dura": 0.4},
+                           {"aparato": "consola", "efecto": "multi", "celdas": 2, "cada": 10}], "semilla": 1}
+    assert _sin_costura(cadena, cuadros[:190], 130, cada=14) == []
+
+
+def test_lo_que_no_alcanza_a_recordarse_se_rechaza_con_su_consejo():
+    mal = A.errores([{"aparato": "consola", "efecto": "multi", "celdas": 4, "cada": 15}])
+    assert mal and "celdas" in mal[0]
+    pasos, _, _ = A.preparar([{"aparato": "casetera", "rebobinar": 4.0}])   # rebobinar_dura por defecto
+    for fps in (50, 60):
+        assert A._revisar_memoria(pasos, fps) == [] and A.calentar(pasos, fps) <= A.CALENTAR_MAX
+
+
+def test_el_traqueteo_va_a_los_cuadros_que_se_ven():
+    from scipy.signal import butter, find_peaks, sosfilt
+
+    sr = A.SR_AUDIO
+    silencio = np.zeros((sr * 3, 2), np.float32)
+
+    def periodo(cuadros, fps):
+        """Cada cuánto suena un golpecito: la mediana entre los picos de la envolvente (por milisegundo)."""
+        y = P.sonido("pelicula", silencio, {**P.POR_DEFECTO["pelicula"], "sonido": "proyector", "cuadros": cuadros, "_fps": fps},
+                     1, 0.0, sr, 0)[:, 0]
+        env = np.abs(sosfilt(butter(4, 900, btype="highpass", fs=sr, output="sos"), y)).reshape(-1, 48).max(axis=1)
+        picos, _ = find_peaks(env, height=0.5 * env.max(), distance=20)   # el siseo no llega a la mitad
+        return float(np.median(np.diff(picos))) / 1000
+    assert abs(periodo(18, 30) - 1 / 18) < 0.006
+    assert abs(periodo(0, 30) - 1 / 30) < 0.004
+
+
+def test_la_casetera_arranca_desde_donde_empieza_la_salida():
+    pasos, captura, s = A.preparar([{"aparato": "casetera", "inicio": 1.0}])
+    ctx = A.Contexto(s, 30, H, W)
+    ctx.inicio, ctx.k, ctx.t = 10.0, 315, 10.5
+    sale = A.procesar_cuadro(gris(0.5), pasos, captura, ctx).reshape(-1, 3).mean(axis=0)
+    assert sale[2] > sale[0] + 60
 
 
 # ── El tiempo al pulso ─────────────────────────────────────────────────────

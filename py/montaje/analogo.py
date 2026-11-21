@@ -39,7 +39,8 @@ Y los que no trabajan en la señal sino en la imagen (2026-11-21), en sus módul
 | `pelicula` | Super 8, 8 mm y 16 mm en la emulsión: la curva, el grano en la densidad, el halo rojo, el vaivén, los 18 cuadros, polvo, rayas y pelos, el quemado, los tintes que se destiñen, la fecha naranja | `pelicula.py` |
 | `sensor` | la cámara digital temprana: el celular, la webcam, la de bolsillo, la MiniDV | `digital.py` |
 | `compresion` | el códec: bloques, lo que no se actualiza, el cuadro clave, los errores que se arrastran | `digital.py` |
-| `consola` | la consola de mezcla de los 90: mosaico, estrobo, multi, pintura, negativo, llave | `consola.py` |
+| `consola` | la consola de mezcla de los 90: mosaico, estrobo, multi, pintura, negativo, llave (siempre, a ratos o al pulso) | `consola.py` |
+| `proyector` | la película proyectada en la pared o en la sábana: la mancha de luz, el trapecio, el cuarto oscuro | `proyeccion.py` |
 
 Y uno de señal en su propio módulo: `casetera` (la pausa, rebobinar, el arranque en azul, el entrelazado), en
 `casetera.py`.
@@ -71,6 +72,7 @@ mismo resultado, y los pedazos se procesan en paralelo sin que se note la costur
     python montaje.py analogo <video> --comparar vhs-de-la-casa,antena-lejana --en 2,5,9   # hoja lado a lado
     python montaje.py analogo <video> --recorrido vhs-de-la-casa,antena-lejana --desde 3 --segundos 6
     python montaje.py analogo --cadenas                                     # las cadenas de la galería
+    python montaje.py analogo <render de p> --cadena consola-al-pulso --golpes <p>   # lo que va al pulso de su canción
 
 La entrada es una ruta (absoluta o dentro de los medios). Sale `<nombre>-<cadena>.mp4` al lado, con el
 audio de la entrada. Una foto sale como video de `--segundos`. Con `--ventana`, la cadena sólo entra en
@@ -301,6 +303,11 @@ class Contexto:
         # Cómo vuelve a la salida una imagen de otro tamaño (la del sensor de un celular): con barras o llenando,
         # y ampliada suave o con sus pixeles. Lo fija el sensor en cada cuadro.
         self.encuadre = ("barras", "suave")
+        # Los golpes de la canción (beats, primeros_tiempos, energia, bpm), para lo que va al pulso; o None.
+        self.musica: dict | None = None
+        # El segundo de la entrada en que empieza la salida (con `--desde`): lo que es «al principio del video»
+        # (la casetera que arranca) cuenta desde ahí; lo demás usa el segundo de la entrada (`t`).
+        self.inicio = 0.0
 
     def rng(self, *extra) -> np.random.Generator:
         return np.random.default_rng([self.semilla, self.paso, self.k, *(_num(x) for x in extra)])
@@ -508,7 +515,7 @@ def sonido_de_cinta(x: np.ndarray, p: dict, semilla: int, t0: float, sr: int = S
     mismos instantes en que hacen saltar la imagen."""
     from scipy.signal import butter, sosfilt
 
-    if p["sonido"] == "ninguno" or not len(x):
+    if p["sonido"] == "ninguno" or len(x) < 64:   # unas muestras sueltas no son sonido (y el silbido se iría al infinito)
         return x
     n = len(x)
     t = t0 + np.arange(n) / sr
@@ -963,10 +970,10 @@ def _imagen() -> dict:
     de mezcla: su `APARATOS`) y los de señal que no están aquí (la casetera: su `SENAL`)."""
     global _IMAGEN
     if _IMAGEN is None:
-        from . import casetera, consola, digital, pelicula
+        from . import casetera, consola, digital, pelicula, proyeccion
 
         _IMAGEN = {}
-        for m in (pelicula, digital, consola, casetera):
+        for m in (pelicula, proyeccion, digital, consola, casetera):
             _IMAGEN.update(getattr(m, "APARATOS", {}))
             APARATOS.update(getattr(m, "SENAL", {}))
             POR_DEFECTO.update(m.POR_DEFECTO)
@@ -1052,10 +1059,8 @@ def errores(cadena) -> list[str]:
         modulo = _modulo(nombre)
         if modulo is not None:
             mal.extend(modulo.errores(nombre, a))
-    if not mal:
-        from . import digital
-
-        mal.extend(digital.errores_de_cadena(c["aparatos"]))
+    if not mal:  # lo que sólo se ve mirando la cadena entera (a 30 cuadros por segundo; `procesar` mira los del video)
+        mal.extend(_revisar_memoria([(a["aparato"], {**POR_DEFECTO[a["aparato"]], **a}) for a in c["aparatos"]], 30.0))
     return mal
 
 
@@ -1078,20 +1083,49 @@ def preparar(cadena) -> tuple[list[tuple[str, dict]], str, int]:
     return pasos, c.get("captura", "peine"), int(c.get("semilla", 1))
 
 
-def calentar(pasos: list[tuple[str, dict]], fps: float = 30.0) -> int:
-    """Cuántos cuadros hay que procesar antes de un pedazo para que lo que tiene memoria llegue igual: la estela,
-    la realimentación y el fósforo; el cuadro de película que dura varios del video; el códec desde su cuadro clave."""
+def _memorias(pasos: list[tuple[str, dict]], fps: float) -> tuple[list[tuple[str, int]], int]:
+    """Cuánto recuerda cada aparato, en cuadros del video: las memorias exactas (el cuadro de película, el códec
+    desde su cuadro clave, la pausa, el rebobinado, el estrobo…: [(aparato, cuadros)]) y la que se apaga sola (la
+    estela, la realimentación, el fósforo: con eso basta para que lo que queda se pierda en el ruido)."""
     _imagen()
-    n = max([0, *(m.calentar(pasos, fps) for m in _MODULOS_IMAGEN)])
-    for nombre, p in pasos:
-        if nombre == "realimentacion":
+    exactas, se_apaga = [], 0
+    for n, (nombre, p) in enumerate(pasos):
+        m = _modulo(nombre)
+        if m is not None:
+            w = m.calentar(pasos, fps, solo=n)
+            if w:
+                exactas.append((nombre, w))
+        elif nombre == "realimentacion":
             ganancia = min(0.97, max(p["mezcla"] * p["contraste"], 0.05))
-            n = max(n, int(math.ceil(math.log(0.01) / math.log(ganancia))) + 2)
-        if nombre == "camara" and p["estela"]:
-            n = max(n, int(math.ceil(math.log(0.01) / math.log(p["estela"]))) + 1)
-        if nombre == "pantalla" and p["persistencia"]:
-            n = max(n, int(math.ceil(math.log(0.01) / math.log(p["persistencia"]))) + 1)
-    return min(n, CALENTAR_MAX)
+            se_apaga += int(math.ceil(math.log(0.01) / math.log(ganancia))) + 2
+        elif nombre == "camara" and p["estela"]:
+            se_apaga += int(math.ceil(math.log(0.01) / math.log(p["estela"]))) + 1
+        elif nombre == "pantalla" and p["persistencia"]:
+            se_apaga += int(math.ceil(math.log(0.01) / math.log(p["persistencia"]))) + 1
+    return exactas, se_apaga
+
+
+def calentar(pasos: list[tuple[str, dict]], fps: float = 30.0) -> int:
+    """Cuántos cuadros hay que procesar antes de un pedazo para que lo que tiene memoria llegue igual. Encadenadas,
+    las memorias se suman: lo que recuerda el de abajo (el cuadro de la pausa) lo tuvo que hacer el de arriba (el
+    estrobo) ya caliente (la revisión del 2026-11-21 lo encontró como costura)."""
+    exactas, se_apaga = _memorias(pasos, fps)
+    return min(sum(w for _, w in exactas) + se_apaga, CALENTAR_MAX)
+
+
+def _revisar_memoria(pasos: list[tuple[str, dict]], fps: float) -> list[str]:
+    """Si lo que tiene memoria exacta necesita más que el tope, la costura se vería: qué mover, por aparato."""
+    exactas, _ = _memorias(pasos, fps)
+    total = sum(w for _, w in exactas)
+    if total <= CALENTAR_MAX:
+        return []
+    consejos = []
+    for nombre, _ in exactas:
+        c = getattr(_modulo(nombre), "CONSEJO", {}).get(nombre)
+        if c and c not in consejos:
+            consejos.append(c)
+    return [f"la cadena necesita recordar {total} cuadros a {fps:g} por segundo (el tope es {CALENTAR_MAX}): "
+            + "; ".join(consejos)]
 
 
 #: Lo más que se calienta un pedazo. El códec se calienta desde su cuadro clave: su `gop` tiene este techo.
@@ -1288,6 +1322,8 @@ def _pedazo(tarea: dict) -> str:
     a, b, cal = tarea["a"], tarea["b"], tarea["calentar"]
     desde = max(0, a - cal)
     ctx = Contexto(semilla, fps, alto, ancho)
+    ctx.musica = tarea.get("musica")
+    ctx.inicio = tarea["k0"] / fps
     cmd = ["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{ancho}x{alto}",
            "-r", tarea["fps"], "-i", "-", "-vf", "scale=out_color_matrix=bt709:out_range=tv",
            "-c:v", "libx264", "-preset", "medium", "-crf", str(tarea["crf"]), "-threads", "2", "-pix_fmt", "yuv420p",
@@ -1340,6 +1376,24 @@ def resolver_cadena(texto: str):
     return {"aparatos": t["cadena"], **{k: t[k] for k in ("captura", "semilla") if k in t}}, texto
 
 
+def musica_de(proyecto: str) -> dict:
+    """Los golpes de la canción de un proyecto (su análisis), para lo que va al pulso en la mesa. Los segundos son
+    los de la canción del proyecto: sirven para un render de ese proyecto, que empieza donde empieza la canción."""
+    from . import musica
+    from .rutas import Proyecto
+
+    m = musica.cargar(Proyecto(proyecto))
+    return {"beats": [float(b) for b in m["beats"]], "primeros_tiempos": [float(b) for b in m["primeros_tiempos"]],
+            "energia": [float(e) for e in m["energia"]], "bpm": float(m["bpm"])}
+
+
+def _sin_golpes(pasos, musica) -> None:
+    from . import consola
+
+    if musica is None and consola.necesita_golpes(pasos):
+        salir("la consola va al pulso y no tiene los golpes: --golpes <proyecto> (el de la canción del video)")
+
+
 def ruta_entrada(texto: str) -> Path:
     r = Path(texto)
     for candidato in (r, MEDIOS / r):
@@ -1350,9 +1404,12 @@ def ruta_entrada(texto: str) -> Path:
 
 def procesar(entrada: Path, salida: Path, cadena, *, desde: float | None = None, hasta: float | None = None,
              segundos: float = 6.0, fps_foto: str = "30", alto: int | None = None, ventanas=None, fundido: float = 0.5,
-             hilos: int | None = None, crf: int = 16, pedazo: int = 48, callado: bool = False) -> Path:
-    """La entrada (video o foto) pasada por la cadena → `salida`, con el audio de la entrada."""
+             hilos: int | None = None, crf: int = 16, pedazo: int = 48, callado: bool = False,
+             musica: dict | None = None) -> Path:
+    """La entrada (video o foto) pasada por la cadena → `salida`, con el audio de la entrada. `musica`: los golpes
+    de la canción (`musica_de`), para lo que va al pulso."""
     pasos, captura, semilla = preparar(cadena)
+    _sin_golpes(pasos, musica)
     if _es_foto(entrada):
         from PIL import Image
 
@@ -1383,11 +1440,8 @@ def procesar(entrada: Path, salida: Path, cadena, *, desde: float | None = None,
     if total <= 0:
         salir("no queda ningún cuadro entre esos segundos")
     cal = calentar(pasos, float(fps))
-    for m in _MODULOS_IMAGEN:  # lo que necesita más memoria que el tope dejaría costuras: el códec, el rebobinado
-        necesita = m.calentar(pasos, float(fps))
-        if necesita > CALENTAR_MAX:
-            salir(f"{m.__name__.split('.')[-1]}: a {float(fps):g} cuadros por segundo necesita recordar {necesita} cuadros "
-                  f"(el tope es {CALENTAR_MAX}): baja el `gop`, sube los `cuadros` del sensor o acorta el rebobinado")
+    for mal in _revisar_memoria(pasos, float(fps)):  # más memoria que el tope dejaría costuras
+        salir(mal)
     hilos = hilos or max(1, min(12, (os.cpu_count() or 4) - 2))
     # Pedazos chicos si el video es corto (que trabajen todos los procesos), de hasta `pedazo` cuadros si no.
     pedazo = int(np.clip(math.ceil(total / hilos), 8, pedazo))
@@ -1399,7 +1453,7 @@ def procesar(entrada: Path, salida: Path, cadena, *, desde: float | None = None,
     vent = [(a - (desde or 0), b - (desde or 0)) for a, b in ventanas] if ventanas else None
     tareas = [{"entrada": str(entrada), "info": info, "origen": a0, "k0": a0, "a": a, "b": min(total, a + pedazo),
                "calentar": cal, "pasos": pasos, "captura": captura, "semilla": semilla, "alto": alto_, "ancho": ancho,
-               "fps": info["fps"], "crf": crf, "ventanas": vent, "fundido": fundido,
+               "fps": info["fps"], "crf": crf, "ventanas": vent, "fundido": fundido, "musica": musica,
                "salida": str(temporal / f"{a:07d}.mp4")} for a in range(0, total, pedazo)]
     inicio = time.time()
     hechos = 0
@@ -1430,7 +1484,7 @@ def procesar(entrada: Path, salida: Path, cadena, *, desde: float | None = None,
         sonidos = [(nombre, p_) for nombre, p_ in pasos if p_.get("sonido", "ninguno") != "ninguno"]
         if info["audio"] and sonidos:
             cmd += ["-i", str(_audio_de_aparatos(entrada, temporal, (desde or 0.0) + info.get("desfase", 0.0), a0 / float(fps),
-                                                 total / float(fps), sonidos, semilla, vent, fundido)),
+                                                 total / float(fps), sonidos, semilla, vent, fundido, float(fps))),
                     "-map", "0:v", "-map", "1:a", "-c:a", "aac", "-b:a", "192k"]
         elif info["audio"]:
             cmd += ["-ss", f"{(desde or 0) + info.get('desfase', 0.0):.6f}", "-t", f"{total / fps:.6f}", "-i", str(entrada),
@@ -1449,7 +1503,7 @@ def procesar(entrada: Path, salida: Path, cadena, *, desde: float | None = None,
 
 
 def _audio_de_aparatos(entrada: Path, carpeta: Path, corte: float, t0: float, dura: float, sonidos: list[tuple[str, dict]],
-                       semilla: int, ventanas, fundido: float) -> Path:
+                       semilla: int, ventanas, fundido: float, fps: float = 30.0) -> Path:
     """El audio de la entrada pasado por los aparatos que suenan (la cinta, el micrófono del celular…), sólo
     dentro de las ventanas si las hay. `corte`: desde dónde se lee en el archivo; `t0`: a qué segundo de la imagen
     corresponde (para que el temblor y las arrugas caigan donde caen en la imagen)."""
@@ -1464,7 +1518,7 @@ def _audio_de_aparatos(entrada: Path, carpeta: Path, corte: float, t0: float, du
     y = x
     for n, (nombre, p) in enumerate(sonidos):
         y = (sonido_de_cinta(y, p, semilla, t0, indice=n) if nombre == "cinta"
-             else _modulo(nombre).sonido(nombre, y, p, semilla, t0, SR_AUDIO, n))
+             else _modulo(nombre).sonido(nombre, y, {**p, "_fps": fps}, semilla, t0, SR_AUDIO, n))
     if ventanas:
         rejilla = np.arange(0, dura + 0.01, 0.01)
         e = np.interp(np.arange(len(x)) / SR_AUDIO, rejilla, [envolvente(s, ventanas, fundido) for s in rejilla])[:, None]
@@ -1487,7 +1541,8 @@ def leer_cuadros(entrada: Path, tiempos: list[float], alto: int) -> list[np.ndar
     return [next(_leer(entrada, info, int(round(t * fps)), 1, alto, ancho)) for t in tiempos]
 
 
-def comparar(entrada: Path, cadenas: list[str], tiempos: list[float], salida: Path, alto: int = 540) -> Path:
+def comparar(entrada: Path, cadenas: list[str], tiempos: list[float], salida: Path, alto: int = 540,
+             musica: dict | None = None) -> Path:
     """Una hoja: una fila por cadena (la primera, la entrada tal cual) y una columna por segundo."""
     from PIL import Image, ImageDraw, ImageFont
 
@@ -1500,11 +1555,15 @@ def comparar(entrada: Path, cadenas: list[str], tiempos: list[float], salida: Pa
     for texto in cadenas:
         cadena, nombre = resolver_cadena(texto)
         pasos, captura, semilla = preparar(cadena)
+        _sin_golpes(pasos, musica)
+        for mal in _revisar_memoria(pasos, fps):
+            salir(mal)
         cal = calentar(pasos, fps)
         cuadros = []
         for t, limpio in zip(tiempos, limpios):
             alto_, ancho_ = limpio.shape[:2]
             ctx = Contexto(semilla, fps, alto_, ancho_)
+            ctx.musica = musica
             k_t = int(round(t * fps))
             k_a = max(0, k_t - cal)
             corrida = (list(_leer(entrada, info, k_a, k_t - k_a, alto_, ancho_)) if info and k_t > k_a
@@ -1553,7 +1612,7 @@ def _rotulo(nombre: str, frase: str, ancho: int, alto: int, destino: Path) -> No
 
 
 def recorrido(entrada: Path, cadenas: list[str], salida: Path, desde: float = 0.0, dura: float = 6.0,
-              alto: int | None = None, hilos: int | None = None) -> Path:
+              alto: int | None = None, hilos: int | None = None, musica: dict | None = None) -> Path:
     """Las cadenas una tras otra sobre el mismo tramo de la entrada (primero, tal cual), cada una con su nombre:
     un video para mirarlas en el teléfono y elegir."""
     if _es_foto(entrada):
@@ -1582,7 +1641,7 @@ def recorrido(entrada: Path, cadenas: list[str], salida: Path, desde: float = 0.
         else:
             cadena, nombre = resolver_cadena(texto)
             print(f"  {n}/{len(cadenas)} {nombre}", flush=True)
-            procesar(entrada, crudo, cadena, desde=desde, hasta=desde + dura, alto=alto, hilos=hilos, callado=True)
+            procesar(entrada, crudo, cadena, desde=desde, hasta=desde + dura, alto=alto, hilos=hilos, callado=True, musica=musica)
             frase = frases.get(nombre, "")
         rotulo = temporal / f"{n:02d}.png"
         _rotulo(nombre, frase[:90], ancho, alto_, rotulo)
@@ -1626,15 +1685,16 @@ def cmd(a) -> None:
     if not a.entrada:
         salir("falta la entrada: un video o una foto (o --cadenas para ver las cadenas de la galería)")
     entrada = ruta_entrada(a.entrada)
+    musica = musica_de(a.golpes) if getattr(a, "golpes", None) else None
     if a.recorrido:
         cadenas = [c.strip() for c in a.recorrido.split(",") if c.strip()]
         destino = Path(a.salida) if a.salida else entrada.with_name(f"{entrada.stem}-recorrido.mp4")
-        print(f"→ {recorrido(entrada, cadenas, destino, a.desde or 0.0, a.segundos, a.alto, a.hilos)}")
+        print(f"→ {recorrido(entrada, cadenas, destino, a.desde or 0.0, a.segundos, a.alto, a.hilos, musica)}")
         return
     if a.comparar:
         tiempos = [float(x) for x in a.en.split(",")]
         destino = Path(a.salida) if a.salida else entrada.with_name(f"{entrada.stem}-comparar.png")
-        print(f"→ {comparar(entrada, [c for c in a.comparar.split(',') if c.strip()], tiempos, destino, a.alto or 540)}")
+        print(f"→ {comparar(entrada, [c for c in a.comparar.split(',') if c.strip()], tiempos, destino, a.alto or 540, musica)}")
         return
     if not a.cadena:
         salir("falta --cadena (un estilo de la galería, o la cadena en JSON) o --comparar")
@@ -1643,4 +1703,4 @@ def cmd(a) -> None:
     if destino.resolve() == entrada:
         salir("la salida no puede pisar la entrada")
     procesar(entrada, destino, cadena, desde=a.desde, hasta=a.hasta, segundos=a.segundos, alto=a.alto,
-             ventanas=[tuple(v) for v in a.ventana] if a.ventana else None, fundido=a.fundido, hilos=a.hilos)
+             ventanas=[tuple(v) for v in a.ventana] if a.ventana else None, fundido=a.fundido, hilos=a.hilos, musica=musica)

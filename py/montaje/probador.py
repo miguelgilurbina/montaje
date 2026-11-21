@@ -433,7 +433,8 @@ def probar(ids: list[str] | None, fijar: bool = False, rehacer: bool = False) ->
 
                 t0 = time.time()
                 sale = render.with_name(render.stem + "-analogo.mp4")
-                analogo.procesar(render, sale, r["analogo"], callado=True)
+                # Los golpes del banco, por si la cadena va al pulso (el render empieza donde empieza su canción).
+                analogo.procesar(render, sale, r["analogo"], callado=True, musica=analogo.musica_de(NOMBRE))
                 render = sale
                 # Lo que cuesta un estilo analógico es su cadena, no el banco (que sale guardado).
                 dibujo, dibujado = time.time() - t0, True

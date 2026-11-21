@@ -46,18 +46,28 @@ def errores(nombre: str, a: dict) -> list[str]:
     return []
 
 
-def calentar(pasos: list[tuple[str, dict]], fps: float) -> int:
-    """La pausa guarda el cuadro donde empezó; el rebobinado, los cuadros de antes que va a mostrar."""
+CONSEJO = {"casetera": "acorta `pausa_dura` o `rebobinar_dura`"}
+
+
+def _atras(fps: float) -> int:
+    """Lo más atrás que el rebobinado va a buscar: a 50 o 60 cuadros por segundo, un rebobinado largo iría más allá
+    del tope de memoria; ahí el final del rebobinado se queda en lo más viejo que se puede recordar."""
+    return A.CALENTAR_MAX - 4
+
+
+def calentar(pasos: list[tuple[str, dict]], fps: float, solo: int | None = None) -> int:
+    """La pausa guarda el cuadro donde empezó; el rebobinado, los cuadros de antes que va a mostrar. Con `solo`,
+    sólo el aparato de ese lugar de la cadena."""
     n = 0
-    for nombre, p in pasos:
-        if nombre != "casetera":
+    for i, (nombre, p) in enumerate(pasos):
+        if nombre != "casetera" or (solo is not None and i != solo):
             continue
         if p["entrelazado"]:
             n = max(n, 2)
         if p["pausa"]:
             n = max(n, int(math.ceil(p["pausa_dura"] * fps)) + 2)
         if p["rebobinar"]:
-            n = max(n, int(math.ceil(p["rebobinar_dura"] * fps * (1 + VELOCIDAD_REBOBINAR))) + 2)
+            n = max(n, min(int(math.ceil(p["rebobinar_dura"] * fps * (1 + VELOCIDAD_REBOBINAR))), _atras(fps)) + 2)
     return n
 
 
@@ -109,7 +119,7 @@ def casetera(s: A.Senal, p: dict, ctx) -> A.Senal:
     # Lo que tiene memoria se guarda siempre, haya evento o no: los pedazos en paralelo no dejan costura.
     if p["rebobinar"]:
         est["guardados"][k] = _guardar(y, i, q)
-        limite = k - int(math.ceil(p["rebobinar_dura"] * fps * (1 + VELOCIDAD_REBOBINAR))) - 2
+        limite = k - min(int(math.ceil(p["rebobinar_dura"] * fps * (1 + VELOCIDAD_REBOBINAR))), _atras(fps)) - 2
         for viejo in [c for c in est["guardados"] if c < limite]:
             del est["guardados"][viejo]
     if p["entrelazado"]:  # el campo impar es del cuadro anterior: lo que se mueve se peina
@@ -138,7 +148,7 @@ def casetera(s: A.Senal, p: dict, ctx) -> A.Senal:
     if rebobina is not None:
         u, _ = rebobina
         inicio = k - int(round(u * p["rebobinar_dura"] * fps))
-        fuente = inicio - VELOCIDAD_REBOBINAR * (k - inicio)
+        fuente = max(inicio - VELOCIDAD_REBOBINAR * (k - inicio), k - _atras(fps))
         disponibles = [c for c in est["guardados"] if c <= fuente] or [min(est["guardados"])]
         y, i, q = _recuperar(est["guardados"][max(disponibles)])
         # Las líneas corridas, el color que va y viene, y dos barras de ruido que suben despacio.
@@ -151,13 +161,14 @@ def casetera(s: A.Senal, p: dict, ctx) -> A.Senal:
             _barra(y, i, q, centro, 24, rng)
         texto = "◀◀"
     if p["inicio"]:
-        if t < p["inicio"]:  # la pantalla azul de la casetera sin señal
+        desde_el_principio = t - ctx.inicio   # «al principio del video»: desde donde empieza la salida
+        if desde_el_principio < p["inicio"]:  # la pantalla azul de la casetera sin señal
             azul = A.color_yiq(AZUL)
             y, i, q = (np.full((A.LINEAS, A.MUESTRAS), v, np.float32) for v in azul)
-        elif t < p["inicio"] + 0.6:  # la imagen entra con el ruido del tracking, de abajo arriba
-            u = (t - p["inicio"]) / 0.6
+        elif desde_el_principio < p["inicio"] + 0.6:  # la imagen entra con el ruido del tracking, de abajo arriba
+            u = (desde_el_principio - p["inicio"]) / 0.6
             _barra(y, i, q, (1 - u) * A.LINEAS, 40 * (1 - u) + 10, rng)
-        if p["inicio"] - 1.2 <= t < p["inicio"] + 2.5:
+        if p["inicio"] - 1.2 <= desde_el_principio < p["inicio"] + 2.5:
             texto = "▶ PLAY"
     s.y, s.i, s.q = y.astype(np.float32), i.astype(np.float32), q.astype(np.float32)
     if texto and p["letreros"]:

@@ -555,6 +555,8 @@ def main() -> None:
     s.add_argument("--recorrido", help="cadenas separadas por coma: un video con cada una sobre el mismo tramo "
                                        "(desde --desde, --segundos cada una), con su nombre; primero, tal cual")
     s.add_argument("--cadenas", action="store_true", help="lista las cadenas de la galería")
+    s.add_argument("--golpes", default=None, metavar="PROYECTO",
+                   help="los golpes de la canción de ese proyecto, para lo que va al pulso (la consola `al pulso`)")
 
     s = sub.add_parser("probar", help="el probador: cada estilo hace su muestra en el mismo banco (mismos clips, misma canción) → medios/estilos/probador/",
                        description="el probador: cada estilo hace su muestra en el mismo banco (mismos clips, misma canción), deja cuadros de "

@@ -51,6 +51,9 @@ FORMATOS = {
             "tira_mm": 8.0, "cuadro_x_mm": 2.6, "paso_mm": 3.81, "perforacion": (0.55, 1.83, 1.27), "perf_en": "linea"},
     "16mm": {"ancho_mm": 10.26, "alto_mm": 7.49, "blando": 0.9, "vaiven": (0.0008, 0.0012),
              "tira_mm": 16.0, "cuadro_x_mm": 3.1, "paso_mm": 7.62, "perforacion": (0.9, 1.83, 1.27), "perf_en": "linea"},
+    # El rollo de fotos: el cuadro de 36 × 24 de la cámara de bolsillo, quieto (no hay vaivén en una foto). Su tira
+    # corre de lado, con perforaciones arriba y abajo: el escaneo no está hecho para él (va con `ventanilla`).
+    "35mm": {"ancho_mm": 36.0, "alto_mm": 24.0, "blando": 0.45, "vaiven": (0.0, 0.0)},
 }
 #: Cada emulsión: contraste (la pendiente de la curva), equilibrio (cuánto más o menos luz recibe cada capa, en
 #: pasos: el color de la película), saturación, densidad máxima (qué tan negro es su negro) y granularidad (desvío
@@ -60,6 +63,11 @@ EMULSIONES = {
     "kodachrome": {"contraste": 1.25, "equilibrio": (0.10, 0.0, -0.12), "saturacion": 1.3, "dmax": 3.4, "granularidad": 9},
     "ektachrome": {"contraste": 1.05, "equilibrio": (-0.10, 0.0, 0.12), "saturacion": 1.08, "dmax": 3.0, "granularidad": 13},
     "blanco-y-negro": {"contraste": 1.3, "equilibrio": (0.0, 0.0, 0.0), "saturacion": 0.0, "dmax": 2.8, "granularidad": 15},
+    # El negativo de color de los rollos de farmacia, copiado en papel en el laboratorio de una hora: menos
+    # contraste que la reversible, negros que no llegan a negro (el papel), cálido el Kodak Gold y de verdes el Fuji
+    # Superia [sin verificar las cifras: es el recuerdo de esas copias, ajustado mirando las hojas].
+    "kodak-gold": {"contraste": 0.92, "equilibrio": (0.12, 0.05, -0.16), "saturacion": 1.15, "dmax": 2.2, "granularidad": 11},
+    "fuji-superia": {"contraste": 0.95, "equilibrio": (-0.04, 0.07, 0.0), "saturacion": 1.18, "dmax": 2.2, "granularidad": 10},
 }
 #: La luz con el filtro bien o mal puesto (ganancia de cada canal en la luz que llega).
 BALANCES = {"correcto": (1.0, 1.0, 1.0), "naranja": (1.0, 0.74, 0.44), "azul": (0.66, 0.86, 1.22)}
@@ -69,28 +77,61 @@ GRUMO_UM = 14.0   # el tamaño de un grumo de grano en la película, µm [sin ve
 POR_DEFECTO = {
     "pelicula": {"formato": "super8", "emulsion": "kodachrome", "cuadros": 18, "exposicion": 0.0, "balance": "correcto",
                  "grano": 1.0, "halo": 1.0, "vaiven": 1.0, "parpadeo": 0.3, "vineta": 0.3, "polvo": 0.6, "rayas": 0.3,
-                 "pelo": 0.0, "quemado": 0.0, "desvanecido": 0.0, "marco": "ninguno", "fecha": ""},
+                 "pelo": 0.0, "quemado": 0.0, "desvanecido": 0.0, "marco": "ninguno", "fecha": "", "sonido": "ninguno"},
 }
+SONIDOS = ("ninguno", "magnetico", "proyector")
 RANGOS = {
     "pelicula": {"formato": tuple(FORMATOS), "emulsion": tuple(EMULSIONES), "cuadros": (0, 60), "exposicion": (-3, 3),
                  "balance": tuple(BALANCES), "grano": (0, 3), "halo": (0, 3), "vaiven": (0, 4), "parpadeo": (0, 2),
                  "vineta": (0, 1), "polvo": (0, 4), "rayas": (0, 4), "pelo": (0, 6), "quemado": (0, 30),
-                 "desvanecido": (0, 1), "marco": MARCOS},
+                 "desvanecido": (0, 1), "marco": MARCOS, "sonido": ("ninguno", "magnetico", "proyector")},
 }
 _CARACTERES_FECHA = set("0123456789 '-.:")
 
 
 def errores(nombre: str, a: dict) -> list[str]:
+    mal = []
     f = a.get("fecha", "")
     if not isinstance(f, str) or not set(f) <= _CARACTERES_FECHA or len(f) > 16:
-        return ["pelicula.fecha: dígitos, espacios y ' - . : (hasta 16), como «'94 10 12»"]
-    return []
+        mal.append("pelicula.fecha: dígitos, espacios y ' - . : (hasta 16), como «'94 10 12»")
+    if a.get("marco") == "escaneo" and a.get("formato") == "35mm":
+        mal.append("pelicula: el escaneo con la tira es de la película de cine; para el 35 mm de fotos, `ventanilla`")
+    return mal
 
 
-def calentar(pasos: list[tuple[str, dict]], fps: float) -> int:
-    """Un cuadro de película dura varios del video: el pedazo tiene que haber visto el primero."""
+def sonido(nombre: str, x: np.ndarray, p: dict, semilla: int, t0: float, sr: int, indice: int) -> np.ndarray:
+    """El sonido de la película. `magnetico`: la banda magnética del Super 8 sonoro (estrecha y con más temblor que
+    el VHS, [sin verificar] las cifras: van las de la pista lineal en LP con el temblor subido). `proyector`: el
+    traqueteo del proyector (un golpecito por cuadro de película, el motor) debajo del audio, 18 dB más bajo."""
+    if p.get("sonido", "ninguno") == "ninguno" or not len(x):
+        return x
+    if p["sonido"] == "magnetico":
+        return A.sonido_de_cinta(x, {"sonido": "lineal", "formato": "LP", "generaciones": 1, "desgaste": 0.35, "temblor": 1.6,
+                                     "arrugas": 0.0}, semilla, t0, sr, indice)
+    from .proyector import traqueteo
+
+    rng = np.random.default_rng([semilla, A._num("traqueteo"), indice])
+    fps = p.get("_fps")   # el traqueteo va a los cuadros de película que se ven: los suyos, o los del video si son menos
+    ritmo = p["cuadros"] if p["cuadros"] and (fps is None or p["cuadros"] < fps) else (fps or 18)
+    ruido = traqueteo(len(x) / sr, ritmo, rng)[: len(x)]
+    if len(ruido) < len(x):
+        ruido = np.pad(ruido, ((0, len(x) - len(ruido)), (0, 0)))
+    if x.shape[1] != ruido.shape[1]:
+        ruido = ruido[:, : x.shape[1]] if x.shape[1] < 2 else np.repeat(ruido[:, :1], x.shape[1], axis=1)
+    nivel = max(float(np.sqrt(np.mean(x ** 2))), 10 ** (-30 / 20))
+    return (x + ruido * nivel * 10 ** (-18 / 20)).astype(np.float32)
+
+
+CONSEJO = {"pelicula": "sube los `cuadros` de la película"}
+
+
+def calentar(pasos: list[tuple[str, dict]], fps: float, solo: int | None = None) -> int:
+    """Un cuadro de película dura varios del video: el pedazo tiene que haber visto el primero. Con `solo`, sólo
+    el aparato de ese lugar de la cadena."""
     n = 0
-    for nombre, p in pasos:
+    for i, (nombre, p) in enumerate(pasos):
+        if solo is not None and i != solo:
+            continue
         if nombre == "pelicula" and 0 < p["cuadros"] < fps:
             n = max(n, int(math.ceil(fps / p["cuadros"])) + 1)
     return n

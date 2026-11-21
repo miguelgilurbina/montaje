@@ -69,17 +69,6 @@ def errores(nombre: str, a: dict) -> list[str]:
     return mal
 
 
-def errores_de_cadena(aparatos: list[dict], fps: float = 30.0) -> list[str]:
-    """Lo que sólo se ve mirando la cadena entera: el códec que tendría que calentarse más de lo que se puede (a
-    30 cuadros por segundo; `procesar` lo vuelve a mirar con los del video)."""
-    pasos = [(a["aparato"], {**POR_DEFECTO[a["aparato"]], **a}) for a in aparatos if a.get("aparato") in POR_DEFECTO]
-    n = calentar(pasos, fps)
-    if n > A.CALENTAR_MAX:
-        return [f"compresion: el cuadro clave queda a {n} cuadros del video (el tope es {A.CALENTAR_MAX}): baja el `gop` "
-                f"o sube los `cuadros` del sensor"]
-    return []
-
-
 def _por_captura(pasos, fps: float) -> int:
     """Cuántos cuadros del video dura una captura del sensor (1 si no hay sensor o captura a la par del video)."""
     for nombre, p in pasos:
@@ -88,15 +77,22 @@ def _por_captura(pasos, fps: float) -> int:
     return 1
 
 
-def calentar(pasos: list[tuple[str, dict]], fps: float) -> int:
+CONSEJO = {"sensor": "sube los `cuadros` del sensor o baja su `irregular`",
+           "compresion": "baja el `gop` o sube los `cuadros` del sensor"}
+
+
+def calentar(pasos: list[tuple[str, dict]], fps: float, solo: int | None = None) -> int:
     """El sensor recuerda sus últimas capturas (las que se repiten, la exposición que tarda); el códec necesita
     volver a su último cuadro clave. Con capturas perdidas, lo que se ve puede ser de hasta dos capturas atrás, y
-    lo anterior a eso (el movimiento que tuerce, el cuadro clave), de una más."""
+    lo anterior a eso (el movimiento que tuerce, el cuadro clave), de una más. Con `solo`, sólo el aparato de ese
+    lugar de la cadena."""
     f = _por_captura(pasos, fps)
     irregular = any(nombre == "sensor" and p["irregular"] for nombre, p in pasos)
     atras = 2 if irregular else 0
     n = 0
-    for nombre, p in pasos:
+    for i, (nombre, p) in enumerate(pasos):
+        if solo is not None and i != solo:
+            continue
         if nombre == "sensor":
             n = max(n, f * (1 + atras) + 1, (2 + atras) * f + 1 if p["rodar"] else 0, 30 * f if p["exposicion"] else 0)
         if nombre == "compresion":
