@@ -162,6 +162,8 @@ const CapaClip: React.FC<{c: Capa; frame: number; tl: Timeline}> = ({c, frame, t
   const congelar = v.congelar ?? 0;
   const local = frame - c.ini;
   const despierta = congelar ? interpolate(local, [congelar - 2, congelar + 12], [0, 1], fijo) : 1;
+  // El cuadro de la toma que se ve: quieto mientras la foto despierta, o el que dicen los gestos de tiempo.
+  const visto = congelar > 0 && local < congelar ? congelar : cuadroVisto(local, v.tiempo, congelar);
   const reproducir = {
     src,
     trimBefore: Math.max(0, Math.round(v.desde * tl.fps - congelar * v.velocidad)),
@@ -185,7 +187,7 @@ const CapaClip: React.FC<{c: Capa; frame: number; tl: Timeline}> = ({c, frame, t
         ...mascara((c.borde ?? 0) * Math.min(c.ancho, c.alto)),
       }}
     >
-      <Freeze frame={congelar} active={congelar > 0 && local < congelar}>
+      <Freeze frame={visto} active={visto !== local}>
         <DibujoClip v={v} reproducir={reproducir} ancho={c.ancho} alto={c.alto} fps={tl.fps} fondo={tl.fondo} />
       </Freeze>
     </div>
@@ -200,7 +202,7 @@ const CapaClip: React.FC<{c: Capa; frame: number; tl: Timeline}> = ({c, frame, t
       <AbsoluteFill style={paso?.contenido !== undefined ? {opacity: paso.contenido} : undefined}>
         {v.relleno ? (
           // Con la foto que despierta, el fondo desenfocado se queda quieto con ella (antes seguía corriendo detrás).
-          <Freeze frame={congelar} active={congelar > 0 && local < congelar}>
+          <Freeze frame={visto} active={visto !== local}>
             <Relleno tl={tl} fuente={v.fuente} reproducir={reproducir} foto={v.foto} />
           </Freeze>
         ) : null}
@@ -217,6 +219,23 @@ const CapaClip: React.FC<{c: Capa; frame: number; tl: Timeline}> = ({c, frame, t
     </Sequence>
   );
 };
+
+/**
+ * Qué cuadro de la toma se ve en el cuadro `local` con los gestos de tiempo: quieto en el golpe, el pedacito
+ * del golpe repetido, o a saltos (paso de cuadro). Nunca uno posterior a `local`: no gasta material. Ni anterior
+ * a `minimo`: con la foto que despierta, lo de antes de `congelar` es el clip antes de su `desde`.
+ */
+export function cuadroVisto(local: number, t?: CapaVideo['tiempo'], minimo = 0): number {
+  if (!t) return local;
+  const paso = (f: number) => Math.max(minimo, t.paso && t.paso > 1 ? Math.floor(f / t.paso) * t.paso : f);
+  for (const [ini, cuantos] of t.congelados ?? []) {
+    if (local >= ini && local < ini + cuantos) return paso(ini);
+  }
+  for (const [ini, largo, veces] of t.tartamudeos ?? []) {
+    if (local >= ini && local < ini + largo * veces) return paso(ini + ((local - ini) % largo));
+  }
+  return paso(local);
+}
 
 /**
  * La entrada de un clip con `transicion`: en vez de aparecer de a poco, se abre paso

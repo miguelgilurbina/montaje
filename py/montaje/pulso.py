@@ -98,6 +98,16 @@ POR_DEFECTO = {
     "espejo": 0,
     "rejilla": None,
     "congelar_golpes": 0.0,
+    # Los gestos de tiempo dentro de la toma (G3, 2026-11-21): la imagen quieta `congelar_golpe` golpes en cada
+    # golpe elegido; el pedacito de `tartamudeo_golpes` que empieza en el golpe, repetido `tartamudeo` veces; y
+    # el paso de cuadro (cada cuadro de la toma dura `paso_de_cuadro`: 2 = a la mitad de cuadros por segundo).
+    # `_cada`: "compas" (el uno de cada compás), "golpe" (todos) o "pico" (el cuarto de golpes de más energía).
+    "congelar_golpe": 0.0,
+    "congelar_cada": "compas",
+    "tartamudeo": 0,
+    "tartamudeo_golpes": 0.25,
+    "tartamudeo_cada": "compas",
+    "paso_de_cuadro": 1,
     "doble_en": "calma",
     "dividir": 1,
     "escala": 1.0,
@@ -115,6 +125,47 @@ POR_DEFECTO = {
 }
 
 CORTES = ("frase", "compas", "golpe", "energia")
+CADAS = ("compas", "golpe", "pico")
+
+
+def _golpes_de(m: dict, cada: str) -> list[float]:
+    """Los segundos de los golpes elegidos: el uno de cada compás, todos, o el cuarto de golpes de más energía de
+    la canción. El pico es relativo a la canción: con un umbral fijo, una canción entera puede no llegar nunca
+    (pasó en el banco del probador: ningún golpe llegaba a su `umbral_pico`)."""
+    if cada == "compas":
+        return [float(s) for s in m["primeros_tiempos"]]
+    if cada == "golpe":
+        return [float(s) for s in m["beats"]]
+    energia = np.asarray(m["energia"], float)
+    if not len(energia):
+        return []
+    corte = float(np.percentile(energia, 75))
+    return [float(b) for b, e in zip(m["beats"], energia) if e >= corte]
+
+
+def tiempo_de_toma(pe: dict, m: dict, fps: float, ini: int, fin: int, golpe_s: float, desde: int = 0) -> dict | None:
+    """Los gestos de tiempo de una toma, en cuadros de la toma (0 = su primer cuadro): la imagen quieta en el
+    golpe (`congelados`: [cuadro, cuántos]), el pedacito que empieza en el golpe repetido (`tartamudeos`:
+    [cuadro, largo, veces]) y el paso de cuadro (`paso`). El render los aplica sin gastar material: lo que se ve
+    nunca va delante del clip, así que después del gesto la toma sigue donde iba. Los gestos empiezan desde el
+    cuadro `desde`: después de la entrada (mientras entra, el doble de la toma anterior sigue moviéndose) y de la
+    foto que despierta (antes de eso el clip no ha empezado)."""
+    t: dict = {}
+    if int(pe["paso_de_cuadro"]) > 1:
+        t["paso"] = int(pe["paso_de_cuadro"])
+
+    def locales(cada: str, largo: int) -> list[int]:
+        cuadros = sorted({round(s * fps) - ini for s in _golpes_de(m, cada)})
+        return [c for c in cuadros if desde <= c and c + largo <= fin - ini]
+
+    if pe["congelar_golpe"] > 0:
+        dura = max(1, round(pe["congelar_golpe"] * golpe_s * fps))
+        t["congelados"] = [[c, dura] for c in locales(pe["congelar_cada"], dura)]
+    if int(pe["tartamudeo"]) > 1:
+        largo = max(2, round(pe["tartamudeo_golpes"] * golpe_s * fps))
+        veces = int(pe["tartamudeo"])
+        t["tartamudeos"] = [[c, largo, veces] for c in locales(pe["tartamudeo_cada"], largo * veces)]
+    return {k: v for k, v in t.items() if v} or None
 
 
 # ── Frases ─────────────────────────────────────────────────────────────────
@@ -341,6 +392,15 @@ def planificar(p: Proyecto) -> None:
     prm = {**POR_DEFECTO, **p.cfg.get("montaje", {})}
     if prm["corte"] not in CORTES:
         salir(f"corte desconocido: {prm['corte']} (hay: {', '.join(CORTES)})")
+    for k in ("congelar_cada", "tartamudeo_cada"):
+        for valor in [prm[k], *(tr[k] for tr in prm.get("tramos") or [] if k in tr)]:
+            if valor not in CADAS:
+                salir(f"{k}: «{valor}» no es {' / '.join(CADAS)}")
+    for k, entero, minimo in (("congelar_golpe", False, 0), ("tartamudeo_golpes", False, 0.05), ("tartamudeo", True, 0),
+                              ("paso_de_cuadro", True, 1)):
+        for valor in [prm[k], *(tr[k] for tr in prm.get("tramos") or [] if k in tr)]:
+            if isinstance(valor, bool) or not isinstance(valor, int if entero else (int, float)) or valor < minimo:
+                salir(f"{k}: {valor!r} tiene que ser un número{' entero' if entero else ''} desde {minimo:g}")
     catalogo = catalogo_clips.cargar(p)
     # Las fotos del catálogo entran sólo si el montaje las pide: sin eso, sumarle fotos a un proyecto no le cambia nada.
     todos = _ordenar([c for c in catalogo if not c["src"].startswith("transformados/") and (prm["mezclar_fotos"] or not c.get("foto"))], prm["orden"])
@@ -550,6 +610,9 @@ def planificar(p: Proyecto) -> None:
             # Los mismos cuadros que de verdad tarda en entrar la que empuja (su entrada tiene tope: lo que dura su toma).
             llega = eventos[k + 1]
             empujada = {"cuadros": int(min(llega["entrada"], max(0, (llega["fin"] - llega["ini"]) - 2))), "dir": sig_tr[1]}
+        congelar = fundido(pe["congelar_golpes"]) if pe["congelar_golpes"] and ev["nuevo_clip"] else 0
+        entrada = int(min(ev["entrada"], max(0, (fin - ini) - 2)))
+        tiempo = tiempo_de_toma(pe, m, fps, ini, fin, golpe_s, desde=max(congelar, entrada))
         capas.append({
             "id": f"{c['id']}#{k}",
             "img": c["proxy"],
@@ -558,10 +621,11 @@ def planificar(p: Proyecto) -> None:
                       **({"espejo": int(pe["espejo"])} if pe["espejo"] in (2, 4) else {}),
                       **({"rejilla": {"columnas": int(pe["rejilla"][0]), "filas": int(pe["rejilla"][1]), "desfase": float(pe["rejilla"][2])}}
                          if pe["rejilla"] else {}),
-                      **({"congelar": fundido(pe["congelar_golpes"])} if pe["congelar_golpes"] and ev["nuevo_clip"] else {})},
+                      **({"congelar": congelar} if congelar else {}),
+                      **({"tiempo": tiempo} if tiempo else {})},
             "ini": ini,
             "fin": fin,
-            "entrada": int(min(ev["entrada"], max(0, (fin - ini) - 2))),
+            "entrada": entrada,
             "salida": int(min(fundido(pe["fundido_final_golpes"]), max(0, (fin - ini) - 2))) if ultima else 0,
             "x": x,
             "y": y,

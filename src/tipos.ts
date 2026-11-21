@@ -66,6 +66,13 @@ export type CapaVideo = {
   rejilla?: {columnas: number; filas: number; desfase: number};
   /** La foto que despierta: los primeros `congelar` cuadros, quieto en `desde` y apagado; después corre desde ahí y toma color. */
   congelar?: number;
+  /**
+   * Los gestos de tiempo al pulso, en cuadros de la toma: `paso` (cada cuadro dura `paso`: 2 = a la mitad de
+   * cuadros por segundo), `congelados` ([cuadro, cuántos]: la imagen quieta en el golpe) y `tartamudeos`
+   * ([cuadro, largo, veces]: el pedacito que empieza en el golpe, repetido). Lo que se ve nunca va delante del
+   * clip: después del gesto la toma sigue donde iba.
+   */
+  tiempo?: {paso?: number; congelados?: [number, number][]; tartamudeos?: [number, number, number][]};
 };
 
 /** Una pieza de la pared, en unidades de pared (centro y tamaño). Aparece en el cuadro `llega`. */

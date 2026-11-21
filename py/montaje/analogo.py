@@ -32,6 +32,21 @@ tiempo: el temblor de la cinta es un retraso distinto por línea.
 | `realimentacion` | la cámara que mira su propio monitor: lo de antes vuelve, más chico y girado, y deja estelas en espiral | `mezcla`, `zoom`, `giro`, `tono` |
 | `pantalla` | el televisor de tubo, al tamaño de salida: líneas de barrido cuyo haz engorda con el brillo, máscara de fósforos, curva del vidrio, el resplandor, la persistencia del fósforo, el blanco azulado de 9300 K, la convergencia imperfecta | `lineas`, `mascara`, `curva`, `brillo`, `persistencia`, `blanco` |
 
+Y los que no trabajan en la señal sino en la imagen (2026-11-21), en sus módulos:
+
+| aparato | qué simula | dónde |
+|---|---|---|
+| `pelicula` | Super 8, 8 mm y 16 mm en la emulsión: la curva, el grano en la densidad, el halo rojo, el vaivén, los 18 cuadros, polvo, rayas y pelos, el quemado, los tintes que se destiñen, la fecha naranja | `pelicula.py` |
+| `sensor` | la cámara digital temprana: el celular, la webcam, la de bolsillo, la MiniDV | `digital.py` |
+| `compresion` | el códec: bloques, lo que no se actualiza, el cuadro clave, los errores que se arrastran | `digital.py` |
+| `consola` | la consola de mezcla de los 90: mosaico, estrobo, multi, pintura, negativo, llave | `consola.py` |
+
+Y uno de señal en su propio módulo: `casetera` (la pausa, rebobinar, el arranque en azul, el entrelazado), en
+`casetera.py`.
+
+Una cadena puede mezclar los dos mundos: `[pelicula, cinta, pantalla]` es el Super 8 de la familia pasado a VHS y
+visto en el televisor.
+
 Una **cadena** es la lista de aparatos con sus perillas (lo que no se dice toma su valor por defecto):
 
     [{"aparato": "cinta", "formato": "EP", "generaciones": 2}, {"aparato": "pantalla"}]
@@ -283,6 +298,9 @@ class Contexto:
         self.aspecto = ancho / alto          # el de la imagen que se ve, no el de la grilla de muestras
         self.k, self.t, self.paso = 0, 0.0, 0
         self.estado: dict = {}
+        # Cómo vuelve a la salida una imagen de otro tamaño (la del sensor de un celular): con barras o llenando,
+        # y ampliada suave o con sus pixeles. Lo fija el sensor en cada cuadro.
+        self.encuadre = ("barras", "suave")
 
     def rng(self, *extra) -> np.random.Generator:
         return np.random.default_rng([self.semilla, self.paso, self.k, *(_num(x) for x in extra)])
@@ -641,7 +659,7 @@ def _mascara_osd(texto: str, cache: dict) -> tuple[np.ndarray, np.ndarray, np.nd
     from PIL import Image, ImageDraw, ImageFont
 
     fuente = ImageFont.truetype(str(_FUENTE_OSD), 11)
-    ancho = max(8, int(fuente.getlength(texto.replace("▶", "  ").replace("●", "  ").replace("‖", "  "))) + 10)
+    ancho = max(8, int(fuente.getlength("".join("  " if c in "▶◀●‖" else c for c in texto))) + 10)
     img = Image.new("L", (ancho, 16), 0)
     rojo = Image.new("L", (ancho, 16), 0)
     dib, dib_r = ImageDraw.Draw(img), ImageDraw.Draw(rojo)
@@ -650,6 +668,9 @@ def _mascara_osd(texto: str, cache: dict) -> tuple[np.ndarray, np.ndarray, np.nd
         if ch == "▶":
             dib.polygon([(x + 1, 3), (x + 1, 12), (x + 9, 7.5)], fill=255)
             x += 12
+        elif ch == "◀":
+            dib.polygon([(x + 9, 3), (x + 9, 12), (x + 1, 7.5)], fill=255)
+            x += 10
         elif ch == "‖":
             dib.rectangle([x + 1, 3, x + 3, 12], fill=255)
             dib.rectangle([x + 6, 3, x + 8, 12], fill=255)
@@ -930,6 +951,35 @@ APARATOS = {"camara": camara, "osd": osd, "cinta": cinta, "antena": antena, "tbc
             "iman": iman, "relieve": relieve, "realimentacion": realimentacion, "pantalla": pantalla}
 CAPTURAS = ("peine", "muesca")
 
+# ── Los aparatos de imagen: la película y lo digital ───────────────────────
+
+_IMAGEN: dict | None = None
+_MODULOS_IMAGEN: list = []
+
+
+def _imagen() -> dict:
+    """Los aparatos que viven en sus propios módulos se suman a la mesa la primera vez que se pide una cadena: los
+    que trabajan en la imagen y no en la señal (la película, el sensor y la compresión de lo digital, la consola
+    de mezcla: su `APARATOS`) y los de señal que no están aquí (la casetera: su `SENAL`)."""
+    global _IMAGEN
+    if _IMAGEN is None:
+        from . import casetera, consola, digital, pelicula
+
+        _IMAGEN = {}
+        for m in (pelicula, digital, consola, casetera):
+            _IMAGEN.update(getattr(m, "APARATOS", {}))
+            APARATOS.update(getattr(m, "SENAL", {}))
+            POR_DEFECTO.update(m.POR_DEFECTO)
+            RANGOS.update(m.RANGOS)
+            _MODULOS_IMAGEN.append(m)
+        APARATOS.update(_IMAGEN)
+    return _IMAGEN
+
+
+def _modulo(nombre: str):
+    _imagen()
+    return next((m for m in _MODULOS_IMAGEN if nombre in getattr(m, "APARATOS", {}) or nombre in getattr(m, "SENAL", {})), None)
+
 
 # ── La cadena ───────────────────────────────────────────────────────────────
 
@@ -943,6 +993,7 @@ def _normalizar_cadena(cadena) -> dict:
 
 def errores(cadena) -> list[str]:
     """Lo que está mal en una cadena. Vacío = se puede usar."""
+    imagen = _imagen()
     c = _normalizar_cadena(cadena)
     if c["aparatos"] is None:
         return ["una cadena es una lista de aparatos, o {\"aparatos\": [...]}"]
@@ -951,6 +1002,9 @@ def errores(cadena) -> list[str]:
         mal.append("la cadena no tiene aparatos")
     if c.get("captura", "peine") not in CAPTURAS:
         mal.append(f"`captura`: «{c['captura']}» no es {' / '.join(CAPTURAS)}")
+    s = c.get("semilla", 1)
+    if isinstance(s, bool) or not isinstance(s, int) or s < 0:
+        mal.append(f"`semilla`: {s!r} tiene que ser un entero desde 0")
     for n, a in enumerate(c["aparatos"]):
         if not isinstance(a, dict) or a.get("aparato") not in APARATOS:
             mal.append(f"aparato {n + 1}: «{a.get('aparato') if isinstance(a, dict) else a}» no es {' / '.join(APARATOS)}")
@@ -995,6 +1049,13 @@ def errores(cadena) -> list[str]:
                     mal.append("osd.textos: cada uno con su `texto`")
                 elif item.get("lugar", "arriba-izquierda") not in LUGARES:
                     mal.append(f"osd: «{item['lugar']}» no es {' / '.join(LUGARES)}")
+        modulo = _modulo(nombre)
+        if modulo is not None:
+            mal.extend(modulo.errores(nombre, a))
+    if not mal:
+        from . import digital
+
+        mal.extend(digital.errores_de_cadena(c["aparatos"]))
     return mal
 
 
@@ -1017,9 +1078,11 @@ def preparar(cadena) -> tuple[list[tuple[str, dict]], str, int]:
     return pasos, c.get("captura", "peine"), int(c.get("semilla", 1))
 
 
-def calentar(pasos: list[tuple[str, dict]]) -> int:
-    """Cuántos cuadros hay que procesar antes de un pedazo para que lo que tiene memoria llegue igual."""
-    n = 0
+def calentar(pasos: list[tuple[str, dict]], fps: float = 30.0) -> int:
+    """Cuántos cuadros hay que procesar antes de un pedazo para que lo que tiene memoria llegue igual: la estela,
+    la realimentación y el fósforo; el cuadro de película que dura varios del video; el códec desde su cuadro clave."""
+    _imagen()
+    n = max([0, *(m.calentar(pasos, fps) for m in _MODULOS_IMAGEN)])
     for nombre, p in pasos:
         if nombre == "realimentacion":
             ganancia = min(0.97, max(p["mezcla"] * p["contraste"], 0.05))
@@ -1028,12 +1091,77 @@ def calentar(pasos: list[tuple[str, dict]]) -> int:
             n = max(n, int(math.ceil(math.log(0.01) / math.log(p["estela"]))) + 1)
         if nombre == "pantalla" and p["persistencia"]:
             n = max(n, int(math.ceil(math.log(0.01) / math.log(p["persistencia"]))) + 1)
-    return min(n, 120)
+    return min(n, CALENTAR_MAX)
+
+
+#: Lo más que se calienta un pedazo. El códec se calienta desde su cuadro clave: su `gop` tiene este techo.
+CALENTAR_MAX = 240
+
+
+def _ocho_bits(img: np.ndarray) -> np.ndarray:
+    return (np.clip(img, 0, 1) * 255 + 0.5).astype(np.uint8)
+
+
+def _encajar(img: np.ndarray, alto: int, ancho: int, como: tuple[str, str]) -> np.ndarray:
+    """Una imagen de otro tamaño (la del sensor de un celular) a la salida: entera con barras negras o llenando
+    (y recortando el centro), ampliada suave (como la ampliaba un reproductor) o con sus pixeles."""
+    from PIL import Image
+
+    h, w = img.shape[:2]
+    if (h, w) == (alto, ancho):
+        return img
+    llenar, metodo = como
+    f = (max if llenar == "llenar" else min)(alto / h, ancho / w)
+    nh, nw = max(1, int(round(h * f))), max(1, int(round(w * f)))
+    filtro = Image.NEAREST if metodo == "pixeles" else Image.BILINEAR
+    grande = np.asarray(Image.fromarray(_ocho_bits(img)).resize((nw, nh), filtro), np.float32) / 255
+    sale = np.zeros((alto, ancho, 3), np.float32)
+    y0, x0 = (alto - nh) // 2, (ancho - nw) // 2
+    ys, xs, yd, xd = max(0, -y0), max(0, -x0), max(0, y0), max(0, x0)
+    hh, ww = min(nh - ys, alto - yd), min(nw - xs, ancho - xd)
+    sale[yd:yd + hh, xd:xd + ww] = grande[ys:ys + hh, xs:xs + ww]
+    return sale
+
+
+def _de_senal(s: Senal, captura: str, alto: int, ancho: int) -> np.ndarray:
+    s.componentes(captura)
+    return _de_grilla(np.clip(a_rgb(s.y, s.i, s.q), 0, 1), alto, ancho)
+
+
+def procesar_cuadro(rgb8: np.ndarray, pasos, captura: str, ctx: Contexto) -> np.ndarray:
+    """Un cuadro de la entrada (RGB de 8 bits, al tamaño de salida) por la cadena entera → RGB de 8 bits al tamaño
+    de salida. La imagen entra a la grilla de la señal cuando le toca a un aparato de señal, y vuelve a ser imagen
+    cuando le toca a uno de imagen (la película, lo digital)."""
+    imagen = _imagen()
+    alto, ancho = ctx.alto, ctx.ancho
+    ctx.encuadre = ("barras", "suave")
+    ctx.estado.pop("captura", None)   # la captura del sensor es de este cuadro: un códec antes del sensor no la ve
+    img = rgb8.astype(np.float32) / 255
+    s = None
+    for n, (nombre, p) in enumerate(pasos):
+        ctx.paso = n
+        if nombre in imagen:
+            if s is not None:
+                img, s = _de_senal(s, captura, alto, ancho), None
+            img = imagen[nombre](img, p, ctx)
+            continue
+        if s is None:
+            s = Senal(*a_yiq(_a_grilla(_ocho_bits(_encajar(img, alto, ancho, ctx.encuadre)))), ctx.k)
+        if nombre == "pantalla":
+            return pantalla(s, p, ctx)
+        s = APARATOS[nombre](s, p, ctx)
+        if s.sale_compuesta:
+            s.compuesta()
+            s.sale_compuesta = False
+    if s is not None:
+        img = _de_senal(s, captura, alto, ancho)
+    return _ocho_bits(_encajar(img, alto, ancho, ctx.encuadre))
 
 
 def cuadro(rgb: np.ndarray, pasos, captura: str, ctx: Contexto) -> np.ndarray:
-    """Un cuadro (en la grilla de la señal, RGB 0–1) por la cadena. Si termina en la pantalla devuelve RGB de
-    8 bits al tamaño de salida; si no, RGB 0–1 en la grilla."""
+    """Un cuadro (en la grilla de la señal, RGB 0–1) por una cadena de aparatos de señal. Si termina en la
+    pantalla devuelve RGB de 8 bits al tamaño de salida; si no, RGB 0–1 en la grilla. (El video usa
+    `procesar_cuadro`, que además sabe de los aparatos de imagen.)"""
     s = Senal(*a_yiq(rgb), ctx.k)
     for n, (nombre, p) in enumerate(pasos):
         ctx.paso = n
@@ -1165,7 +1293,6 @@ def _pedazo(tarea: dict) -> str:
            "-c:v", "libx264", "-preset", "medium", "-crf", str(tarea["crf"]), "-threads", "2", "-pix_fmt", "yuv420p",
            "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", tarea["salida"]]
     enc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
-    termina_en_pantalla = pasos and pasos[-1][0] == "pantalla"
     try:
         for n, rgb8 in enumerate(_leer(Path(tarea["entrada"]), tarea["info"], tarea["origen"] + desde, b - desde, alto, ancho)):
             k = desde + n
@@ -1176,14 +1303,12 @@ def _pedazo(tarea: dict) -> str:
                 continue
             # Lo que tiene memoria (estela, realimentación, fósforo) sigue andando fuera de las ventanas: si no, al
             # abrir una la memoria dependería de dónde cayó la costura entre pedazos.
-            sale = cuadro(_a_grilla(rgb8), pasos, captura, ctx)
+            sale = procesar_cuadro(rgb8, pasos, captura, ctx)
             if k < a:
                 continue
             if e <= 0:
                 enc.stdin.write(np.ascontiguousarray(rgb8).tobytes())
                 continue
-            if not termina_en_pantalla:
-                sale = (np.clip(_de_grilla(sale, alto, ancho), 0, 1) * 255 + 0.5).astype(np.uint8)
             if e < 1:
                 sale = (sale.astype(np.float32) * e + rgb8.astype(np.float32) * (1 - e) + 0.5).astype(np.uint8)
             enc.stdin.write(sale.tobytes())
@@ -1257,10 +1382,17 @@ def procesar(entrada: Path, salida: Path, cadena, *, desde: float | None = None,
         total = min(total, info["cuadros"] - a0)
     if total <= 0:
         salir("no queda ningún cuadro entre esos segundos")
-    cal = calentar(pasos)
+    cal = calentar(pasos, float(fps))
+    for m in _MODULOS_IMAGEN:  # lo que necesita más memoria que el tope dejaría costuras: el códec, el rebobinado
+        necesita = m.calentar(pasos, float(fps))
+        if necesita > CALENTAR_MAX:
+            salir(f"{m.__name__.split('.')[-1]}: a {float(fps):g} cuadros por segundo necesita recordar {necesita} cuadros "
+                  f"(el tope es {CALENTAR_MAX}): baja el `gop`, sube los `cuadros` del sensor o acorta el rebobinado")
     hilos = hilos or max(1, min(12, (os.cpu_count() or 4) - 2))
     # Pedazos chicos si el video es corto (que trabajen todos los procesos), de hasta `pedazo` cuadros si no.
     pedazo = int(np.clip(math.ceil(total / hilos), 8, pedazo))
+    if cal > pedazo:  # un calentamiento largo (el códec desde su cuadro clave) se reparte en pedazos más largos
+        pedazo = max(pedazo, min(2 * cal, math.ceil(total / 2)))
     temporal = salida.parent / f".{salida.stem}-pedazos"
     shutil.rmtree(temporal, ignore_errors=True)
     temporal.mkdir(parents=True)
@@ -1295,10 +1427,10 @@ def procesar(entrada: Path, salida: Path, cadena, *, desde: float | None = None,
         lista = temporal / "lista.txt"
         lista.write_text("".join(f"file '{Path(t['salida']).name}'\n" for t in tareas), encoding="utf-8")
         cmd = ["ffmpeg", "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", str(lista)]
-        cintas = [p_ for nombre, p_ in pasos if nombre == "cinta" and p_["sonido"] != "ninguno"]
-        if info["audio"] and cintas:
-            cmd += ["-i", str(_audio_de_cinta(entrada, temporal, (desde or 0.0) + info.get("desfase", 0.0), a0 / float(fps),
-                                              total / float(fps), cintas, semilla, vent, fundido)),
+        sonidos = [(nombre, p_) for nombre, p_ in pasos if p_.get("sonido", "ninguno") != "ninguno"]
+        if info["audio"] and sonidos:
+            cmd += ["-i", str(_audio_de_aparatos(entrada, temporal, (desde or 0.0) + info.get("desfase", 0.0), a0 / float(fps),
+                                                 total / float(fps), sonidos, semilla, vent, fundido)),
                     "-map", "0:v", "-map", "1:a", "-c:a", "aac", "-b:a", "192k"]
         elif info["audio"]:
             cmd += ["-ss", f"{(desde or 0) + info.get('desfase', 0.0):.6f}", "-t", f"{total / fps:.6f}", "-i", str(entrada),
@@ -1316,11 +1448,11 @@ def procesar(entrada: Path, salida: Path, cadena, *, desde: float | None = None,
     return salida
 
 
-def _audio_de_cinta(entrada: Path, carpeta: Path, corte: float, t0: float, dura: float, cintas: list[dict], semilla: int,
-                    ventanas, fundido: float) -> Path:
-    """El audio de la entrada pasado por la cinta (o las cintas), sólo dentro de las ventanas si las hay. `corte`:
-    desde dónde se lee en el archivo; `t0`: a qué segundo de la imagen corresponde (para que el temblor y las
-    arrugas caigan donde caen en la imagen)."""
+def _audio_de_aparatos(entrada: Path, carpeta: Path, corte: float, t0: float, dura: float, sonidos: list[tuple[str, dict]],
+                       semilla: int, ventanas, fundido: float) -> Path:
+    """El audio de la entrada pasado por los aparatos que suenan (la cinta, el micrófono del celular…), sólo
+    dentro de las ventanas si las hay. `corte`: desde dónde se lee en el archivo; `t0`: a qué segundo de la imagen
+    corresponde (para que el temblor y las arrugas caigan donde caen en la imagen)."""
     import soundfile as sf
 
     crudo, sale = carpeta / "audio.wav", carpeta / "audio-cinta.wav"
@@ -1330,8 +1462,9 @@ def _audio_de_cinta(entrada: Path, carpeta: Path, corte: float, t0: float, dura:
         salir(f"no pude leer el audio de {entrada.name}: {r.stderr.strip()[-300:]}")
     x, _ = sf.read(crudo, dtype="float32", always_2d=True)
     y = x
-    for n, p in enumerate(cintas):
-        y = sonido_de_cinta(y, p, semilla, t0, indice=n)
+    for n, (nombre, p) in enumerate(sonidos):
+        y = (sonido_de_cinta(y, p, semilla, t0, indice=n) if nombre == "cinta"
+             else _modulo(nombre).sonido(nombre, y, p, semilla, t0, SR_AUDIO, n))
     if ventanas:
         rejilla = np.arange(0, dura + 0.01, 0.01)
         e = np.interp(np.arange(len(x)) / SR_AUDIO, rejilla, [envolvente(s, ventanas, fundido) for s in rejilla])[:, None]
@@ -1367,7 +1500,7 @@ def comparar(entrada: Path, cadenas: list[str], tiempos: list[float], salida: Pa
     for texto in cadenas:
         cadena, nombre = resolver_cadena(texto)
         pasos, captura, semilla = preparar(cadena)
-        cal = calentar(pasos)
+        cal = calentar(pasos, fps)
         cuadros = []
         for t, limpio in zip(tiempos, limpios):
             alto_, ancho_ = limpio.shape[:2]
@@ -1379,12 +1512,9 @@ def comparar(entrada: Path, cadenas: list[str], tiempos: list[float], salida: Pa
             for j, previo in enumerate(corrida):  # lo que tiene memoria (fósforo, realimentación) llega como en el video
                 ctx.k = k_a + j
                 ctx.t = ctx.k / fps
-                cuadro(_a_grilla(previo), pasos, captura, ctx)
+                procesar_cuadro(previo, pasos, captura, ctx)
             ctx.k, ctx.t = k_t, k_t / fps
-            sale = cuadro(_a_grilla(limpio), pasos, captura, ctx)
-            if sale.dtype != np.uint8:
-                sale = (np.clip(_de_grilla(sale, alto_, ancho_), 0, 1) * 255 + 0.5).astype(np.uint8)
-            cuadros.append(sale)
+            cuadros.append(procesar_cuadro(limpio, pasos, captura, ctx))
         filas.append((nombre, cuadros))
     h, w = limpios[0].shape[:2]
     margen = 34
@@ -1476,6 +1606,7 @@ def recorrido(entrada: Path, cadenas: list[str], salida: Path, desde: float = 0.
 def listar() -> None:
     from . import estilos as galeria
 
+    _imagen()
     cadenas = [e for e in galeria.leer() if e["tecnica"].get("comando") == "analogo"]
     if not cadenas:
         print("no hay cadenas analógicas en estilos/")
