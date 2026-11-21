@@ -67,6 +67,12 @@ experimento 24 para las hojas y para medir. Nada se bajó.
 - **La consola al pulso**: la mesa recibe los golpes de la canción (`musica_de`, `--golpes <proyecto>`; el
   probador pasa los del banco) y la consola prende sus efectos en el uno de cada compás, en cada golpe o en los
   picos. Sin golpes, la cadena se detiene y dice qué falta.
+- **`py/montaje/optica.py`**, el aparato `lente` (Miguel eligió en tarjetas «Luz y óptica»): la aberración
+  cromática (cada color a su escala), el barril y el ojo de pez, el destello (los fantasmas en la línea que pasa
+  por el centro, con el tinte del antirreflejo), la raya anamórfica, la niebla, la suciedad que aparece en el
+  velo, la viñeta y el foco que se va en cada golpe. Siete estilos: `destello-de-sol`, `lente-anamorfico`,
+  `ojo-de-pez`, `video-de-skate` (ojo de pez sobre MiniDV, como la VX1000 con el Century), `lente-empanado`,
+  `lente-barato`, `foco-al-pulso`.
 - **`py/pruebas/test_pelicula_digital.py`**: la cadencia de 18 cuadros, el cuadro repetido con su grano, el gris
   medio en su lugar, la copia desteñida que tira al rojo, el halo rojo, la ventanilla, el blanco y negro, la
   película y lo digital sin costura entre pedazos, las capturas perdidas, el celular con barras, la calidad del
@@ -150,6 +156,12 @@ muestras del probador se redibujaron.
   de revoque o en la sábana (los pliegues se notan en los bordes torcidos más que en la sombra, sobre una imagen
   oscura); el cuarto salía gris claro y ahora queda casi negro, con un poco de luz rebotada cerca de la imagen. El
   Kodak Gold cálido con la fecha naranja, el Fuji más verde.
+- **La lente** (hojas a 540, y un sol de prueba): los fantasmas caen en la línea que va del sol al centro, del
+  otro lado, ámbar, verde y magenta; salían opacos y de borde duro, y ahora son discos blandos y traslúcidos. La
+  raya anamórfica azul y las manchas en el velo, bien. Sobre el banco la lente es sutil, porque el material casi
+  no tiene luces fuertes (lo dice el `evitar` de cada estilo); el ojo de pez y la niebla sí se ven. Primero el
+  brillo empezaba al 75 % de la luz y no prendía nada: en un video el blanco ya es lo más claro que hay, así que
+  ahora empieza a la mitad.
 - **Velocidad**, a 1620×1080 en este computador: Super 8 ~5 cuadros/s, el escaneo ~6,5, el celular ~11, la
   MiniDV ~11, el Super 8 pasado a VHS y visto en el tubo ~2,6.
 

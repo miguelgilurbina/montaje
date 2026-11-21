@@ -1,0 +1,31 @@
+{
+ "nombre": "Foco al pulso",
+ "frase": "En cada golpe de la canción el foco se va un instante y vuelve: la imagen late con la música.",
+ "para": [
+  "subir la energía",
+  "destacar"
+ ],
+ "material": "cualquiera",
+ "energia": "alta",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "lente",
+    "foco_al_pulso": 2.0,
+    "golpes_cada": "golpe"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "sin canción: necesita los golpes (`--golpes <proyecto>`)",
+  "la calma: el latido distrae",
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

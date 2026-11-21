@@ -1,0 +1,31 @@
+{
+ "nombre": "Lente empañado",
+ "frase": "La lente empañada: lo claro se derrama alrededor, los negros suben y las manchas del vidrio aparecen cuando les pega la luz. Un recuerdo que se ve a través de algo.",
+ "para": [
+  "respirar",
+  "mostrar el archivo",
+  "cerrar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "lente",
+    "niebla": 1.0,
+    "suciedad": 0.8,
+    "destello": 0.4
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

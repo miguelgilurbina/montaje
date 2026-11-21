@@ -1,0 +1,31 @@
+{
+ "nombre": "Ojo de pez",
+ "frase": "Las rectas se curvan hacia afuera y los bordes se separan en rojo y azul: el gran angular que se pegaba delante de la cámara.",
+ "para": [
+  "destacar",
+  "subir la energía"
+ ],
+ "material": "cualquiera",
+ "energia": "alta",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "lente",
+    "barril": 1.2,
+    "vineta": 0.5,
+    "aberracion": 1.0
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "las caras de cerca: se deforman",
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

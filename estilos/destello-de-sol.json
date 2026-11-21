@@ -1,0 +1,30 @@
+{
+ "nombre": "Destello de sol",
+ "frase": "La luz fuerte rebota entre los vidrios de la lente: fantasmas de colores (ámbar, verde, magenta) en la línea que va de la luz al centro y un velo que lava el contraste.",
+ "para": [
+  "abrir",
+  "respirar",
+  "destacar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "lente",
+    "destello": 1.5
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "material oscuro, sin luces fuertes: casi no se ve (el destello sale de lo que brilla)",
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

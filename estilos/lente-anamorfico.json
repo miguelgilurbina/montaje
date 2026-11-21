@@ -1,0 +1,31 @@
+{
+ "nombre": "Lente anamórfico",
+ "frase": "Las luces estiradas en una raya horizontal azulada, como en el cine anamórfico, con un poco de color corrido en los bordes.",
+ "para": [
+  "destacar",
+  "abrir"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "lente",
+    "raya": 1.5,
+    "aberracion": 0.4,
+    "vineta": 0.3
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "material oscuro, sin luces fuertes: casi no se ve (el destello sale de lo que brilla)",
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

@@ -1,0 +1,31 @@
+{
+ "nombre": "Lente barato",
+ "frase": "El lente de plástico de una cámara barata: blando, con las esquinas oscuras y los bordes de las cosas separados en rojo y azul.",
+ "para": [
+  "mostrar el archivo",
+  "respirar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "lente",
+    "aberracion": 2.0,
+    "vineta": 0.7,
+    "foco": 0.8,
+    "barril": 0.2
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "25-mas-aparatos"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}
