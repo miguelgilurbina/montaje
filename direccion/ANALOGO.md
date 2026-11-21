@@ -207,8 +207,29 @@ Dos aparatos más, de la sala de la casa y de la sala de edición:
   [Manual del WJ-MX50](https://www.manualsdir.com/manuals/652668/panasonic-wj-mx50.html) ·
   [Studio 1 Productions: preguntas sobre el MX50](https://studio1productions.com/Articles/MX50QA.htm)
 
-La sincronía con la música del MX50 es lo mismo que el modo `pulso` hace con los golpes: la consola al pulso
-quedó como propuesta (M8 en `PROPUESTAS.md`).
+La sincronía con la música del MX50 es lo mismo que el modo `pulso` hace con los golpes: la consola **al pulso**
+(`cuando: "al pulso"`) prende sus efectos en el uno de cada compás, en cada golpe o en los picos de la canción;
+la mesa recibe los golpes del proyecto (`analogo --golpes <proyecto>`; el probador pasa los del banco).
+
+## El proyector, el 35 mm y el sonido de la película (2026-11-21)
+
+Miguel eligió seguir acumulando. Tres cosas más alrededor de la película:
+
+- **El proyector en la pared** (`proyector`, `py/montaje/proyeccion.py`, de imagen): la película se veía
+  proyectada en la sala, con la luz apagada. La ampolleta y el condensador dejan una **mancha de luz** (el centro
+  más claro), la luz es cálida (tungsteno), el proyector sobre una mesa abre la imagen arriba (**trapecio**), el
+  foco nunca es perfecto, la pared tiene su revoque o la **sábana** colgada sus pliegues (que tuercen y sombrean la
+  imagen), y el cuarto queda oscuro con algo de luz rebotada cerca. El obturador de tres aspas a 18 cuadros da 54
+  destellos por segundo; contra los 60 campos de una cámara que filma la pared, un latido de ~6 por segundo
+  [sin verificar: depende del proyector y de la cámara].
+- **El 35 mm de las fotos** (`pelicula`, `formato: 35mm`): el cuadro de 36 × 24 mm (el grano se ve mucho más
+  fino) y dos negativos de color copiados en papel, como en los laboratorios de una hora: `kodak-gold` (cálido) y
+  `fuji-superia` (los verdes). La copia en papel tiene menos contraste que la reversible y su negro no llega a
+  negro [sin verificar las cifras de cada emulsión: el recuerdo de esas copias, ajustado mirando las hojas].
+- **El sonido de la película** (`pelicula.sonido`): `magnetico` (la banda magnética del Super 8 sonoro, estrecha
+  y con más temblor que el VHS; [sin verificar] sus cifras: van las de la pista lineal en LP con el temblor subido)
+  y `proyector` (el traqueteo del proyector debajo del audio: un golpecito por cuadro de película y el motor, el
+  mismo sintetizador del comando `proyector`).
 
 ## Los gestos de tiempo al pulso (2026-11-21)
 

@@ -73,7 +73,8 @@ canción ───musica────▶ musica.json   ├─planificar─▶ tim
   le hacía; las referencias, en `direccion/ANALOGO.md`. En la misma mesa, la película (Super 8,
   8 mm, 16 mm, simulada en la emulsión), lo digital temprano (el celular, la webcam, la MiniDV:
   un sensor chico y un códec en bloques, con su datamosh), la casetera (pausa, rebobinar, la
-  pantalla azul con PLAY) y la consola de mezcla de los 90 (mosaico, estrobo, multi).
+  pantalla azul con PLAY), la consola de mezcla de los 90 (mosaico, estrobo, multi; también al
+  pulso de la canción) y el proyector en la pared o en la sábana.
 - **Gestos de tiempo al pulso:** la imagen congelada en el golpe, el tartamudeo y el paso de cuadro.
 
 ## Requisitos

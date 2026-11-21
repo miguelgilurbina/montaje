@@ -104,18 +104,20 @@ digitales y siguen pendientes). Lo que queda, en el orden en que lo haría:
 
 Miguel, al volver: «acumulemos más efectos antes de evaluar lo que ya hiciste. Que más podemos hacer?». De un menú
 de nueve dijo «Dale» a lo recomendado: la película, lo digital temprano y el tiempo al pulso; después siguieron la
-casetera y la consola de mezcla (hecho, experimento 25: veinticinco estilos en `propuesta`). Lo que quedó del menú,
-y lo que apareció haciendo:
+casetera y la consola de mezcla, y con «Seguir acumulando» el proyector, el 35 mm, el sonido de la película y la
+consola al pulso (hecho, experimento 25: treinta y un estilos en `propuesta`). Lo que quedó del menú, y lo que
+apareció haciendo:
 
 | # | Qué | Qué da | Qué necesita |
 |---|---|---|---|
-| M1 | **Juzgar las veinticinco** junto con las quince de la mesa (A1): `/estilos`, filtros «en 25-mas-aparatos» y «en 24-mesa-analogica». | Saber qué se queda antes de seguir sumando. | Unos minutos de Miguel. |
+| M1 | **Juzgar las treinta y una** junto con las quince de la mesa (A1): `/estilos`, filtros «en 25-mas-aparatos» y «en 24-mesa-analogica». | Saber qué se queda antes de seguir sumando. | Unos minutos de Miguel. |
 | M2 | ~~La casetera~~ (y A5). **Hecho el mismo día**: `casetera` con pausa, rebobinar, el arranque en azul con PLAY y el entrelazado; estilos `pausa-del-vhs`, `rebobinar`, `vhs-que-arranca`. Falta el sonido de la pausa y del rebobinado. | Gestos de la cinta que sirven al pulso. | Los veredictos de Miguel. |
 | M3 | ~~La consola de mezcla de los 90.~~ **Hecho el mismo día**: `consola` con mosaico, estrobo, multi, pintura, negativo y llave, siempre o a ratos; seis estilos, entre ellos `video-de-boda` (cámara, consola, fecha, cinta y casetera). Las cortinillas con borde de color quedan para `pulso` (son transiciones). | Efectos y transiciones a la vez, de la época del VHS. | Los veredictos de Miguel. |
-| M8 | **La consola al pulso**: el MX50 disparaba sus efectos con la música; aquí, que la consola los dispare en los golpes de la canción (hoy van `a ratos`, al azar). Necesita que la mesa sepa de los golpes (una capa de `pulso` con la cadena, o los golpes pasados a `analogo`). | Los efectos de la consola en el tiempo de la canción. | Nada. |
-| M4 | **El proyector en la pared**: la película proyectada y filmada: la mancha de luz al centro, la textura de la pared, el trapecio, el parpadeo del obturador. | El Super 8 visto como se veía en la casa. | Nada. |
-| M5 | **El 35 mm de las fotos**: un formato `35mm` (hoy `foto-con-fecha` usa el grano del 16 mm) y el negativo con su copia de laboratorio (otra curva y otro color). | Las fotos de la galería en papel de laboratorio. | Nada. |
-| M6 | **El sonido de la película**: el Super 8 sonoro (la banda magnética, con su temblor) y el traqueteo del proyector cuando hay `pelicula` en la cadena. | Imagen y sonido de la misma máquina. | El oído de Miguel. |
+| M8 | ~~La consola al pulso.~~ **Hecho**: `cuando: "al pulso"` con `golpes_cada` y `dura_golpes`; la mesa recibe los golpes con `--golpes <proyecto>` (el probador pasa los del banco); estilo `consola-al-pulso`. Lo siguiente sería lo mismo para la casetera (la pausa en el golpe). | Los efectos de la consola en el tiempo de la canción. | Los veredictos de Miguel. |
+| M9 | **La mesa dentro del guion** (amplía A4): hoy la mesa corre sobre un render ya hecho; que un tramo del guion diga «aquí, la película en la pared» y `render` lo pase sólo por esos segundos, con los golpes de su canción. | El analógico como un estilo más del guion. | Nada. |
+| M4 | ~~El proyector en la pared.~~ **Hecho el mismo día** (Miguel: «Seguir acumulando»): el aparato `proyector` (la mancha de luz, el trapecio, la pared o la sábana, el foco, el latido, el cuarto oscuro); estilos `pelicula-en-la-pared`, `pelicula-en-la-sabana`. | El Super 8 visto como se veía en la casa. | Los veredictos de Miguel. |
+| M5 | ~~El 35 mm de las fotos.~~ **Hecho**: `formato: 35mm` y los negativos `kodak-gold` y `fuji-superia`; estilos `foto-de-laboratorio`, `foto-de-laboratorio-fuji`, y `foto-con-fecha` pasó al 35 mm. Falta probarlos con fotos de verdad (el banco es de clips: G5). | Las fotos de la galería en papel de laboratorio. | Unas fotos de la galería de Curiana. |
+| M6 | ~~El sonido de la película.~~ **Hecho**: `pelicula.sonido` (`magnetico`, `proyector`); estilo `super-8-sonoro`, y las dos películas proyectadas llevan el traqueteo. | Imagen y sonido de la misma máquina. | El oído de Miguel. |
 | M7 | Lo que no entró del menú: **luz y óptica** (G8), **imprenta** (G7), **píxeles ordenados** (G9). | — | Nada. |
 
 ## Sintetización: lo que el motor todavía no sabe

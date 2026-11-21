@@ -228,6 +228,10 @@ con cámara virtual; **«más caótico»** = la curva de caos. **«reel rápido 
 | multi | multi-picture | la pantalla partida en 4, 9 o 16 que se llena con momentos distintos | `consola.efecto` |
 | posterizado | paint, posterization | cada color en pocos escalones, como un afiche | `consola.efecto` (`pintura`) |
 | llave de luma | luma key | donde la imagen es oscura (o clara), se ve otra | `consola.efecto` (`llave`) |
+| mancha de luz | hot spot | el centro de la imagen proyectada, más claro que los bordes | `proyector.mancha` |
+| trapecio | keystone | la imagen proyectada más ancha arriba, con el proyector inclinado | `proyector.trapecio` |
+| negativo de color, copia de laboratorio | color negative, minilab print | el rollo de fotos revelado y copiado en papel: menos contraste, el negro del papel | `pelicula.emulsion` (`kodak-gold`, `fuji-superia`) |
+| banda magnética | magnetic stripe | el sonido grabado en una tira de óxido al borde de la película | `pelicula.sonido` |
 | golpe congelado | freeze frame | la imagen quieta en el golpe | `pulso.congelar_golpe` |
 | tartamudeo | stutter edit | el pedacito del golpe repetido | `pulso.tartamudeo` |
 | paso de cuadro | step printing, frame step | cada cuadro dura dos: el movimiento a saltos | `pulso.paso_de_cuadro` |

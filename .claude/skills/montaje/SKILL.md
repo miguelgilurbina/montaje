@@ -235,7 +235,12 @@ Todo comando se corre desde la raíz del repo: `python montaje.py <comando> <pro
     El códec se calienta desde su cuadro clave: `gop` alarga cada pedazo. También la
     `casetera` (de señal: pausa, rebobinar, el arranque en azul con PLAY, el entrelazado;
     `py/montaje/casetera.py`) y la `consola` de mezcla de los 90 (de imagen: mosaico,
-    estrobo, multi, pintura, negativo, llave, `siempre` o `a ratos`; `py/montaje/consola.py`).
+    estrobo, multi, pintura, negativo, llave, `siempre`, `a ratos` o `al pulso`;
+    `py/montaje/consola.py`), y el `proyector` en la pared (`py/montaje/proyeccion.py`:
+    la mancha de luz, el trapecio, la pared o la sábana; va después de `pelicula`). La
+    película tiene `formato: 35mm` con negativos de laboratorio (`kodak-gold`,
+    `fuji-superia`) y `sonido` (`magnetico`, `proyector`). Lo que va **al pulso** necesita
+    los golpes: `analogo … --golpes <proyecto>` (el probador pasa los del banco).
     **Gestos de tiempo** (en `pulso`, 2026-11-21): `congelar_golpe`, `tartamudeo` y
     `paso_de_cuadro`, colgados de `compas`, `golpe` o `pico` (`_cada`); el render los
     aplica con `Freeze` sin gastar material (`tiempo_de_toma` → `video.tiempo`).
