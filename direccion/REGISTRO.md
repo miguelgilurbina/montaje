@@ -211,3 +211,9 @@ archivo, qué comando correr) no van aquí.
   Medidos cuadro a cuadro en el probador, eligió las tres recomendadas: uno por grupo, con lo que los separaba como
   variante dentro del principal; la pausa, el rebobinado, el arranque y los efectos de la consola como gestos aparte,
   que van encima de cualquier base; y el lente barato y el foco al pulso subidos hasta que se vean.
+
+## 2026-11-22 · El sonido de los aparatos (27)
+
+- Mientras se cerraba el 26: «Otra cosa, hay efectos que deberían ir acompañados de audios característicos». De
+  cuatro grupos propuestos (la casetera, la antena y el televisor, la película, las cámaras y la videollamada),
+  eligió los cuatro.

@@ -272,6 +272,31 @@ compás, el pedacito del golpe repetido (el tartamudeo de los videos de música)
 dura dos: el movimiento a saltos de la película vieja y del stop motion). Se calculan en `pulso.tiempo_de_toma`
 desde los golpes de la canción y el render los aplica con `Freeze` de Remotion, sin gastar material del clip.
 
+## Los ruidos de los aparatos (2026-11-22)
+
+Miguel: «hay efectos que deberían ir acompañados de audios característicos». Hasta aquí los aparatos sólo cambiaban
+cómo suena la canción (la cinta lineal, el micrófono del celular, la banda magnética); ahora suenan también sus
+momentos, sintetizados en `py/montaje/ruidos.py` (la perilla `sonido` de cada aparato):
+
+- **La casetera** (`mecanica`): en la pausa la cinta calla (la casetera en pausa no saca audio) y queda el tambor
+  girando, que es 1 800 vueltas por minuto en VHS (30 Hz y sus armónicos), con el clac del solenoide al entrar y al
+  salir; al rebobinar, la cinta corre con un chirrido que sube y para con un golpe; el arranque es el cassette que
+  entra, el motor que carga, el PLAY y la canción que entra con el ruido del tracking.
+- **La antena** (`aire`): el audio del televisor viaja en FM, y con la señal débil sisea y crepita; sin
+  sincronismo, el zumbido de los pulsos de 59,94 Hz se cuela en el audio y la señal va y viene.
+- **La pantalla** (`parlante`): la canción por el parlante chico del televisor (mono, sin graves ni agudos, la caja
+  que resuena) y el silbido del transformador de salto a la frecuencia de línea, 15 734 Hz.
+- **La cámara** (`microfono`): el micrófono de la cámara de los 90, con su control automático de ganancia, que en
+  lo quieto sube el motor de la cinta y los golpes de la mano.
+- **La llamada** (`compresion`, `llamada`): banda de voz a 16 kHz y, donde se pierde un paquete (algunas de las
+  capturas donde se rompe la imagen), los últimos 20 ms repetidos, que suenan a robot, apagándose.
+- **La película** ya tenía el traqueteo del proyector (`pelicula`, `proyector`): ahora lo llevan el Super 8 de la
+  familia, el del filtro puesto, el 8 mm en blanco y negro y la película desteñida.
+
+Los momentos caen donde los muestra la imagen (las mismas semillas). Los niveles y las frecuencias que no son de
+norma (el silbido del tambor, el chirrido, la caja del parlante, la pérdida de paquetes) son puntos de partida:
+el oído es de Miguel.
+
 ## Lo que no se pudo verificar
 
 La amplitud de los fantasmas, el SNR del VHS en dB, el largo y la frecuencia reales de los dropouts, las barras

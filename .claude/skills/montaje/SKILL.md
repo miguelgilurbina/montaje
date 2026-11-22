@@ -144,6 +144,11 @@ Todo comando se corre desde la raíz del repo: `python montaje.py <comando> <pro
   `tono` en proyecto.json, `guion` sólo avisa. **`aprender`** junta las lecciones, compara las
   recetas aprobadas con las rechazadas perilla por perilla (dentro de cada técnica) y lista los «no»
   y «a medias» sin una palabra de Miguel → `direccion/APRENDIDO.md`.
+- **Los aparatos suenan** (2026-11-22, «hay efectos que deberían ir acompañados de audios
+  característicos»): la perilla `sonido` de la casetera, la antena, la pantalla, la cámara y la
+  compresión (`py/montaje/ruidos.py`) pone el ruido de su momento donde la imagen lo muestra. Un
+  estilo nuevo de la mesa que tenga un momento audible (un botón, un motor, una señal) lleva su
+  sonido; Claude no oye: mide que caiga donde se ve, y el oído es de Miguel.
 - **Uno por grupo** (2026-11-22, «Hay muchos que son muy parecidos entre si»): lo que casi
   no se distingue de otro estilo es su **variante** (`variante_de` + `diferencia`: vive dentro
   de su principal y `guion` no la propone aparte), y un momento que va encima de una base

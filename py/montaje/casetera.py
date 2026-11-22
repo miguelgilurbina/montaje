@@ -32,11 +32,11 @@ VELOCIDAD_REBOBINAR = 3
 
 POR_DEFECTO = {
     "casetera": {"entrelazado": 0.0, "pausa": 0.0, "pausa_dura": 1.6, "rebobinar": 0.0, "rebobinar_dura": 1.2,
-                 "inicio": 0.0, "letreros": True},
+                 "inicio": 0.0, "letreros": True, "sonido": "ninguno"},
 }
 RANGOS = {
     "casetera": {"entrelazado": (0, 1), "pausa": (0, 20), "pausa_dura": (0.3, 3), "rebobinar": (0, 20),
-                 "rebobinar_dura": (0.3, 1.8), "inicio": (0, 10)},
+                 "rebobinar_dura": (0.3, 1.8), "inicio": (0, 10), "sonido": ("ninguno", "mecanica")},   # ruidos.py
 }
 
 

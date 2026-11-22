@@ -14,7 +14,8 @@
   "cadena": [
    {
     "aparato": "casetera",
-    "inicio": 2.0
+    "inicio": 2.0,
+    "sonido": "mecanica"
    }
   ],
   "sobre": [
@@ -29,7 +30,8 @@
  "miguel": [],
  "visto_en": [
   "25-mas-aparatos",
-  "26-los-parecidos"
+  "26-los-parecidos",
+  "27-el-sonido-de-los-aparatos"
  ],
  "evitar": [
   "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"

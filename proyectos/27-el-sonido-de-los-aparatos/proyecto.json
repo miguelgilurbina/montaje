@@ -1,0 +1,25 @@
+{
+ "titulo": "27 · El sonido de los aparatos: la casetera, la antena y el televisor, la película, las cámaras y la llamada",
+ "idea": "Miguel, 2026-11-22, después de juzgar la mesa: «hay efectos que deberían ir acompañados de audios característicos». De 53 estilos de 24 y 25, 8 cambiaban cómo suena la canción y ninguno sonaba en su momento. Eligió los cuatro grupos propuestos: la casetera (la pausa, rebobinar, el arranque), la antena y el televisor (la estática, el zumbido, la señal que se pierde, el parlante chico), la película (el traqueteo del proyector) y las cámaras y la videollamada (el micrófono de la cámara de los 90, la llamada que se corta). Los ruidos: py/montaje/ruidos.py, la perilla `sonido` de cada aparato.",
+ "biblioteca": "probador",
+ "nota": "No tiene montaje propio: los estilos suenan sobre el banco del probador (sus muestras, con sonido, en /estilos y en la mesa).",
+ "cadenas": [
+  "antena-lejana",
+  "camara-de-los-90",
+  "camara-de-tubo",
+  "canal-con-interferencia",
+  "iman-en-el-televisor",
+  "ocho-milimetros-en-blanco-y-negro",
+  "pausa-del-vhs",
+  "pelicula-destenida",
+  "rebobinar",
+  "se-pierde-la-senal",
+  "super-8-con-el-filtro-puesto",
+  "super-8-de-la-familia",
+  "televisor-de-tubo",
+  "vhs-en-el-televisor",
+  "vhs-que-arranca",
+  "video-de-boda",
+  "videollamada-que-se-corta"
+ ]
+}

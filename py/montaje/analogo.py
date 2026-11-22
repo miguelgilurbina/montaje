@@ -349,12 +349,13 @@ TINTAS_CURIANA = ["#07090d", "#26396a", "#2154c5", "#c36712", "#e6b43c", "#f3ead
 LUGARES = ("arriba-izquierda", "arriba-derecha", "abajo-izquierda", "abajo-derecha", "centro")
 
 POR_DEFECTO: dict[str, dict] = {
-    "camara": {"mancha": 0.5, "blancos": 0.86, "balance": 0.3, "detalle": 0.4, "ruido": 0.3, "estela": 0.0},
+    "camara": {"mancha": 0.5, "blancos": 0.86, "balance": 0.3, "detalle": 0.4, "ruido": 0.3, "estela": 0.0, "sonido": "ninguno"},
     "osd": {"textos": [], "fecha": "1994-10-12", "hora": "19:42:00"},
     "cinta": {"formato": "SP", "generaciones": 1, "desgaste": 0.2, "temblor": 0.5, "tracking": 0.0, "cabezal": 1.0,
               "cabezal_lineas": 8, "realce": 0.6, "retraso_croma": None, "saturacion": 1.0, "tono": 2.0,
               "arrugas": 0.0, "svideo": False, "sonido": "ninguno"},
-    "antena": {"nieve": 0.06, "fantasma": [], "interferencia": [], "zumbido": 0.0, "rodar": 0.0, "desenganche": 0.0},
+    "antena": {"nieve": 0.06, "fantasma": [], "interferencia": [], "zumbido": 0.0, "rodar": 0.0, "desenganche": 0.0,
+               "sonido": "ninguno"},
     "tbc": {"fuerza": 1.0, "brillo": 0.0, "contraste": 1.0, "color": 1.0, "tono": 0.0},
     "colorizador": {"tintas": TINTAS_CURIANA, "bandas": 0, "mezcla": 1.0},
     "iman": {"fuerza": 0.6, "radio": 0.32, "velocidad": 0.12, "ondas": 0.0},
@@ -362,16 +363,17 @@ POR_DEFECTO: dict[str, dict] = {
     "realimentacion": {"mezcla": 0.8, "zoom": 0.95, "giro": 2.0, "tono": 10.0, "contraste": 1.05, "modo": "aclarar"},
     "pantalla": {"lineas": 0.65, "mascara": "rejilla", "mascara_fuerza": 0.3, "curva": 0.05, "brillo": 0.3,
                  "persistencia": 0.0, "convergencia": 0.6, "blanco": 9300, "vineta": 0.35, "gamma": 2.4,
-                 "decodificador": "muesca", "parpadeo": 0.0},
+                 "decodificador": "muesca", "parpadeo": 0.0, "sonido": "ninguno"},
 }
 #: Lo que vale cada perilla: (mínimo, máximo) para números, o los valores posibles.
 RANGOS: dict[str, dict] = {
-    "camara": {"mancha": (0, 2), "blancos": (0.5, 1), "balance": (0, 1), "detalle": (0, 2), "ruido": (0, 2), "estela": (0, 0.95)},
+    "camara": {"mancha": (0, 2), "blancos": (0.5, 1), "balance": (0, 1), "detalle": (0, 2), "ruido": (0, 2), "estela": (0, 0.95),
+               "sonido": ("ninguno", "microfono")},   # los ruidos de la cámara, la antena y la pantalla: ruidos.py
     "cinta": {"formato": tuple(FORMATOS), "generaciones": (1, 6), "desgaste": (0, 1), "temblor": (0, 3),
               "tracking": (0, 1), "cabezal": (0, 3), "cabezal_lineas": (0, 30), "realce": (0, 2),
               "retraso_croma": (-20, 20), "saturacion": (0, 2), "tono": (0, 30), "arrugas": (0, 30),
               "sonido": ("ninguno", "lineal", "hifi")},
-    "antena": {"nieve": (0, 1), "zumbido": (0, 0.5), "rodar": (-2, 2), "desenganche": (0, 1)},
+    "antena": {"nieve": (0, 1), "zumbido": (0, 0.5), "rodar": (-2, 2), "desenganche": (0, 1), "sonido": ("ninguno", "aire")},
     "tbc": {"fuerza": (0, 1), "brillo": (-0.3, 0.3), "contraste": (0.5, 1.5), "color": (0, 2), "tono": (-45, 45)},
     "colorizador": {"bandas": (0, 16), "mezcla": (0, 1)},
     "iman": {"fuerza": (0, 2), "radio": (0.05, 1), "velocidad": (0, 2), "ondas": (0, 2)},
@@ -381,7 +383,7 @@ RANGOS: dict[str, dict] = {
     "pantalla": {"lineas": (0, 1), "mascara": ("rejilla", "puntos", "ranuras", "ninguna"), "mascara_fuerza": (0, 1),
                  "curva": (0, 0.2), "brillo": (0, 1.5), "persistencia": (0, 0.9), "convergencia": (0, 4),
                  "blanco": (6500, 9300), "vineta": (0, 1), "gamma": (2.0, 2.8), "decodificador": ("muesca", "peine"),
-                 "parpadeo": (0, 1)},
+                 "parpadeo": (0, 1), "sonido": ("ninguno", "parlante")},
 }
 
 
@@ -1571,7 +1573,10 @@ def procesar(entrada: Path, salida: Path, cadena, *, desde: float | None = None,
         lista = temporal / "lista.txt"
         lista.write_text("".join(f"file '{Path(t['salida']).name}'\n" for t in tareas), encoding="utf-8")
         cmd = ["ffmpeg", "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", str(lista)]
-        sonidos = [(nombre, p_) for nombre, p_ in pasos if p_.get("sonido", "ninguno") != "ninguno"]
+        # Cada uno sabe su lugar en la cadena (`_paso`: la semilla de sus eventos es la de la imagen) y a cuántas
+        # capturas por segundo va el sensor que tiene antes (`_cps`: la llamada pierde paquetes por captura).
+        sonidos = [(nombre, {**p_, "_paso": n, "_cps": _capturas_antes(pasos, n, float(fps))})
+                   for n, (nombre, p_) in enumerate(pasos) if p_.get("sonido", "ninguno") != "ninguno"]
         if info["audio"] and sonidos:
             cmd += ["-i", str(_audio_de_aparatos(entrada, temporal, (desde or 0.0) + info.get("desfase", 0.0), a0 / float(fps),
                                                  total / float(fps), sonidos, semilla, vent, fundido, float(fps))),
@@ -1606,15 +1611,29 @@ def _audio_de_aparatos(entrada: Path, carpeta: Path, corte: float, t0: float, du
         salir(f"no pude leer el audio de {entrada.name}: {r.stderr.strip()[-300:]}")
     x, _ = sf.read(crudo, dtype="float32", always_2d=True)
     y = x
+    from . import ruidos
+
     for n, (nombre, p) in enumerate(sonidos):
-        y = (sonido_de_cinta(y, p, semilla, t0, indice=n) if nombre == "cinta"
-             else _modulo(nombre).sonido(nombre, y, {**p, "_fps": fps}, semilla, t0, SR_AUDIO, n))
+        if nombre == "cinta":
+            y = sonido_de_cinta(y, p, semilla, t0, indice=n)
+        elif nombre in ruidos.RUIDOS:   # la casetera, la antena, la pantalla, la cámara, la llamada (2026-11-22)
+            y = ruidos.sonido(nombre, y, {**p, "_fps": fps}, semilla, t0, SR_AUDIO, n)
+        else:
+            y = _modulo(nombre).sonido(nombre, y, {**p, "_fps": fps}, semilla, t0, SR_AUDIO, n)
     if ventanas:
         rejilla = np.arange(0, dura + 0.01, 0.01)
         e = np.interp(np.arange(len(x)) / SR_AUDIO, rejilla, [envolvente(s, ventanas, fundido) for s in rejilla])[:, None]
         y = x * (1 - e) + y * e
     sf.write(sale, np.clip(y, -1, 1), SR_AUDIO, subtype="FLOAT")
     return sale
+
+
+def _capturas_antes(pasos: list[tuple[str, dict]], n: int, fps: float) -> float:
+    """A cuántas capturas por segundo llega la imagen al aparato `n`: las del último sensor antes, o las del video."""
+    for nombre, p in reversed(pasos[:n]):
+        if nombre == "sensor" and 0 < p.get("cuadros", 0) < fps:
+            return float(p["cuadros"])
+    return fps
 
 
 def leer_cuadros(entrada: Path, tiempos: list[float], alto: int) -> list[np.ndarray]:

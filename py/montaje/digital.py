@@ -44,7 +44,8 @@ POR_DEFECTO = {
     "sensor": {"resolucion": [320, 240], "cuadros": 0, "irregular": 0.0, "ruido": 0.5, "rango": 0.5, "balance": 0.0,
                "tinte": "azul", "exposicion": 0.0, "detalle": 0.4, "mancha": 0.0, "franja": 0.0, "rodar": 0.0,
                "aliasing": 0.3, "entrelazado": 0.0, "encuadre": "barras", "ampliar": "suave", "sonido": "ninguno"},
-    "compresion": {"modo": "mpeg", "calidad": 0.4, "gop": 30, "busqueda": 7, "residuo": 1.0, "errores": 0.0},
+    "compresion": {"modo": "mpeg", "calidad": 0.4, "gop": 30, "busqueda": 7, "residuo": 1.0, "errores": 0.0,
+                   "sonido": "ninguno"},
 }
 RANGOS = {
     "sensor": {"cuadros": (0, 60), "irregular": (0, 1), "ruido": (0, 3), "rango": (0, 1), "balance": (0, 1),
@@ -53,7 +54,7 @@ RANGOS = {
                "ampliar": ("suave", "pixeles"),
                "sonido": SONIDOS},
     "compresion": {"modo": MODOS, "calidad": (0, 1), "gop": (1, 120), "busqueda": (0, 15), "residuo": (0, 1),
-                   "errores": (0, 1)},
+                   "errores": (0, 1), "sonido": ("ninguno", "llamada")},   # el ruido de la llamada: ruidos.py
 }
 
 
@@ -433,6 +434,10 @@ MICROFONOS = {
     "celular": {"banda": (300, 3400), "sr": 8000, "ruido_db": -50, "agc": 0.85, "zumbido": 0.0},
     "webcam": {"banda": (120, 7000), "sr": 16000, "ruido_db": -46, "agc": 0.7, "zumbido": 1.0},
     "camara": {"banda": (100, 5200), "sr": 11025, "ruido_db": -52, "agc": 0.5, "zumbido": 0.0},
+    # Los que usa ruidos.py (2026-11-22): el de la cámara de cinta de los 90 (analógico: sin muestra gruesa) y el
+    # audio de una llamada por internet (banda ancha de voz, 16 kHz).
+    "videocamara": {"banda": (90, 9000), "sr": 48000, "ruido_db": -54, "agc": 0.6, "zumbido": 0.0},
+    "llamada": {"banda": (100, 7000), "sr": 16000, "ruido_db": -58, "agc": 0.7, "zumbido": 0.0},
 }
 
 

@@ -21,14 +21,16 @@
     "vaiven": 1.5,
     "polvo": 1.4,
     "rayas": 1.0,
-    "pelo": 2.0
+    "pelo": 2.0,
+    "sonido": "proyector"
    }
   ]
  },
  "estado": "aprobado",
  "miguel": [],
  "visto_en": [
-  "25-mas-aparatos"
+  "25-mas-aparatos",
+  "27-el-sonido-de-los-aparatos"
  ],
  "evitar": [
   "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"

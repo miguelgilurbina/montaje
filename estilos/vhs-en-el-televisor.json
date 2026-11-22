@@ -17,14 +17,16 @@
     "desgaste": 0.2
    },
    {
-    "aparato": "pantalla"
+    "aparato": "pantalla",
+    "sonido": "parlante"
    }
   ]
  },
  "estado": "aprobado",
  "miguel": [],
  "visto_en": [
-  "24-mesa-analogica"
+  "24-mesa-analogica",
+  "27-el-sonido-de-los-aparatos"
  ],
  "evitar": [
   "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"

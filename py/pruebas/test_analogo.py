@@ -407,7 +407,9 @@ def test_un_gesto_de_la_galeria_dibuja_la_misma_cadena_que_antes_de_ser_gesto():
                                   {"aparato": "cinta", "formato": "SP", "desgaste": 0.2}],
     }
     for id_, cadena in antes.items():
-        assert A.cadena_de_tecnica(hechos[id_]["tecnica"])["aparatos"] == cadena
+        # El sonido (27, ruidos.py) no toca la imagen: la cadena de la imagen es la misma.
+        imagen = [{k: v for k, v in a.items() if k != "sonido"} for a in A.cadena_de_tecnica(hechos[id_]["tecnica"])["aparatos"]]
+        assert imagen == cadena
 
 
 def test_un_gesto_va_encima_de_cualquier_base_por_su_nombre():

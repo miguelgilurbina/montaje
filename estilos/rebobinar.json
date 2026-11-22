@@ -14,7 +14,8 @@
   "cadena": [
    {
     "aparato": "casetera",
-    "rebobinar": 4.0
+    "rebobinar": 4.0,
+    "sonido": "mecanica"
    }
   ],
   "sobre": [
@@ -29,7 +30,8 @@
  "miguel": [],
  "visto_en": [
   "25-mas-aparatos",
-  "26-los-parecidos"
+  "26-los-parecidos",
+  "27-el-sonido-de-los-aparatos"
  ],
  "evitar": [
   "si el clip es corto: lo que se ve hacia atrás es lo que ya pasó, unos segundos antes",
