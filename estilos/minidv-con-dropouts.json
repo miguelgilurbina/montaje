@@ -14,13 +14,14 @@
    {
     "aparato": "sensor",
     "resolucion": [
-     720,
+     640,
      480
     ],
     "ruido": 0.3,
     "detalle": 0.5,
     "rango": 0.4,
-    "aliasing": 0.0
+    "aliasing": 0.0,
+    "entrelazado": 0.7
    },
    {
     "aparato": "compresion",

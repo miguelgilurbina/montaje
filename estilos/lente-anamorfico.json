@@ -1,6 +1,6 @@
 {
  "nombre": "Lente anamórfico",
- "frase": "Las luces estiradas en una raya horizontal azulada, como en el cine anamórfico, con un poco de color corrido en los bordes.",
+ "frase": "Las luces del video estiradas en rayas horizontales azuladas, como en el cine anamórfico, con un poco de color corrido en los bordes. Sale sólo de las luces que hay: para material de noche, faroles, focos de autos.",
  "para": [
   "destacar",
   "abrir"
@@ -19,13 +19,20 @@
    }
   ]
  },
- "estado": "propuesta",
- "miguel": [],
+ "estado": "a medias",
+ "miguel": [
+  "el anamorfico parece más una animación que un efecto"
+ ],
  "visto_en": [
   "25-mas-aparatos"
  ],
  "evitar": [
-  "material oscuro, sin luces fuertes: casi no se ve (el destello sale de lo que brilla)",
+  "material sin luces puntuales (el banco del probador): no se ve; con un sol dibujado encima parece agregado (Miguel: «parece más una animación que un efecto»)",
   "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
- ]
+ ],
+ "veredicto": {
+  "estado": "a medias",
+  "fecha": "2026-11-21",
+  "via": "chat"
+ }
 }

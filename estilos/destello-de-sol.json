@@ -14,17 +14,28 @@
   "cadena": [
    {
     "aparato": "lente",
-    "destello": 1.5
+    "destello": 1.2,
+    "sol": [
+     0.9,
+     0.05
+    ],
+    "sol_fuerza": 1.0
    }
   ]
  },
- "estado": "propuesta",
- "miguel": [],
+ "estado": "aprobado",
+ "miguel": [
+  "el primero que mostraste el del sol, está bueno"
+ ],
  "visto_en": [
   "25-mas-aparatos"
  ],
  "evitar": [
-  "material oscuro, sin luces fuertes: casi no se ve (el destello sale de lo que brilla)",
   "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
- ]
+ ],
+ "veredicto": {
+  "estado": "aprobado",
+  "fecha": "2026-11-21",
+  "via": "chat"
+ }
 }

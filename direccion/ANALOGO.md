@@ -245,9 +245,10 @@ vidrio le hace a la luz, en luz lineal:
 | El ojo de pez | el barril fuerte de un gran angular; el de los videos de skate era la Sony VX1000 (MiniDV, tres CCD) con el ojo de pez Century Optics, desde fines de los 90 | `barril` (y el estilo `video-de-skate`: lente, sensor de 720 × 480 y DV) |
 
 La lente va al principio de la cadena (antes de la película, del sensor o de la cámara). Sus fantasmas salen de lo
-que brilla en el video: en un material oscuro casi no se ven, porque en un video el sol ya está recortado en el
-blanco. Las posiciones, los tamaños y los colores de los fantasmas son puntos de partida [sin verificar en una
-lente concreta].
+más claro del video y, con `sol`, de un sol que puede quedar fuera del cuadro: la luz que pega en el vidrio desde
+afuera deja fantasmas y lava el contraste igual. Sin eso, sobre un material oscuro el destello no se veía (Miguel,
+del primer recorrido de la lente: «imperciptibles»). Las posiciones, los tamaños y los colores de los fantasmas son
+puntos de partida [sin verificar en una lente concreta].
 
 [MIT, fotografía computacional: el destello](https://people.csail.mit.edu/fredo/comp-photo-book/09-optics-lenses-and-aberration-correction-09-glare-suppression.html) ·
 [Fstoppers: la física del destello](https://fstoppers.com/education/lens-flare-and-incredible-physics-modern-lenses-903821) ·

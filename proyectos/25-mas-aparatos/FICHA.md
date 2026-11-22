@@ -172,7 +172,20 @@ banco a 1080 por cadena). Las muestras de la galería, en `~/Videos/montaje/esti
 
 ## Lo que dijo Miguel
 
-—
+- Del cuarto recorrido (la lente): «pasa que esos que me mostraste de lente, los primeros tres efectos son
+  imperciptibles». Tenía razón: el destello y la raya salían sólo de las luces fuertes, y el banco no tiene (en un
+  video el blanco ya es lo más claro que hay); el ojo de pez sobre una playa no tiene rectas que lo delaten. Ahora:
+  un **sol** que puede quedar fuera del cuadro (la luz que pega en el vidrio desde afuera deja fantasmas igual) y
+  se pasea un poco como una cámara en la mano; lo que brilla se mide contra la propia imagen (lo más claro de
+  ella); y el ojo de pez es casi el doble de fuerte, con las esquinas oscuras de su círculo de imagen. La prueba
+  nueva parte de lo que dijo: en un material oscuro, sin luces, el sol de afuera tiene que dejar su fantasma.
+- Del recorrido arreglado: «el ojo de pez y el skate se parecen y el anamorfico parece más una animación que un
+  efecto, pero el primero que mostraste el del sol, está bueno». Veredictos: `destello-de-sol` aprobado;
+  `lente-anamorfico`, `ojo-de-pez` y `video-de-skate` a medias. El skate se separó del ojo de pez con lo que tenía
+  la MiniDV de esos videos: 4:3 con barras (el DV es 4:3; estaba en 3:2, y la `minidv-con-dropouts` también pasó a
+  4:3), los bordes muy afilados y el **entrelazado** (perilla nueva del `sensor`: lo que se mueve rápido se peina).
+  El anamórfico, con su elección en tarjetas, queda natural (la raya sale sólo de las luces del video) y anotado
+  para material con luces puntuales: sobre el banco no se ve, y con un sol dibujado parecía agregado.
 
 ## Lo aprendido
 

@@ -189,3 +189,14 @@ archivo, qué comando correr) no van aquí.
 
 - Al volver, antes de juzgar las quince: «acumulemos más efectos antes de evaluar lo que ya hiciste. Que más podemos
   hacer ?». De un menú de nueve (aparatos de la mesa, otras familias, el tiempo): «Dale» a lo recomendado.
+- Eligió seguir acumulando dos veces («Seguir acumulando», «Luz y óptica») y después «Juzgar ahora». Del recorrido de
+  la lente: «pasa que esos que me mostraste de lente, los primeros tres efectos son imperciptibles» (el destello de
+  sol, el lente anamórfico y el ojo de pez). Arreglado: un sol que puede quedar fuera del cuadro, el brillo medido
+  contra la propia imagen y un ojo de pez mucho más fuerte, con sus esquinas oscuras.
+
+## 2026-11-21 · Veredictos
+
+- Destello de sol (`destello-de-sol`), aprobado: «el primero que mostraste el del sol, está bueno»
+- Lente anamórfico (`lente-anamorfico`), a medias: «el anamorfico parece más una animación que un efecto»
+- Ojo de pez (`ojo-de-pez`), a medias: «el ojo de pez y el skate se parecen»
+- Video de skate (`video-de-skate`), a medias: «el ojo de pez y el skate se parecen»
