@@ -10,6 +10,7 @@
  "dura": "un tramo",
  "tecnica": {
   "comando": "analogo",
+  "gesto": true,
   "cadena": [
    {
     "aparato": "consola",
@@ -18,7 +19,9 @@
     "por_minuto": 5.0,
     "dura": 1.5,
     "bloque": 24
-   },
+   }
+  ],
+  "sobre": [
    {
     "aparato": "cinta",
     "formato": "SP",
@@ -26,12 +29,18 @@
    }
   ]
  },
- "estado": "propuesta",
+ "estado": "rechazado",
  "miguel": [],
  "visto_en": [
-  "25-mas-aparatos"
+  "25-mas-aparatos",
+  "26-los-parecidos"
  ],
  "evitar": [
   "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
- ]
+ ],
+ "veredicto": {
+  "estado": "rechazado",
+  "fecha": "2026-11-22",
+  "via": "galeria"
+ }
 }

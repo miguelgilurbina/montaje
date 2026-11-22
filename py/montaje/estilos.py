@@ -121,11 +121,66 @@ def errores(e: dict) -> list[str]:
 
         if "cadena" not in t:
             mal.append("`tecnica.cadena`: la lista de aparatos (ver py/montaje/analogo.py)")
+        elif "gesto" in t:
+            mal += errores_de_gesto(t)
         else:
             cadena = {"aparatos": t["cadena"], **{k: t[k] for k in ("captura",) if k in t}}
             mal += [f"`tecnica.cadena`: {m}" for m in analogo.errores(cadena)]
+    if "variante_de" in e:
+        mal += errores_de_variante(e)
     mal += [f"`visto_en`: no existe el experimento «{p}»" for p in e["visto_en"] if not (PROYECTOS / p / "proyecto.json").exists()]
     return mal
+
+
+def errores_de_gesto(t: dict) -> list[str]:
+    """Un gesto (ver `GESTOS` en analogo.py): sólo aparatos de gesto, una base para su muestra, y juntos una cadena válida."""
+    from . import analogo
+
+    mal = []
+    if t["gesto"] is not True:
+        mal.append("`tecnica.gesto`: true, o no va")
+    if not isinstance(t["cadena"], list) or not t["cadena"]:
+        return mal + ["`tecnica.cadena`: los aparatos del gesto"]
+    fuera = [a.get("aparato") if isinstance(a, dict) else a for a in t["cadena"]
+             if not isinstance(a, dict) or a.get("aparato") not in analogo.GESTOS]
+    if fuera:
+        mal.append(f"`tecnica.cadena`: un gesto sólo lleva {' / '.join(analogo.GESTOS)} (no {', '.join(map(str, fuera))}); la base va en `sobre`")
+    sobre = t.get("sobre")
+    if isinstance(sobre, str):
+        base = next((x for x in leer() if x["id"] == sobre), None)
+        if base is None or base["tecnica"].get("comando") != "analogo" or base["tecnica"].get("gesto"):
+            return mal + [f"`tecnica.sobre`: «{sobre}» no es un estilo analógico que no sea gesto"]
+    elif not isinstance(sobre, list):
+        return mal + ["`tecnica.sobre`: la base de la muestra (una cadena, o el id de un estilo analógico)"]
+    if not mal:
+        cadena = analogo.cadena_de_tecnica(t)
+        mal += [f"`tecnica.cadena` sobre su base: {m}" for m in analogo.errores(cadena)]
+    return mal
+
+
+def errores_de_variante(e: dict) -> list[str]:
+    """Una variante es un estilo que casi no se distingue de otro: vive dentro de él en la galería (2026-11-22)."""
+    v = e["variante_de"]
+    if not isinstance(v, str) or v == e.get("id"):
+        return ["`variante_de`: el id de otro estilo"]
+    principal = next((x for x in leer() if x["id"] == v), None)
+    mal = []
+    if principal is None:
+        mal.append(f"`variante_de`: no existe el estilo «{v}»")
+    elif "variante_de" in principal:
+        mal.append(f"`variante_de`: «{v}» ya es variante de «{principal['variante_de']}»; va directo al principal")
+    if not isinstance(e.get("diferencia"), str) or not e["diferencia"].strip():
+        mal.append("`diferencia`: en pocas palabras, lo que la separa de su principal")
+    return mal
+
+
+def variantes(estilos: list[dict]) -> dict[str, list[dict]]:
+    """Las variantes de cada estilo principal: {id del principal: [variantes]}."""
+    tabla: dict[str, list[dict]] = {}
+    for e in estilos:
+        if isinstance(e.get("variante_de"), str):
+            tabla.setdefault(e["variante_de"], []).append(e)
+    return tabla
 
 
 def muestra_de(e: dict) -> Path:
@@ -153,7 +208,8 @@ def listar(para: str | None = None, material: str | None = None, estado: str | N
     for e in elegidos:
         m = muestra_de(e)
         peso = f"muestra {m.stat().st_size / 1e6:.1f} MB" if m.exists() else "sin muestra"
-        print(f"{e['estado']:<10} {e['id']:<26} {e['material']:<6} {e['energia']:<6} {', '.join(e['para'])}  · {peso}")
+        cual = f"  · variante de {e['variante_de']}: {e['diferencia']}" if "variante_de" in e else "  · gesto" if e["tecnica"].get("gesto") else ""
+        print(f"{e['estado']:<10} {e['id']:<26} {e['material']:<6} {e['energia']:<6} {', '.join(e['para'])}  · {peso}{cual}")
     total = sum(muestra_de(e).stat().st_size for e in estilos if muestra_de(e).exists())
     print(f"\n{len(elegidos)} de {len(estilos)} estilos · muestras: {total / 1e6:.1f} MB en {MUESTRAS}")
 

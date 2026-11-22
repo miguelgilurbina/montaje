@@ -48,6 +48,11 @@ Y uno de señal en su propio módulo: `casetera` (la pausa, rebobinar, el arranq
 Una cadena puede mezclar los dos mundos: `[pelicula, cinta, pantalla]` es el Super 8 de la familia pasado a VHS y
 visto en el televisor.
 
+Un **gesto** (2026-11-22) es un momento que va encima de cualquier base: la pausa, el rebobinado o el arranque de la
+casetera, el estrobo, la llave, la pintura, el mosaico o el multi de la consola. Su estilo lleva `"gesto": true`, la
+cadena con sólo esos aparatos y `sobre`, la base de su muestra; `componer` lo pone en su lugar (la consola antes de la
+cinta, la casetera después) y `--gesto` lo suma a cualquier `--cadena`.
+
 Una **cadena** es la lista de aparatos con sus perillas (lo que no se dice toma su valor por defecto):
 
     [{"aparato": "cinta", "formato": "EP", "generaciones": 2}, {"aparato": "pantalla"}]
@@ -69,6 +74,7 @@ mismo resultado, y los pedazos se procesan en paralelo sin que se note la costur
     python montaje.py analogo <video o foto> --cadena copia-de-copia     # un estilo de la galería
     python montaje.py analogo <video> --cadena '[{"aparato": "cinta", "formato": "LP"}]'
     python montaje.py analogo <video> --cadena vhs-de-la-casa --ventana 4 9 --ventana 20 26
+    python montaje.py analogo <video> --cadena super-8-de-la-familia --gesto estrobo-de-la-consola   # un gesto encima
     python montaje.py analogo <video> --comparar vhs-de-la-casa,antena-lejana --en 2,5,9   # hoja lado a lado
     python montaje.py analogo <video> --recorrido vhs-de-la-casa,antena-lejana --desde 3 --segundos 6
     python montaje.py analogo --cadenas                                     # las cadenas de la galería
@@ -1357,23 +1363,89 @@ def _pedazo(tarea: dict) -> str:
     return tarea["salida"]
 
 
-def resolver_cadena(texto: str):
-    """Un estilo de la galería con `comando: analogo`, o la cadena escrita en JSON."""
+#: Los aparatos que hacen un **gesto** (2026-11-22): un momento que se pone encima de cualquier base —la pausa
+#: del VHS, el estrobo de la consola— en vez de ser un estilo propio. Miguel, al juzgar la mesa: «Hay muchos que
+#: son muy parecidos entre sí»; medidos, la pausa, el estrobo o la llave sobre el VHS eran el VHS de la casa con un
+#: momento distinto encima, y eligió que fueran gestos aparte.
+GESTOS = ("consola", "casetera")
+
+
+def componer(base: list, gesto: list) -> list:
+    """La cadena `base` con los aparatos de un gesto en su lugar. La consola mezcla lo que sale de la cámara o de la
+    película antes de grabarlo: va antes de la primera cinta. La casetera reproduce lo grabado: va después de la
+    última. Sin cinta, los dos van al final (antes de la pantalla, que siempre cierra)."""
+    base = list(base)
+    antes = [a for a in gesto if a.get("aparato") == "consola"]
+    despues = [a for a in gesto if a.get("aparato") != "consola"]
+    cintas = [n for n, a in enumerate(base) if isinstance(a, dict) and a.get("aparato") == "cinta"]
+    fin = len(base) - 1 if base and isinstance(base[-1], dict) and base[-1].get("aparato") == "pantalla" else len(base)
+    i0, i1 = (cintas[0], cintas[-1] + 1) if cintas else (fin, fin)
+    return base[:i0] + antes + base[i0:i1] + despues + base[i1:]
+
+
+def _estilo(id_: str, estilos: list[dict] | None = None) -> dict | None:
+    if estilos is None:
+        from . import estilos as galeria
+
+        estilos = galeria.leer()
+    return next((x for x in estilos if x["id"] == id_), None)
+
+
+def base_de(sobre, estilos: list[dict] | None = None) -> dict:
+    """La base de un gesto (`sobre` en su técnica): una cadena escrita, o el id de un estilo analógico que no sea gesto."""
+    if isinstance(sobre, list):
+        return {"aparatos": sobre}
+    e = _estilo(sobre, estilos) if isinstance(sobre, str) else None
+    if e is None or e["tecnica"].get("comando") != "analogo" or e["tecnica"].get("gesto"):
+        salir(f"`sobre`: «{sobre}» no es una cadena ni un estilo analógico que no sea gesto")
+    return cadena_de_tecnica(e["tecnica"], estilos)
+
+
+def cadena_de_tecnica(t: dict, estilos: list[dict] | None = None) -> dict:
+    """La cadena de una técnica `comando: analogo`, lista para `procesar`. La de un gesto es su base (`sobre`, la que
+    usa su muestra) con el gesto encima."""
+    propios = {k: t[k] for k in ("captura", "semilla") if k in t}
+    if not t.get("gesto"):
+        return {"aparatos": t["cadena"], **propios}
+    base = base_de(t.get("sobre"), estilos)
+    return {**base, "aparatos": componer(base["aparatos"], t["cadena"]), **propios}
+
+
+def resolver_cadena(texto: str, gestos: list[str] | tuple = ()):
+    """Un estilo de la galería con `comando: analogo`, o la cadena escrita en JSON; con `gestos`, los gestos de la
+    galería encima, en orden (`--gesto pausa-del-vhs`)."""
     texto = texto.strip()
+    todos = None
     if texto.startswith(("[", "{")):
         try:
-            return json.loads(texto), "cadena"
+            cadena, nombre = _normalizar_cadena(json.loads(texto)), "cadena"
         except json.JSONDecodeError as err:
             salir(f"la cadena no es JSON válido: {err}")
-    from . import estilos as galeria
+        if cadena["aparatos"] is None:
+            salir("una cadena es una lista de aparatos, o {\"aparatos\": [...]}")
+    else:
+        from . import estilos as galeria
 
-    e = next((x for x in galeria.leer() if x["id"] == texto), None)
-    if e is None:
-        salir(f"no hay un estilo «{texto}» en estilos/ (las cadenas: python montaje.py analogo --cadenas)")
-    t = e["tecnica"]
-    if t.get("comando") != "analogo":
-        salir(f"«{texto}» no es una cadena analógica (su técnica es {t})")
-    return {"aparatos": t["cadena"], **{k: t[k] for k in ("captura", "semilla") if k in t}}, texto
+        todos = galeria.leer()
+        e = _estilo(texto, todos)
+        if e is None:
+            salir(f"no hay un estilo «{texto}» en estilos/ (las cadenas: python montaje.py analogo --cadenas)")
+        t = e["tecnica"]
+        if t.get("comando") != "analogo":
+            salir(f"«{texto}» no es una cadena analógica (su técnica es {t})")
+        cadena, nombre = cadena_de_tecnica(t, todos), texto
+    for g in gestos:
+        if todos is None:
+            from . import estilos as galeria
+
+            todos = galeria.leer()
+        eg = _estilo(g.strip(), todos)
+        if eg is None or not eg["tecnica"].get("gesto"):
+            hay = ", ".join(x["id"] for x in todos if x["tecnica"].get("gesto"))
+            salir(f"«{g}» no es un gesto de la galería (hay: {hay})")
+        cadena = {**cadena, "aparatos": componer(cadena["aparatos"], eg["tecnica"]["cadena"])}
+        nombre += "+" + eg["id"]
+    return cadena, nombre
 
 
 def musica_de(proyecto: str) -> dict:
@@ -1690,6 +1762,9 @@ def listar() -> None:
         return
     for e in cadenas:
         aparatos = " → ".join(a["aparato"] for a in e["tecnica"]["cadena"])
+        if e["tecnica"].get("gesto"):
+            aparatos = f"gesto: {aparatos} (su muestra, sobre " + (e["tecnica"]["sobre"] if isinstance(e["tecnica"].get("sobre"), str)
+                                                                  else " → ".join(a["aparato"] for a in e["tecnica"].get("sobre", []))) + ")"
         print(f"{e['id']:<26} {e['estado']:<10} {aparatos}")
         print(f"{'':<26} {e['frase']}")
     print(f"{len(cadenas)} cadenas · aparatos: {', '.join(APARATOS)}")
@@ -1716,7 +1791,7 @@ def cmd(a) -> None:
         return
     if not a.cadena:
         salir("falta --cadena (un estilo de la galería, o la cadena en JSON) o --comparar")
-    cadena, nombre = resolver_cadena(a.cadena)
+    cadena, nombre = resolver_cadena(a.cadena, getattr(a, "gesto", None) or [])
     destino = Path(a.salida) if a.salida else entrada.with_name(f"{entrada.stem}-{nombre}.mp4")
     if destino.resolve() == entrada:
         salir("la salida no puede pisar la entrada")

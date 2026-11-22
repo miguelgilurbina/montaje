@@ -144,6 +144,12 @@ Todo comando se corre desde la raíz del repo: `python montaje.py <comando> <pro
   `tono` en proyecto.json, `guion` sólo avisa. **`aprender`** junta las lecciones, compara las
   recetas aprobadas con las rechazadas perilla por perilla (dentro de cada técnica) y lista los «no»
   y «a medias» sin una palabra de Miguel → `direccion/APRENDIDO.md`.
+- **Uno por grupo** (2026-11-22, «Hay muchos que son muy parecidos entre si»): lo que casi
+  no se distingue de otro estilo es su **variante** (`variante_de` + `diferencia`: vive dentro
+  de su principal y `guion` no la propone aparte), y un momento que va encima de una base
+  —la pausa del VHS, el estrobo de la consola— es un **gesto** (`"gesto": true` y `sobre`, la
+  base de su muestra; `analogo … --cadena <base> --gesto <id>`). Antes de sumar un estilo
+  nuevo, preguntarse si es una de las dos. Ver `estilos/README.md`.
 - `python montaje.py estilos` valida el catálogo (vocabulario cerrado, experimentos
   que existen, veredictos con cita) y lo lista; la galería está en `/estilos` del panel.
 - **La galería de textos** (`textos/`, ver `textos/README.md`): letreros con nombre para títulos,

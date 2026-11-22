@@ -1,0 +1,27 @@
+{
+ "titulo": "26 · Los parecidos: uno por grupo, los momentos como gestos y la lente que se vea",
+ "idea": "Miguel, 2026-11-22, después de juzgar en la mesa los estilos de 24 y 25: «Hay muchos que son muy parecidos entre si». Medidos en el probador, cuadro a cuadro, salieron grupos que casi no se distinguen. Eligió las tres recomendadas: uno por grupo, con lo que los separaba como variante dentro del principal (`variante_de`); la pausa, el rebobinado, el arranque y los efectos de la consola como gestos aparte, que van encima de cualquier base (`gesto` y `sobre`, `--gesto`); y el lente barato y el foco al pulso subidos hasta que se vean.",
+ "biblioteca": "probador",
+ "nota": "No tiene montaje propio: los estilos se prueban sobre el banco del probador. La medida de parecido (cuadro a cuadro sobre las muestras del probador) se corrió fuera del repo; lo que dio está en la FICHA.",
+ "cadenas": [
+  "pausa-del-vhs",
+  "rebobinar",
+  "vhs-que-arranca",
+  "estrobo-de-la-consola",
+  "llave-de-la-consola",
+  "pintura-de-la-consola",
+  "mosaico-de-la-consola",
+  "multi-de-la-consola",
+  "super-8-sonoro",
+  "super-8-pasado-a-vhs",
+  "pelicula-en-la-sabana",
+  "foto-de-laboratorio-fuji",
+  "foto-con-fecha",
+  "televisor-de-tubo",
+  "lente-barato",
+  "foco-al-pulso",
+  "camara-de-los-90",
+  "camara-de-tubo",
+  "cinta-con-tbc"
+ ]
+}

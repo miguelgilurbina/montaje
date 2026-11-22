@@ -200,3 +200,14 @@ archivo, qué comando correr) no van aquí.
 - Lente anamórfico (`lente-anamorfico`), a medias: «el anamorfico parece más una animación que un efecto»
 - Ojo de pez (`ojo-de-pez`), a medias: «el ojo de pez y el skate se parecen»
 - Video de skate (`video-de-skate`), a medias: «el ojo de pez y el skate se parecen»
+
+## 2026-11-22 · Veredictos desde la galería
+
+- Lente barato (`lente-barato`), a medias: «No veo mucha diferencia»
+
+## 2026-11-22 · Los parecidos (26)
+
+- Después de juzgar en la mesa (desde el teléfono) los estilos de 24 y 25: «Hay muchos que son muy parecidos entre si».
+  Medidos cuadro a cuadro en el probador, eligió las tres recomendadas: uno por grupo, con lo que los separaba como
+  variante dentro del principal; la pausa, el rebobinado, el arranque y los efectos de la consola como gestos aparte,
+  que van encima de cualquier base; y el lente barato y el foco al pulso subidos hasta que se vean.

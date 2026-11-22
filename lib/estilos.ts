@@ -38,7 +38,14 @@ export type Estilo = {
   /** Cuánto gana cuando Miguel lo elige entre dos. */
   elecciones?: Puntaje;
   familia: Familia;
+  /** Si casi no se distingue de otro estilo, vive dentro de él en la galería (2026-11-22): su id y lo que los separa. */
+  variante_de?: string;
+  diferencia?: string;
+  /** Las del principal: cada una con lo que la separa y su muestra del probador. */
+  variantes?: Variante[];
 };
+
+export type Variante = {id: string; nombre: string; diferencia: string; estado: Estado; probador: string | null};
 
 export type Probado = {
   url: string;
@@ -56,12 +63,14 @@ export type Probado = {
 export type Puntaje = {ganadas: number; jugadas: number; puntaje: number};
 
 /** Para elegir entre dos se comparan estilos de la misma familia: dos transiciones, dos filtros. */
-export type Familia = 'transiciones' | 'efectos de tiempo' | 'filtros y texturas' | 'textos y gráficos' | 'formatos' | 'montajes';
-export const FAMILIAS: Familia[] = ['transiciones', 'efectos de tiempo', 'filtros y texturas', 'textos y gráficos', 'formatos', 'montajes'];
+export type Familia = 'transiciones' | 'efectos de tiempo' | 'filtros y texturas' | 'gestos' | 'textos y gráficos' | 'formatos' | 'montajes';
+export const FAMILIAS: Familia[] = ['transiciones', 'efectos de tiempo', 'filtros y texturas', 'gestos', 'textos y gráficos', 'formatos', 'montajes'];
 
 const TEXTOS = new Set(['titulo', 'rotulos', 'credito', 'cuenta', 'partitura']);
 
 export function familiaDe(t: Record<string, unknown>, para: string[]): Familia {
+  // Un gesto (la pausa del VHS, el estrobo de la consola) va encima de una base: se compara con otro gesto.
+  if (t.gesto === true) return 'gestos';
   // Una transición es el estilo entero, no una perilla de paso: «fotos y clips» lleva cortina y es un montaje.
   if (typeof t.transicion === 'string' && t.transicion !== 'fundido' && para.includes('transición')) return 'transiciones';
   if (t.comando === 'transformar') return 'efectos de tiempo';
@@ -126,7 +135,7 @@ export function leerEstilos(): Estilo[] {
   if (!fs.existsSync(ESTILOS)) return [];
   const registro = leerJson<Registro>(path.join(PROBADOR, 'registro.json'), {});
   const gana = puntajes();
-  return fs
+  const todos: Estilo[] = fs
     .readdirSync(ESTILOS)
     .filter((n) => n.endsWith('.json'))
     .map((n) => {
@@ -149,6 +158,13 @@ export function leerEstilos(): Estilo[] {
       };
     })
     .sort((a, b) => ESTADOS.indexOf(a.estado) - ESTADOS.indexOf(b.estado) || a.nombre.localeCompare(b.nombre, 'es'));
+  // Cada principal lleva sus variantes (las valida `python montaje.py estilos`).
+  for (const v of todos) {
+    const principal = v.variante_de ? todos.find((e) => e.id === v.variante_de) : undefined;
+    if (!principal) continue;
+    (principal.variantes ??= []).push({id: v.id, nombre: v.nombre, diferencia: v.diferencia ?? '', estado: v.estado, probador: v.probador?.url ?? null});
+  }
+  return todos;
 }
 
 /**

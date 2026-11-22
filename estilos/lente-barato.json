@@ -13,19 +13,27 @@
   "cadena": [
    {
     "aparato": "lente",
-    "aberracion": 2.0,
-    "vineta": 0.7,
-    "foco": 0.8,
-    "barril": 0.2
+    "aberracion": 3.0,
+    "vineta": 1.0,
+    "foco": 2.0,
+    "barril": 0.45
    }
   ]
  },
- "estado": "propuesta",
- "miguel": [],
+ "estado": "a medias",
+ "miguel": [
+  "No veo mucha diferencia"
+ ],
  "visto_en": [
-  "25-mas-aparatos"
+  "25-mas-aparatos",
+  "26-los-parecidos"
  ],
  "evitar": [
   "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
- ]
+ ],
+ "veredicto": {
+  "estado": "a medias",
+  "fecha": "2026-11-22",
+  "via": "galeria"
+ }
 }

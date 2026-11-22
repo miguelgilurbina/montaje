@@ -255,8 +255,10 @@ def receta(e: dict, cfg: dict, m: dict) -> tuple[dict | None, str]:
         return {"montaje": {}, "sintesis": cine, "proyector": float(t.get("nivel", 16))}, ""
     if comando == "analogo":
         # El banco tal cual, pasado después por la cadena de aparatos (como se usa: sobre un render).
-        cadena = {"aparatos": t["cadena"], **{k: t[k] for k in ("captura", "semilla") if k in t}}
-        return {"montaje": {}, "sintesis": [], "analogo": cadena}, ""
+        # Un gesto se prueba sobre su base (`sobre`): la misma cadena que hizo su muestra antes de ser gesto.
+        from . import analogo
+
+        return {"montaje": {}, "sintesis": [], "analogo": analogo.cadena_de_tecnica(t)}, ""
     if comando == "sincronizar":
         return None, POR_QUE_NO["sincronizar"]
     if comando:

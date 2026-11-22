@@ -39,6 +39,8 @@ ráfaga con valores y material distintos.
 | `evitar` | dónde no va, y por qué. Un rechazo se guarda aquí para no repetirlo |
 | `muestra` | (lo escribe `muestra`) de qué render y qué segundos salió la muestra |
 | `veredicto` | (lo escribe la galería) el último veredicto dado con un clic: `estado`, `fecha`, `via`. Vale como las palabras de Miguel para validar un aprobado, a medias o rechazado |
+| `variante_de` | (opcional) el id del estilo del que casi no se distingue: la variante vive dentro de él en la galería y `guion` no la propone aparte. Va con `diferencia` |
+| `diferencia` | lo que separa a una variante de su principal, en pocas palabras («con el sonido de la banda magnética») |
 
 ### Vocabulario de `para`
 
@@ -47,6 +49,26 @@ ráfaga con valores y material distintos.
 
 Es cerrado a propósito: el guion habla con estas palabras. Una nueva se agrega en
 `PARA` de `py/montaje/estilos.py` y aquí, cuando un estilo de verdad la necesite.
+
+## Uno por grupo: variantes y gestos (2026-11-22)
+
+Miguel, al juzgar en la mesa los estilos de 24 y 25: «Hay muchos que son muy parecidos entre si». Medidos en el
+probador, cuadro a cuadro, había grupos que casi no se distinguían, y eligió dos arreglos (experimento
+`26-los-parecidos`):
+
+- **Variantes.** Del grupo queda un estilo en la galería y los demás pasan a ser variantes suyas (`variante_de` y
+  `diferencia`): el Super 8 de la familia con el sonoro y el pasado a VHS; la película en la pared con la de la
+  sábana; la foto de laboratorio con la Fuji y la de la fecha; el VHS en el televisor con el televisor solo; el
+  VHS de la casa con la cámara de los 90, la cámara de tubo y la cinta con TBC. No se borra nada: cada variante
+  conserva su receta, su veredicto y su muestra, y se pide por su nombre.
+- **Gestos.** La pausa, el rebobinado y el arranque de la casetera, y el estrobo, la llave, la pintura, el mosaico
+  y el multi de la consola eran el VHS de la casa con un momento distinto encima. Ahora son gestos: su técnica lleva
+  `"gesto": true`, la cadena sólo con esos aparatos y `sobre`, la base de su muestra (la misma cinta de antes, así
+  que la muestra no cambia). Van encima de cualquier base: `python montaje.py analogo <video> --cadena
+  super-8-de-la-familia --gesto estrobo-de-la-consola`. En la galería son su propia familia, «gestos».
+
+Antes de sumar un estilo parecido a otro, preguntarse si es una variante (cambia un detalle) o un gesto (es la
+misma base con un momento encima).
 
 ## Las muestras
 

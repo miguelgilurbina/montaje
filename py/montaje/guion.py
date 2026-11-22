@@ -59,7 +59,9 @@ def candidatos(estilos: list[dict], papel_: str, energia: str, material: str, ba
     para = lambda e: papel_ in e["para"]  # noqa: E731
     misma = lambda e: e["energia"] in (energia, "sigue")  # noqa: E731
     orden = list(catalogo.ESTADOS)
-    sirven = [e for e in estilos if e["estado"] != "rechazado" and e["material"] in (material, "cualquiera", "mixto") and (para(e) or misma(e))]
+    # Las variantes no compiten: van dentro de su principal (`_marca` las nombra).
+    sirven = [e for e in estilos if e["estado"] != "rechazado" and "variante_de" not in e
+              and e["material"] in (material, "cualquiera", "mixto") and (para(e) or misma(e))]
     # Entre dos igual de buenos, el que Miguel eligió más veces al verlos lado a lado (`comparar`).
     gana = catalogo.puntajes()
     sirven.sort(key=lambda e: (not para(e), orden.index(e["estado"]), not misma(e), -gana.get(e["id"], {}).get("puntaje", 0.5), e["id"]))
@@ -91,8 +93,14 @@ def capa_de(e: dict, desde: float, hasta: float) -> dict | None:
     return {"tipo": capa, **{k: v for k, v in t.items() if k in sintesis.POR_DEFECTO[capa]}, "desde": desde, "hasta": hasta}
 
 
-def _marca(e: dict) -> str:
-    return f"`{e['id']}`" + (" ✓" if e["estado"] == "aprobado" else " (a medias)" if e["estado"] == "a medias" else "")
+def _marca(e: dict, variantes: dict[str, list[dict]] | None = None) -> str:
+    marca = f"`{e['id']}`" + (" ✓" if e["estado"] == "aprobado" else " (a medias)" if e["estado"] == "a medias" else "")
+    if e["tecnica"].get("gesto"):
+        marca += " (gesto: va encima de una base)"
+    otras = [v for v in (variantes or {}).get(e["id"], []) if v["estado"] != "rechazado"]
+    if otras:
+        marca += " (variantes: " + ", ".join(f"`{v['id']}`, {v['diferencia']}" for v in otras) + ")"
+    return marca
 
 
 def esqueleto(p: Proyecto) -> tuple[str, list[dict], dict]:
@@ -102,6 +110,7 @@ def esqueleto(p: Proyecto) -> tuple[str, list[dict], dict]:
     calma, pico = float(prm.get("umbral_calma", 0.35)), float(prm.get("umbral_pico", 0.7))
     material = "clips" if p.cfg.get("clips") else "fotos"
     estilos = catalogo.leer()
+    de_variantes = catalogo.variantes(estilos)
     secciones = m.get("secciones") or [{"ini": 0.0, "fin": m["duracion"], "energia": 0.5}]
     energias = [s["energia"] for s in secciones]
     # Los bordes van al «uno» más cercano: un tramo vale por compases enteros, y así las capas de
@@ -139,9 +148,9 @@ def esqueleto(p: Proyecto) -> tuple[str, list[dict], dict]:
         # Lo que cada estilo elegido pide evitar: el armado no lo sabe leer, quien lo use sí.
         armado.setdefault("ojo", []).extend(f"{e['id']} ({desde:g}–{hasta:g} s): {x}" for e in usados for x in e.get("evitar", []))
         base, encima = candidatos(estilos, pa, en, material)
-        sirven = ", ".join(_marca(e) for e in base) or "ninguno todavía: es un ejercicio"
+        sirven = ", ".join(_marca(e, de_variantes) for e in base) or "ninguno todavía: es un ejercicio"
         if encima:
-            sirven += " · encima: " + ", ".join(_marca(e) for e in encima)
+            sirven += " · encima: " + ", ".join(_marca(e, de_variantes) for e in encima)
         filas.append(f"| {i + 1} | {s['ini']:.0f}–{s['fin']:.0f} | {en} ({s['energia']:.2f}) · {pa} |  |  | {sirven} |")
         tramos.append({"nombre": f"tramo {i + 1}", "desde": desde, "hasta": hasta})
     for lid, capa in aprender.capas(p.cfg, lecciones):

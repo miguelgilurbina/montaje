@@ -12,10 +12,15 @@
   "modo": "pulso",
   "paso_de_cuadro": 2
  },
- "estado": "propuesta",
+ "estado": "aprobado",
  "miguel": [],
  "visto_en": [
   "25-mas-aparatos"
  ],
- "evitar": []
+ "evitar": [],
+ "veredicto": {
+  "estado": "aprobado",
+  "fecha": "2026-11-22",
+  "via": "galeria"
+ }
 }

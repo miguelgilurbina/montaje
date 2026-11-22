@@ -378,3 +378,58 @@ def test_un_video_girado_sale_derecho(tmp_path):
     sale = A.procesar(girado, tmp_path / "sale.mp4", [{"aparato": "cinta"}], hilos=2, callado=True)
     s = A._sonda(sale)
     assert (s["ancho"], s["alto"]) == (240, 320)
+
+
+# ── Los gestos y las variantes (2026-11-22) ────────────────────────────────
+
+def test_la_consola_va_antes_de_la_cinta_y_la_casetera_despues():
+    cinta, pantalla = {"aparato": "cinta"}, {"aparato": "pantalla"}
+    consola, casetera = {"aparato": "consola", "efecto": "estrobo"}, {"aparato": "casetera", "pausa": 4.0}
+    assert A.componer([cinta], [consola]) == [consola, cinta]
+    assert A.componer([cinta], [casetera]) == [cinta, casetera]
+    assert A.componer([cinta, pantalla], [casetera, consola]) == [consola, cinta, casetera, pantalla]
+    # Sin cinta, el gesto va al final, antes de la pantalla.
+    pelicula = {"aparato": "pelicula"}
+    assert A.componer([pelicula], [consola]) == [pelicula, consola]
+    assert A.componer([pelicula, pantalla], [casetera]) == [pelicula, casetera, pantalla]
+    # Dos de la consola conservan su orden; dos cintas, el gesto entre la primera y la última como corresponde.
+    otra = {"aparato": "consola", "efecto": "mosaico"}
+    assert A.componer([{"aparato": "camara"}, cinta], [consola, otra]) == [{"aparato": "camara"}, consola, otra, cinta]
+
+
+def test_un_gesto_de_la_galeria_dibuja_la_misma_cadena_que_antes_de_ser_gesto():
+    """La muestra de un gesto no cambia: su base (`sobre`) más el gesto es la cadena que la hizo."""
+    hechos = {e["id"]: e for e in estilos.leer() if e["tecnica"].get("gesto")}
+    assert {"pausa-del-vhs", "estrobo-de-la-consola"} <= set(hechos)
+    antes = {  # las cadenas del commit 751894e, antes de ser gestos
+        "pausa-del-vhs": [{"aparato": "cinta", "formato": "SP", "desgaste": 0.2}, {"aparato": "casetera", "pausa": 4.0, "entrelazado": 0.5}],
+        "estrobo-de-la-consola": [{"aparato": "consola", "efecto": "estrobo", "cuando": "a ratos", "por_minuto": 6.0, "dura": 2.0, "cada": 5},
+                                  {"aparato": "cinta", "formato": "SP", "desgaste": 0.2}],
+    }
+    for id_, cadena in antes.items():
+        assert A.cadena_de_tecnica(hechos[id_]["tecnica"])["aparatos"] == cadena
+
+
+def test_un_gesto_va_encima_de_cualquier_base_por_su_nombre():
+    cadena, nombre = A.resolver_cadena("super-8-de-la-familia", ["estrobo-de-la-consola", "pausa-del-vhs"])
+    assert [a["aparato"] for a in cadena["aparatos"]] == ["pelicula", "consola", "casetera"]
+    assert nombre == "super-8-de-la-familia+estrobo-de-la-consola+pausa-del-vhs"
+    assert A.errores(cadena) == []
+    with pytest.raises(SystemExit):
+        A.resolver_cadena("vhs-de-la-casa", ["super-8-sonoro"])  # no es un gesto
+
+
+def test_el_catalogo_pide_lo_suyo_a_un_gesto_y_a_una_variante():
+    base = {"nombre": "x", "frase": "x", "para": ["destacar"], "material": "cualquiera", "energia": "media", "dura": "un tramo",
+            "estado": "propuesta", "miguel": [], "visto_en": [], "evitar": []}
+    bien = {**base, "tecnica": {"comando": "analogo", "gesto": True, "cadena": [{"aparato": "consola", "efecto": "estrobo"}],
+                                "sobre": "vhs-de-la-casa"}}
+    assert estilos.errores(bien) == []
+    con_cinta = {**base, "tecnica": {**bien["tecnica"], "cadena": [{"aparato": "cinta"}]}}
+    assert any("un gesto sólo lleva" in m for m in estilos.errores(con_cinta))
+    sin_base = {**base, "tecnica": {"comando": "analogo", "gesto": True, "cadena": [{"aparato": "casetera"}]}}
+    assert any("sobre" in m for m in estilos.errores(sin_base))
+    variante = {**base, "id": "x", "tecnica": {"comando": "analogo", "cadena": [{"aparato": "cinta"}]}, "variante_de": "super-8-de-la-familia"}
+    assert any("diferencia" in m for m in estilos.errores(variante))
+    assert estilos.errores({**variante, "diferencia": "otra cosa"}) == []
+    assert any("ya es variante" in m for m in estilos.errores({**variante, "diferencia": "y", "variante_de": "super-8-sonoro"}))

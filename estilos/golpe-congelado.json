@@ -13,12 +13,17 @@
   "congelar_golpe": 0.5,
   "congelar_cada": "compas"
  },
- "estado": "propuesta",
+ "estado": "aprobado",
  "miguel": [],
  "visto_en": [
   "25-mas-aparatos"
  ],
  "evitar": [
   "la calma: el golpe se nota como un error"
- ]
+ ],
+ "veredicto": {
+  "estado": "aprobado",
+  "fecha": "2026-11-22",
+  "via": "galeria"
+ }
 }

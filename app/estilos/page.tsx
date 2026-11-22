@@ -69,6 +69,29 @@ function Tarjeta({e}: {e: Estilo}) {
             ))}
           </div>
         )}
+        {e.tecnica.gesto === true && (
+          <p className="dato">
+            gesto: va encima de cualquier base (<code>--gesto {e.id}</code>); su muestra, sobre{' '}
+            {typeof e.tecnica.sobre === 'string'
+              ? e.tecnica.sobre
+              : ((e.tecnica.sobre as {aparato: string}[] | undefined) ?? []).map((a) => a.aparato).join(' → ')}
+          </p>
+        )}
+        {e.variantes && e.variantes.length > 0 && (
+          <ul className="variantes">
+            {e.variantes.map((v) => (
+              <li key={v.id}>
+                <span className="dato">variante</span> {v.nombre}: {v.diferencia} <span className="dato">· {v.estado}</span>
+                {v.probador ? (
+                  <>
+                    {' · '}
+                    <a href={v.probador}>su muestra</a>
+                  </>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        )}
         <EnElProbador e={e} />
         {e.evitar.length > 0 && (
           <ul className="evitar">
@@ -98,7 +121,9 @@ function Tarjeta({e}: {e: Estilo}) {
 
 export default async function Estilos({searchParams}: {searchParams: Promise<Filtros>}) {
   const f = await searchParams;
-  const todos = leerEstilos();
+  // Las variantes van dentro de su principal: la galería muestra uno por grupo.
+  const todos = leerEstilos().filter((e) => !e.variante_de);
+  const variantes = todos.reduce((s, e) => s + (e.variantes?.length ?? 0), 0);
   const elegidos = todos.filter(
     (e) =>
       (!f.estado || e.estado === f.estado) &&
@@ -125,7 +150,7 @@ export default async function Estilos({searchParams}: {searchParams: Promise<Fil
       <p className="dato">
         Cada estilo es una receta con nombre para elegir según el guion: la técnica con sus valores, para qué sirve y lo que
         dijo Miguel. Los renders de los ejercicios se borran; la receta y la muestra quedan. El veredicto se da aquí mismo:
-        sí, a medias o no, con o sin palabras. {todos.length} estilos · {probados} en el probador · muestras {peso.toFixed(1)} MB.
+        sí, a medias o no, con o sin palabras. {todos.length} estilos (y {variantes} variantes dentro de ellos) · {probados} en el probador · muestras {peso.toFixed(1)} MB.
       </p>
       <p className="entrada-comparar">
         <Link href="/estilos/comparar">Elegir entre dos →</Link>{' '}

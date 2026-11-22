@@ -25,13 +25,21 @@
    }
   ]
  },
- "estado": "propuesta",
+ "estado": "aprobado",
  "miguel": [],
  "visto_en": [
-  "25-mas-aparatos"
+  "25-mas-aparatos",
+  "26-los-parecidos"
  ],
  "evitar": [
   "si el video tiene que llenar el cuadro",
   "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
- ]
+ ],
+ "veredicto": {
+  "estado": "aprobado",
+  "fecha": "2026-11-22",
+  "via": "galeria"
+ },
+ "variante_de": "pelicula-en-la-pared",
+ "diferencia": "proyectada en una sábana: el trapecio y el foco blando"
 }

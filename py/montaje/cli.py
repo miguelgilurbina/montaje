@@ -541,6 +541,8 @@ def main() -> None:
                                    "Ver py/montaje/analogo.py y direccion/ANALOGO.md")
     s.add_argument("entrada", nargs="?", help="el video o la foto (ruta absoluta o dentro de los medios)")
     s.add_argument("--cadena", help="un estilo de la galería con `comando: analogo`, o la cadena en JSON")
+    s.add_argument("--gesto", action="append", metavar="ID",
+                   help="un gesto de la galería encima de la cadena (la pausa del VHS, el estrobo de la consola…); se repite")
     s.add_argument("--salida", help="dónde dejarla (por defecto, <entrada>-<cadena>.mp4 al lado)")
     s.add_argument("--desde", type=float, help="segundo inicial")
     s.add_argument("--hasta", type=float, help="segundo final")

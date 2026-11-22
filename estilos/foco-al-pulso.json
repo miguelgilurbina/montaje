@@ -13,19 +13,25 @@
   "cadena": [
    {
     "aparato": "lente",
-    "foco_al_pulso": 2.0,
+    "foco_al_pulso": 5.0,
     "golpes_cada": "golpe"
    }
   ]
  },
- "estado": "propuesta",
+ "estado": "a medias",
  "miguel": [],
  "visto_en": [
-  "25-mas-aparatos"
+  "25-mas-aparatos",
+  "26-los-parecidos"
  ],
  "evitar": [
   "sin canción: necesita los golpes (`--golpes <proyecto>`)",
   "la calma: el latido distrae",
   "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
- ]
+ ],
+ "veredicto": {
+  "estado": "a medias",
+  "fecha": "2026-11-22",
+  "via": "galeria"
+ }
 }

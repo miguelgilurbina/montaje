@@ -13,12 +13,17 @@
   "tartamudeo_golpes": 0.25,
   "tartamudeo_cada": "pico"
  },
- "estado": "propuesta",
+ "estado": "aprobado",
  "miguel": [],
  "visto_en": [
   "25-mas-aparatos"
  ],
  "evitar": [
   "clips casi quietos: no se nota"
- ]
+ ],
+ "veredicto": {
+  "estado": "aprobado",
+  "fecha": "2026-11-22",
+  "via": "galeria"
+ }
 }

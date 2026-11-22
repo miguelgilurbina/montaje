@@ -211,6 +211,12 @@ La sincronía con la música del MX50 es lo mismo que el modo `pulso` hace con l
 (`cuando: "al pulso"`) prende sus efectos en el uno de cada compás, en cada golpe o en los picos de la canción;
 la mesa recibe los golpes del proyecto (`analogo --golpes <proyecto>`; el probador pasa los del banco).
 
+**Gestos** (2026-11-22, experimento 26). Los botones de la casetera y de la consola no son un look sino un momento
+encima de lo que pasa por ellos, y así quedaron en la galería: un gesto se pone sobre cualquier base (`analogo
+<video> --cadena super-8-de-la-familia --gesto estrobo-de-la-consola`). La consola entra antes de la primera cinta
+(mezclaba lo que después se grababa); la casetera, después de la última (reproducía lo grabado). Fue por Miguel,
+al juzgarlos sobre el mismo VHS: «Hay muchos que son muy parecidos entre si».
+
 ## El proyector, el 35 mm y el sonido de la película (2026-11-21)
 
 Miguel eligió seguir acumulando. Tres cosas más alrededor de la película:
