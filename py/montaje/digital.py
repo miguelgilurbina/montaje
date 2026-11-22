@@ -43,13 +43,14 @@ MODOS = ("mpeg", "jpeg", "dv")
 POR_DEFECTO = {
     "sensor": {"resolucion": [320, 240], "cuadros": 0, "irregular": 0.0, "ruido": 0.5, "rango": 0.5, "balance": 0.0,
                "tinte": "azul", "exposicion": 0.0, "detalle": 0.4, "mancha": 0.0, "franja": 0.0, "rodar": 0.0,
-               "aliasing": 0.3, "encuadre": "barras", "ampliar": "suave", "sonido": "ninguno"},
+               "aliasing": 0.3, "entrelazado": 0.0, "encuadre": "barras", "ampliar": "suave", "sonido": "ninguno"},
     "compresion": {"modo": "mpeg", "calidad": 0.4, "gop": 30, "busqueda": 7, "residuo": 1.0, "errores": 0.0},
 }
 RANGOS = {
     "sensor": {"cuadros": (0, 60), "irregular": (0, 1), "ruido": (0, 3), "rango": (0, 1), "balance": (0, 1),
                "tinte": tuple(TINTES), "exposicion": (0, 1), "detalle": (0, 2), "mancha": (0, 2), "franja": (0, 2),
-               "rodar": (0, 2), "aliasing": (0, 1), "encuadre": ("barras", "llenar"), "ampliar": ("suave", "pixeles"),
+               "rodar": (0, 2), "aliasing": (0, 1), "entrelazado": (0, 1), "encuadre": ("barras", "llenar"),
+               "ampliar": ("suave", "pixeles"),
                "sonido": SONIDOS},
     "compresion": {"modo": MODOS, "calidad": (0, 1), "gop": (1, 120), "busqueda": (0, 15), "residuo": (0, 1),
                    "errores": (0, 1)},
@@ -94,7 +95,8 @@ def calentar(pasos: list[tuple[str, dict]], fps: float, solo: int | None = None)
         if solo is not None and i != solo:
             continue
         if nombre == "sensor":
-            n = max(n, f * (1 + atras) + 1, (2 + atras) * f + 1 if p["rodar"] else 0, 30 * f if p["exposicion"] else 0)
+            n = max(n, f * (1 + atras) + 1, (2 + atras) * f + 1 if p["rodar"] or p["entrelazado"] else 0,
+                    30 * f if p["exposicion"] else 0)
         if nombre == "compresion":
             n = max(n, (p["gop"] + 1 + atras) * f + 2 if p["modo"] == "mpeg" else ((2 + atras) * f + 1 if p["errores"] else 0))
     return n
@@ -213,6 +215,15 @@ def _sensor_captura(img: np.ndarray, p: dict, ctx, semilla: int, cid: int) -> np
             f = (cols - np.floor(cols))[..., None]
             filas = np.arange(h)[:, None]
             x = x[filas, c0] * (1 - f) + x[filas, c1] * f
+    if p["entrelazado"]:  # las cámaras de video grababan campos: las líneas impares, un instante antes (se peina lo que se mueve)
+        clave = ("entrelazado", ctx.paso)
+        antes = ctx.estado.get(clave)
+        actual = x.copy()
+        if antes is not None and antes[0] != cid and antes[1].shape == x.shape:
+            x = x.copy()
+            x[1::2] = (1 - p["entrelazado"]) * x[1::2] + p["entrelazado"] * antes[1][1::2]
+        if antes is None or antes[0] != cid:
+            ctx.estado[clave] = (cid, actual)
     return np.clip(x, 0, 1).astype(np.float32)
 
 

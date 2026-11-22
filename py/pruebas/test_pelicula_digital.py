@@ -479,7 +479,7 @@ def _sol(h: int = 180, w: int = 320, cy: int = 40, cx: int = 260) -> np.ndarray:
 
 def test_el_barril_curva_las_rectas():
     img = np.full((180, 320, 3), 20, np.uint8)
-    img[20:23] = 255   # una recta horizontal cerca del borde de arriba
+    img[50:53] = 255   # una recta horizontal arriba del centro
     sale = np.clip(correr([{"aparato": "lente", "barril": 1.0}], [img])[0][..., 1].astype(float) - 30, 0, None)
     fila = lambda x: float((np.arange(180) * sale[:, x]).sum() / sale[:, x].sum())  # noqa: E731
     # El barril agranda el centro: en el medio la recta se aleja del centro (sube) más que en las orillas.
@@ -518,6 +518,29 @@ def test_la_raya_anamorfica_es_horizontal_y_azul():
     lado = (con - sin)[38:43, 170:240]
     arriba = (con - sin)[100:110, 255:265]
     assert lado[..., 2].mean() > 8 and lado[..., 2].mean() > lado[..., 0].mean() + 3 and arriba.mean() < 1
+
+
+def test_el_sensor_entrelazado_peina_con_la_captura_anterior():
+    a, b = gris_azar(11), gris_azar(12)
+    cadena = [{"aparato": "sensor", "resolucion": [W, H], "ruido": 0.0, "rango": 0.0, "detalle": 0.0, "aliasing": 0.0,
+               "entrelazado": 1.0}]
+    sale = correr(cadena, [a, b])[1].astype(float)[..., 0]
+    corr = lambda x, y: abs(np.corrcoef(x.ravel(), y.ravel())[0, 1])  # noqa: E731
+    assert corr(sale[1::2], a[1::2, :, 0]) > 0.9 and corr(sale[0::2], b[0::2, :, 0]) > 0.9
+    pasos, _, _ = A.preparar(cadena)
+    assert A.calentar(pasos, 30) >= 2
+
+
+def test_el_sol_fuera_del_cuadro_deja_fantasmas_en_un_material_oscuro():
+    """Lo que Miguel vio «imperceptible»: sin luces fuertes no había destello. El sol que pega en el vidrio desde
+    afuera deja fantasmas igual, del otro lado del centro."""
+    oscuro = gris(0.12, 180, 320)
+    sin_sol = correr([{"aparato": "lente", "destello": 1.2}], [oscuro])[0].astype(float)
+    con_sol = correr([{"aparato": "lente", "destello": 1.2, "sol": [1.1, -0.1], "sol_paseo": 0.0}], [oscuro])[0].astype(float)
+    assert np.abs(sin_sol - oscuro).mean() < 3                     # sin luces ni sol: nada
+    diferencia = (con_sol - sin_sol).mean(axis=2)
+    assert diferencia[120:175, 5:110].max() > 25                    # un fantasma abajo a la izquierda
+    assert A.errores([{"aparato": "lente", "sol": [5, 5]}]) and not A.errores([{"aparato": "lente", "sol": [1.1, -0.1]}])
 
 
 def test_el_foco_al_pulso_se_va_en_el_golpe_y_vuelve():

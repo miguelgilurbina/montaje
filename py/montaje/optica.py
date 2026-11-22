@@ -32,12 +32,13 @@ from . import analogo as A
 
 POR_DEFECTO = {
     "lente": {"aberracion": 0.0, "barril": 0.0, "destello": 0.0, "raya": 0.0, "niebla": 0.0, "suciedad": 0.0,
-              "foco": 0.0, "foco_al_pulso": 0.0, "golpes_cada": "golpe", "vineta": 0.0},
+              "foco": 0.0, "foco_al_pulso": 0.0, "golpes_cada": "golpe", "vineta": 0.0,
+              "sol": [], "sol_fuerza": 1.0, "sol_paseo": 0.04},
 }
 RANGOS = {
-    "lente": {"aberracion": (0, 3), "barril": (-0.5, 1.5), "destello": (0, 3), "raya": (0, 3), "niebla": (0, 2),
+    "lente": {"aberracion": (0, 3), "barril": (-0.5, 2), "destello": (0, 3), "raya": (0, 3), "niebla": (0, 2),
               "suciedad": (0, 2), "foco": (0, 6), "foco_al_pulso": (0, 6), "golpes_cada": ("compas", "golpe", "pico"),
-              "vineta": (0, 1)},
+              "vineta": (0, 1), "sol_fuerza": (0, 3), "sol_paseo": (0, 0.3)},
 }
 CONSEJO = {"lente": ""}
 
@@ -50,6 +51,9 @@ FANTASMAS = [(-0.45, 0.030, 0.55, (1.0, 0.72, 0.35)), (-0.95, 0.055, 0.35, (0.45
 
 
 def errores(nombre: str, a: dict) -> list[str]:
+    s = a.get("sol", [])
+    if not (isinstance(s, list) and (s == [] or (len(s) == 2 and all(isinstance(v, (int, float)) and -1 <= v <= 2 for v in s)))):
+        return ["lente.sol: [x, y] en fracción del cuadro (0 a 1 adentro; puede quedar afuera, entre −1 y 2), o [] sin sol"]
     return []
 
 
@@ -77,7 +81,7 @@ def _geometria(p: dict, alto: int, ancho: int, semilla: int) -> dict:
     escala = math.hypot(cx, cy)
     dx, dy = (x - cx) / escala, (y - cy) / escala   # 1 en la esquina
     r2 = dx * dx + dy * dy
-    k = 0.35 * p["barril"]
+    k = 0.6 * p["barril"]   # con 1,5, el centro sale casi al doble que las esquinas: el ojo de pez
     # Con barril, la esquina de la salida tira de más afuera de la imagen: se agranda para que caiga adentro.
     llenar = 1 + k if k > 0 else 1.0
     mapas = []
@@ -90,6 +94,9 @@ def _geometria(p: dict, alto: int, ancho: int, semilla: int) -> dict:
         mapas.append((y0, x0, np.minimum(y0 + 1, alto - 1), np.minimum(x0 + 1, ancho - 1),
                       (sx - x0).astype(np.float32), (sy - y0).astype(np.float32)))
     vineta = (1 / (1 + 0.6 * p["vineta"] * r2 * 1.6) ** 2).astype(np.float32)   # el coseno a la cuarta, suavizado
+    if p["barril"] > 1:  # el ojo de pez de verdad no llega a las esquinas: su círculo de imagen las deja oscuras
+        borde = 1.12 - 0.22 * (p["barril"] - 1)
+        vineta = vineta * np.clip((borde - np.sqrt(r2)) / 0.09, 0, 1).astype(np.float32)
     manchas = np.ones((alto // 4 + 1, ancho // 4 + 1), np.float32)
     if p["suciedad"]:  # huellas y polvo del vidrio, fuera de foco: manchas blandas que sólo se ven en el velo
         rng = np.random.default_rng([semilla, A._num("suciedad")])
@@ -149,6 +156,25 @@ def _escalar(campo: np.ndarray, s: float) -> np.ndarray:
     return sale
 
 
+def _sol(p: dict, ctx, semilla: int, h4: int, w4: int) -> tuple[float, float]:
+    """Dónde está el sol (a un cuarto, en pixeles; puede quedar fuera del cuadro): donde dice `sol`, paseándose un
+    poco como una cámara en la mano, para que los fantasmas se muevan."""
+    x, y = p["sol"]
+    x += p["sol_paseo"] * A.suave(semilla, "sol-x", ctx.t, 0.12)
+    y += p["sol_paseo"] * 0.6 * A.suave(semilla, "sol-y", ctx.t, 0.1)
+    return y * (h4 - 1), x * (w4 - 1)
+
+
+def _disco(sol: tuple[float, float], s: float, r: float, h4: int, w4: int) -> np.ndarray:
+    """El fantasma de una luz en `sol`: un disco blando (el diafragma fuera de foco) de radio `r`, en el lugar que
+    le toca en la línea que pasa por el centro (s: −1 del otro lado, 1 en la luz)."""
+    cy, cx = (h4 - 1) / 2, (w4 - 1) / 2
+    gy, gx = cy + s * (sol[0] - cy), cx + s * (sol[1] - cx)
+    yy, xx = np.mgrid[0:h4, 0:w4].astype(np.float32)
+    d = np.sqrt((yy - gy) ** 2 + (xx - gx) ** 2)
+    return (np.clip((r - d) / (0.35 * r + 1), 0, 1) * (0.7 + 0.3 * np.clip(d / max(r, 1), 0, 1))).astype(np.float32)
+
+
 def lente(img: np.ndarray, p: dict, ctx) -> np.ndarray:
     from scipy import ndimage
 
@@ -166,27 +192,47 @@ def lente(img: np.ndarray, p: dict, ctx) -> np.ndarray:
     geo = _geometria(p, alto, ancho, semilla)
     if p["barril"] or p["aberracion"]:
         lin = _remapear(lin, geo)
-    if p["vineta"]:
+    if p["vineta"] or p["barril"] > 1:
         lin = lin * geo["vineta"]
     if p["destello"] or p["raya"] or p["niebla"]:
         # Lo que hace el vidrio con la luz fuerte, a un cuarto (no tiene detalle).
         h4, w4 = alto // 4, ancho // 4
         chico = lin[: h4 * 4, : w4 * 4].reshape(h4, 4, w4, 4, 3).mean(axis=(1, 3))
         # En un video el blanco ya es lo más claro que hay (lo que de verdad era el sol quedó recortado ahí): lo que
-        # brilla es lo que pasa de la mitad de la luz, cada vez más.
-        brillo = (np.clip(chico.max(axis=2) - 0.5, 0, None) / 0.5) ** 2
-        luz = chico * (brillo / (chico.max(axis=2) + 1e-6))[..., None]   # el color de lo que brilla
+        # brilla es lo más claro de la imagen (el último uno y medio por ciento, y al menos de la mitad de la luz
+        # para arriba). Con un umbral fijo, un material sin luces fuertes no prendía nada (Miguel: «imperceptibles»).
+        maximo = chico.max(axis=2)
+        umbral = max(0.42, float(np.percentile(maximo, 98.5)))
+        brillo = (np.clip(maximo - umbral, 0, None) / max(1e-3, 1 - umbral)) ** 2
+        luz = chico * (brillo / (maximo + 1e-6))[..., None]   # el color de lo que brilla
         extra = np.zeros_like(chico)
+        sol = _sol(p, ctx, semilla, h4, w4) if p["sol"] and (p["destello"] or p["raya"]) else None
         if p["destello"]:
             for s, abre, peso, tinte in FANTASMAS:
                 fantasma = _escalar(luz, s)
                 r = max(1.0, abre * h4)
                 fantasma = ndimage.gaussian_filter(fantasma, (0.7 * r, 0.7 * r, 0))   # fuera de foco: un disco blando
                 extra += p["destello"] * peso * 2.2 * fantasma * np.array(tinte, np.float32)
+                if sol is not None:   # los fantasmas del sol, aunque el sol quede fuera del cuadro
+                    extra += p["destello"] * peso * 0.9 * p["sol_fuerza"] * _disco(sol, s, 1.6 * r, h4, w4)[..., None] \
+                        * np.array(tinte, np.float32)
             extra += p["destello"] * 0.04 * float(brillo.mean()) * 30   # el velo: el contraste se lava
+            if sol is not None:  # el velo del sol: más fuerte de su lado; y el sol mismo, si cae adentro
+                sy, sx = sol
+                yy, xx = np.mgrid[0:h4, 0:w4].astype(np.float32)
+                d = np.sqrt((yy - sy) ** 2 + (xx - sx) ** 2) / h4
+                extra += p["destello"] * p["sol_fuerza"] * (0.06 + 0.5 * np.exp(-d / 0.35))[..., None] \
+                    * np.array([1.0, 0.82, 0.6], np.float32) * 0.35
+                extra += p["sol_fuerza"] * (2.5 * np.exp(-(d / 0.035) ** 2) + 0.6 * np.exp(-d / 0.08))[..., None] \
+                    * np.array([1.0, 0.92, 0.78], np.float32)
         if p["raya"]:  # la raya anamórfica: el brillo estirado de lado, azulado
             raya = ndimage.uniform_filter1d(ndimage.gaussian_filter1d(brillo, 0.6, axis=0), max(3, int(w4 * 0.35)), axis=1)
             raya = raya + ndimage.uniform_filter1d(brillo, max(3, int(w4 * 0.08)), axis=1)
+            if sol is not None:  # la raya del sol: cruza el cuadro a su altura
+                sy, sx = sol
+                yy, xx = np.mgrid[0:h4, 0:w4].astype(np.float32)
+                raya = raya + p["sol_fuerza"] * 0.9 * np.exp(-((yy - sy) / (0.006 * h4 + 0.6)) ** 2) \
+                    * (0.35 + np.exp(-np.abs(xx - sx) / (0.45 * w4)))
             extra += p["raya"] * 2.2 * raya[..., None] * np.array([0.35, 0.6, 1.0], np.float32)
         if p["niebla"]:  # la lente empañada: lo claro se derrama, los negros suben
             glow = ndimage.gaussian_filter(chico, (0.03 * h4, 0.03 * h4, 0)) * 0.6 + ndimage.gaussian_filter(chico, (0.1 * h4, 0.1 * h4, 0)) * 0.4
