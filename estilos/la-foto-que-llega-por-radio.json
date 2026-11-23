@@ -1,0 +1,33 @@
+{
+ "nombre": "La foto que llega por radio",
+ "frase": "La televisión de barrido lento de los radioaficionados: cada seis segundos llega una foto en color, chica, línea por línea de arriba abajo, con los puntos y las rayas del ruido de la banda y un poco inclinada. Suenan los tonos que la dibujan: la altura sigue el brillo de cada línea.",
+ "para": [
+  "mostrar el archivo",
+  "presentar la marca",
+  "abrir"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "radiofoto",
+    "modo": "sstv",
+    "dura": 6.0,
+    "ruido": 0.35,
+    "inclinacion": 0.25,
+    "sonido": "tonos"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "31-la-radio"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

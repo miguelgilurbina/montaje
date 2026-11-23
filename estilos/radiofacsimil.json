@@ -1,0 +1,32 @@
+{
+ "nombre": "Radiofacsímil",
+ "frase": "El mapa del tiempo que llegaba por onda corta a los barcos: la imagen impresa en papel térmico, en pocos grises, línea por línea, con la franja de fase arriba. Suena el radiofacsímil: el tic de cada línea y el silbido que sigue el gris.",
+ "para": [
+  "mostrar el archivo",
+  "abrir",
+  "transición"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "radiofoto",
+    "modo": "fax",
+    "dura": 7.0,
+    "ruido": 0.3,
+    "sonido": "tonos"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "31-la-radio"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

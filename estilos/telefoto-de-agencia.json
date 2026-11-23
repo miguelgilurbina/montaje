@@ -1,0 +1,32 @@
+{
+ "nombre": "Telefoto de agencia",
+ "frase": "La foto de prensa que llegaba por cable a los diarios: gris, en papel tibio, dibujándose de arriba abajo con las franjas de cada línea y las rayas del tambor. Suena el tono que la trae.",
+ "para": [
+  "mostrar el archivo",
+  "respirar",
+  "abrir"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "radiofoto",
+    "modo": "telefoto",
+    "dura": 7.0,
+    "ruido": 0.25,
+    "sonido": "tonos"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "31-la-radio"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

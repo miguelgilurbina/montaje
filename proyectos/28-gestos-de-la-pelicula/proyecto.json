@@ -1,0 +1,13 @@
+{
+ "titulo": "28 · Gestos de la película: la quema, el cuadro que se corre, el cambio de rollo, el empalme y la cola",
+ "idea": "Miguel, 2026-11-22, en el mapa de la galería: eligió los cuatro territorios recomendados para abrir (gestos de la película, la radio, imprenta y fotografía de antes) y pidió juzgarlos todos al final. Éste es el primero: lo que le pasaba a la película en el proyector, como gestos encima de cualquier base, igual que la pausa y el rebobinado de la casetera. El aparato: py/montaje/rollo.py; sus ruidos, `rollo` en py/montaje/ruidos.py.",
+ "biblioteca": "probador",
+ "nota": "No tiene montaje propio: los gestos se muestran sobre el banco del probador (sus muestras, con sonido, en /estilos y en la mesa).",
+ "cadenas": [
+  "la-pelicula-que-se-quema",
+  "el-cuadro-que-se-corre",
+  "cambio-de-rollo",
+  "el-empalme",
+  "se-acaba-el-rollo"
+ ]
+}

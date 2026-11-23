@@ -1,0 +1,15 @@
+{
+ "titulo": "29 · Fotografía de antes: cianotipo, ferrotipo, daguerrotipo, linterna mágica, la instantánea, el fotomatón y la tarjeta estereoscópica",
+ "idea": "Miguel, 2026-11-22, en el mapa de la galería: el segundo de los cuatro territorios que eligió abrir (se juzgan todos al final). Los procesos de antes del rollo y la foto como objeto. Los aparatos: `placa` y `copia` en py/montaje/fotografia.py; el sonido de la copia, `copia` en py/montaje/ruidos.py.",
+ "biblioteca": "probador",
+ "nota": "No tiene montaje propio: los estilos se muestran sobre el banco del probador (sus muestras en /estilos y en la mesa). El banco es de clips: las copias (la instantánea, el fotomatón) se pensaron también para fotos, y quedan por probar con fotos de verdad (G5).",
+ "cadenas": [
+  "cianotipo",
+  "ferrotipo",
+  "daguerrotipo",
+  "linterna-magica",
+  "la-instantanea",
+  "fotomaton",
+  "tarjeta-estereoscopica"
+ ]
+}

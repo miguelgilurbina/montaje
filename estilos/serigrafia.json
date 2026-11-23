@@ -1,0 +1,31 @@
+{
+ "nombre": "Serigrafía",
+ "frase": "La imagen como cartel serigrafiado en las tintas del arte (oro, rojo, índigo) sobre el hueso: tres tintas planas que no calzan del todo y la tinta que no cubre pareja. Cada impresión es un cuadro: el registro baila a ocho por segundo. Suena la rasqueta.",
+ "para": [
+  "presentar la marca",
+  "abrir",
+  "transición"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "imprenta",
+    "tecnica": "serigrafia",
+    "cuadros": 8,
+    "sonido": "maquina"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "30-imprenta"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

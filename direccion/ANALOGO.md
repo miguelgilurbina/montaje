@@ -297,6 +297,29 @@ Los momentos caen donde los muestra la imagen (las mismas semillas). Los niveles
 norma (el silbido del tambor, el chirrido, la caja del parlante, la pérdida de paquetes) son puntos de partida:
 el oído es de Miguel.
 
+## Los cuatro territorios del mapa (2026-11-22)
+
+Del mapa de la galería, Miguel eligió abrir cuatro (experimentos 28 a 31). Cada aparato cuenta en el encabezado de su
+archivo qué hace y por qué; aquí, lo que es de norma y lo que no:
+
+- **El rollo** (`rollo.py`): la quema, el cuadro que se corre, las marcas de cambio de rollo (cuatro cuadros cada
+  una, la del motor unos siete segundos antes de la del cambio: así se marcaban las copias de cine), el empalme y la
+  cola. La línea entre cuadros (≈ 9 % del alto) y los colores de la quema son [sin verificar].
+- **La fotografía de antes** (`fotografia.py`): el colodión es sensible casi sólo al azul (por eso los cielos
+  blancos de las fotos del siglo XIX); las proporciones de la instantánea son las del cuadro de 88 × 107 mm con la
+  imagen de 79 × 79. Los tonos de cada proceso, la sensibilidad exacta y el cartón de la tarjeta estereoscópica son
+  [sin verificar]: mirados en fotos de museo y ajustados en las hojas.
+- **La imprenta** (`imprenta.py`): los ángulos de la trama del offset (cian 15°, magenta 75°, amarillo 0°, negro 45°)
+  son los de la imprenta; el área del punto es el tono. La separación de la riso, los registros y el tóner son [sin
+  verificar].
+- **La radio** (`radio.py`): las frecuencias de los tonos son las de la norma de la sstv y del radiofacsímil
+  (1 200 Hz el sincronismo, 1 500 el negro, 2 300 el blanco; el encabezado de la sstv a 1 900 con su corte a
+  1 200), y la sstv es de 320 × 256. Los tiempos están acelerados (una de verdad tarda de 36 segundos a dos
+  minutos): un programa de radioaficionado no leería estos tonos. La telefoto en amplitud sobre 1 800 Hz es [sin
+  verificar].
+
+Los sonidos de los cuatro van en `ruidos.py`, en sus momentos, como los del 27.
+
 ## Lo que no se pudo verificar
 
 La amplitud de los fantasmas, el SNR del VHS en dB, el largo y la frecuencia reales de los dropouts, las barras

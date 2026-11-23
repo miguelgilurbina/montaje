@@ -1,0 +1,31 @@
+{
+ "nombre": "Daguerrotipo",
+ "frase": "La placa de plata pulida como un espejo, en su estuche de bronce: según cómo le pega la luz se ve positiva o negativa, con el velo de colores del óxido en el borde.",
+ "para": [
+  "mostrar el archivo",
+  "destacar",
+  "cerrar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "placa",
+    "proceso": "daguerrotipo",
+    "angulo": 0.7,
+    "marco": "estuche"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "29-fotografia-de-antes"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

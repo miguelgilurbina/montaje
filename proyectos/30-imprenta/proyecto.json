@@ -1,0 +1,12 @@
+{
+ "titulo": "30 · Imprenta: serigrafía, risografía, el tramado del diario y la fotocopia",
+ "idea": "Miguel, 2026-11-22, en el mapa de la galería: el tercero de los cuatro territorios que eligió abrir (se juzgan todos al final). Era G7 en PROPUESTAS.md: «la voz serigráfica de las tintas del arte». El aparato: `imprenta` en py/montaje/imprenta.py; la máquina que suena, `imprenta` en py/montaje/ruidos.py.",
+ "biblioteca": "probador",
+ "nota": "No tiene montaje propio: los estilos se muestran sobre el banco del probador (sus muestras en /estilos y en la mesa).",
+ "cadenas": [
+  "serigrafia",
+  "risografia",
+  "tramado-del-diario",
+  "fotocopia"
+ ]
+}

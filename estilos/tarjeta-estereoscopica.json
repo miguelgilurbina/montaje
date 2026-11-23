@@ -1,0 +1,30 @@
+{
+ "nombre": "Tarjeta estereoscópica",
+ "frase": "Las dos fotos casi iguales de las tarjetas para ver en relieve, copiadas a la albúmina, con las puntas de arriba redondeadas, sobre el cartón ocre con sus manchas.",
+ "para": [
+  "mostrar el archivo",
+  "respirar",
+  "cerrar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "copia",
+    "forma": "estereo",
+    "desvanecido": 0.5
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "29-fotografia-de-antes"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

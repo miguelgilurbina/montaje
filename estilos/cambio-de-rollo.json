@@ -1,0 +1,47 @@
+{
+ "nombre": "Cambio de rollo",
+ "frase": "Las marcas de las copias de cine: un círculo raspado arriba a la derecha, cuatro cuadros, y siete segundos después el segundo, el aviso de que viene el otro rollo.",
+ "para": [
+  "mostrar el archivo",
+  "cerrar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "gesto": true,
+  "cadena": [
+   {
+    "aparato": "rollo",
+    "cambio": 3.0
+   }
+  ],
+  "sobre": [
+   {
+    "aparato": "pelicula",
+    "formato": "16mm",
+    "emulsion": "ektachrome",
+    "cuadros": 24,
+    "polvo": 0.6,
+    "rayas": 0.3,
+    "desvanecido": 0.15,
+    "sonido": "proyector"
+   },
+   {
+    "aparato": "proyector",
+    "pared": "pantalla",
+    "trapecio": 0.02
+   }
+  ],
+  "semilla": 14
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "28-gestos-de-la-pelicula"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

@@ -1,0 +1,14 @@
+{
+ "titulo": "31 · La radio: la foto que llega por radio, el radiofacsímil, la telefoto, el dial que sintoniza y la canción en el osciloscopio",
+ "idea": "Miguel, 2026-11-22, en el mapa de la galería: el cuarto de los territorios que eligió abrir (se juzgan todos al final). Curiana es una radio: imágenes que llegan por el aire (con los tonos que las dibujan), el dial del 88.8 y la canción que se ve. Los aparatos: `radiofoto`, `dial` y `osciloscopio` en py/montaje/radio.py; sus sonidos, `radiofoto` y `dial` en py/montaje/ruidos.py.",
+ "biblioteca": "probador",
+ "nota": "No tiene montaje propio: los estilos se muestran sobre el banco del probador (sus muestras en /estilos y en la mesa).",
+ "cadenas": [
+  "la-foto-que-llega-por-radio",
+  "radiofacsimil",
+  "telefoto-de-agencia",
+  "el-dial-que-sintoniza",
+  "el-dial-al-empezar",
+  "la-cancion-en-el-osciloscopio"
+ ]
+}

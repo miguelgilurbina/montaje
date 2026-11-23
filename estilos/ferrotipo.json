@@ -1,0 +1,32 @@
+{
+ "nombre": "Ferrotipo",
+ "frase": "El colodión húmedo sobre la placa de metal negro: sólo ve el azul (el cielo blanco, lo rojo negro), nítido al centro y arremolinado en los bordes, con el borde donde corrió el colodión y la esquina del dedo. Lo que se mueve se borra, como en las exposiciones largas.",
+ "para": [
+  "mostrar el archivo",
+  "respirar",
+  "abrir"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "placa",
+    "proceso": "colodion",
+    "exposicion": 0.8,
+    "bordes": 0.7,
+    "manchas": 0.6
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "29-fotografia-de-antes"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

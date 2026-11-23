@@ -1,0 +1,32 @@
+{
+ "nombre": "El empalme",
+ "frase": "Donde dos pedazos de la película se pegaron con cinta: el cuadro salta, pasa la cinta lechosa con su borde y sus burbujas, y un destello. Suena el chasquido del empalme en la ventanilla.",
+ "para": [
+  "transición",
+  "mostrar el archivo"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un momento",
+ "tecnica": {
+  "comando": "analogo",
+  "gesto": true,
+  "cadena": [
+   {
+    "aparato": "rollo",
+    "empalme": 6.0,
+    "sonido": "proyector"
+   }
+  ],
+  "sobre": "super-8-de-la-familia",
+  "semilla": 19
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "28-gestos-de-la-pelicula"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

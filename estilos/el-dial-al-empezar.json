@@ -1,0 +1,34 @@
+{
+ "nombre": "El dial al empezar",
+ "frase": "La emisora que se sintoniza para abrir: el video empieza perdido en la estática, la aguja busca y se asienta en el 88.8, y entra la imagen con la canción.",
+ "para": [
+  "abrir",
+  "presentar la marca"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "los primeros segundos",
+ "tecnica": {
+  "comando": "analogo",
+  "gesto": true,
+  "cadena": [
+   {
+    "aparato": "dial",
+    "inicio": true,
+    "dura": 2.4,
+    "sonido": "sintonia"
+   }
+  ],
+  "sobre": []
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "31-la-radio"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ],
+ "variante_de": "el-dial-que-sintoniza",
+ "diferencia": "una sola vez, al empezar el video"
+}

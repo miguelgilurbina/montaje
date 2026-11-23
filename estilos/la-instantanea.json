@@ -1,0 +1,31 @@
+{
+ "nombre": "La instantánea",
+ "frase": "La foto que sale de la cámara y se revela en la mano: el marco blanco con el borde de abajo ancho, y la imagen que aparece de a poco desde el gris verdoso, primero la luz y después el color. Suena el obturador y el motor que la expulsa.",
+ "para": [
+  "abrir",
+  "destacar",
+  "mostrar el archivo"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "copia",
+    "forma": "instantanea",
+    "revelado": 6.0,
+    "sonido": "camara"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "29-fotografia-de-antes"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

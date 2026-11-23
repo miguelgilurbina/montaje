@@ -67,6 +67,10 @@ probador, cuadro a cuadro, había grupos que casi no se distinguían, y eligió 
   que la muestra no cambia). Van encima de cualquier base: `python montaje.py analogo <video> --cadena
   super-8-de-la-familia --gesto estrobo-de-la-consola`. En la galería son su propia familia, «gestos».
 
+Desde el 2026-11-22 hay dos aparatos de gesto más: el **rollo** de película (la quema, el cuadro que se corre, el
+cambio de rollo, el empalme, la cola; va justo después de la última película de la base) y el **dial** de la radio
+(la emisora que se pierde y vuelve en el 88.8).
+
 Antes de sumar un estilo parecido a otro, preguntarse si es una variante (cambia un detalle) o un gesto (es la
 misma base con un momento encima).
 

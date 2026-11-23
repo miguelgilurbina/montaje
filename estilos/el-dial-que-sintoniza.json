@@ -1,0 +1,33 @@
+{
+ "nombre": "El dial que sintoniza",
+ "frase": "Alguien mueve el dial: la imagen se desgarra y se pierde en la estática mientras la aguja recorre la escala de FM, y vuelve cuando se asienta en el 88.8. Suena la canción que se va, el silbido entre emisoras y la que vuelve.",
+ "para": [
+  "transición",
+  "presentar la marca",
+  "abrir"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un momento",
+ "tecnica": {
+  "comando": "analogo",
+  "gesto": true,
+  "cadena": [
+   {
+    "aparato": "dial",
+    "sintonizar": 3.0,
+    "sonido": "sintonia"
+   }
+  ],
+  "sobre": [],
+  "semilla": 77
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "31-la-radio"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

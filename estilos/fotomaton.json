@@ -1,0 +1,31 @@
+{
+ "nombre": "Fotomatón",
+ "frase": "La tira de cuatro cuadros en blanco y negro: el que viene se ve en vivo y cada flash lo congela, hasta llenar la tira y empezar otra. Suena el flash y la carga que silba.",
+ "para": [
+  "mostrar el archivo",
+  "destacar",
+  "subir la energía"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "copia",
+    "forma": "fotomaton",
+    "intervalo": 1.6,
+    "sonido": "camara"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "29-fotografia-de-antes"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

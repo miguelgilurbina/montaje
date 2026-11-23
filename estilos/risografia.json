@@ -1,0 +1,31 @@
+{
+ "nombre": "Risografía",
+ "frase": "Dos tintas transparentes de la riso (eléctrico y rojo) en trama gruesa, que se pisan y se oscurecen donde se juntan, con el registro corrido que baila y la tinta que no carga pareja. Suena el tambor.",
+ "para": [
+  "presentar la marca",
+  "mostrar el archivo",
+  "transición"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "imprenta",
+    "tecnica": "riso",
+    "cuadros": 8,
+    "sonido": "maquina"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "30-imprenta"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

@@ -314,6 +314,11 @@ class Contexto:
         # El segundo de la entrada en que empieza la salida (con `--desde`): lo que es «al principio del video»
         # (la casetera que arranca) cuenta desde ahí; lo demás usa el segundo de la entrada (`t`).
         self.inicio = 0.0
+        # El segundo de la entrada en que termina la salida: lo que es «al final del video» (la cola del rollo que se
+        # acaba). None si no se sabe (un cuadro suelto).
+        self.fin: float | None = None
+        # El video que entra (el osciloscopio lee su audio). None si no se sabe.
+        self.entrada = None
 
     def rng(self, *extra) -> np.random.Generator:
         return np.random.default_rng([self.semilla, self.paso, self.k, *(_num(x) for x in extra)])
@@ -978,10 +983,10 @@ def _imagen() -> dict:
     de mezcla: su `APARATOS`) y los de señal que no están aquí (la casetera: su `SENAL`)."""
     global _IMAGEN
     if _IMAGEN is None:
-        from . import casetera, consola, digital, optica, pelicula, proyeccion
+        from . import casetera, consola, digital, fotografia, imprenta, optica, pelicula, proyeccion, radio, rollo
 
         _IMAGEN = {}
-        for m in (optica, pelicula, proyeccion, digital, consola, casetera):
+        for m in (optica, pelicula, rollo, proyeccion, fotografia, imprenta, radio, digital, consola, casetera):
             _IMAGEN.update(getattr(m, "APARATOS", {}))
             APARATOS.update(getattr(m, "SENAL", {}))
             POR_DEFECTO.update(m.POR_DEFECTO)
@@ -1332,6 +1337,8 @@ def _pedazo(tarea: dict) -> str:
     ctx = Contexto(semilla, fps, alto, ancho)
     ctx.musica = tarea.get("musica")
     ctx.inicio = tarea["k0"] / fps
+    ctx.fin = tarea["k_fin"] / fps if tarea.get("k_fin") is not None else None
+    ctx.entrada = tarea["entrada"]
     cmd = ["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{ancho}x{alto}",
            "-r", tarea["fps"], "-i", "-", "-vf", "scale=out_color_matrix=bt709:out_range=tv",
            "-c:v", "libx264", "-preset", "medium", "-crf", str(tarea["crf"]), "-threads", "2", "-pix_fmt", "yuv420p",
@@ -1369,16 +1376,23 @@ def _pedazo(tarea: dict) -> str:
 #: del VHS, el estrobo de la consola— en vez de ser un estilo propio. Miguel, al juzgar la mesa: «Hay muchos que
 #: son muy parecidos entre sí»; medidos, la pausa, el estrobo o la llave sobre el VHS eran el VHS de la casa con un
 #: momento distinto encima, y eligió que fueran gestos aparte.
-GESTOS = ("consola", "casetera")
+GESTOS = ("consola", "casetera", "rollo", "dial")
 
 
 def componer(base: list, gesto: list) -> list:
     """La cadena `base` con los aparatos de un gesto en su lugar. La consola mezcla lo que sale de la cámara o de la
     película antes de grabarlo: va antes de la primera cinta. La casetera reproduce lo grabado: va después de la
-    última. Sin cinta, los dos van al final (antes de la pantalla, que siempre cierra)."""
+    última. Sin cinta, los dos van al final (antes de la pantalla, que siempre cierra). El rollo (2026-11-22) es lo que
+    le pasa a la película en el proyector: va justo después de la última película; sin película, como la consola."""
     base = list(base)
+    rollos = [a for a in gesto if a.get("aparato") == "rollo"]
     antes = [a for a in gesto if a.get("aparato") == "consola"]
-    despues = [a for a in gesto if a.get("aparato") != "consola"]
+    despues = [a for a in gesto if a.get("aparato") not in ("consola", "rollo")]
+    peliculas = [n for n, a in enumerate(base) if isinstance(a, dict) and a.get("aparato") == "pelicula"]
+    if rollos and peliculas:
+        base = base[:peliculas[-1] + 1] + rollos + base[peliculas[-1] + 1:]
+    else:
+        antes = rollos + antes
     cintas = [n for n, a in enumerate(base) if isinstance(a, dict) and a.get("aparato") == "cinta"]
     fin = len(base) - 1 if base and isinstance(base[-1], dict) and base[-1].get("aparato") == "pantalla" else len(base)
     i0, i1 = (cintas[0], cintas[-1] + 1) if cintas else (fin, fin)
@@ -1543,7 +1557,7 @@ def procesar(entrada: Path, salida: Path, cadena, *, desde: float | None = None,
     shutil.rmtree(temporal, ignore_errors=True)
     temporal.mkdir(parents=True)
     vent = [(a - (desde or 0), b - (desde or 0)) for a, b in ventanas] if ventanas else None
-    tareas = [{"entrada": str(entrada), "info": info, "origen": a0, "k0": a0, "a": a, "b": min(total, a + pedazo),
+    tareas = [{"entrada": str(entrada), "info": info, "origen": a0, "k0": a0, "k_fin": a0 + total, "a": a, "b": min(total, a + pedazo),
                "calentar": cal, "pasos": pasos, "captura": captura, "semilla": semilla, "alto": alto_, "ancho": ancho,
                "fps": info["fps"], "crf": crf, "ventanas": vent, "fundido": fundido, "musica": musica,
                "salida": str(temporal / f"{a:07d}.mp4")} for a in range(0, total, pedazo)]
@@ -1575,7 +1589,8 @@ def procesar(entrada: Path, salida: Path, cadena, *, desde: float | None = None,
         cmd = ["ffmpeg", "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", str(lista)]
         # Cada uno sabe su lugar en la cadena (`_paso`: la semilla de sus eventos es la de la imagen) y a cuántas
         # capturas por segundo va el sensor que tiene antes (`_cps`: la llamada pierde paquetes por captura).
-        sonidos = [(nombre, {**p_, "_paso": n, "_cps": _capturas_antes(pasos, n, float(fps))})
+        sonidos = [(nombre, {**p_, "_paso": n, "_cps": _capturas_antes(pasos, n, float(fps)), "_fin": (a0 + total) / float(fps),
+                                   "_entrada": str(entrada)})
                    for n, (nombre, p_) in enumerate(pasos) if p_.get("sonido", "ninguno") != "ninguno"]
         if info["audio"] and sonidos:
             cmd += ["-i", str(_audio_de_aparatos(entrada, temporal, (desde or 0.0) + info.get("desfase", 0.0), a0 / float(fps),
@@ -1673,6 +1688,8 @@ def comparar(entrada: Path, cadenas: list[str], tiempos: list[float], salida: Pa
             alto_, ancho_ = limpio.shape[:2]
             ctx = Contexto(semilla, fps, alto_, ancho_)
             ctx.musica = musica
+            ctx.fin = info.get("duracion") if info else None
+            ctx.entrada = entrada
             k_t = int(round(t * fps))
             k_a = max(0, k_t - cal)
             corrida = (list(_leer(entrada, info, k_a, k_t - k_a, alto_, ancho_)) if info and k_t > k_a

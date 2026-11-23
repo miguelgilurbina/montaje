@@ -1,0 +1,32 @@
+{
+ "nombre": "El cuadro que se corre",
+ "frase": "El proyector pierde el lazo: la línea negra entre dos cuadros recorre la pantalla, con la perforación clara, una o varias vueltas, hasta que alguien ajusta. Suena la uña saltando las perforaciones.",
+ "para": [
+  "transición",
+  "mostrar el archivo"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un momento",
+ "tecnica": {
+  "comando": "analogo",
+  "gesto": true,
+  "cadena": [
+   {
+    "aparato": "rollo",
+    "corrido": 3.0,
+    "sonido": "proyector"
+   }
+  ],
+  "sobre": "pelicula-en-la-pared",
+  "semilla": 11
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "28-gestos-de-la-pelicula"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

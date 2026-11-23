@@ -1,0 +1,30 @@
+{
+ "nombre": "Se acaba el rollo",
+ "frase": "El final de la película casera: la punta velada entra naranja por un borde, pasa la cola transparente con su mugre y al final la punta suelta golpea en el carrete; la pantalla titila entre la luz y lo oscuro.",
+ "para": [
+  "cerrar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "los últimos segundos",
+ "tecnica": {
+  "comando": "analogo",
+  "gesto": true,
+  "cadena": [
+   {
+    "aparato": "rollo",
+    "cola": 4.0,
+    "sonido": "proyector"
+   }
+  ],
+  "sobre": "super-8-de-la-familia"
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "28-gestos-de-la-pelicula"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

@@ -1,0 +1,33 @@
+{
+ "nombre": "La película que se quema",
+ "frase": "El cuadro se traba en el proyector, la lámpara lo calienta y se abre un agujero: el borde se ampolla y se tuesta, y el centro es la luz blanca hasta que no queda imagen. El proyector se traba y la película crepita.",
+ "para": [
+  "transición",
+  "cerrar",
+  "destacar"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un momento",
+ "tecnica": {
+  "comando": "analogo",
+  "gesto": true,
+  "cadena": [
+   {
+    "aparato": "rollo",
+    "quema": 2.0,
+    "sonido": "proyector"
+   }
+  ],
+  "sobre": "pelicula-en-la-pared",
+  "semilla": 43
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "28-gestos-de-la-pelicula"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

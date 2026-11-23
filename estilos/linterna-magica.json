@@ -1,0 +1,29 @@
+{
+ "nombre": "Linterna mágica",
+ "frase": "La placa de vidrio pintada a mano, proyectada en la pared: blanco y negro con colores planos de acuarela que se salen de la línea, en su máscara redonda.",
+ "para": [
+  "abrir",
+  "mostrar el archivo",
+  "respirar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "placa",
+    "proceso": "linterna"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "29-fotografia-de-antes"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

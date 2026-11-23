@@ -1,0 +1,29 @@
+{
+ "nombre": "La canción en el osciloscopio",
+ "frase": "La canción dibujada en la pantalla de un osciloscopio: un canal contra el otro, en verde, con la retícula y el fósforo que dura; el video apenas detrás. La figura se abre y se cierra con la música.",
+ "para": [
+  "presentar la marca",
+  "transición",
+  "respirar"
+ ],
+ "material": "cualquiera",
+ "energia": "sigue",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "osciloscopio",
+    "mezcla": 0.35
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "31-la-radio"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}
