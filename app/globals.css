@@ -958,3 +958,494 @@ h2.familia-texto {
   display: block;
   height: auto;
 }
+
+/* ── La consola de diales (direccion/CONSOLA.md) ── */
+
+.tablero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(340px, 520px);
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100vh;
+}
+
+@media (max-width: 1100px) {
+  .tablero {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+    height: auto;
+  }
+}
+
+.tablero-vacio {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+.tablero-cabeza {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--filete);
+}
+
+.tablero-cabeza h1 {
+  margin: 0 8px 0 0;
+  color: var(--acento);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 15px;
+}
+
+.tablero select,
+.tablero input:not([type]),
+.tablero input[type="text"] {
+  padding: 6px 8px;
+  background: var(--hondo);
+  color: var(--hueso);
+  border: 1px solid var(--filete-fuerte);
+  border-radius: 4px;
+  font: inherit;
+  font-size: 13px;
+  max-width: 100%;
+}
+
+.tablero-sesion {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.tablero-vista {
+  overflow: auto;
+  padding: 14px 16px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tablero-pantalla {
+  position: relative;
+  background: #000;
+  border: 1px solid var(--filete);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+}
+
+.tablero-pantalla canvas {
+  display: block;
+  max-width: 100%;
+  max-height: 62vh;
+  width: auto;
+  height: auto;
+}
+
+.tablero-sin-fuente {
+  position: absolute;
+}
+
+.tablero-antes,
+.tablero-rec {
+  position: absolute;
+  top: 8px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-family: var(--mono);
+  font-size: 12px;
+  background: rgba(7, 9, 13, 0.75);
+}
+
+.tablero-antes {
+  left: 8px;
+  color: var(--hueso);
+}
+
+.tablero-rec {
+  right: 8px;
+  color: #ff8a6a;
+}
+
+.tablero-fuente {
+  display: none;
+}
+
+.tablero-transporte,
+.tablero-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.tablero-boton-grande {
+  min-width: 46px;
+  font-size: 15px;
+}
+
+.tablero-reloj {
+  min-width: 118px;
+}
+
+.tablero-barra {
+  position: relative;
+  flex: 1 1 240px;
+  min-width: 200px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.tablero-barra input[type="range"] {
+  width: 100%;
+  accent-color: var(--acento);
+  position: relative;
+  z-index: 2;
+}
+
+.tablero-marca {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  width: 2px;
+  z-index: 1;
+}
+
+.tablero-marca.entrada {
+  background: var(--dato);
+}
+
+.tablero-marca.salida {
+  background: var(--hueso-2);
+}
+
+.tablero-pistas-mini {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.tablero-pistas-mini polyline {
+  fill: none;
+  stroke: var(--rojo);
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.9;
+}
+
+.tablero-casilla {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--hueso-2);
+}
+
+.tablero button.activo {
+  border-color: var(--acento);
+  color: var(--acento);
+}
+
+.tablero-grabar {
+  color: var(--hueso-2);
+}
+
+.tablero-grabar.activo {
+  background: var(--rojo);
+  border-color: var(--rojo) !important;
+  color: var(--hueso) !important;
+}
+
+.tablero-render {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-left: auto;
+}
+
+.tablero-renderizar {
+  background: var(--acento);
+  color: var(--fondo);
+  border-color: var(--acento);
+  font-weight: 600;
+}
+
+.tablero-aviso {
+  cursor: pointer;
+  color: var(--acento);
+}
+
+.tablero-lista {
+  border-top: 1px solid var(--filete);
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tablero-lista h2 {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--hueso-2);
+}
+
+.tablero-pista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  font-size: 13px;
+}
+
+.tablero-pista button {
+  margin-left: auto;
+  padding: 3px 9px;
+  font-size: 12px;
+}
+
+.tablero-log {
+  margin: 0;
+  max-height: 220px;
+  overflow: auto;
+  padding: 8px 10px;
+  background: var(--hondo);
+  border: 1px solid var(--filete);
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--hueso-2);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.tablero-salida {
+  width: 100%;
+  max-height: 46vh;
+  background: #000;
+  border-radius: 4px;
+}
+
+.tablero-salida-fila {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  text-align: left;
+  padding: 5px 9px;
+  font-size: 12.5px;
+  background: transparent;
+  border-color: var(--filete);
+}
+
+.tablero-rack {
+  overflow: auto;
+  padding: 14px 16px 40px;
+  border-left: 1px solid var(--filete);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--hondo);
+}
+
+@media (max-width: 1100px) {
+  .tablero-rack {
+    border-left: 0;
+    border-top: 1px solid var(--filete);
+  }
+}
+
+.tablero-sumar {
+  display: flex;
+  gap: 8px;
+}
+
+.tablero-sumar select {
+  flex: 1;
+}
+
+.tablero-modulo {
+  background: var(--panel);
+  border: 1px solid var(--filete);
+  border-radius: 6px;
+  padding: 10px 12px 12px;
+}
+
+.tablero-modulo.apagado {
+  opacity: 0.55;
+}
+
+.tablero-modulo > header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tablero-modulo > header b {
+  font-family: var(--mono);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.tablero-modulo .chip {
+  margin-left: 0;
+  font-size: 11px;
+}
+
+.tablero-modulo .chip-render {
+  border-style: dashed;
+  color: var(--dato);
+}
+
+.tablero-mover {
+  margin-left: auto;
+  display: flex;
+  gap: 4px;
+}
+
+.tablero-mover button {
+  padding: 2px 8px;
+  font-size: 12px;
+}
+
+.tablero-led {
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--hondo);
+  border: 1px solid var(--filete-fuerte);
+}
+
+.tablero-led.encendido {
+  background: var(--acento);
+  border-color: var(--acento);
+  box-shadow: 0 0 6px rgba(230, 180, 60, 0.6);
+}
+
+.tablero-doc {
+  margin: 6px 0 0;
+  font-size: 11.5px;
+}
+
+.tablero-diales {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(66px, 1fr));
+  gap: 8px 4px;
+  margin-top: 10px;
+}
+
+.dial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 2px 0 4px;
+  border-radius: 6px;
+  cursor: ns-resize;
+  user-select: none;
+  touch-action: none;
+  outline: none;
+}
+
+.dial:focus-visible {
+  box-shadow: 0 0 0 2px var(--acento);
+}
+
+.dial.aprendiendo {
+  cursor: crosshair;
+  box-shadow: 0 0 0 1px var(--dato) inset;
+}
+
+.dial.atada .dial-nombre::after {
+  content: " ·m";
+  color: var(--dato);
+}
+
+.dial-pista {
+  fill: none;
+  stroke: var(--filete);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.dial-lleno {
+  fill: none;
+  stroke: var(--acento);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.dial.auto .dial-lleno {
+  stroke: #e07a52;
+}
+
+.dial.tocada .dial-lleno {
+  stroke: var(--hueso);
+}
+
+.dial-marca {
+  fill: var(--filete-fuerte);
+}
+
+.dial-cuerpo {
+  fill: #1c2735;
+  stroke: var(--filete-fuerte);
+  stroke-width: 1;
+}
+
+.dial-aguja {
+  stroke: var(--hueso);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+
+.dial-grabada {
+  fill: var(--rojo);
+}
+
+.dial-nombre {
+  font-size: 11px;
+  color: var(--hueso-2);
+  text-align: center;
+  line-height: 1.15;
+  max-width: 76px;
+  overflow-wrap: anywhere;
+}
+
+.dial-valor {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--dato);
+  max-width: 76px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dial-si-no {
+  cursor: default;
+  justify-content: center;
+}
+
+.dial-si-no button {
+  padding: 4px 10px;
+  font-size: 12px;
+  margin: 10px 0 6px;
+}
+
+.dial-si-no button.encendido {
+  border-color: var(--acento);
+  color: var(--acento);
+}
