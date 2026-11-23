@@ -59,3 +59,4 @@ Las muestras con sonido están en la mesa (versión 9), en «por juzgar», cada 
 
 - «Otra cosa, hay efectos que deberían ir acompañados de audios característicos»
 - En la tarjeta: los cuatro grupos (casetera, antena y televisor, película, cámaras y videollamada).
+- En la mesa: **los diecisiete sí**, la señal que se pierde y la videollamada incluidas.

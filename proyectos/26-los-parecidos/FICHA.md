@@ -92,6 +92,7 @@ receta nueva, tienen referencia nueva.
 - «Hay muchos que son muy parecidos entre si»
 - En tarjetas: «Uno por grupo», «Como gestos aparte», «Subirlos hasta que se vean» (las tres recomendadas), y
   «Sí, variantes» para la cámara de los 90, la cámara de tubo y la cinta con TBC.
+- En la mesa, los dos de lente rehechos: el lente barato **sí**; el foco al pulso **no**, sin decir por qué.
 
 ## Lo aprendido
 
