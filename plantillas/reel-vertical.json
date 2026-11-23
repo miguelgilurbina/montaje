@@ -1,0 +1,70 @@
+{
+ "nombre": "Reel vertical al pulso",
+ "frase": "Un reel de 9:16 que se repite solo: un clip por compás, recortado siguiendo a lo que se mueve, un tramo que sube con la imagen que se queda quieta en el uno, y una toma larga al final para que empalme con el principio.",
+ "para": "redes: Instagram, TikTok, historias",
+ "material": "clips",
+ "dura": "de 15 a 40 segundos",
+ "salida": {
+  "ancho": 1080,
+  "alto": 1920,
+  "fps": 24,
+  "fondo": "#07090d"
+ },
+ "formato": "reel-recortado",
+ "montaje": {
+  "modo": "pulso",
+  "orden": "nombre",
+  "reparto": "seguido",
+  "umbral_calma": 0.45,
+  "umbral_pico": 0.8
+ },
+ "tramos": [
+  {
+   "nombre": "al pulso",
+   "parte": [
+    0,
+    0.5
+   ],
+   "estilos": [
+    "clip-por-compas"
+   ],
+   "pasa": "un clip por compás, en ronda"
+  },
+  {
+   "nombre": "sube",
+   "parte": [
+    0.5,
+    0.85
+   ],
+   "estilos": [
+    "golpe-congelado"
+   ],
+   "pasa": "en el uno de cada compás la imagen se queda quieta medio golpe y sigue"
+  },
+  {
+   "nombre": "vuelve al principio",
+   "parte": [
+    0.85,
+    1
+   ],
+   "estilos": [
+    "toma-por-frase"
+   ],
+   "pasa": "una toma larga, que baja para que el loop empalme con el primer clip"
+  }
+ ],
+ "textos": [
+  {
+   "estilo": "sonando-ahora",
+   "parte": [
+    0.03,
+    0.3
+   ],
+   "texto": "el nombre de la canción y quien la canta"
+  }
+ ],
+ "pasos": [
+  "Cortar la canción a la duración del reel antes de `musica` (un loop se nota si la canción no cierra).",
+  "Para Instagram, `paquete` deja el video, la portada y el texto."
+ ]
+}

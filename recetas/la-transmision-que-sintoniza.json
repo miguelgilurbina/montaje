@@ -1,0 +1,13 @@
+{
+ "nombre": "La transmisión que sintoniza",
+ "frase": "La señal que llega de lejos al televisor, y alguien que mueve el dial: se pierde en la estática y vuelve en el 88.8.",
+ "para": [
+  "abrir",
+  "transición",
+  "presentar la marca"
+ ],
+ "base": "antena-lejana",
+ "gestos": [
+  "el-dial-que-sintoniza"
+ ]
+}

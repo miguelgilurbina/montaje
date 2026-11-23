@@ -1445,7 +1445,14 @@ def resolver_cadena(texto: str, gestos: list[str] | tuple = ()):
         todos = galeria.leer()
         e = _estilo(texto, todos)
         if e is None:
-            salir(f"no hay un estilo «{texto}» en estilos/ (las cadenas: python montaje.py analogo --cadenas)")
+            from . import recetas   # una receta guardada: su base con sus gestos, y después los que se pidan
+
+            r = recetas.buscar(texto)
+            if r is not None:
+                cadena, _ = resolver_cadena(r["base"], [*r["gestos"], *gestos])
+                return cadena, texto + "".join("+" + g.strip() for g in gestos)
+            salir(f"no hay un estilo ni una receta «{texto}» (las cadenas: python montaje.py analogo --cadenas; "
+                  "las recetas: python montaje.py recetas)")
         t = e["tecnica"]
         if t.get("comando") != "analogo":
             salir(f"«{texto}» no es una cadena analógica (su técnica es {t})")

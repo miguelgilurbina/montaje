@@ -474,6 +474,23 @@ def main() -> None:
     s.add_argument("--material", help="fotos, clips, mixto o serie")
     s.add_argument("--estado", help="aprobado, a medias, pedido, propuesta o rechazado")
 
+    sub.add_parser("recetas", help="lista y valida las recetas guardadas: una base analógica con sus gestos (recetas/*.json)",
+                   description="lista y valida las recetas guardadas: una base analógica con sus gestos (recetas/*.json)")
+    sub.add_parser("plantillas", help="lista y valida las plantillas de piezas (plantillas/*.json)",
+                   description="lista y valida las plantillas de piezas (plantillas/*.json)")
+    s = nuevo("plantilla", "le pone a un proyecto una plantilla de pieza: los tramos con sus estilos, las capas, los textos "
+                           "que faltan y la mesa analógica para después del render (ver plantillas/README.md)")
+    s.add_argument("plantilla", help="el id de la plantilla (plantillas/<id>.json)")
+    s.add_argument("--crear", action="store_true", help="crea el proyecto con la plantilla (falta la canción y el material)")
+    s.add_argument("--escribir", action="store_true", help="deja los tramos y las capas en proyecto.json y escribe PIEZA.md")
+    s.add_argument("--forzar", action="store_true", help="reemplaza los tramos que el proyecto ya tenga")
+    s = sub.add_parser("experimento", help="el molde de un experimento nuevo: carpeta, ficha y fila de la bitácora (direccion/MOLDE.md)",
+                       description="el molde de un experimento nuevo: carpeta, ficha y fila de la bitácora (direccion/MOLDE.md)")
+    s.add_argument("nombre", help="con su número: 32-pantallas")
+    s.add_argument("--titulo", required=True, help="cómo se llama")
+    s.add_argument("--idea", required=True, help="la idea en una línea")
+    s.add_argument("--cita", help="lo que dijo Miguel, tal cual")
+
     s = sub.add_parser("muestra", help="corta unos segundos livianos de un render como muestra de un estilo → medios/estilos/<id>.mp4", description="corta unos segundos livianos de un render como muestra de un estilo → medios/estilos/<id>.mp4")
     s.add_argument("estilo", help="id del estilo (nombre del archivo en estilos/, sin .json)")
     s.add_argument("--de", required=True, help="el render, relativo a los medios (p. ej. 13-variaciones/render/final.mp4)")
@@ -632,6 +649,24 @@ def main() -> None:
         return
     if a.comando == "ejercicio":
         cmd_ejercicio(a)
+        return
+    if a.comando == "recetas":
+        from . import recetas
+
+        raise SystemExit(1 if recetas.listar() else 0)
+    if a.comando == "plantillas":
+        from . import plantillas
+
+        raise SystemExit(1 if plantillas.listar() else 0)
+    if a.comando == "plantilla":
+        from . import plantillas
+
+        plantillas.aplicar(a.proyecto, a.plantilla, a.crear, a.escribir, a.forzar)
+        return
+    if a.comando == "experimento":
+        from . import experimento
+
+        experimento.nuevo(a.nombre, a.titulo, a.idea, a.cita)
         return
     p = Proyecto(a.proyecto, getattr(a, "version", None))
     if a.comando == "catalogo":

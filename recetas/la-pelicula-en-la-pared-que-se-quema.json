@@ -1,0 +1,14 @@
+{
+ "nombre": "La película en la pared que se quema",
+ "frase": "El Super 8 proyectado en la sala: el cuadro se corre a ratos y, en un momento, se traba y se quema.",
+ "para": [
+  "mostrar el archivo",
+  "transición",
+  "cerrar"
+ ],
+ "base": "pelicula-en-la-pared",
+ "gestos": [
+  "el-cuadro-que-se-corre",
+  "la-pelicula-que-se-quema"
+ ]
+}

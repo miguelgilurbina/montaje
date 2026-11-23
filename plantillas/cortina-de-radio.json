@@ -1,0 +1,92 @@
+{
+ "nombre": "Cortina de radio",
+ "frase": "Una pieza corta con su propio sonido, entre programa y programa, como las cortinas de Locomotion: la emisora se sintoniza al empezar, las tomas van al pulso con el nombre del programa, y cierra con la canción dibujada en el osciloscopio y el crédito de lo que suena.",
+ "para": "separar programas, abrir un video, presentar la marca",
+ "material": "clips",
+ "dura": "de 8 a 20 segundos",
+ "salida": {
+  "ancho": 1620,
+  "alto": 1080,
+  "fps": 24,
+  "fondo": "#07090d"
+ },
+ "montaje": {
+  "modo": "pulso",
+  "orden": "nombre",
+  "reparto": "seguido",
+  "umbral_calma": 0.45,
+  "umbral_pico": 0.8
+ },
+ "tramos": [
+  {
+   "nombre": "la emisora se sintoniza",
+   "parte": [
+    0,
+    0.3
+   ],
+   "estilos": [
+    "clip-por-compas"
+   ],
+   "pasa": "las primeras tomas, mientras la aguja busca el 88.8"
+  },
+  {
+   "nombre": "el programa",
+   "parte": [
+    0.3,
+    0.8
+   ],
+   "estilos": [
+    "tartamudeo"
+   ],
+   "pasa": "al pulso, con el tartamudeo en los golpes fuertes"
+  },
+  {
+   "nombre": "la firma",
+   "parte": [
+    0.8,
+    1
+   ],
+   "estilos": [
+    "toma-por-frase"
+   ],
+   "pasa": "una toma quieta para la firma"
+  }
+ ],
+ "textos": [
+  {
+   "estilo": "rotulos-cartel",
+   "parte": [
+    0.3,
+    0.8
+   ],
+   "texto": "dos o tres palabras: el nombre del programa"
+  },
+  {
+   "estilo": "sonando-ahora",
+   "parte": [
+    0.8,
+    1
+   ],
+   "texto": "el nombre de la canción"
+  }
+ ],
+ "analogo": [
+  {
+   "cadena": "el-dial-al-empezar",
+   "parte": [
+    0,
+    0.3
+   ]
+  },
+  {
+   "cadena": "la-cancion-en-el-osciloscopio",
+   "parte": [
+    0.82,
+    1
+   ]
+  }
+ ],
+ "pasos": [
+  "La canción, cortada a la duración de la cortina antes de `musica`."
+ ]
+}

@@ -1,0 +1,78 @@
+{
+ "nombre": "Archivo de familia",
+ "frase": "Los videos caseros al pulso de una canción tranquila: despiertan como fotos, siguen en tomas largas y se despiden respirando con la canción, todo en el Super 8 de la familia que se acaba al final.",
+ "para": "videos de la familia, de un viaje, de una fiesta: material que es recuerdo",
+ "material": "clips",
+ "tono": "recuerdo",
+ "dura": "una canción entera",
+ "salida": {
+  "ancho": 1620,
+  "alto": 1080,
+  "fps": 24,
+  "fondo": "#07090d"
+ },
+ "montaje": {
+  "modo": "pulso",
+  "orden": "nombre",
+  "reparto": "seguido",
+  "umbral_calma": 0.45,
+  "umbral_pico": 0.8
+ },
+ "tramos": [
+  {
+   "nombre": "el archivo despierta",
+   "parte": [
+    0,
+    0.18
+   ],
+   "estilos": [
+    "foto-que-despierta"
+   ],
+   "pasa": "las primeras tomas entran quietas y en sepia, como fotos, y despiertan con la canción"
+  },
+  {
+   "nombre": "las tomas largas",
+   "parte": [
+    0.18,
+    0.72
+   ],
+   "estilos": [
+    "toma-por-frase"
+   ],
+   "pasa": "una toma por frase de la canción, en cámara lenta, con fundidos largos"
+  },
+  {
+   "nombre": "la canción se va",
+   "parte": [
+    0.72,
+    1
+   ],
+   "estilos": [
+    "respira-con-la-cancion"
+   ],
+   "pasa": "dos compases por toma en lo pleno y cuatro en la calma, con la que viene asomándose"
+  }
+ ],
+ "textos": [
+  {
+   "estilo": "titulo-al-pulso",
+   "parte": [
+    0.02,
+    0.16
+   ],
+   "texto": "el nombre de la pieza"
+  }
+ ],
+ "analogo": [
+  {
+   "cadena": "la-familia-en-super-8",
+   "parte": [
+    0,
+    1
+   ]
+  }
+ ],
+ "pasos": [
+  "La receta de la mesa es todo el video: si alguna toma es una imagen protagonista de la galería, esa ventana se saca."
+ ]
+}

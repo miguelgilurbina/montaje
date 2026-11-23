@@ -1,0 +1,13 @@
+{
+ "nombre": "La cinta que arranca y rebobina",
+ "frase": "La cinta de la casa puesta en la casetera: la pantalla azul y el PLAY al empezar, y a ratos alguien rebobina para volver a verlo.",
+ "para": [
+  "abrir",
+  "mostrar el archivo"
+ ],
+ "base": "vhs-de-la-casa",
+ "gestos": [
+  "vhs-que-arranca",
+  "rebobinar"
+ ]
+}

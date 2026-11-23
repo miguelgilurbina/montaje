@@ -155,6 +155,19 @@ Todo comando se corre desde la raíz del repo: `python montaje.py <comando> <pro
   —la pausa del VHS, el estrobo de la consola— es un **gesto** (`"gesto": true` y `sobre`, la
   base de su muestra; `analogo … --cadena <base> --gesto <id>`). Antes de sumar un estilo
   nuevo, preguntarse si es una de las dos. Ver `estilos/README.md`.
+- **El mapa de la galería** (2026-11-22): el repaso de lo que hay y los territorios que se pueden
+  sumar viven en una página privada (su dirección no va al repo; está en la memoria de Claude).
+  Miguel anota ideas ahí: se leen con ArtifactData (colección `ideas`) y se vuelven territorios.
+  Los abiertos son experimentos (28 a 31: el rollo, la fotografía de antes, la imprenta, la
+  radio); los que faltan están en `PROPUESTAS.md` («El mapa de la galería»).
+- **Los moldes de trabajo** (2026-11-22, «armar templates de trabajo para poder armar trabajo más
+  adelante»):
+  - para una pieza que se hace seguido, una **plantilla** (`plantillas/`, `python montaje.py
+    plantilla <p> <id> --crear`, después `--escribir`);
+  - para una combinación de base y gestos que se repite, una **receta** (`recetas/`, se pide con
+    `--cadena`);
+  - para sumar un efecto a la galería, el **molde de experimento** (`direccion/MOLDE.md`,
+    `python montaje.py experimento <NN-nombre>`): seguir sus pasos siempre.
 - `python montaje.py estilos` valida el catálogo (vocabulario cerrado, experimentos
   que existen, veredictos con cita) y lo lista; la galería está en `/estilos` del panel.
 - **La galería de textos** (`textos/`, ver `textos/README.md`): letreros con nombre para títulos,

@@ -75,7 +75,7 @@ Lo que quedó para después, de lo que se propuso el 2026-11-19 (Miguel eligió 
 | T5 | **Letra de dial de radio:** matriz de puntos o siete segmentos, dibujada en código desde una grilla (100 % propia), para «el dato teclea». | Nada. |
 | T6 | **La letra a mano de Miguel:** una plantilla con las letras, tildes, ñ y ¿¡«», fotografiada, vectorizada y armada como tipografía. | Que Miguel llene la plantilla; **descarga con ok:** potrace para vectorizar. |
 | G6 | **Gráficos que se dibujan:** el círculo y la flecha a mano, el subrayado que se traza, la ruta que avanza en un mapa, el número que cuenta, barras y línea de tiempo (lo que pedía el documental). | Nada. |
-| G7 | **Imprenta:** tramado de puntos, registro corrido (tintas que no calzan) y papel: la voz serigráfica de las tintas del arte. | Nada. |
+| G7 | ~~Imprenta.~~ **Hecho el 2026-11-22** (experimento 30, elección de Miguel en el mapa de la galería): el aparato `imprenta`, con serigrafía, risografía, el tramado del diario y la fotocopia. | Los veredictos de Miguel. |
 | G8 | ~~Luz y óptica.~~ **Hecho el 2026-11-21** en la mesa: el aparato `lente` (aberración, barril, destello, raya anamórfica, niebla, suciedad, foco al pulso, viñeta). Las luces que se cuelan ya estaban (`fugas`). | Nada. |
 | G9 | **Señal rota:** píxeles ordenados por brillo (amplía `senal`). El lado analógico (cinta, antena, sincronismo perdido) se hizo el 2026-11-20 en la mesa analógica, y el datamosh el 2026-11-21 (el códec de `digital.py` con `residuo` bajo: estilo `se-derrite`). | Nada. |
 | G10 | **Recorte y collage:** la persona recortada como sticker, fotos que caen sobre una mesa. | **Descarga con ok:** un modelo que separe a la persona del fondo. |
@@ -118,7 +118,43 @@ Lo que quedó del menú, y lo que apareció haciendo:
 | M4 | ~~El proyector en la pared.~~ **Hecho el mismo día** (Miguel: «Seguir acumulando»): el aparato `proyector` (la mancha de luz, el trapecio, la pared o la sábana, el foco, el latido, el cuarto oscuro); estilos `pelicula-en-la-pared`, `pelicula-en-la-sabana`. | El Super 8 visto como se veía en la casa. | Los veredictos de Miguel. |
 | M5 | ~~El 35 mm de las fotos.~~ **Hecho**: `formato: 35mm` y los negativos `kodak-gold` y `fuji-superia`; estilos `foto-de-laboratorio`, `foto-de-laboratorio-fuji`, y `foto-con-fecha` pasó al 35 mm. Falta probarlos con fotos de verdad (el banco es de clips: G5). | Las fotos de la galería en papel de laboratorio. | Unas fotos de la galería de Curiana. |
 | M6 | ~~El sonido de la película.~~ **Hecho**: `pelicula.sonido` (`magnetico`, `proyector`); estilo `super-8-sonoro`, y las dos películas proyectadas llevan el traqueteo. | Imagen y sonido de la misma máquina. | El oído de Miguel. |
-| M7 | Lo que no entró del menú: ~~luz y óptica~~ (G8, **hecho el mismo día** con su elección: el aparato `lente` y siete estilos), **imprenta** (G7), **píxeles ordenados** (G9). | — | Nada. |
+| M7 | Lo que no entró del menú: ~~luz y óptica~~ (G8, **hecho el mismo día** con su elección: el aparato `lente` y siete estilos), ~~imprenta~~ (G7, **hecho el 2026-11-22**), **píxeles ordenados** (G9). | — | Nada. |
+
+## El mapa de la galería (2026-11-22)
+
+Miguel: «Me gustaría revisar todo lo que tenemos hasta ahora y mapear que otra cosa podemos hacer para expander nuestra
+galería de efectos y filtros». El repaso (el catálogo por mundos con sus veredictos, lo que dicen los veredictos y lo
+pendiente) y once territorios quedaron en una página privada, el «Mapa de la galería» (su dirección no va al repo). La
+página tiene además un cuadro donde Miguel anota ideas desde el teléfono: se guardan en la colección `ideas` de su base
+y Claude las lee para volverlas territorios.
+
+Eligió abrir cuatro (y juzgarlos todos al final, «Al final juzgo todos»): los gestos de la película (28), la
+fotografía de antes (29), la imprenta (30) y la radio (31). Los otros siete siguen en el mapa:
+
+| # | Territorio | Qué | Qué necesita |
+|---|---|---|---|
+| K1 | **Transiciones** (G1) | la cinta que pasa y agranda la imagen siguiente (idea de Miguel), el quemado de película, el fundido por luz, el desenfoque que cruza, las cortinillas de la consola; también en los modos de fotos | Nada. |
+| K2 | **Pantallas** | la cámara de vigilancia, el cartel de luces, el teletexto, la pantalla de cuatro verdes, la imagen en letras, el muro de televisores de una tienda | Nada. |
+| K3 | **Color** (G2, S3) | LUT escritas desde la paleta: noche americana, película infrarroja, blanqueo saltado, proceso cruzado; e igualar los clips entre sí | Nada (una LUT de afuera, con su ok). |
+| K4 | **Señal rota digital** (G9) | píxeles ordenados, el JPEG gastado, el escáner que se mueve, el archivo que se lee mal | Nada. |
+| K5 | **Óptica y aire** | miniatura, la luz del fondo del mar, la sombra de las hojas, la lluvia en el vidrio, la cámara en mano | Nada. |
+| K6 | **Grabado** | el grabado en cobre (como el mapa a lo De Bry de Kaketiana), la xilografía, el aguafuerte, el picado | Nada; el más difícil: que las líneas no tiemblen. |
+| K7 | **Con un modelo** (G10, G11, S5) | el recorte de la persona, la foto en capas con profundidad, las caras | **Descarga con ok** de cada modelo. |
+
+Pidió también moldes de trabajo para armar trabajo más adelante, y en la tarjeta eligió los tres:
+
+- **las plantillas de piezas** (`plantillas/`, `python montaje.py plantilla <p> <id>`): el archivo de familia, el reel
+  vertical y la cortina de radio. Cada una deja los tramos con sus estilos, las capas, los textos que faltan y la
+  mesa analógica para después del render (`PIEZA.md`);
+- **las recetas guardadas** (`recetas/`, `--cadena <receta>`): una base analógica con sus gestos, con nombre;
+- **el molde de experimento** (`direccion/MOLDE.md`, `python montaje.py experimento <NN-nombre>`): la carpeta, la
+  ficha y la fila de la bitácora, y los pasos de siempre.
+
+Lo que falta de los moldes:
+
+- la plantilla para el modo de fotos (collage, carrusel, secuencia: sin tramos);
+- la del documental con voz (el modo `planos`);
+- que la mesa corra dentro del render (M9).
 
 ## Sintetización: lo que el motor todavía no sabe
 

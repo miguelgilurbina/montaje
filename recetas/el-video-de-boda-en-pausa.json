@@ -1,0 +1,12 @@
+{
+ "nombre": "El video de boda en pausa",
+ "frase": "El video del camarógrafo de los 90, con sus efectos de consola, y alguien que lo pone en pausa para mirar un momento.",
+ "para": [
+  "mostrar el archivo",
+  "destacar"
+ ],
+ "base": "video-de-boda",
+ "gestos": [
+  "pausa-del-vhs"
+ ]
+}

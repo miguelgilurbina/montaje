@@ -1,0 +1,13 @@
+{
+ "nombre": "La familia en Super 8",
+ "frase": "La película casera con sus empalmes, que se acaba al final del video: la punta velada, la cola con su mugre y la punta suelta que golpea.",
+ "para": [
+  "mostrar el archivo",
+  "cerrar"
+ ],
+ "base": "super-8-de-la-familia",
+ "gestos": [
+  "el-empalme",
+  "se-acaba-el-rollo"
+ ]
+}
