@@ -82,3 +82,4 @@ es más gris.
 ## Lo que dijo Miguel
 
 - En la tarjeta: «La radio», junto con los otros tres territorios. Se juzga al final.
+- En la mesa (2026-11-23): la foto que llega por radio, el dial que sintoniza, el dial al empezar y la canción en el osciloscopio, **sí**; del osciloscopio: «Me encantaría expandir esta función.» El radiofacsímil y la telefoto de agencia, **a medias** (sin decir por qué todavía).

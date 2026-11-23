@@ -217,3 +217,7 @@ archivo, qué comando correr) no van aquí.
 - Mientras se cerraba el 26: «Otra cosa, hay efectos que deberían ir acompañados de audios característicos». De
   cuatro grupos propuestos (la casetera, la antena y el televisor, la película, las cámaras y la videollamada),
   eligió los cuatro.
+
+## 2026-11-23 · Veredictos desde la galería
+
+- La canción en el osciloscopio (`la-cancion-en-el-osciloscopio`), aprobado: «Me encantaría expandir esta función.»

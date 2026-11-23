@@ -1,0 +1,32 @@
+{
+ "nombre": "Moiré",
+ "frase": "La trama de líneas de la imagen y, encima, otra pareja un poco girada que gira y corre despacio: las ondas del moiré cruzan la imagen, que el ojo pone a vibrar.",
+ "para": [
+  "transición",
+  "subir la energía",
+  "presentar la marca"
+ ],
+ "material": "cualquiera",
+ "energia": "alta",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "cinetico",
+    "tecnica": "moire",
+    "paso": 8,
+    "angulo": 4,
+    "deriva": 0.6
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "32-el-cinetismo"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

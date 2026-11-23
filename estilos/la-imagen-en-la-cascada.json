@@ -1,0 +1,32 @@
+{
+ "nombre": "La imagen en la cascada",
+ "frase": "La pantalla de una radio por software: las frecuencias de la canción cayendo en las tintas de Curiana, y cada seis segundos el cuadro del video dibujado en la cascada por el sonido mismo. Lo que se ve es lo que suena: la imagen está en el audio.",
+ "para": [
+  "presentar la marca",
+  "transición",
+  "respirar"
+ ],
+ "material": "cualquiera",
+ "energia": "sigue",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "cascada",
+    "dura": 6.0,
+    "historia": 8.0,
+    "mezcla": 0.2,
+    "sonido": "pintura"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "33-la-radio-segunda-vuelta"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

@@ -141,6 +141,19 @@ fotografía de antes (29), la imprenta (30) y la radio (31). Los otros siete sig
 | K6 | **Grabado** | el grabado en cobre (como el mapa a lo De Bry de Kaketiana), la xilografía, el aguafuerte, el picado | Nada; el más difícil: que las líneas no tiemblen. |
 | K7 | **Con un modelo** (G10, G11, S5) | el recorte de la persona, la foto en capas con profundidad, las caras | **Descarga con ok** de cada modelo. |
 
+Miguel, el 2026-11-23: «Tu busca más por favor». Lo que se encontró buscando (las fuentes, en el mapa):
+
+| # | Territorio | Qué | Qué necesita |
+|---|---|---|---|
+| K8 | **El cinetismo** | las técnicas del arte cinético venezolano, sin copiar obras: la vibración (líneas finas delante de lo que se mueve), el moiré, la inducción del color | **Abierto: experimento 32** (por juzgar). |
+| K9 | **La radio, segunda vuelta** | el satélite del tiempo (dos imágenes, las barras de sincronismo, el tic-tac de 2 400 Hz; se apagaron en 2025), el texto que llega por radio (Hellschreiber), la imagen dibujada en la cascada de frecuencias | **Abierto: experimento 33** (por juzgar). |
+| K10 | **El color del cine mudo** | el tintado (azul noche, rojo fuego, ámbar lámpara: sin reglas fijas), el virado, los dos colores con su franja en lo que se mueve | **Abierto: experimento 34** (por juzgar). |
+| K11 | **Antes del cine** | el zoótropo, el fenaquistiscopio, el libro animado, la postal lenticular, la cronofotografía de Marey | **Abierto: experimento 35** (por juzgar). |
+| K12 | **La televisión mecánica** | treinta líneas, el disco de Nipkow, el naranja del neón | Nada. |
+| K13 | **La gráfica popular** | el mimeógrafo, el esténcil, el cartel serigrafiado de cine, la rotulación popular | Nada (una letra desde fotos de rótulos, con su ok). |
+| K14 | **La cámara de juguete de cassette** | el video de juguete de 1987 grabado en cassette de audio: blanco y negro, pocos pixeles, el mecanismo ruidoso | Nada. |
+| K15 | **El autocromo** | la primera foto en color (1907): granos de almidón teñidos, color en grumos, oscura | Nada. |
+
 Pidió también moldes de trabajo para armar trabajo más adelante, y en la tarjeta eligió los tres:
 
 - **las plantillas de piezas** (`plantillas/`, `python montaje.py plantilla <p> <id>`): el archivo de familia, el reel

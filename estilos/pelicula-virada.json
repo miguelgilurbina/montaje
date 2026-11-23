@@ -1,0 +1,40 @@
+{
+ "nombre": "Película virada",
+ "frase": "La copia en blanco y negro virada en sepia: lo oscuro toma el color pardo y lo claro queda limpio, como las copias que se viraban para que duraran.",
+ "para": [
+  "mostrar el archivo",
+  "respirar",
+  "cerrar"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "pelicula",
+    "formato": "16mm",
+    "emulsion": "blanco-y-negro",
+    "cuadros": 18,
+    "polvo": 0.9,
+    "rayas": 0.5,
+    "parpadeo": 0.4,
+    "sonido": "proyector"
+   },
+   {
+    "aparato": "tinte",
+    "modo": "virado",
+    "tinta": "sepia"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "34-el-color-del-cine-mudo"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

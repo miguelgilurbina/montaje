@@ -1,0 +1,32 @@
+{
+ "nombre": "Cronofotografía",
+ "frase": "Varias exposiciones en una sola placa, como las del siglo XIX que estudiaban el movimiento: cada octavo de segundo una pose más de lo claro que se mueve, sobre el negro, las últimas diez encimadas. Suena el obturador en cada pose.",
+ "para": [
+  "destacar",
+  "mostrar el archivo",
+  "transición"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "juguete",
+    "modo": "cronofotografia",
+    "intervalo": 0.12,
+    "poses": 10,
+    "sonido": "mecanismo"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "35-antes-del-cine"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

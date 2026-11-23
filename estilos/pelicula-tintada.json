@@ -1,0 +1,40 @@
+{
+ "nombre": "Película tintada",
+ "frase": "La copia en blanco y negro teñida entera, escena por escena, con el color que pide la escena: azul la noche, ámbar la luz de lámpara, rojo lo que arde, verde el campo. Lo claro toma el color y lo negro queda negro. Con el proyector.",
+ "para": [
+  "mostrar el archivo",
+  "respirar",
+  "transición"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "pelicula",
+    "formato": "16mm",
+    "emulsion": "blanco-y-negro",
+    "cuadros": 18,
+    "polvo": 0.9,
+    "rayas": 0.5,
+    "parpadeo": 0.4,
+    "sonido": "proyector"
+   },
+   {
+    "aparato": "tinte",
+    "modo": "tintado",
+    "tinta": "auto"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "34-el-color-del-cine-mudo"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

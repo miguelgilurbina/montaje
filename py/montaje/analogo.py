@@ -319,6 +319,8 @@ class Contexto:
         self.fin: float | None = None
         # El video que entra (el osciloscopio lee su audio). None si no se sabe.
         self.entrada = None
+        # El cuadro como entró a la cadena, antes de cualquier aparato (lo pone `procesar_cuadro`).
+        self.original = None
 
     def rng(self, *extra) -> np.random.Generator:
         return np.random.default_rng([self.semilla, self.paso, self.k, *(_num(x) for x in extra)])
@@ -983,10 +985,12 @@ def _imagen() -> dict:
     de mezcla: su `APARATOS`) y los de señal que no están aquí (la casetera: su `SENAL`)."""
     global _IMAGEN
     if _IMAGEN is None:
-        from . import casetera, consola, digital, fotografia, imprenta, optica, pelicula, proyeccion, radio, rollo
+        from . import (aire, casetera, cinemudo, cinetico, consola, digital, fotografia, imprenta, juguetes, optica, pelicula,
+                       proyeccion, radio, rollo)
 
         _IMAGEN = {}
-        for m in (optica, pelicula, rollo, proyeccion, fotografia, imprenta, radio, digital, consola, casetera):
+        for m in (optica, pelicula, rollo, cinemudo, proyeccion, fotografia, juguetes, imprenta, cinetico, radio, aire,
+                  digital, consola, casetera):
             _IMAGEN.update(getattr(m, "APARATOS", {}))
             APARATOS.update(getattr(m, "SENAL", {}))
             POR_DEFECTO.update(m.POR_DEFECTO)
@@ -1184,6 +1188,7 @@ def procesar_cuadro(rgb8: np.ndarray, pasos, captura: str, ctx: Contexto) -> np.
     ctx.encuadre = ("barras", "suave")
     ctx.estado.pop("captura", None)   # la captura del sensor es de este cuadro: un códec antes del sensor no la ve
     img = rgb8.astype(np.float32) / 255
+    ctx.original = img   # el cuadro como entró a la cadena (el tintado elige su color por la escena, no por la copia)
     s = None
     for n, (nombre, p) in enumerate(pasos):
         ctx.paso = n

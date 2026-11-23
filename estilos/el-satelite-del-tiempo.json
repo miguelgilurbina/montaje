@@ -1,0 +1,31 @@
+{
+ "nombre": "El satélite del tiempo",
+ "frase": "La imagen que mandaban los satélites meteorológicos por radio: dos imágenes lado a lado, la de luz y la infrarroja, con las barras de sincronismo y la cuña de grises, que llegan línea por línea. Suena el tic-tac de verdad: el brillo de cada línea sobre una portadora de 2 400 Hz, dos líneas por segundo. Esos satélites se apagaron en 2025.",
+ "para": [
+  "mostrar el archivo",
+  "abrir",
+  "transición"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "satelite",
+    "dura": 7.0,
+    "ruido": 0.3,
+    "sonido": "tictac"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "33-la-radio-segunda-vuelta"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

@@ -1,0 +1,30 @@
+{
+ "nombre": "Libro animado",
+ "frase": "El libro de hojas que pasan con el pulgar: cada hoja una figura, a doce por segundo, con el doblez que corre y el canto de las hojas de abajo. Suenan las hojas.",
+ "para": [
+  "abrir",
+  "mostrar el archivo",
+  "cerrar"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "juguete",
+    "modo": "libro",
+    "sonido": "mecanismo"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "35-antes-del-cine"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

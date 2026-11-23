@@ -63,3 +63,4 @@ puntos de diferencia (es una prueba).
 ## Lo que dijo Miguel
 
 - En la tarjeta: «Imprenta», junto con los otros tres territorios. Se juzga al final.
+- En la mesa (2026-11-23): los cuatro **sí** (la serigrafía, la risografía, el tramado del diario y la fotocopia).

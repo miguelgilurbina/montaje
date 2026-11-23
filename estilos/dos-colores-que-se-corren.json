@@ -1,0 +1,39 @@
+{
+ "nombre": "Dos colores que se corren",
+ "frase": "El color aditivo que se proyectaba alternando un filtro rojo y uno verde: como los dos colores no son del mismo instante, lo que se mueve rápido deja una franja roja de un lado y verde del otro.",
+ "para": [
+  "mostrar el archivo",
+  "subir la energía",
+  "destacar"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "pelicula",
+    "formato": "16mm",
+    "emulsion": "ektachrome",
+    "cuadros": 0,
+    "polvo": 0.5,
+    "rayas": 0.2,
+    "parpadeo": 0.4,
+    "sonido": "proyector"
+   },
+   {
+    "aparato": "tinte",
+    "modo": "kinemacolor"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "34-el-color-del-cine-mudo"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

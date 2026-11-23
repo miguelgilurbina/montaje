@@ -1,0 +1,30 @@
+{
+ "nombre": "Vibración",
+ "frase": "La imagen hecha de líneas verticales fijas, más gruesas donde es oscuro, en noche sobre hueso: las líneas no se mueven y lo que se mueve detrás vibra en la trama. A la manera del cinetismo venezolano, sin copiar obras.",
+ "para": [
+  "transición",
+  "presentar la marca",
+  "destacar"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "cinetico",
+    "tecnica": "vibracion",
+    "paso": 8
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "32-el-cinetismo"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

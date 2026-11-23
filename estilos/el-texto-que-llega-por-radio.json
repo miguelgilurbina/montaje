@@ -1,0 +1,32 @@
+{
+ "nombre": "El texto que llega por radio",
+ "frase": "Una tira de papel que corre abajo con el texto impreso en puntos, dos veces, como el teletipo por radio de 1929: «CURIANA RADIO 88.8 FM», inclinado porque los relojes no calzan. Suena el tono que se prende y se apaga punto por punto.",
+ "para": [
+  "presentar la marca",
+  "abrir",
+  "destacar"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "hell",
+    "texto": "CURIANA RADIO 88.8 FM",
+    "velocidad": 2.5,
+    "inclinacion": 0.25,
+    "sonido": "tonos"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "33-la-radio-segunda-vuelta"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

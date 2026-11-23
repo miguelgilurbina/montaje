@@ -20,6 +20,7 @@ perilla `sonido` de su aparato, así que viaja con la cadena y suena también en
 | `imprenta` | `maquina` | (2026-11-22) la máquina andando debajo de la canción: la fotocopiadora (la luz que barre y el clic de cada copia), el tambor de la riso y de la rotativa (el golpe y la hoja que sale), la rasqueta de la serigrafía |
 | `radiofoto` | `tonos` | (2026-11-22) los tonos que dibujan la foto que llega por radio: cada línea, la altura sigue el brillo (1 500 Hz el negro, 2 300 el blanco, 1 200 el sincronismo); el encabezado de la sstv, la franja de fase del fax; la canción baja mientras llega |
 | `dial` | `sintonia` | (2026-11-22) la canción que se va en la estática mientras la aguja busca, el silbido entre emisoras, y vuelve en sintonía |
+| `juguete` | `mecanismo` | (2026-11-23) el juguete óptico: el tambor del zoótropo con el aleteo de las ranuras, el disco que gira, las hojas del libro que pasan, el obturador de la cronofotografía en cada pose |
 | `rollo` | `proyector` | (2026-11-22) el proyector cuando falla la película: la quema traba el mecanismo y crepita; el cuadro que se corre es la uña que salta las perforaciones; el empalme pasa con un chasquido; la cola es la punta suelta que golpea en el carrete |
 
 Los momentos caen donde caen en la imagen: la misma semilla y el mismo lugar en la cadena (`_paso`, que pasa
@@ -40,7 +41,8 @@ from . import analogo as A
 SONIDOS = {"casetera": ("ninguno", "mecanica"), "antena": ("ninguno", "aire"), "pantalla": ("ninguno", "parlante"),
            "camara": ("ninguno", "microfono"), "compresion": ("ninguno", "llamada"), "rollo": ("ninguno", "proyector"),
            "copia": ("ninguno", "camara"), "imprenta": ("ninguno", "maquina"),
-           "radiofoto": ("ninguno", "tonos"), "dial": ("ninguno", "sintonia")}
+           "radiofoto": ("ninguno", "tonos"), "dial": ("ninguno", "sintonia"),
+           "juguete": ("ninguno", "mecanismo")}
 
 #: De las capturas donde la llamada rompe la imagen, en cuántas se pierde también el audio.
 PAQUETES_DE_AUDIO = 0.4
@@ -564,9 +566,35 @@ def dial(x: np.ndarray, p: dict, semilla: int, t0: float, sr: int, indice: int) 
     return m.salida()
 
 
+# ── Los juguetes ópticos ───────────────────────────────────────────────────
+
+def juguete(x: np.ndarray, p: dict, semilla: int, t0: float, sr: int, indice: int) -> np.ndarray:
+    """El juguete andando, debajo de la canción: lo que gira, las hojas, el obturador (`juguetes.juguete`)."""
+    if p.get("sonido", "ninguno") == "ninguno" or not len(x) or p["modo"] == "lenticular":
+        return x
+    m = _Mezcla(x, t0, sr)
+    rng = np.random.default_rng([semilla, A._num("juguete-sonido"), indice])
+    n = m.n
+    t = t0 + np.arange(n) / sr
+    if p["modo"] in ("zootropo", "fenaquistiscopio"):
+        # El roce del eje y el aleteo de las ranuras que pasan (13 por segundo en el zoótropo, como en la imagen).
+        roce = _filtrar(rng.standard_normal(n), "bandpass", (80, 900), sr)
+        aleteo = 0.55 + 0.45 * np.sin(2 * np.pi * (13.0 if p["modo"] == "zootropo" else 12.0) * t)
+        m.poner(roce / (_rms(roce) + 1e-9) * aleteo, t0, -27)
+    elif p["modo"] == "libro":
+        from .juguetes import FIGURAS_POR_SEGUNDO
+
+        m.poner(tictac(n, sr, rng, FIGURAS_POR_SEGUNDO, FIGURAS_POR_SEGUNDO, (2000, 8000)), t0, -23)
+    else:   # la cronofotografía: el obturador en cada pose, a los mismos segundos que la imagen
+        for j in range(math.floor(t0 / p["intervalo"]), math.ceil(t[-1] / p["intervalo"]) + 1):
+            m.poner(golpecito(sr, rng, (900, 6000), 0.0025, cuerpo=0.3), j * p["intervalo"], -20)
+    return m.salida()
+
+
 #: Para `analogo._audio_de_aparatos`: el ruido de cada aparato que lo tiene aquí.
 RUIDOS = {"casetera": casetera, "antena": antena, "pantalla": pantalla, "camara": camara, "compresion": llamada, "rollo": rollo,
-          "copia": copia, "imprenta": imprenta, "radiofoto": radiofoto, "dial": dial}
+          "copia": copia, "imprenta": imprenta, "radiofoto": radiofoto, "dial": dial,
+          "juguete": juguete}
 
 
 def sonido(nombre: str, x: np.ndarray, p: dict, semilla: int, t0: float, sr: int, indice: int) -> np.ndarray:

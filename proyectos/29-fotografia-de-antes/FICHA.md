@@ -78,3 +78,4 @@ pensaron también para fotos, y quedan por probar con fotos de verdad (G5 en `PR
 ## Lo que dijo Miguel
 
 - En la tarjeta: «Fotografía de antes», junto con los otros tres territorios. Se juzga al final.
+- En la mesa (2026-11-23): el cianotipo, el ferrotipo, la linterna mágica, la instantánea, el fotomatón y la tarjeta estereoscópica, **sí**; el daguerrotipo, **a medias** (sin decir por qué todavía).

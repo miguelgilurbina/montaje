@@ -1,0 +1,30 @@
+{
+ "nombre": "Fenaquistiscopio",
+ "frase": "El disco de cartón con doce figuras en círculo, cada una un instante del loop: mirado por las ranuras del borde, cada figura se mueve en su lugar. Suena el disco que gira.",
+ "para": [
+  "presentar la marca",
+  "transición",
+  "abrir"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "juguete",
+    "modo": "fenaquistiscopio",
+    "sonido": "mecanismo"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "35-antes-del-cine"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

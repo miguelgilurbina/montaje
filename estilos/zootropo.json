@@ -1,0 +1,30 @@
+{
+ "nombre": "Zoótropo",
+ "frase": "El tambor que gira con la tira de figuras adentro, mirado por las ranuras: un loop corto a doce figuras por segundo, oscuro y cortado en franjas que pasan, sobre la curva del tambor. Cada cuatro segundos se cambia la tira. Suena el tambor y el aleteo de las ranuras.",
+ "para": [
+  "transición",
+  "mostrar el archivo",
+  "abrir"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "juguete",
+    "modo": "zootropo",
+    "sonido": "mecanismo"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "35-antes-del-cine"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

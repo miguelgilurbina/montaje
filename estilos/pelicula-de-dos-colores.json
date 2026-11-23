@@ -1,0 +1,39 @@
+{
+ "nombre": "Película de dos colores",
+ "frase": "La copia de dos colores de los años 20: lo que vio el filtro rojo y lo que vio el verde, en un tinte rojo anaranjado y uno verde azulado. La piel y el follaje bien; los azules no existen.",
+ "para": [
+  "mostrar el archivo",
+  "respirar",
+  "abrir"
+ ],
+ "material": "cualquiera",
+ "energia": "calma",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "pelicula",
+    "formato": "16mm",
+    "emulsion": "ektachrome",
+    "cuadros": 24,
+    "polvo": 0.6,
+    "rayas": 0.3,
+    "parpadeo": 0.4,
+    "sonido": "proyector"
+   },
+   {
+    "aparato": "tinte",
+    "modo": "dos-colores"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "34-el-color-del-cine-mudo"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

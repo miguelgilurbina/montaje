@@ -75,3 +75,4 @@ Las pruebas están en `py/pruebas/test_territorios.py`:
   galería de efectos y filtros.»
 - En las tarjetas eligió los cuatro territorios: Gestos de la película, Fotografía de antes, Imprenta y La radio.
 - «Al final juzgo todos.»
+- En la mesa (2026-11-23): la película que se quema, el cambio de rollo, el empalme y se acaba el rollo, **sí**; el cuadro que se corre, **a medias** (sin decir por qué todavía).

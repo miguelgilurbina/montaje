@@ -1,0 +1,31 @@
+{
+ "nombre": "Inducción del color",
+ "frase": "Franjas finas, negras y claras según el brillo, y cada tres una franja de color de la paleta según el tono de la imagen en ese lugar; las de color corren despacio y el ojo mezcla lo que no se pintó.",
+ "para": [
+  "transición",
+  "presentar la marca",
+  "respirar"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "cinetico",
+    "tecnica": "induccion",
+    "paso": 7,
+    "deriva": 0.5
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "32-el-cinetismo"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

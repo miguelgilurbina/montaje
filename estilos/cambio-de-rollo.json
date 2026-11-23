@@ -36,12 +36,17 @@
   ],
   "semilla": 14
  },
- "estado": "propuesta",
+ "estado": "aprobado",
  "miguel": [],
  "visto_en": [
   "28-gestos-de-la-pelicula"
  ],
  "evitar": [
   "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
- ]
+ ],
+ "veredicto": {
+  "estado": "aprobado",
+  "fecha": "2026-11-23",
+  "via": "galeria"
+ }
 }

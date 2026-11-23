@@ -320,6 +320,22 @@ archivo qué hace y por qué; aquí, lo que es de norma y lo que no:
 
 Los sonidos de los cuatro van en `ruidos.py`, en sus momentos, como los del 27.
 
+## Lo que se encontró buscando (2026-11-23)
+
+Miguel: «Tu busca más por favor». De ocho territorios con sus fuentes (K8 a K15 en `PROPUESTAS.md`), eligió abrir
+cuatro (experimentos 32 a 35):
+
+- **El cinetismo** (`cinetico.py`): la vibración, el moiré y la inducción del color, como técnicas del arte cinético
+  venezolano y sin copiar obras.
+- **La radio, segunda vuelta** (`aire.py`):
+  - las cifras del satélite son las de la norma APT: la portadora de 2 400 Hz en amplitud, los sincronismos de
+    1 040 Hz y de 832 pulsos por segundo, la línea de 2 080 pixeles a dos por segundo y la telemetría en 16 cuñas;
+  - el texto por radio imprime dos veces, como el Hellschreiber;
+  - la pintura en la cascada es [sin verificar] en sus niveles.
+- **El color del cine mudo** (`cinemudo.py`): las convenciones del tintado no eran fijas; los colores son [sin
+  verificar].
+- **Antes del cine** (`juguetes.py`): las proporciones y velocidades son [sin verificar].
+
 ## Lo que no se pudo verificar
 
 La amplitud de los fantasmas, el SNR del VHS en dB, el largo y la frecuencia reales de los dropouts, las barras
