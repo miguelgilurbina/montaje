@@ -1,0 +1,7 @@
+{
+ "titulo": "37 · El teaser de la alfa",
+ "idea": "un video corto para anunciar la alfa pública, hecho con montaje mismo y con material generado con código: la imagen que se sintoniza, los aparatos uno tras otro y la marca que dibuja el sonido Miguel: «Tenemos que pensar además en un vídeo interesante de teaser. Para publicarlo como open source.».",
+ "biblioteca": "demo",
+ "nota": "No tiene montaje propio: lo arma armar.py con el material de prueba (python montaje.py demo) y el motor de la mesa.",
+ "cadenas": []
+}

@@ -44,5 +44,6 @@ si la idea cambia, es otro número.
 | 34 | [El color del cine mudo](proyectos/34-el-color-del-cine-mudo/FICHA.md) | 2026-11-23 | el banco del probador (La Añoranza) | el tintado por escena, el virado y los dos colores de antes del color completo, con la franja de lo que se mueve | por juzgar al final |
 | 35 | [Antes del cine](proyectos/35-antes-del-cine/FICHA.md) | 2026-11-23 | el banco del probador (La Añoranza) | los juguetes ópticos: el zoótropo, el fenaquistiscopio, el libro animado, la postal lenticular y la cronofotografía | por juzgar al final |
 | 36 | [La marca en el osciloscopio](proyectos/36-la-marca-en-el-osciloscopio/FICHA.md) | 2026-11-23 | el banco del probador (La Añoranza) | la canción se aparta y el haz dibuja la marca, la espiral del isotipo y el nombre, con un sonido que es el dibujo | por juzgar |
+| 37 | [El teaser de la alfa](proyectos/37-el-teaser-de-la-alfa/FICHA.md) | 2026-11-23 | el material de prueba (`demo`, CC0) | un video corto para anunciar la alfa pública, hecho con montaje mismo: la imagen que se sintoniza, los aparatos uno tras otro y la marca que dibuja el sonido (borrador de 28 s) | por juzgar |
 
 La dirección que vale para todos los experimentos (tono, paleta, motivos, referencias, sonido y las palabras de Miguel) está en [`direccion/`](direccion/README.md).

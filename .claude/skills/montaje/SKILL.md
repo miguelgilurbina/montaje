@@ -168,6 +168,18 @@ Todo comando se corre desde la raíz del repo: `python montaje.py <comando> <pro
     `--cadena`);
   - para sumar un efecto a la galería, el **molde de experimento** (`direccion/MOLDE.md`,
     `python montaje.py experimento <NN-nombre>`): seguir sus pasos siempre.
+- **La consola de diales** (2026-11-23, «tener un espacio para hacer edición manual de vídeo […]
+  con diales manuales»; `/consola` del panel, `direccion/CONSOLA.md`): la mesa a mano. La vista
+  previa es una aproximación en WebGL (`lib/consola-gl.ts`, un shader por aparato; los que no
+  tienen dicen «sólo en el render»); lo que vale es el render del motor. Lo que se gira con el
+  video corriendo queda como `automatizacion` de la cadena (`[{paso, perilla, puntos}]`, segundos
+  de la fuente) y el motor lo repite (`analogo … --automatizacion ARCHIVO`); `analogo --aparatos`
+  le da a la consola las perillas y las cadenas de la galería: **una sola lista**, la del motor. Si
+  se toca un aparato o sus rangos, revisar que su shader use los mismos nombres. Los renders y sus
+  recetas quedan en `~/Videos/montaje/consola/`.
+- **El material de prueba** (`python montaje.py demo`, CC0, hecho con código): para probar y para
+  mostrar en público sin material de nadie (el teaser de la alfa, `direccion/TEASER.md`; la alfa,
+  `ALFA.md`).
 - `python montaje.py estilos` valida el catálogo (vocabulario cerrado, experimentos
   que existen, veredictos con cita) y lo lista; la galería está en `/estilos` del panel.
 - **La galería de textos** (`textos/`, ver `textos/README.md`): letreros con nombre para títulos,

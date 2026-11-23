@@ -1,0 +1,67 @@
+{
+  "nota": "La imagen que sale de la nieve: lo que se grabaría girando la nieve, el rodar y el desenganche de la antena en la consola (paso 0 = la antena). Segundos de la fuente.",
+  "automatizacion": [
+    {
+      "paso": 0,
+      "perilla": "nieve",
+      "puntos": [
+        [
+          0.0,
+          1.0
+        ],
+        [
+          1.4,
+          0.85
+        ],
+        [
+          2.3,
+          0.25
+        ],
+        [
+          2.9,
+          0.05
+        ]
+      ]
+    },
+    {
+      "paso": 0,
+      "perilla": "rodar",
+      "puntos": [
+        [
+          0.0,
+          1.4
+        ],
+        [
+          1.6,
+          0.6
+        ],
+        [
+          2.4,
+          0.1
+        ],
+        [
+          2.7,
+          0.0
+        ]
+      ]
+    },
+    {
+      "paso": 0,
+      "perilla": "desenganche",
+      "puntos": [
+        [
+          0.0,
+          0.7
+        ],
+        [
+          1.8,
+          0.5
+        ],
+        [
+          2.6,
+          0.0
+        ]
+      ]
+    }
+  ]
+}

@@ -66,16 +66,21 @@ canción ───musica────▶ musica.json   ├─planificar─▶ tim
   (`senal`), cortinas con su propio audio (`ensamblar`), paquete por red social
   masterizado a −14 LUFS (`paquete`).
 - **Mesa analógica** (`analogo`): un video o una foto pasado por aparatos simulados en su señal
-  NTSC —la cámara de video, la cinta VHS (formatos, copias de copias, tracking, desgaste, con su
+  NTSC: la cámara de video, la cinta VHS (formatos, copias de copias, tracking, desgaste, con su
   sonido), la antena (nieve, fantasmas, interferencia, sincronismo perdido), el corrector de base
   de tiempo, el video arte (colorizador, imán de Paik, relieve Rutt/Etra, realimentación) y el
-  televisor de tubo—. Los defectos salen de cómo se codificaba el color y de lo que cada aparato
+  televisor de tubo. Los defectos salen de cómo se codificaba el color y de lo que cada aparato
   le hacía; las referencias, en `direccion/ANALOGO.md`. En la misma mesa, la película (Super 8,
   8 mm, 16 mm, simulada en la emulsión), lo digital temprano (el celular, la webcam, la MiniDV:
   un sensor chico y un códec en bloques, con su datamosh), la casetera (pausa, rebobinar, la
   pantalla azul con PLAY), la consola de mezcla de los 90 (mosaico, estrobo, multi; también al
   pulso de la canción), el proyector en la pared o en la sábana, y la lente (aberración, ojo de
   pez, destello, raya anamórfica, niebla).
+- **Consola de diales** (`/consola` en el panel): la mesa a mano. El video pasa por la cadena de
+  aparatos en la tarjeta de video, en vivo, y cada perilla se gira con el mouse, el teclado o un
+  controlador MIDI. Lo que se gira con el video corriendo queda grabado (puntos por perilla, como
+  la automatización de un programa de música) y el motor lo renderiza igual. Ver
+  `direccion/CONSOLA.md`.
 - **Gestos de tiempo al pulso:** la imagen congelada en el golpe, el tartamudeo y el paso de cuadro.
 
 ## Requisitos
@@ -88,6 +93,25 @@ canción ───musica────▶ musica.json   ├─planificar─▶ tim
 ```bash
 npm install
 python -m pip install --user -r requirements.txt
+```
+
+## Probar sin material propio
+
+```bash
+python montaje.py demo        # cinco clips hechos con código, CC0 → ~/Videos/montaje/demo/clips/
+npm run panel                 # el panel en http://127.0.0.1:3310 → «consola»
+```
+
+En la consola: elige `demo/clips/cielo-con-sol.mp4`, parte de una cadena de la galería (por
+ejemplo `destello-de-sol` o `cinta-gastada`) y gira. Con **grabar** encendido y el video
+corriendo, lo que giras queda escrito; **renderizar con el motor** saca el video de verdad a
+`~/Videos/montaje/consola/renders/`, con su receta al lado.
+
+Desde la línea de comandos, lo mismo sin el panel:
+
+```bash
+python montaje.py analogo demo/clips/carta-que-se-mueve.mp4 --cadena cinta-gastada
+python montaje.py analogo --cadenas          # las cadenas de la galería
 ```
 
 ## Empezar con tus imágenes
@@ -154,16 +178,16 @@ varios experimentos; las salidas de cada uno van en su propia carpeta.
 
 ## El método
 
-- **`direccion/`** — la biblia: tono, paleta, motivos, referencias, sonido y el
+- **`direccion/`**: la biblia: tono, paleta, motivos, referencias, sonido y el
   registro de lo que dijo la persona que dirige, con sus palabras. El agente la
   lee antes de cada experimento.
-- **`proyectos/NN-nombre/FICHA.md`** — cada experimento con su idea, material,
+- **`proyectos/NN-nombre/FICHA.md`**: cada experimento con su idea, material,
   renders y el veredicto. **`EXPERIMENTOS.md`** es el índice.
-- **`GLOSARIO.md`** — el vocabulario de montaje en español e inglés, con el
+- **`GLOSARIO.md`**: el vocabulario de montaje en español e inglés, con el
   parámetro que mueve cada cosa.
-- **`PUBLICACIONES.md`** — qué se preparó para qué red. Nada se publica sin el sí
+- **`PUBLICACIONES.md`**: qué se preparó para qué red. Nada se publica sin el sí
   de la persona.
-- **`.claude/skills/montaje/SKILL.md`** — la skill de Claude Code con el flujo
+- **`.claude/skills/montaje/SKILL.md`**: la skill de Claude Code con el flujo
   paso a paso: cómo trabaja el agente (mirar las hojas antes de opinar,
   registrar cada experimento, no tocar los originales, pedir ok antes de bajar
   nada). Al abrir el repo con Claude Code se carga sola.
@@ -174,16 +198,17 @@ están en el repo.
 
 ## Estructura
 
-- `montaje.py` — punto de entrada: `python montaje.py <comando> <proyecto>`.
-- `py/montaje/` — catálogo, análisis de música, planificador y modos (`collage`,
+- `montaje.py`: punto de entrada: `python montaje.py <comando> <proyecto>`.
+- `py/montaje/`: catálogo, análisis de música, planificador y modos (`collage`,
   `cinta`, `actos`), marca y logo, sonido, señal, ensamblado, publicación.
-- `src/` — la composición de Remotion (`Montaje.tsx`) y los tipos del timeline
+- `src/`: la composición de Remotion (`Montaje.tsx`) y los tipos del timeline
   (`tipos.ts`).
-- `app/`, `components/`, `lib/` — el panel (Next): páginas, reproductor, tira,
-  servidor de medios con rangos y los comandos como API.
-- `proyectos/<p>/` — cada experimento. `curaduria/` — listas de imágenes de marca
-  por biblioteca. `estilos/` — el catálogo de estilos.
-- `py/pruebas/` — pruebas del motor: `python -m pytest py/pruebas -q` (las que
+- `app/`, `components/`, `lib/`: el panel (Next): páginas, reproductor, tira,
+  servidor de medios con rangos, los comandos como API y la consola de diales
+  (`components/Consola.tsx`; los shaders de la vista previa en `lib/consola-gl.ts`).
+- `proyectos/<p>/`: cada experimento. `curaduria/`: listas de imágenes de marca
+  por biblioteca. `estilos/`: el catálogo de estilos.
+- `py/pruebas/`: pruebas del motor: `python -m pytest py/pruebas -q` (las que
   necesitan medios se saltan si no están).
 
 ## Licencias
@@ -192,6 +217,8 @@ El código de este repo es libre bajo la licencia MIT (`LICENSE`). Remotion tien
 licencia](https://github.com/remotion-dev/remotion/blob/main/LICENSE.md): gratis
 para personas y empresas chicas, con licencia de empresa a partir de cierto
 tamaño; quien use esto en una organización debe revisarla. Las imágenes y la
-música de los experimentos son de sus autores y no se distribuyen aquí.
+música de los experimentos son de sus autores y no se distribuyen aquí. El material de prueba
+(`demo`) lo genera el código y es CC0. Los shaders de la consola están escritos para este repo;
+lo que se estudió de otros proyectos y bajo qué licencia está en `direccion/CONSOLA.md`.
 
 Hecho entre Miguel Gil (Curiana Radio) y Claude.
