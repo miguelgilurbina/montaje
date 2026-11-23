@@ -972,6 +972,22 @@ def pantalla(s: Senal, p: dict, ctx: Contexto) -> np.ndarray:
 APARATOS = {"camara": camara, "osd": osd, "cinta": cinta, "antena": antena, "tbc": tbc, "colorizador": colorizador,
             "iman": iman, "relieve": relieve, "realimentacion": realimentacion, "pantalla": pantalla}
 CAPTURAS = ("peine", "muesca")
+# Qué es cada aparato de señal, en una línea (la consola del panel lo muestra en su tarjeta). Los de imagen lo dicen
+# en la primera línea de su módulo.
+DESCRIPCION = {
+    "camara": "La cámara de tubo o de los 90: la mancha clara sobre las luces, los blancos que se queman, el ruido y la estela.",
+    "osd": "Los letreros de la cámara y la casetera en pantalla: la fecha, la hora, REC, PLAY.",
+    "cinta": "La cinta de video (VHS, Betamax, Video8): el color corrido, el temblor, el tracking, la costura del cabezal "
+             "y el desgaste de las copias.",
+    "antena": "La señal por el aire: la nieve, los fantasmas, la interferencia, la barra del zumbido y la imagen que rueda.",
+    "tbc": "El corrector de base de tiempo: endereza la cinta que viene antes y ajusta brillo, contraste, color y tono.",
+    "colorizador": "El colorizador del sintetizador de video: el brillo pasado a las tintas.",
+    "iman": "El imán junto al tubo (Paik, Magnet TV, 1965): la imagen se tuerce y cambia de color alrededor de un punto.",
+    "relieve": "El relieve de barrido (Rutt/Etra): el brillo levanta las líneas de la pantalla.",
+    "realimentacion": "La cámara que mira su propio monitor: lo de antes vuelve más chico, girado y corrido de color.",
+    "pantalla": "El televisor de tubo: el vidrio curvo, las líneas de barrido, la máscara de fósforos, el resplandor y "
+                "la persistencia.",
+}
 
 # ── Los aparatos de imagen: la película y lo digital ───────────────────────
 
@@ -1076,9 +1092,149 @@ def errores(cadena) -> list[str]:
         modulo = _modulo(nombre)
         if modulo is not None:
             mal.extend(modulo.errores(nombre, a))
+    if not mal:
+        mal.extend(errores_de_automatizacion(c))
     if not mal:  # lo que sólo se ve mirando la cadena entera (a 30 cuadros por segundo; `procesar` mira los del video)
         mal.extend(_revisar_memoria([(a["aparato"], {**POR_DEFECTO[a["aparato"]], **a}) for a in c["aparatos"]], 30.0))
     return mal
+
+
+# ── La automatización: las perillas que se mueven en el tiempo ─────────────
+#
+# Miguel, el 2026-11-23: «podríamos además de tener una galería, tener un espacio para hacer edición manual de vídeo.
+# Como modificación análoga de vídeo. Con diales manuales». La consola del panel (`/consola`) graba los movimientos de
+# las perillas; el motor los repite al renderizar. Una cadena puede llevar:
+#
+#     "automatizacion": [{"paso": 0, "perilla": "nieve", "puntos": [[0.0, 0.1], [2.5, 0.6], [4.0, 0.0]]}, …]
+#
+# `paso` es el lugar del aparato en la cadena (desde 0); `puntos`, pares [segundo de la entrada, valor]. Entre punto y
+# punto la perilla se mueve en línea recta (`curva: "lineal"`, la de fábrica) o salta (`"escalon"`); antes del primero
+# y después del último, se queda en su valor. Las perillas de opciones (un modo, un sí o no) siempre saltan. Lo que
+# suena usa el valor de la perilla al empezar (la automatización mueve la imagen).
+
+CURVAS = ("lineal", "escalon")
+
+
+def errores_de_automatizacion(c: dict) -> list[str]:
+    auto = c.get("automatizacion", [])
+    if not auto:
+        return []
+    if not isinstance(auto, list):
+        return ["`automatizacion`: una lista de pistas {paso, perilla, puntos}"]
+    mal = []
+    aparatos = c["aparatos"]
+    for n, pista in enumerate(auto):
+        donde = f"automatizacion {n + 1}"
+        if not isinstance(pista, dict):
+            mal.append(f"{donde}: una pista es {{paso, perilla, puntos}}")
+            continue
+        paso = pista.get("paso")
+        if isinstance(paso, bool) or not isinstance(paso, int) or not 0 <= paso < len(aparatos):
+            mal.append(f"{donde}: `paso` es el lugar del aparato en la cadena, de 0 a {len(aparatos) - 1}")
+            continue
+        nombre = aparatos[paso]["aparato"]
+        perilla = pista.get("perilla")
+        if perilla not in POR_DEFECTO[nombre]:
+            mal.append(f"{donde}: {nombre} no tiene la perilla `{perilla}`")
+            continue
+        if pista.get("curva", "lineal") not in CURVAS:
+            mal.append(f"{donde}: `curva` es {' / '.join(CURVAS)}")
+        puntos = pista.get("puntos")
+        if not isinstance(puntos, list) or not puntos or not all(isinstance(x, list) and len(x) == 2 for x in puntos):
+            mal.append(f"{donde}: `puntos` es una lista de [segundo, valor]")
+            continue
+        tiempos = [x[0] for x in puntos]
+        if not all(isinstance(t, (int, float)) and not isinstance(t, bool) for t in tiempos) or tiempos != sorted(tiempos):
+            mal.append(f"{donde}: los segundos de los puntos van en orden")
+        r = RANGOS.get(nombre, {}).get(perilla)
+        for _, v in puntos:
+            if r is None:
+                continue
+            if isinstance(r[0], str):
+                if v not in r:
+                    mal.append(f"{donde}: {nombre}.{perilla}: «{v}» no es {' / '.join(r)}")
+                    break
+            elif isinstance(v, bool) or not isinstance(v, (int, float)) or not r[0] <= v <= r[1]:
+                mal.append(f"{donde}: {nombre}.{perilla}: {v!r} tiene que ser un número entre {r[0]} y {r[1]}")
+                break
+    return mal
+
+
+def _pistas_por_paso(c: dict) -> dict[int, list[dict]]:
+    pistas: dict[int, list[dict]] = {}
+    for pista in c.get("automatizacion", []) or []:
+        pistas.setdefault(pista["paso"], []).append(pista)
+    return pistas
+
+
+def valor_en(pista: dict, t: float):
+    """El valor de una perilla automatizada en el segundo t de la entrada."""
+    puntos = pista["puntos"]
+    if t <= puntos[0][0]:
+        return puntos[0][1]
+    if t >= puntos[-1][0]:
+        return puntos[-1][1]
+    for (t0, v0), (t1, v1) in zip(puntos, puntos[1:]):
+        if t0 <= t < t1:
+            if pista.get("curva", "lineal") == "escalon" or not isinstance(v0, (int, float)) or isinstance(v0, bool) \
+                    or not isinstance(v1, (int, float)) or isinstance(v1, bool) or t1 <= t0:
+                return v0
+            v = v0 + (v1 - v0) * (t - t0) / (t1 - t0)
+            # Si la perilla es entera lo dice su valor de fábrica (`_entero`, lo pone `preparar`): los puntos que
+            # llegan del navegador en JSON no distinguen 1.0 de 1.
+            entero = pista.get("_entero")
+            if entero is None:
+                entero = isinstance(v0, int) and isinstance(v1, int)
+            return int(round(v)) if entero else float(v)
+    return puntos[-1][1]
+
+
+def _es_entero(v) -> bool:
+    return isinstance(v, int) and not isinstance(v, bool)
+
+
+def _con_automatizacion(p: dict, t: float) -> dict:
+    """Las perillas del paso en el segundo t: las de la cadena con las automatizadas en su valor de ese instante."""
+    pistas = p.get("_auto")
+    if not pistas:
+        return p
+    return {**p, **{pista["perilla"]: valor_en(pista, t) for pista in pistas}}
+
+
+def aparatos_json() -> dict:
+    """Todos los aparatos de la mesa con sus perillas (el valor de fábrica y el rango): lo que la consola dibuja como
+    diales. `tipo`: señal (trabaja en la señal de video) o imagen (en la imagen); `doc`: la primera línea de su módulo."""
+    imagen = _imagen()
+    sale = {}
+    for nombre in APARATOS:
+        m = _modulo(nombre)
+        doc = DESCRIPCION.get(nombre) or ((m.__doc__ if m is not None else __doc__) or "").strip().splitlines()[0]
+        perillas = {}
+        for k, v in POR_DEFECTO[nombre].items():
+            r = RANGOS.get(nombre, {}).get(k)
+            perillas[k] = {"defecto": v, "rango": list(r) if r is not None else None, "entero": _es_entero(v)}
+        sale[nombre] = {"tipo": "imagen" if nombre in imagen else "señal", "gesto": nombre in GESTOS,
+                        "modulo": m.__name__.split(".")[-1] if m is not None else "analogo", "doc": doc, "perillas": perillas}
+    return sale
+
+
+def cadenas_json() -> list[dict]:
+    """Las cadenas analógicas de la galería ya resueltas (sin los gestos): los puntos de partida de la consola."""
+    from . import estilos as galeria
+
+    todos = galeria.leer()
+    sale = []
+    for e in todos:
+        t = e["tecnica"]
+        if t.get("comando") != "analogo" or t.get("gesto"):
+            continue
+        try:
+            c = _normalizar_cadena(cadena_de_tecnica(t, todos))
+        except SystemExit:
+            continue
+        sale.append({"id": e["id"], "frase": e.get("frase", ""), "estado": e.get("estado", ""),
+                     "aparatos": c["aparatos"], "captura": c.get("captura", "peine"), "semilla": c.get("semilla", 1)})
+    return sale
 
 
 def preparar(cadena) -> tuple[list[tuple[str, dict]], str, int]:
@@ -1088,9 +1244,17 @@ def preparar(cadena) -> tuple[list[tuple[str, dict]], str, int]:
         salir("cadena analógica con errores:\n  " + "\n  ".join(mal))
     c = _normalizar_cadena(cadena)
     pasos = []
-    for a in c["aparatos"]:
+    pistas = _pistas_por_paso(c)
+    for n, a in enumerate(c["aparatos"]):
         p = {**POR_DEFECTO[a["aparato"]], **{k: v for k, v in a.items() if k != "aparato"}}
-        pasos.append((a["aparato"], json.loads(json.dumps(p))))
+        p = json.loads(json.dumps(p))
+        if n in pistas:   # las perillas que se mueven: arrancan en su primer valor (lo que suena usa ése)
+            p["_auto"] = [{**pista, "_entero": _es_entero(POR_DEFECTO[a["aparato"]].get(pista["perilla"]))}
+                          for pista in pistas[n]]
+            for pista in p["_auto"]:
+                v = pista["puntos"][0][1]
+                p[pista["perilla"]] = int(round(v)) if pista["_entero"] and isinstance(v, (int, float)) else v
+        pasos.append((a["aparato"], p))
     # El TBC endereza la base de tiempo de las cintas que vienen antes.
     for n, (nombre, p) in enumerate(pasos):
         if nombre == "tbc":
@@ -1192,6 +1356,7 @@ def procesar_cuadro(rgb8: np.ndarray, pasos, captura: str, ctx: Contexto) -> np.
     s = None
     for n, (nombre, p) in enumerate(pasos):
         ctx.paso = n
+        p = _con_automatizacion(p, ctx.t)
         if nombre in imagen:
             if s is not None:
                 img, s = _de_senal(s, captura, alto, ancho), None
@@ -1217,6 +1382,7 @@ def cuadro(rgb: np.ndarray, pasos, captura: str, ctx: Contexto) -> np.ndarray:
     s = Senal(*a_yiq(rgb), ctx.k)
     for n, (nombre, p) in enumerate(pasos):
         ctx.paso = n
+        p = _con_automatizacion(p, ctx.t)
         if nombre == "pantalla":
             return pantalla(s, p, ctx)
         s = APARATOS[nombre](s, p, ctx)
@@ -1823,6 +1989,9 @@ def cmd(a) -> None:
     if a.cadenas:
         listar()
         return
+    if getattr(a, "aparatos", False):   # para la consola del panel: los aparatos con sus perillas
+        print(json.dumps({"aparatos": aparatos_json(), "cadenas": cadenas_json()}, ensure_ascii=False))
+        return
     if not a.entrada:
         salir("falta la entrada: un video o una foto (o --cadenas para ver las cadenas de la galería)")
     entrada = ruta_entrada(a.entrada)
@@ -1840,6 +2009,11 @@ def cmd(a) -> None:
     if not a.cadena:
         salir("falta --cadena (un estilo de la galería, o la cadena en JSON) o --comparar")
     cadena, nombre = resolver_cadena(a.cadena, getattr(a, "gesto", None) or [])
+    if getattr(a, "automatizacion", None):   # los movimientos de las perillas, grabados en la consola
+        datos = json.loads(Path(a.automatizacion).read_text(encoding="utf-8"))
+        pistas = datos.get("automatizacion", []) if isinstance(datos, dict) else datos
+        cadena = {**cadena, "automatizacion": [*cadena.get("automatizacion", []), *pistas]}
+        nombre += "-a-mano"
     destino = Path(a.salida) if a.salida else entrada.with_name(f"{entrada.stem}-{nombre}.mp4")
     if destino.resolve() == entrada:
         salir("la salida no puede pisar la entrada")

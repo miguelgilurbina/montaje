@@ -4,5 +4,6 @@ numpy
 matplotlib
 pillow
 scipy
+fonttools   # la marca en el osciloscopio lee el contorno de las letras
 # Opcional, para `transcribir` (y bajar su modelo aparte):
 # faster-whisper

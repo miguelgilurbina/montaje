@@ -574,8 +574,19 @@ def main() -> None:
     s.add_argument("--recorrido", help="cadenas separadas por coma: un video con cada una sobre el mismo tramo "
                                        "(desde --desde, --segundos cada una), con su nombre; primero, tal cual")
     s.add_argument("--cadenas", action="store_true", help="lista las cadenas de la galería")
+    s.add_argument("--aparatos", action="store_true", help="los aparatos de la mesa con sus perillas, en JSON (lo lee la consola)")
+    s.add_argument("--automatizacion", metavar="ARCHIVO",
+                   help="los movimientos de las perillas (JSON: una lista de pistas {paso, perilla, puntos}, o un objeto con "
+                        "`automatizacion`), grabados en la consola del panel")
     s.add_argument("--golpes", default=None, metavar="PROYECTO",
                    help="los golpes de la canción de ese proyecto, para lo que va al pulso (la consola `al pulso`)")
+
+    s = sub.add_parser("demo", help="material de prueba hecho con código (cielo con sol, carta, barras, fractal, juego de la vida), "
+                                     "CC0, para probar sin material propio → medios/demo/clips/",
+                       description="material de prueba hecho con código, CC0: un cielo con sol, la carta de prueba, las barras de "
+                                   "color, un fractal y el juego de la vida, con un pulso de fondo (ver py/montaje/demo.py)")
+    s.add_argument("--segundos", type=float, default=8.0, help="cuánto dura cada clip")
+    s.add_argument("--alto", type=int, default=720, help="alto de los clips (16:9)")
 
     s = sub.add_parser("probar", help="el probador: cada estilo hace su muestra en el mismo banco (mismos clips, misma canción) → medios/estilos/probador/",
                        description="el probador: cada estilo hace su muestra en el mismo banco (mismos clips, misma canción), deja cuadros de "
@@ -596,6 +607,11 @@ def main() -> None:
         from . import analogo
 
         analogo.cmd(a)
+        return
+    if a.comando == "demo":
+        from . import demo
+
+        demo.cmd(a)
         return
     if a.comando == "probar":
         from . import probador

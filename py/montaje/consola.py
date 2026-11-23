@@ -18,6 +18,12 @@ se encadena con la cámara antes y con la cinta después, como en la sala de edi
 `al pulso`: en los golpes de la canción (`golpes_cada`: el uno de cada compás, cada golpe o los picos), durante
 `dura_golpes` golpes; como la sincronía con la música del MX50. Al pulso necesita los golpes: `analogo --golpes
 <proyecto>` (el probador pasa los del banco).
+
+`cruce` es la barra del mezclador (la T del MX50 entre A y B), desde el 2026-11-23, para la consola de diales del
+panel: `cantidad` 1 deja salir lo que viene de la cadena y 0 el cuadro como entró; en el medio, los dos fundidos. Va
+donde termina lo que se mezcla (antes del tubo, si hay: la salida del mezclador entra al televisor) y se mueve a mano
+grabándolo (`automatizacion`). Las reseñas de los mezcladores de consumo se quejaban de la barra que respondía tarde:
+aquí no guarda nada, responde en el cuadro.
 """
 
 from __future__ import annotations
@@ -31,10 +37,12 @@ from . import analogo as A
 EFECTOS = ("mosaico", "estrobo", "multi", "pintura", "negativo", "llave")
 
 POR_DEFECTO = {
+    "cruce": {"cantidad": 1.0},
     "consola": {"efecto": "mosaico", "cuando": "siempre", "por_minuto": 4.0, "dura": 2.0, "bloque": 16, "cada": 4,
                 "celdas": 3, "niveles": 4, "umbral": 0.35, "memoria": 4.0, "golpes_cada": "compas", "dura_golpes": 1.0},
 }
 RANGOS = {
+    "cruce": {"cantidad": (0, 1)},
     "consola": {"efecto": EFECTOS, "cuando": ("siempre", "a ratos", "al pulso"), "por_minuto": (0, 60), "dura": (0.2, 10),
                 "bloque": (2, 96), "cada": (1, 60), "celdas": (2, 4), "niveles": (2, 12), "umbral": (0, 1),
                 "memoria": (0.5, 7), "golpes_cada": ("compas", "golpe", "pico"), "dura_golpes": (0.1, 8)},
@@ -154,4 +162,15 @@ def consola(img: np.ndarray, p: dict, ctx) -> np.ndarray:
     return (img * (1 - m) + est["memoria"] * m).astype(np.float32)
 
 
-APARATOS = {"consola": consola}
+def cruce(img: np.ndarray, p: dict, ctx) -> np.ndarray:
+    """La barra: el cuadro como entró a la cadena (`ctx.original`) fundido con lo que salió de ella."""
+    c = float(p["cantidad"])
+    original = getattr(ctx, "original", None)
+    if c >= 1 or original is None:
+        return img
+    if img.shape[:2] != original.shape[:2]:   # lo digital puede haber cambiado el tamaño (el 4:3 del celular)
+        img = A._encajar(img, original.shape[0], original.shape[1], ctx.encuadre)
+    return (original * (1 - c) + img * c).astype(np.float32)
+
+
+APARATOS = {"consola": consola, "cruce": cruce}
