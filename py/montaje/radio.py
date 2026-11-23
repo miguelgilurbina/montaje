@@ -24,6 +24,14 @@ Con `inicio`, una vez al empezar el video (la emisora que se sintoniza para abri
 `osciloscopio`: la canción dibujada como una figura verde en la pantalla de un osciloscopio (un canal contra el otro,
 corrido unos milisegundos para que una canción en mono también dibuje), con la retícula y el fósforo que dura.
 
+La marca en el osciloscopio (Miguel, del osciloscopio: «Me encantaría expandir esta función»; eligió «La marca en el
+osciloscopio», 2026-11-23). Con `dibujo`, cada `cada` segundos y durante `dura`, la canción se aparta (queda un 6 %) y el haz dibuja
+la marca: la espiral del isotipo (el trazo de `~/Videos/montaje/marca/espiral.svg`, fuera del repo), el nombre en la
+letra Curiana Cartel, o las dos. El dibujo es sonido: el canal izquierdo lleva la x y el derecho la y, y el haz
+recorre la figura 50 veces por segundo (un zumbido grave con sus armónicos). Con `sonido: marca`, ese sonido va en el
+audio: mirado en un osciloscopio de verdad, el audio dibuja la marca. La imagen y el sonido usan la misma cuenta
+(`marca_xy`, `marca_ganancia`).
+
 Los tiempos y los niveles son [sin verificar] salvo las frecuencias de los tonos (1 200 Hz el sincronismo, 1 500 el
 negro, 2 300 el blanco: las de la norma sstv y las del radiofacsímil).
 """
@@ -42,12 +50,15 @@ MODOS = ("sstv", "fax", "telefoto")
 POR_DEFECTO = {
     "radiofoto": {"modo": "sstv", "dura": 6.0, "ruido": 0.3, "inclinacion": 0.0, "sonido": "ninguno"},
     "dial": {"sintonizar": 0.0, "dura": 1.8, "frecuencia": 88.8, "inicio": False, "sonido": "ninguno"},
-    "osciloscopio": {"mezcla": 0.0, "tinta": "verde", "trazo": 1.0, "retardo_ms": 2.0},
+    "osciloscopio": {"mezcla": 0.0, "tinta": "verde", "trazo": 1.0, "retardo_ms": 2.0, "dibujo": "cancion", "cada": 8.0,
+                     "dura": 3.0, "texto": "CURIANA", "sonido": "ninguno"},
 }
+DIBUJOS = ("cancion", "espiral", "nombre", "espiral-y-nombre")
 RANGOS = {
     "radiofoto": {"modo": MODOS, "dura": (2, 7.5), "ruido": (0, 1), "inclinacion": (-1, 1), "sonido": ("ninguno", "tonos")},
     "dial": {"sintonizar": (0, 20), "dura": (0.8, 3), "frecuencia": (88, 108), "sonido": ("ninguno", "sintonia")},
-    "osciloscopio": {"mezcla": (0, 1), "tinta": ("verde", "oro"), "trazo": (0.3, 3), "retardo_ms": (0, 20)},
+    "osciloscopio": {"mezcla": (0, 1), "tinta": ("verde", "oro"), "trazo": (0.3, 3), "retardo_ms": (0, 20),
+                     "dibujo": DIBUJOS, "cada": (0, 60), "dura": (0.5, 60), "sonido": ("ninguno", "marca")},
 }
 
 #: Las partes de una llegada, en fracción de `dura`: el encabezado, la imagen que se dibuja, y quieta.
@@ -66,6 +77,10 @@ ORO = np.array([0.90, 0.71, 0.24], np.float32)
 def errores(nombre: str, a: dict) -> list[str]:
     if nombre == "dial" and "inicio" in a and not isinstance(a["inicio"], bool):
         return ["dial.inicio: true o false"]
+    if nombre == "osciloscopio" and "texto" in a and (not isinstance(a["texto"], str) or not a["texto"].strip()):
+        return ["osciloscopio.texto: el nombre que dibuja el haz"]
+    if nombre == "osciloscopio" and a.get("dibujo", "cancion") != "cancion" and a.get("cada", 8.0) and a.get("dura", 3.0) > a.get("cada", 8.0):
+        return ["osciloscopio: la `dura` de la marca no puede ser más larga que `cada`"]
     return []
 
 
@@ -339,6 +354,12 @@ def osciloscopio(img: np.ndarray, p: dict, ctx) -> np.ndarray:
             der = x[max(0, a - retardo):max(0, b - retardo), 1]
             n = min(len(izq), len(der))
             izq, der = izq[-n:], der[-n:]
+            if p["dibujo"] != "cancion":   # la marca: la canción se aparta y el haz dibuja la figura
+                ts = (b - n + np.arange(n)) / SR
+                g = marca_ganancia(ts, p)
+                mx, my = marca_xy(ts, p)
+                izq = izq * (1 - MARCA_APARTA * g) + mx * g * MARCA_AMPLITUD * pico
+                der = der * (1 - MARCA_APARTA * g) + my * g * MARCA_AMPLITUD * pico
             # Entre muestra y muestra, puntos intermedios: el haz es una línea, no puntos sueltos.
             fino = np.linspace(0, n - 1, n * 4)
             xs = np.interp(fino, np.arange(n), izq) / pico
@@ -353,6 +374,187 @@ def osciloscopio(img: np.ndarray, p: dict, ctx) -> np.ndarray:
     fondo = img * 0.35 * p["mezcla"]
     sale = fondo + fosforo * (luz + reticula)[..., None] + np.clip(luz - 1, 0, 1)[..., None] * 0.6
     return np.clip(sale, 0, 1).astype(np.float32)
+
+
+# ── La marca en el osciloscopio ────────────────────────────────────────────
+
+#: La espiral del isotipo (copiada del sitio a la biblioteca de medios: la marca no va en este repo público).
+ESPIRAL = A.MEDIOS / "marca" / "espiral.svg"
+LETRA = A.RAIZ / "fuentes" / "curiana-cartel" / "CurianaCartel-Regular.ttf"
+#: Cuántas veces por segundo recorre el haz la figura, y cuántos puntos tiene el recorrido.
+TRAZOS_POR_SEGUNDO, PUNTOS = 50.0, 2400
+#: El tamaño de la marca contra la canción (en veces el pico de la canción), y cuánto se aparta la canción mientras
+#: suena la marca (con un 15 % el dibujo temblaba donde la canción es fuerte; con un 6 % se lee).
+MARCA_AMPLITUD, MARCA_APARTA = 0.8, 0.94
+_RECORRIDOS: dict = {}
+
+
+def _cubica(p0, p1, p2, p3, n: int = 24) -> np.ndarray:
+    t = np.linspace(0, 1, n)[:, None]
+    return (1 - t) ** 3 * p0 + 3 * (1 - t) ** 2 * t * p1 + 3 * (1 - t) * t ** 2 * p2 + t ** 3 * p3
+
+
+def _cuadratica(p0, p1, p2, n: int = 16) -> np.ndarray:
+    t = np.linspace(0, 1, n)[:, None]
+    return (1 - t) ** 2 * p0 + 2 * (1 - t) * t * p1 + t ** 2 * p2
+
+
+def _espiral() -> list[np.ndarray]:
+    """El trazo de la espiral (un solo camino de curvas en el SVG), en puntos."""
+    import re
+
+    if not ESPIRAL.exists():
+        return []
+    d = re.search(r'\sd="([^"]+)"', ESPIRAL.read_text(encoding="utf-8"))
+    if not d:
+        return []
+    fichas = re.findall(r"[MmCcLlZz]|-?\d*\.?\d+", d.group(1))
+    puntos, actual, cmd, i = [], np.zeros(2), None, 0
+    while i < len(fichas):
+        if fichas[i].isalpha():
+            cmd = fichas[i]
+            i += 1
+            continue
+        if cmd in ("M", "L"):
+            actual = np.array([float(fichas[i]), float(fichas[i + 1])])
+            puntos.append(actual[None, :])
+            i += 2
+        elif cmd == "C":
+            c = [np.array([float(fichas[i + k]), float(fichas[i + k + 1])]) for k in (0, 2, 4)]
+            puntos.append(_cubica(actual, *c)[1:])
+            actual = c[2]
+            i += 6
+        else:
+            i += 1
+    return [np.concatenate(puntos) * np.array([1, -1])] if puntos else []   # la y del SVG va hacia abajo
+
+
+def _nombre(texto: str) -> list[np.ndarray]:
+    """El contorno de cada letra del nombre, en la letra Curiana Cartel."""
+    from fontTools.pens.recordingPen import RecordingPen
+    from fontTools.ttLib import TTFont
+
+    fuente = TTFont(str(LETRA))
+    glifos, mapa = fuente.getGlyphSet(), fuente.getBestCmap()
+    contornos, corre = [], 0.0
+    for ch in texto:
+        nombre = mapa.get(ord(ch))
+        if nombre is None:
+            continue
+        pluma = RecordingPen()
+        glifos[nombre].draw(pluma)
+        actual, uno = np.zeros(2), []
+        for op, args in pluma.value:
+            pts = [np.array(a, float) + [corre, 0] for a in args]
+            if op == "moveTo":
+                actual, uno = pts[0], [pts[0][None, :]]
+            elif op == "lineTo":
+                uno.append(pts[0][None, :])
+                actual = pts[0]
+            elif op == "curveTo":
+                uno.append(_cubica(actual, *pts)[1:])
+                actual = pts[-1]
+            elif op == "qCurveTo":   # TrueType: los puntos de control seguidos llevan un punto sobre la curva implícito
+                ctrl, fin = pts[:-1], pts[-1]
+                for k, c in enumerate(ctrl):
+                    sig = fin if k == len(ctrl) - 1 else (c + ctrl[k + 1]) / 2
+                    uno.append(_cuadratica(actual, c, sig)[1:])
+                    actual = sig
+            elif op in ("closePath", "endPath") and uno:
+                uno.append(uno[0][:1])
+                contornos.append(np.concatenate(uno))
+                uno = []
+        corre += glifos[nombre].width
+    return contornos
+
+
+def _recorrido(dibujo: str, texto: str) -> np.ndarray:
+    """La figura entera como un solo recorrido del haz, de `PUNTOS` puntos repartidos por largo, entre −1 y 1. La
+    espiral se recorre de ida y de vuelta (sin salto); entre letras, el haz salta rápido (el salto casi no se ve)."""
+    clave = (dibujo, texto)
+    if clave in _RECORRIDOS:
+        return _RECORRIDOS[clave]
+    partes = []
+    if dibujo in ("espiral", "espiral-y-nombre"):
+        for c in _espiral():
+            partes.append(("espiral", np.concatenate([c, c[::-1]])))
+    if dibujo in ("nombre", "espiral-y-nombre") or not partes:
+        for c in _nombre(texto):
+            partes.append(("nombre", c))
+    if not partes:
+        _RECORRIDOS[clave] = np.zeros((PUNTOS, 2))
+        return _RECORRIDOS[clave]
+
+    def encajar(cs, x0, x1, y0, y1):
+        todo = np.concatenate(cs)
+        lo, hi = todo.min(0), todo.max(0)
+        esc = min((x1 - x0) / max(hi[0] - lo[0], 1e-6), (y1 - y0) / max(hi[1] - lo[1], 1e-6))
+        centro = (lo + hi) / 2
+        medio = np.array([(x0 + x1) / 2, (y0 + y1) / 2])
+        return [(c - centro) * esc + medio for c in cs]
+
+    esp = [c for k, c in partes if k == "espiral"]
+    nom = [c for k, c in partes if k == "nombre"]
+    if esp and nom:
+        esp, nom = encajar(esp, -0.55, 0.55, -0.05, 0.95), encajar(nom, -0.95, 0.95, -0.95, -0.25)
+    elif esp:
+        esp = encajar(esp, -0.95, 0.95, -0.95, 0.95)
+    else:
+        nom = encajar(nom, -0.95, 0.95, -0.4, 0.4)
+    camino = np.concatenate(esp + nom)
+    largo = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(camino, axis=0).T))])
+    # Los saltos entre contornos no cuentan como largo: el haz los cruza en un punto (casi no deja traza).
+    tramos = np.diff(largo)
+    saltos = tramos > 0.25
+    tramos[saltos] = 0.002
+    largo = np.concatenate([[0], np.cumsum(tramos)])
+    u = np.linspace(0, largo[-1], PUNTOS, endpoint=False)
+    rec = np.stack([np.interp(u, largo, camino[:, 0]), np.interp(u, largo, camino[:, 1])], -1)
+    _RECORRIDOS[clave] = rec
+    return rec
+
+
+def marca_xy(t: np.ndarray, p: dict) -> tuple[np.ndarray, np.ndarray]:
+    """Dónde está el haz en cada instante t (segundos): la figura recorrida `TRAZOS_POR_SEGUNDO` veces por segundo, que
+    se mece un poco de lado (como si girara en la pantalla)."""
+    rec = _recorrido(p["dibujo"], p["texto"])
+    fase = (np.asarray(t) * TRAZOS_POR_SEGUNDO) % 1.0 * len(rec)
+    i0 = np.floor(fase).astype(np.int64) % len(rec)
+    f = fase - np.floor(fase)
+    punto = rec[i0] * (1 - f[:, None]) + rec[(i0 + 1) % len(rec)] * f[:, None]
+    giro = np.cos(0.55 * np.sin(2 * np.pi * np.asarray(t) / 9.0))
+    return punto[:, 0] * giro, punto[:, 1]
+
+
+def marca_ganancia(t: np.ndarray, p: dict) -> np.ndarray:
+    """Cuánto de marca hay en cada instante (0 a 1): cada `cada` segundos, durante `dura`, con entradas suaves."""
+    t = np.asarray(t, float)
+    if p["dibujo"] == "cancion":
+        return np.zeros_like(t)
+    if not p["cada"]:
+        return np.ones_like(t)
+    u = t % p["cada"]
+    rampa = min(0.4, p["dura"] / 3)
+    return np.clip(np.minimum(u / rampa, (p["dura"] - u) / rampa), 0, 1)
+
+
+def sonido(nombre: str, x: np.ndarray, p: dict, semilla: int, t0: float, sr: int, indice: int) -> np.ndarray:
+    """La marca en el audio: donde la imagen la dibuja, la canción se aparta y el haz suena (x a la izquierda, y a la
+    derecha). Mirado en un osciloscopio de verdad, el audio dibuja la marca."""
+    if nombre != "osciloscopio" or p.get("sonido", "ninguno") == "ninguno" or not len(x) or p["dibujo"] == "cancion":
+        return x
+    t = t0 + np.arange(len(x)) / sr
+    g = marca_ganancia(t, p)
+    mx, my = marca_xy(t, p)
+    audio = _audio(p.get("_entrada"))
+    pico = audio[1] if audio is not None and audio[0] is not None else float(np.percentile(np.abs(x), 99.5)) + 1e-4
+    sale = x * (1 - MARCA_APARTA * g)[:, None]
+    marca = np.stack([mx, my], -1) * (g * MARCA_AMPLITUD * pico)[:, None]
+    if sale.shape[1] == 2:
+        sale = sale + marca
+    else:
+        sale = sale + marca.mean(1, keepdims=True)
+    return sale.astype(np.float32)
 
 
 APARATOS = {"radiofoto": radiofoto, "dial": dial, "osciloscopio": osciloscopio}

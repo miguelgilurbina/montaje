@@ -43,5 +43,6 @@ si la idea cambia, es otro número.
 | 33 | [La radio, segunda vuelta](proyectos/33-la-radio-segunda-vuelta/FICHA.md) | 2026-11-23 | el banco del probador (La Añoranza) | el satélite del tiempo con su tic-tac, el texto que llega por radio y la imagen dibujada en la cascada de frecuencias | por juzgar al final |
 | 34 | [El color del cine mudo](proyectos/34-el-color-del-cine-mudo/FICHA.md) | 2026-11-23 | el banco del probador (La Añoranza) | el tintado por escena, el virado y los dos colores de antes del color completo, con la franja de lo que se mueve | por juzgar al final |
 | 35 | [Antes del cine](proyectos/35-antes-del-cine/FICHA.md) | 2026-11-23 | el banco del probador (La Añoranza) | los juguetes ópticos: el zoótropo, el fenaquistiscopio, el libro animado, la postal lenticular y la cronofotografía | por juzgar al final |
+| 36 | [La marca en el osciloscopio](proyectos/36-la-marca-en-el-osciloscopio/FICHA.md) | 2026-11-23 | el banco del probador (La Añoranza) | la canción se aparta y el haz dibuja la marca, la espiral del isotipo y el nombre, con un sonido que es el dibujo | por juzgar |
 
 La dirección que vale para todos los experimentos (tono, paleta, motivos, referencias, sonido y las palabras de Miguel) está en [`direccion/`](direccion/README.md).

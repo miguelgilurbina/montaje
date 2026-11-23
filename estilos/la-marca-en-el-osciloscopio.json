@@ -1,0 +1,33 @@
+{
+ "nombre": "La marca en el osciloscopio",
+ "frase": "La canción en el osciloscopio y, cada ocho segundos, la canción se aparta y el haz dibuja la espiral del isotipo y «CURIANA» en la letra de la marca, meciéndose. El dibujo es sonido: un zumbido grave, el canal izquierdo la x y el derecho la y. Mirado en un osciloscopio de verdad, el audio dibuja la marca.",
+ "para": [
+  "presentar la marca",
+  "abrir",
+  "cerrar"
+ ],
+ "material": "cualquiera",
+ "energia": "sigue",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "osciloscopio",
+    "mezcla": 0.35,
+    "dibujo": "espiral-y-nombre",
+    "cada": 8.0,
+    "dura": 3.0,
+    "sonido": "marca"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "36-la-marca-en-el-osciloscopio"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

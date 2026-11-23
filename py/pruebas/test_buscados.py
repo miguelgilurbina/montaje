@@ -176,3 +176,34 @@ def test_la_pintura_de_la_cascada_suena_en_su_banda(monkeypatch):
     e = np.abs(np.fft.rfft(y))
     bajos, altos = e[(f > 1000) & (f < 2400)].sum(), e[(f > 2600) & (f < 4000)].sum()
     assert altos > 3 * bajos and e[f > 5000].sum() < 0.05 * e.sum()
+
+
+# ── La marca en el osciloscopio (2026-11-23) ───────────────────────────────
+
+def test_el_audio_dibuja_la_marca():
+    from montaje import radio as RA
+
+    if not RA.ESPIRAL.exists():
+        import pytest
+
+        pytest.skip("sin la espiral en la biblioteca de medios")
+    p = {**RA.POR_DEFECTO["osciloscopio"], "dibujo": "espiral", "cada": 8.0, "dura": 3.0, "sonido": "marca"}
+    t = np.arange(int(4 * SR)) / SR
+    cancion = (0.2 * np.sin(2 * np.pi * 220 * t)).astype(np.float32)
+    x = np.stack([cancion, cancion], 1)
+    y = RA.sonido("osciloscopio", x, p, 1, 0.0, SR, 0)
+    medio = slice(int(1.0 * SR), int(2.0 * SR))          # la marca entera
+    mx, my = RA.marca_xy(t[medio], p)
+    # Los dos canales, uno contra el otro, son la figura (más un poco de canción que queda debajo).
+    assert np.corrcoef(y[medio, 0], mx)[0, 1] > 0.95 and np.corrcoef(y[medio, 1], my)[0, 1] > 0.95
+    fuera = slice(int(3.5 * SR), int(4.0 * SR))           # pasada la marca, la canción tal cual
+    assert np.allclose(y[fuera], x[fuera], atol=1e-5)
+
+
+def test_el_nombre_tiene_sus_letras():
+    from montaje import radio as RA
+
+    contornos = RA._nombre("CURIANA")
+    assert len(contornos) >= 7                            # al menos un contorno por letra (la A y la R tienen dos)
+    rec = RA._recorrido("nombre", "CURIANA")
+    assert rec.shape == (RA.PUNTOS, 2) and np.abs(rec).max() <= 1.0
