@@ -1,0 +1,23 @@
+{
+ "nombre": "Por bloques",
+ "frase": "La imagen nueva se arma por bloques, en un orden que parece al azar (siempre el mismo).",
+ "para": [
+  "transición"
+ ],
+ "material": "clips",
+ "energia": "media",
+ "dura": "lo que dura el fundido entre clips (uno o dos golpes)",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "frase",
+  "frase_compases": 2,
+  "transicion": "pixeles",
+  "fundido_golpes": 2
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "39-transiciones-en-todo"
+ ],
+ "evitar": []
+}

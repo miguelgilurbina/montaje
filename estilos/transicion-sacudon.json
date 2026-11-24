@@ -1,0 +1,24 @@
+{
+ "nombre": "Sacudón",
+ "frase": "La imagen nueva entra de golpe y tiembla, cada vez menos. Para la energía alta.",
+ "para": [
+  "transición",
+  "subir la energía"
+ ],
+ "material": "clips",
+ "energia": "alta",
+ "dura": "lo que dura el fundido entre clips (uno o dos golpes)",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "frase",
+  "frase_compases": 2,
+  "transicion": "sacudon",
+  "fundido_golpes": 2
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "39-transiciones-en-todo"
+ ],
+ "evitar": []
+}

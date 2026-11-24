@@ -1,0 +1,24 @@
+{
+ "nombre": "Quemado de película",
+ "frase": "La película se quema desde un borde: la mancha crece blanca y naranja, tapa todo y al retirarse ya está la imagen nueva. Para el recuerdo.",
+ "para": [
+  "transición",
+  "cerrar"
+ ],
+ "material": "clips",
+ "energia": "media",
+ "dura": "lo que dura el fundido entre clips (uno o dos golpes)",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "frase",
+  "frase_compases": 2,
+  "transicion": "quemado",
+  "fundido_golpes": 2
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "39-transiciones-en-todo"
+ ],
+ "evitar": []
+}

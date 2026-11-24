@@ -177,6 +177,12 @@ Todo comando se corre desde la raíz del repo: `python montaje.py <comando> <pro
   le da a la consola las perillas y las cadenas de la galería: **una sola lista**, la del motor. Si
   se toca un aparato o sus rangos, revisar que su shader use los mismos nombres. Los renders y sus
   recetas quedan en `~/Videos/montaje/consola/`.
+- **Lo que se trajo de OpenMontage, hecho aquí** (2026-11-23, «y podríamos sacar nosotros algo de ahí pero
+  hacerlo nosotros mismos?»; desde cero, sin mirar su código, que es AGPL): el etalonaje (aparato `color`,
+  `etalonaje.py`, tablas `.cube` que van y vienen de otros editores, `montaje.py color`), las transiciones nuevas
+  (`transiciones.py`; la ronda sigue con las seis de antes, las nuevas se piden por nombre; también en `secuencia` y
+  con `transicion_tramo` en `pulso`) y la monotonía en `revisar` (cinco señales: avisan dónde mirar, no juzgan).
+  Antes de tocar `pulso.py`: `python py/pruebas/planes.py foto <antes>` y después `comparar`.
 - **El material de prueba** (`python montaje.py demo`, CC0, hecho con código): para probar y para
   mostrar en público sin material de nadie (el teaser de la alfa, `direccion/TEASER.md`; la alfa,
   `ALFA.md`).

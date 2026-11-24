@@ -35,7 +35,9 @@ canción ───musica────▶ musica.json   ├─planificar─▶ tim
   a la vez al caos, con pared, ecos y coda), `superposicion` (doble exposición),
   `secuencia` (una tras otra a pantalla completa) y `pulso` (**clips**: cada uno
   en su frase de la canción, saltando entre sus mejores momentos, con fundidos
-  o transiciones (cortina, iris, empuje, destello, zoom, persiana), fantasmas,
+  o transiciones (cortina, iris, empuje, destello, zoom, persiana; y luz, desenfoque,
+  doble exposición, quemado de película, sacudón, colores corridos, bloques, latigazo
+  y la cinta que agranda, también entre fotos y al empezar cada tramo), fantasmas,
   díptico, ventana, caleidoscopio, muro… y un estilo por tramo del guion; las
   fotos del proyecto pueden entrar al mismo reparto, con un acercamiento lento).
 - **Clips:** copias de trabajo (giradas, HDR→SDR, cámara lenta interpolada), lectura
@@ -52,7 +54,8 @@ canción ───musica────▶ musica.json   ├─planificar─▶ tim
 - **Ejercicios:** `ejercicio` corre todas las versiones de un experimento (plan,
   render, hoja, medidas y muestra) o barre una perilla y pone los valores lado a
   lado (`--barrer fundido_golpes=0.5,1,2,4`), `revisar` mide un render (negro, cuadros
-  repetidos, destellos por segundo, sonoridad), `recorrido` junta la galería en un
+  repetidos, destellos por segundo, sonoridad, y cinco señales de monotonía: planos del
+  mismo largo, planos que vuelven, poco movimiento, energía pareja, misma luz), `recorrido` junta la galería en un
   video y `guion` propone los estilos que sirven en cada tramo de la canción.
 - **Al pulso:** la canción se analiza (BPM, golpes, compases, energía por golpe,
   secciones, tonalidad) y el ritmo de entradas la sigue: compás → golpe →
@@ -75,7 +78,9 @@ canción ───musica────▶ musica.json   ├─planificar─▶ tim
   un sensor chico y un códec en bloques, con su datamosh), la casetera (pausa, rebobinar, la
   pantalla azul con PLAY), la consola de mezcla de los 90 (mosaico, estrobo, multi; también al
   pulso de la canción), el proyector en la pared o en la sábana, y la lente (aberración, ojo de
-  pez, destello, raya anamórfica, niebla).
+  pez, destello, raya anamórfica, niebla). Y el etalonaje (`color`): tablas de color escritas en
+  código (la paleta de la marca, noche americana, infrarroja, blanqueo saltado, proceso cruzado) o
+  cualquier `.cube` de otro editor; `python montaje.py color --exportar` las lleva a otro editor.
 - **Consola de diales** (`/consola` en el panel): la mesa a mano. El video pasa por la cadena de
   aparatos en la tarjeta de video, en vivo, y cada perilla se gira con el mouse, el teclado o un
   controlador MIDI. Lo que se gira con el video corriendo queda grabado (puntos por perilla, como

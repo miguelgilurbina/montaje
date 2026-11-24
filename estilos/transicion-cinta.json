@@ -1,0 +1,24 @@
+{
+ "nombre": "La cinta que agranda",
+ "frase": "La idea de Miguel: la imagen siguiente llega chica desde el costado, como en una tira, y se agranda hasta ocupar el cuadro.",
+ "para": [
+  "transición",
+  "mostrar el archivo"
+ ],
+ "material": "clips",
+ "energia": "media",
+ "dura": "lo que dura el fundido entre clips (uno o dos golpes)",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "frase",
+  "frase_compases": 2,
+  "transicion": "cinta",
+  "fundido_golpes": 2
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "39-transiciones-en-todo"
+ ],
+ "evitar": []
+}

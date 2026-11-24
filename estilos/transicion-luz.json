@@ -1,0 +1,24 @@
+{
+ "nombre": "Fundido por luz",
+ "frase": "Lo claro de la imagen nueva aparece primero, encima de la que se va, y lo oscuro llega después; la que se va se apaga al final. Para la calma.",
+ "para": [
+  "transición",
+  "respirar"
+ ],
+ "material": "clips",
+ "energia": "calma",
+ "dura": "lo que dura el fundido entre clips (uno o dos golpes)",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "frase",
+  "frase_compases": 2,
+  "transicion": "luz",
+  "fundido_golpes": 2
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "39-transiciones-en-todo"
+ ],
+ "evitar": []
+}

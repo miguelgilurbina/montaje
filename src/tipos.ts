@@ -40,12 +40,32 @@ export type Capa = {
    * Cómo entra sobre el clip que se va, durante sus `entrada` cuadros (sin esto, fundido):
    * cortina (un borde que barre), iris (un círculo que se abre desde `centro`), empuje
    * (entra corriendo al otro), destello (un fogonazo), zoom (llega desde cerca, desenfocado)
-   * o persiana (franjas). `dir` es hacia dónde se mueve: [1, 0] = a la derecha.
+   * o persiana (franjas). `dir` es hacia dónde se mueve: [1, 0] = a la derecha. Desde el 2026-11-23, también: luz
+   * (lo claro de la nueva primero), desenfoque (llega desenfocada), doble (doble exposición pasajera), quemado (la
+   * película que se quema), sacudón, separación (los colores corridos), píxeles (se arma por bloques), latigazo (el
+   * paneo rápido que la trae) y cinta (llega chica, como de una tira, y se agranda).
    */
-  transicion?: {tipo: 'cortina' | 'iris' | 'empuje' | 'destello' | 'zoom' | 'persiana'; dir: [number, number]; centro?: [number, number]};
+  transicion?: {tipo: TipoTransicion; dir: [number, number]; centro?: [number, number]};
   /** En sus últimos `cuadros`, el clip que entra con empuje la corre hacia `dir` hasta sacarla del cuadro. */
   empujada?: {cuadros: number; dir: [number, number]};
 };
+
+export type TipoTransicion =
+  | 'cortina'
+  | 'iris'
+  | 'empuje'
+  | 'destello'
+  | 'zoom'
+  | 'persiana'
+  | 'luz'
+  | 'desenfoque'
+  | 'doble'
+  | 'quemado'
+  | 'sacudon'
+  | 'separacion'
+  | 'pixeles'
+  | 'latigazo'
+  | 'cinta';
 
 export type CapaVideo = {
   /** Segundo del clip en que empieza la capa. */

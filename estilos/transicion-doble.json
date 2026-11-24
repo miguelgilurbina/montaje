@@ -1,0 +1,24 @@
+{
+ "nombre": "Doble exposición pasajera",
+ "frase": "Un rato las dos a la vez, sumadas como dos exposiciones en el mismo negativo, y la que se va se apaga.",
+ "para": [
+  "transición",
+  "respirar"
+ ],
+ "material": "clips",
+ "energia": "calma",
+ "dura": "lo que dura el fundido entre clips (uno o dos golpes)",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "frase",
+  "frase_compases": 2,
+  "transicion": "doble",
+  "fundido_golpes": 2
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "39-transiciones-en-todo"
+ ],
+ "evitar": []
+}

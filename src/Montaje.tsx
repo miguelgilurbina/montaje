@@ -123,7 +123,12 @@ const CapaImagen: React.FC<{c: Capa; frame: number; tl: Timeline}> = ({c, frame,
   // entrada 0 = corte seco: visible entera desde su primer cuadro.
   const alEntrar = c.entrada > 0 ? interpolate(frame, [c.ini, c.ini + c.entrada], [0, 1], {...fijo, easing: suave}) : 1;
   const alSalir = c.salida > 0 ? interpolate(frame, [c.fin - c.salida, c.fin], [1, 0], {...fijo, easing: suave}) : 1;
-  const opacidad = frame < c.ini ? 0 : c.opacidad * Math.min(alEntrar, alSalir);
+  let opacidad = frame < c.ini ? 0 : c.opacidad * Math.min(alEntrar, alSalir);
+  // La transición (desde el 2026-11-23 también entre fotos): medida en la caja de la foto, no en el cuadro.
+  const paso = transicionDe(c, frame, alEntrar, tl, {ancho: c.ancho, alto: c.alto, x0: c.x - c.ancho / 2, y0: c.y - c.alto / 2});
+  if (paso) opacidad = frame < c.ini ? 0 : c.opacidad * paso.opacidad * alSalir * (paso.contenido ?? 1);
+  const empuje = empujeDe(c, frame, tl);
+  const base = `translate(${c.deriva[0] * t}px, ${c.deriva[1] * t}px) scale(${entre(c.zoom, t)})`;
 
   const estilo: CSSProperties = {
     position: 'absolute',
@@ -132,11 +137,18 @@ const CapaImagen: React.FC<{c: Capa; frame: number; tl: Timeline}> = ({c, frame,
     width: c.ancho,
     height: c.alto,
     opacity: opacidad,
-    transform: `translate(${c.deriva[0] * t}px, ${c.deriva[1] * t}px) scale(${entre(c.zoom, t)})`,
     mixBlendMode: c.mezcla as CSSProperties['mixBlendMode'],
     ...mascara((c.borde ?? 0) * Math.min(c.ancho, c.alto)),
+    ...paso?.estilo,
+    transform: [empuje.transform, paso?.estilo.transform, base].filter(Boolean).join(' '),
   };
-  return <Img src={archivo(tl, c.img)} style={estilo} />;
+  if (!paso?.encima) return <Img src={archivo(tl, c.img)} style={estilo} />;
+  return (
+    <>
+      <Img src={archivo(tl, c.img)} style={estilo} />
+      {paso.encima}
+    </>
+  );
 };
 
 /**
@@ -247,11 +259,15 @@ function transicionDe(
   frame: number,
   u: number,
   tl: Timeline,
+  caja?: {ancho: number; alto: number; x0: number; y0: number},
 ): {opacidad: number; estilo: CSSProperties; encima?: React.ReactNode; contenido?: number} | null {
   const tr = c.transicion;
   if (!tr || c.entrada <= 0 || frame >= c.ini + c.entrada) return null;
-  const W = tl.ancho;
-  const H = tl.alto;
+  // Las medidas: las del cuadro (un clip ocupa el cuadro entero) o las de la caja de la foto.
+  const W = caja ? caja.ancho : tl.ancho;
+  const H = caja ? caja.alto : tl.alto;
+  const nuevas = transicionNueva(c, frame, u, tl, W, H, caja);
+  if (nuevas) return nuevas;
   const [dx, dy] = tr.dir;
   const mascara_ = (m: string): CSSProperties => ({maskImage: m, WebkitMaskImage: m});
   // Hacia dónde avanza el borde: 90deg = de izquierda a derecha.
@@ -262,7 +278,7 @@ function transicionDe(
     return {opacidad: 1, estilo: mascara_(`linear-gradient(${angulo}deg, #000 ${(p - borde).toFixed(2)}%, transparent ${p.toFixed(2)}%)`)};
   }
   if (tr.tipo === 'iris') {
-    const [cx, cy] = tr.centro ?? [W / 2, H / 2];
+    const [cx, cy] = tr.centro ? [tr.centro[0] - (caja?.x0 ?? 0), tr.centro[1] - (caja?.y0 ?? 0)] : [W / 2, H / 2];
     const lejos = Math.hypot(Math.max(cx, W - cx), Math.max(cy, H - cy));
     const borde = H * 0.05;
     const r = u * (lejos + borde);
@@ -294,6 +310,160 @@ function transicionDe(
       <AbsoluteFill style={{backgroundColor: '#fff1d0', opacity: Math.pow(Math.max(0, luz), 0.8), mixBlendMode: 'screen', pointerEvents: 'none'}} />
     ),
   };
+}
+
+/** Un número de 0 a 1 que depende sólo de `n` (y de `s`): el mismo en cada render. */
+function azar(n: number, s = 0): number {
+  const x = Math.sin(n * 127.1 + s * 311.7) * 43758.5453;
+  return x - Math.floor(x);
+}
+
+/** Un nombre de filtro SVG que se pueda usar en `url(#…)`. */
+function idFiltro(c: Capa, tipo: string): string {
+  return `tr-${tipo}-${c.id.replace(/[^A-Za-z0-9_-]/g, '-')}-${c.ini}`;
+}
+
+/**
+ * Las transiciones del 2026-11-23 (G1/K1 de PROPUESTAS.md; la idea de verlas juntas vino de mirar OpenMontage, y
+ * están hechas desde cero): `u` es el avance de la entrada, `W` y `H` las medidas de lo que entra.
+ */
+function transicionNueva(
+  c: Capa,
+  frame: number,
+  u: number,
+  tl: Timeline,
+  W: number,
+  H: number,
+  caja?: {ancho: number; alto: number; x0: number; y0: number},
+): {opacidad: number; estilo: CSSProperties; encima?: React.ReactNode; contenido?: number} | null {
+  const tr = c.transicion!;
+  const [dx, dy] = tr.dir;
+  const local = frame - c.ini;
+  switch (tr.tipo) {
+    case 'luz':
+      // Lo claro de la nueva aparece primero (aclarar: sólo gana donde es más clara que la que se va); la que se va
+      // se apaga al final (su `salida`), así al terminar no hay salto.
+      return {
+        opacidad: Math.min(1, u * 1.6),
+        estilo: {
+          mixBlendMode: 'lighten',
+          filter: `brightness(${(0.45 + 0.55 * u).toFixed(3)}) contrast(${(1 + 1.6 * (1 - u)).toFixed(3)})`,
+        },
+      };
+    case 'desenfoque':
+      return {opacidad: u, estilo: {filter: `blur(${((1 - u) * H * 0.03).toFixed(1)}px)`}};
+    case 'doble': {
+      // Un rato las dos a la vez (sumadas, como dos exposiciones en el mismo negativo); la que se va se apaga al final.
+      const a = u < 0.25 ? u / 0.25 : 1;
+      return {opacidad: 0.75 * a + 0.25 * u, estilo: {mixBlendMode: 'screen'}};
+    }
+    case 'quemado': {
+      // La película se quema desde un borde: la mancha crece blanca y naranja, y cuando tapa todo, ya es la nueva.
+      const cx = dx > 0 ? 0 : dx < 0 ? W : W * 0.5;
+      const cy = dy > 0 ? 0 : dy < 0 ? H : H * 0.65;
+      const r = Math.pow(u, 0.8) * Math.hypot(W, H) * 1.1;
+      const fuego = u < 0.55 ? u / 0.55 : 1 - (u - 0.55) / 0.45;
+      return {
+        opacidad: 1,
+        estilo: {},
+        contenido: u < 0.5 ? 0 : 1,
+        encima: (
+          <AbsoluteFill
+            style={{
+              left: caja?.x0,
+              top: caja?.y0,
+              width: caja?.ancho,
+              height: caja?.alto,
+              background: `radial-gradient(circle at ${cx.toFixed(0)}px ${cy.toFixed(0)}px, #fffbe8 0, #ffd27a ${(r * 0.35).toFixed(0)}px, #e0701c ${(r * 0.7).toFixed(0)}px, #5a1d06 ${(r * 0.92).toFixed(0)}px, transparent ${r.toFixed(0)}px)`,
+              opacity: Math.pow(Math.max(0, fuego), 0.7),
+              mixBlendMode: 'screen',
+              pointerEvents: 'none',
+            }}
+          />
+        ),
+      };
+    }
+    case 'sacudon': {
+      // Entra de golpe y la imagen tiembla, cada vez menos.
+      const fuerza = Math.pow(1 - u, 2);
+      const x = (azar(local, 1) - 0.5) * W * 0.06 * fuerza;
+      const y = (azar(local, 2) - 0.5) * H * 0.06 * fuerza;
+      return {opacidad: Math.min(1, u / 0.12), estilo: {transform: `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) scale(${(1 + 0.08 * fuerza).toFixed(4)})`}};
+    }
+    case 'separacion': {
+      // Los tres colores llegan corridos y se juntan.
+      const d = (1 - u) * W * 0.025;
+      const id = idFiltro(c, 'separacion');
+      const canal = (r: number, g: number, b: number) => `${r} 0 0 0 0  0 ${g} 0 0 0  0 0 ${b} 0 0  0 0 0 1 0`;
+      return {
+        opacidad: Math.min(1, u / 0.2),
+        estilo: {filter: `url(#${id})`},
+        encima: (
+          <svg width={0} height={0} style={{position: 'absolute'}} aria-hidden>
+            <filter id={id} x="-10%" y="0" width="120%" height="100%" colorInterpolationFilters="sRGB">
+              <feColorMatrix in="SourceGraphic" type="matrix" values={canal(1, 0, 0)} result="r" />
+              <feOffset in="r" dx={(d * (dx || 1)).toFixed(1)} dy={0} result="r2" />
+              <feColorMatrix in="SourceGraphic" type="matrix" values={canal(0, 1, 0)} result="g" />
+              <feColorMatrix in="SourceGraphic" type="matrix" values={canal(0, 0, 1)} result="b" />
+              <feOffset in="b" dx={(-d * (dx || 1)).toFixed(1)} dy={(d * 0.3).toFixed(1)} result="b2" />
+              <feBlend in="r2" in2="g" mode="screen" result="rg" />
+              <feBlend in="rg" in2="b2" mode="screen" />
+            </filter>
+          </svg>
+        ),
+      };
+    }
+    case 'pixeles': {
+      // Se arma por bloques, en un orden que parece al azar (el mismo en cada render).
+      const cols = 24;
+      const filas = Math.max(1, Math.round((cols * H) / W));
+      let celdas = '';
+      for (let j = 0; j < filas; j++) {
+        for (let i = 0; i < cols; i++) {
+          if (azar(i + j * cols, 7) < u) celdas += `<rect x="${i}" y="${j}" width="1.02" height="1.02"/>`;
+        }
+      }
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${cols} ${filas}" preserveAspectRatio="none" shape-rendering="crispEdges">${celdas}</svg>`;
+      const m = `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`;
+      return {opacidad: 1, estilo: {maskImage: m, WebkitMaskImage: m, maskSize: '100% 100%', WebkitMaskSize: '100% 100%'}};
+    }
+    case 'latigazo': {
+      // El paneo rápido: llega corrida desde un costado y borroneada en esa dirección; la que se va sale empujada.
+      const desplazo = Math.pow(1 - u, 1.6);
+      const id = idFiltro(c, 'latigazo');
+      const sigma = desplazo * W * 0.04;
+      return {
+        opacidad: 1,
+        estilo: {transform: `translate(${(-(dx || 1) * desplazo * W).toFixed(1)}px, ${(-dy * desplazo * H).toFixed(1)}px)`, filter: `url(#${id})`},
+        encima: (
+          <svg width={0} height={0} style={{position: 'absolute'}} aria-hidden>
+            <filter id={id} x="-20%" y="-5%" width="140%" height="110%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation={`${(dy ? 0 : sigma).toFixed(1)} ${(dy ? sigma : 0).toFixed(1)}`} />
+            </filter>
+          </svg>
+        ),
+      };
+    }
+    case 'cinta': {
+      // La idea de Miguel (2026-11-09): la imagen siguiente llega chica, desde el costado, como en una tira, y se
+      // agranda hasta ocupar el cuadro.
+      const e = Math.pow(u, 0.85);
+      const escala = 0.3 + 0.7 * e;
+      const lado = dx || 1;
+      const x = lado * (1 - e) * W * 0.34;
+      const y = (1 - e) * H * 0.26;
+      return {
+        opacidad: Math.min(1, u / 0.1),
+        estilo: {
+          transform: `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) scale(${escala.toFixed(4)})`,
+          boxShadow: `0 ${(H * 0.02).toFixed(0)}px ${(H * 0.06).toFixed(0)}px rgba(0,0,0,${(0.55 * (1 - e)).toFixed(3)})`,
+          borderRadius: `${((1 - e) * H * 0.02).toFixed(1)}px`,
+        },
+      };
+    }
+    default:
+      return null;
+  }
 }
 
 /** El clip que se va cuando el siguiente entra con empuje: sale por el otro lado en los mismos cuadros. */

@@ -61,7 +61,6 @@ proyecto.json:
 from __future__ import annotations
 
 import datetime as dt
-import functools
 import math
 
 import numpy as np
@@ -170,44 +169,16 @@ def tiempo_de_toma(pe: dict, m: dict, fps: float, ini: int, fin: int, golpe_s: f
 
 # ── Frases ─────────────────────────────────────────────────────────────────
 
-#: Cómo entra un clip sobre el que se va (dura lo que el fundido entre clips).
-TRANSICIONES = ("fundido", "cortina", "iris", "empuje", "destello", "zoom", "persiana")
-DIRECCIONES = {"derecha": [1, 0], "izquierda": [-1, 0], "abajo": [0, 1], "arriba": [0, -1]}
+#: Cómo entra un clip sobre el que se va (dura lo que el fundido entre clips): ver transiciones.py.
+from .transiciones import DIRECCIONES, TRANSICIONES, en_ronda  # noqa: E402,F401  (los nombres de siempre, para quien los busque aquí)
+from . import transiciones as _tr  # noqa: E402
 
 
-@functools.lru_cache(maxsize=1)
-def en_ronda() -> tuple[str, ...]:
-    """Las transiciones que recorre la `ronda`: todas menos las que Miguel rechazó en la galería
-    (el estilo `transicion-<tipo>`). La persiana entraba a la ronda aunque la había rechazado (2026-11-10)."""
-    from . import estilos
-
-    rechazadas = {e["id"].removeprefix("transicion-") for e in estilos.leer()
-                  if e["id"].startswith("transicion-") and e.get("estado") == "rechazado"}
-    return tuple(t for t in TRANSICIONES[1:] if t not in rechazadas) or TRANSICIONES[1:]
-
-
-def _transicion(prm: dict, n: int) -> tuple[str, list[int]] | None:
-    """La transición del `n`-ésimo cambio de clip: (tipo, hacia dónde). None = fundido.
-
-    `ronda` recorre las que no están rechazadas, una por cambio; `alterna` va a la derecha y a la izquierda.
-    """
-    tipo = prm["transicion"]
-    if tipo == "ronda":
-        tipo = en_ronda()[n % len(en_ronda())]
-    if tipo not in TRANSICIONES:
-        salir(f"transicion desconocida: {tipo} (hay: {', '.join(TRANSICIONES)}, ronda)")
-    if tipo == "fundido":
-        return None
-    d = prm["transicion_dir"]
-    if d == "alterna":
-        # En una ronda de un número par de tipos, si el lado dependiera sólo de `n`, cada tipo saldría
-        # siempre para el mismo lado: cada vuelta empieza por el otro. Con un número impar ya cambia solo.
-        k = len(en_ronda())
-        vuelta = n // k if prm["transicion"] == "ronda" and k % 2 == 0 else 0
-        d = ("derecha", "izquierda")[(n + vuelta) % 2]
-    if d not in DIRECCIONES:
-        salir(f"transicion_dir desconocida: {d} (hay: {', '.join(DIRECCIONES)}, alterna)")
-    return tipo, DIRECCIONES[d]
+def _transicion(prm: dict, n: int, tramo_nuevo: bool = False) -> tuple[str, list[int]] | None:
+    """La transición del `n`-ésimo cambio de clip: (tipo, hacia dónde). None = fundido. En el primer clip de un
+    tramo del guion, `transicion_tramo` (si está) manda sobre `transicion`."""
+    tipo = prm.get("transicion_tramo") if tramo_nuevo and prm.get("transicion_tramo") else prm["transicion"]
+    return _tr.elegir(tipo, prm["transicion_dir"], n)
 
 
 def _es_material(c: dict, palabra: str) -> bool:
@@ -534,7 +505,8 @@ def planificar(p: Proyecto) -> None:
     cambios = 0
     for k, ev in enumerate(eventos):
         if k and ev["nuevo_clip"]:
-            ev["transicion"] = _transicion(ev["prm"], cambios) if ev["entrada"] > 0 else None
+            tramo_nuevo = tramo_de(frases[ev["frase"]][0]) != tramo_de(frases[eventos[k - 1]["frase"]][0])
+            ev["transicion"] = _transicion(ev["prm"], cambios, tramo_nuevo) if ev["entrada"] > 0 else None
             cambios += 1
 
     duracion = math.ceil(m["duracion"] * fps)
@@ -606,10 +578,13 @@ def planificar(p: Proyecto) -> None:
         # Empuje: el que entra corre al que se va, que sale por el otro lado en los mismos cuadros.
         sig_tr = eventos[k + 1].get("transicion") if k + 1 < len(eventos) else None
         empujada = None
-        if sig_tr and sig_tr[0] == "empuje":
-            # Los mismos cuadros que de verdad tarda en entrar la que empuja (su entrada tiene tope: lo que dura su toma).
+        apagar = 0
+        if sig_tr:
+            # Los mismos cuadros que de verdad tarda en entrar la que llega (su entrada tiene tope: lo que dura su toma).
             llega = eventos[k + 1]
-            empujada = {"cuadros": int(min(llega["entrada"], max(0, (llega["fin"] - llega["ini"]) - 2))), "dir": sig_tr[1]}
+            extra = _tr.para_la_que_se_va(sig_tr, int(min(llega["entrada"], max(0, (llega["fin"] - llega["ini"]) - 2))))
+            empujada = extra.get("empujada")
+            apagar = extra.get("salida", 0)
         congelar = fundido(pe["congelar_golpes"]) if pe["congelar_golpes"] and ev["nuevo_clip"] else 0
         entrada = int(min(ev["entrada"], max(0, (fin - ini) - 2)))
         tiempo = tiempo_de_toma(pe, m, fps, ini, fin, golpe_s, desde=max(congelar, entrada))
@@ -626,7 +601,7 @@ def planificar(p: Proyecto) -> None:
             "ini": ini,
             "fin": fin,
             "entrada": entrada,
-            "salida": int(min(fundido(pe["fundido_final_golpes"]), max(0, (fin - ini) - 2))) if ultima else 0,
+            "salida": int(min(fundido(pe["fundido_final_golpes"]), max(0, (fin - ini) - 2))) if ultima else int(apagar),
             "x": x,
             "y": y,
             "ancho": ancho,

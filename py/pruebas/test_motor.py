@@ -20,7 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import numpy as np  # noqa: E402
 
 from montaje import estilos as estilos_mod  # noqa: E402
-from montaje import aprender, clips, estilos, guion, por_tramos, proyector, pulso, revisar, seleccion, sintesis, tomas, transcribir, transformar  # noqa: E402
+from montaje import aprender, clips, estilos, guion, por_tramos, proyector, pulso, revisar, seleccion, sintesis, tomas, transcribir, transformar, transiciones  # noqa: E402
 from montaje.rutas import MEDIOS, PROYECTOS, Proyecto  # noqa: E402
 
 
@@ -145,7 +145,7 @@ def test_transicion_fundido_no_deja_marca():
 
 
 def _galeria_de_transiciones(monkeypatch, rechazadas: set[str]) -> None:
-    falsos = [{"id": f"transicion-{t}", "estado": "rechazado" if t in rechazadas else "aprobado"} for t in pulso.TRANSICIONES[1:]]
+    falsos = [{"id": f"transicion-{t}", "estado": "rechazado" if t in rechazadas else "aprobado"} for t in transiciones.RONDA]
     monkeypatch.setattr(estilos, "leer", lambda: falsos)
     pulso.en_ronda.cache_clear()
 
@@ -153,9 +153,9 @@ def _galeria_de_transiciones(monkeypatch, rechazadas: set[str]) -> None:
 def test_transicion_ronda_las_recorre_y_alterna(monkeypatch):
     _galeria_de_transiciones(monkeypatch, set())
     prm = {"transicion": "ronda", "transicion_dir": "alterna"}
-    seis = len(pulso.TRANSICIONES) - 1
+    seis = len(transiciones.RONDA)
     tipos = [pulso._transicion(prm, n)[0] for n in range(seis)]
-    assert sorted(tipos) == sorted(pulso.TRANSICIONES[1:])  # todas, una vez
+    assert sorted(tipos) == sorted(transiciones.RONDA)  # todas las de la ronda, una vez
     assert pulso._transicion(prm, 0)[1] == [1, 0] and pulso._transicion(prm, 1)[1] == [-1, 0]
     # El mismo tipo, en la vuelta siguiente, sale para el otro lado (antes, cada tipo iba siempre al mismo).
     for n in range(seis):
@@ -168,7 +168,7 @@ def test_transicion_ronda_salta_lo_rechazado(monkeypatch):
     _galeria_de_transiciones(monkeypatch, {"persiana"})
     prm = {"transicion": "ronda", "transicion_dir": "alterna"}
     tipos = [pulso._transicion(prm, n)[0] for n in range(20)]
-    assert "persiana" not in tipos and set(tipos) == set(pulso.TRANSICIONES[1:]) - {"persiana"}
+    assert "persiana" not in tipos and set(tipos) == set(transiciones.RONDA) - {"persiana"}
     # Con cinco (impar), cada tipo igual cambia de lado de una vuelta a la otra.
     assert pulso._transicion(prm, 0)[1] != pulso._transicion(prm, 5)[1]
     # La persiana sola, pedida por su nombre, sigue valiendo: lo rechazado no se borra, sólo no entra solo.

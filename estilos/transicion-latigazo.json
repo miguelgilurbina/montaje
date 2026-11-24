@@ -1,0 +1,24 @@
+{
+ "nombre": "Latigazo",
+ "frase": "El paneo rápido: la imagen nueva llega corrida desde un costado, borroneada en esa dirección, y empuja a la que se va.",
+ "para": [
+  "transición",
+  "subir la energía"
+ ],
+ "material": "clips",
+ "energia": "alta",
+ "dura": "lo que dura el fundido entre clips (uno o dos golpes)",
+ "tecnica": {
+  "modo": "pulso",
+  "corte": "frase",
+  "frase_compases": 2,
+  "transicion": "latigazo",
+  "fundido_golpes": 2
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "39-transiciones-en-todo"
+ ],
+ "evitar": []
+}

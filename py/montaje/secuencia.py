@@ -38,7 +38,7 @@ import math
 
 import numpy as np
 
-from . import catalogo, musica
+from . import catalogo, musica, transiciones
 from .planificar import audio_de, escribir
 from .rutas import Proyecto, salir
 
@@ -51,6 +51,12 @@ POR_DEFECTO = {
     "fundido_calma": 0.4,
     "contraste": 2.0,
     "max_por_golpe": 4,
+    # Cómo entra cada imagen sobre la anterior (2026-11-23): sin esto (o con "corte"), corte seco (y fundido en la calma). Una de
+    # transiciones.py (cortina, iris, luz, doble, pixeles, cinta…) o "ronda"; dura `transicion_golpes` golpes (nunca
+    # más de la mitad de lo que se ve la imagen).
+    "transicion": None,
+    "transicion_golpes": 1.0,
+    "transicion_dir": "alterna",
 }
 
 
@@ -242,12 +248,23 @@ def planificar(p: Proyecto) -> None:
     fundido = max(1, round(prm["fundido_calma"] * fps))
     capas = []
     inis = [round(t * fps) for t, *_ in eventos]
+    # Cuánto tarda en aparecer cada una y, si hay, con qué transición.
+    entradas = [fundido if f and j > 0 else 0 for j, (_, _, _, f) in enumerate(eventos)]
+    trs: list = [None] * len(eventos)
+    if prm["transicion"] and prm["transicion"] != "corte":   # «corte» (el formulario del panel) = sin transición
+        golpe = max(1, round(60 / max(m.get("bpm") or 120, 1) * fps * prm["transicion_golpes"]))
+        for j in range(1, len(eventos)):
+            visible = (inis[j + 1] if j + 1 < len(eventos) else duracion) - inis[j]
+            trs[j] = transiciones.elegir(prm["transicion"], prm["transicion_dir"], j - 1)
+            if trs[j]:
+                entradas[j] = max(1, min(golpe, visible // 2))
     for j, (t, it, es_o, f) in enumerate(eventos):
         ini = inis[j]
         siguiente = inis[j + 1] if j + 1 < len(eventos) else duracion
-        entra = fundido if f and j > 0 else 0
-        entra_sig = (fundido if eventos[j + 1][3] else 0) if j + 1 < len(eventos) else 0
+        entra = entradas[j]
+        entra_sig = entradas[j + 1] if j + 1 < len(eventos) else 0
         fin = min(duracion, siguiente + entra_sig)
+        para_irse = transiciones.para_la_que_se_va(trs[j + 1], entra_sig) if j + 1 < len(eventos) else {}
         ancho, alto = _cubrir(it, W, H)
         ultima = j == len(eventos) - 1
         capas.append({
@@ -256,7 +273,9 @@ def planificar(p: Proyecto) -> None:
             "ini": ini,
             "fin": fin,
             "entrada": entra,
-            "salida": 0,
+            "salida": para_irse.get("salida", 0),
+            **({"transicion": {"tipo": trs[j][0], "dir": trs[j][1]}} if trs[j] else {}),
+            **({"empujada": para_irse["empujada"]} if "empujada" in para_irse else {}),
             "x": W / 2,
             "y": H / 2,
             "ancho": ancho,
