@@ -18,6 +18,22 @@ el render entero (chico y en gris) y cuenta:
   del cuadro entero, no el área ni el rojo saturado que la pauta también mira;
 - **sonido**: sonoridad integrada (LUFS) y pico real (dBTP).
 
+Y la **monotonía** (2026-11-23; Miguel le dio 6/10 al 22, «no es uff», y la versión lenta del mismo material le
+pareció «excelente»; la idea de medir el riesgo de que un montaje salga plano se vio en OpenMontage y se hizo aquí
+desde cero). Cinco señales, cada una con su umbral; ninguna dice que algo esté mal, dicen dónde mirar:
+
+- **metrónomo**: los planos duran todos lo mismo (la variación de su largo, `planos_cv`, es chica);
+- **vuelven**: planos que se parecen a uno anterior (la misma toma, el mismo encuadre), `planos_que_vuelven`;
+- **quieto**: la parte del video que casi no se mueve dentro de los planos, `poco_movimiento`;
+- **parejo**: el movimiento no cambia de un tramo a otro (la variación del movimiento por segundo, `energia_cv`);
+- **misma luz**: la luz media casi no cambia de plano a plano (`luz_cv`).
+
+Los planos se encuentran comparando cada cuadro con el de medio segundo antes (los fundidos casi no cambian de un
+cuadro al siguiente). Calibrado el 2026-11-23 con los timelines: en el 15 a encuentra 17 planos de 20, en el 15 b 59
+contra 55, en el 22 lenta 38 de 42; se le escapan los fundidos entre escenas parecidas. Sobre lo ya juzgado: el 15 b
+(un clip por compás) enciende «vuelven» (33 %: repite sus clips); el 13 enciende «quieto» (son fotos); el 22 y su
+versión lenta no encienden ninguna: lo que le faltó al 22 («no es uff») no es esta monotonía.
+
     python montaje.py revisar <p> <archivo.mp4>
 
 `ejercicio` lo corre sobre cada versión. No juzga si algo se ve bien: avisa lo que
@@ -114,6 +130,86 @@ def medir_cuadros(luz: np.ndarray, dif: np.ndarray, fps: float) -> dict:
     }
 
 
+#: Un plano: entre dos cortes, de al menos medio segundo (lo más corto es parte de una ráfaga o de una transición).
+PLANO_MIN_S = 0.5
+#: Dos planos «vuelven» si sus cuadros del medio, achicados y normalizados, se parecen así o más (correlación).
+VUELVE = 0.9
+#: Bajo esta diferencia media entre cuadros (0..255) un plano casi no se mueve.
+MOVIMIENTO_BAJO = 1.2
+UMBRALES = {"planos_cv": 0.2, "planos_que_vuelven": 0.25, "poco_movimiento": 0.6, "energia_cv": 0.35, "luz_cv": 0.12}
+
+
+def _firma(cuadro: np.ndarray) -> np.ndarray:
+    """El cuadro en 32×18, sin su brillo ni su contraste: para reconocer la misma toma aunque cambie la luz."""
+    h, w = cuadro.shape
+    chico = cuadro[: h - h % 18, : w - w % 32].reshape(18, (h - h % 18) // 18, 32, (w - w % 32) // 32).mean(axis=(1, 3))
+    chico = chico - chico.mean()
+    return chico / (np.linalg.norm(chico) + 1e-6)
+
+
+#: Para ver un cambio de plano se compara cada cuadro con el de medio segundo antes: así se ven también los fundidos
+#: (de un cuadro al siguiente, un fundido cambia poco). Bajo esta correlación de las firmas, es otro plano.
+OTRO_PLANO = 0.85
+
+
+def cambios_de_plano(firmas: np.ndarray, fps: float) -> list[int]:
+    """Dónde empieza cada plano nuevo: el medio de cada tramo en que el cuadro ya no se parece al de medio segundo
+    antes (un corte da un tramo de medio segundo; un fundido, uno más largo)."""
+    lag = max(1, int(round(0.5 * fps)))
+    if len(firmas) <= lag:
+        return []
+    corr = (firmas[lag:] * firmas[:-lag]).sum(axis=(1, 2))
+    bajo = np.concatenate([[False], corr < OTRO_PLANO, [False]])
+    ini = np.where(bajo[1:] & ~bajo[:-1])[0]
+    fin = np.where(~bajo[1:] & bajo[:-1])[0]
+    # El tramo bajo [a, b) en `corr` compara el cuadro a+lag..b+lag con el de medio segundo antes: el cambio está a
+    # medio camino de ese tramo, corrido medio segundo.
+    return [int((a + b) // 2 + lag // 2) for a, b in zip(ini, fin)]
+
+
+def medir_monotonia(cuadros: np.ndarray, dif: np.ndarray, fps: float) -> dict:
+    """Las cinco señales de monotonía, de los mismos cuadros chicos y grises que mide `medir`."""
+    n = len(cuadros)
+    firmas = np.stack([_firma(c.astype(np.float32)) for c in cuadros])
+    bordes = [0, *cambios_de_plano(firmas, fps), n]
+    planos = [(a, b) for a, b in zip(bordes, bordes[1:]) if b - a >= PLANO_MIN_S * fps]
+    largos = np.array([(b - a) / fps for a, b in planos], float)
+    centros = [firmas[(a + b) // 2] for a, b in planos]
+    vuelven = sum(1 for i in range(1, len(centros)) if max(float((centros[i] * f).sum()) for f in centros[:i]) >= VUELVE)
+    luz_planos = np.array([float(cuadros[a:b].mean()) for a, b in planos], float)
+    # El movimiento dentro de los planos (sin los cortes secos) y por segundo.
+    mov = np.where(dif > 28, np.nan, dif)
+    paso = max(1, int(round(fps)))
+    por_segundo = np.array([np.nanmean(mov[i:i + paso]) for i in range(0, len(mov), paso) if np.any(~np.isnan(mov[i:i + paso]))],
+                           float)
+    return {
+        "planos": len(planos),
+        "plano_medio_s": round(float(largos.mean()), 2) if len(largos) else 0.0,
+        "planos_cv": round(float(largos.std() / largos.mean()), 3) if len(largos) > 1 else 0.0,
+        "planos_que_vuelven": round(vuelven / max(1, len(planos) - 1), 3),
+        "poco_movimiento": round(float(np.mean(por_segundo < MOVIMIENTO_BAJO)), 3) if len(por_segundo) else 0.0,
+        "energia_cv": round(float(por_segundo.std() / max(por_segundo.mean(), 1e-6)), 3) if len(por_segundo) else 0.0,
+        "luz_cv": round(float(luz_planos.std() / max(luz_planos.mean(), 1e-6)), 3) if len(luz_planos) > 1 else 0.0,
+    }
+
+
+def senales_de_monotonia(m: dict) -> list[str]:
+    """Las señales encendidas, en palabras. Con pocos planos, las de los planos no dicen nada y no se encienden."""
+    s = []
+    if m.get("planos", 0) >= 8 and m["planos_cv"] < UMBRALES["planos_cv"]:
+        s.append(f"metrónomo: los {m['planos']} planos duran casi lo mismo (~{m['plano_medio_s']:g} s; variación "
+                 f"{m['planos_cv'] * 100:.0f} %)")
+    if m.get("planos", 0) >= 4 and m["planos_que_vuelven"] > UMBRALES["planos_que_vuelven"]:
+        s.append(f"vuelven: {m['planos_que_vuelven'] * 100:.0f} % de los planos se parecen a uno anterior")
+    if m.get("poco_movimiento", 0) > UMBRALES["poco_movimiento"]:
+        s.append(f"quieto: {m['poco_movimiento'] * 100:.0f} % de los segundos casi no se mueven")
+    if m.get("energia_cv") is not None and m.get("segundos", 0) >= 20 and m["energia_cv"] < UMBRALES["energia_cv"]:
+        s.append(f"parejo: el movimiento casi no cambia de un tramo a otro (variación {m['energia_cv'] * 100:.0f} %)")
+    if m.get("planos", 0) >= 4 and m["luz_cv"] < UMBRALES["luz_cv"]:
+        s.append(f"misma luz: la luz casi no cambia de plano a plano (variación {m['luz_cv'] * 100:.0f} %)")
+    return s
+
+
 def avisos(m: dict) -> list[str]:
     """Lo que conviene mirar. Vacío no quiere decir que esté bien: quiere decir que esto no encontró nada."""
     a = []
@@ -162,6 +258,7 @@ def medir(ruta: Path) -> dict:
         for a in range(0, len(cuadros) - 1, 256) for b in [min(a + 256, len(cuadros) - 1)]
     ])
     m = medir_cuadros(luz, dif, fps)
+    m.update(medir_monotonia(cuadros, dif, fps))
     m["lufs"], m["pico_dbtp"] = _sonido(ruta)
     return m
 
@@ -183,4 +280,11 @@ def revisar(p: Proyecto, video: str) -> dict:
         print(f"  ⚠ {a}")
     if not avisos(m):
         print("  sin avisos (igual hay que mirar la hoja)")
+    print(f"  monotonía: {m['planos']} planos de ~{m['plano_medio_s']:g} s · variación del largo {m['planos_cv'] * 100:.0f} % · "
+          f"vuelven {m['planos_que_vuelven'] * 100:.0f} % · quieto {m['poco_movimiento'] * 100:.0f} % · "
+          f"variación del movimiento {m['energia_cv'] * 100:.0f} % · de la luz {m['luz_cv'] * 100:.0f} %")
+    senales = senales_de_monotonia(m)
+    for x in senales:
+        print(f"  ~ {x}")
+    print(f"  señales de monotonía: {len(senales)} de 5")
     return m
