@@ -336,6 +336,23 @@ cuatro (experimentos 32 a 35):
   verificar].
 - **Antes del cine** (`juguetes.py`): las proporciones y velocidades son [sin verificar].
 
+## Las tablas de color (2026-11-23)
+
+Miguel, después de mirar lo que trae OpenMontage: «y podríamos sacar nosotros algo de ahí pero hacerlo nosotros
+mismos?». Eligió el etalonaje con tablas de color (era G2/K3 en `PROPUESTAS.md`), escrito desde cero sin mirar su
+código (experimento 38, `etalonaje.py`, aparato `color`):
+
+- Una tabla de color 3D dice qué color sale para cada color que entra, en una grilla de N×N×N; entre los puntos se
+  interpola (trilineal). El formato `.cube` (de Adobe) es el que comparten los editores: en el archivo el rojo cambia
+  más rápido. Medido: la mesa aplica una tabla igual que `lut3d` de ffmpeg (a menos de un nivel de 255); con el
+  orden de los canales al revés la diferencia sería de 17.
+- Las tablas de la mesa están escritas en código: la paleta de Curiana (sombras al índigo, luces al oro), la noche
+  americana, la película infrarroja de falso color, el blanqueo saltado y el proceso cruzado. Son descripciones del
+  proceso, no mediciones de la película: [sin verificar]. La infrarroja adivina el infrarrojo desde lo visible (la
+  vegetación y lo rojo lo reflejan, el cielo no).
+- `python montaje.py color --exportar <tabla> <salida.cube>` las lleva a otro editor; una tabla de otro editor entra
+  con `tabla: archivo`. Sólo tablas 3D con dominio 0–1 (casi todas).
+
 ## Lo que no se pudo verificar
 
 La amplitud de los fantasmas, el SNR del VHS en dB, el largo y la frecuencia reales de los dropouts, las barras

@@ -1,0 +1,28 @@
+{
+ "nombre": "Blanqueo saltado",
+ "frase": "El revelado que se salta el blanqueo: la plata queda con el color y la imagen sale desaturada, dura y metálica.",
+ "para": [
+  "destacar",
+  "subir la energía"
+ ],
+ "material": "cualquiera",
+ "energia": "alta",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "color",
+    "tabla": "blanqueo-saltado"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "38-las-tablas-de-color"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

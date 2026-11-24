@@ -39,7 +39,7 @@ mostrar el gesto rápido. No es el render: es la aproximación y puede perder cu
 ## Qué se ve en vivo
 
 Tienen vista previa: `cinta`, `antena`, `pantalla`, `pelicula`, `tinte`, `imprenta`, `cinetico`, `lente`,
-`consola`, `cruce`, `iman`, `realimentacion`, `colorizador`, `camara`, `sensor` y `compresion` (`lib/consola-gl.ts`).
+`consola`, `cruce`, `color` (con la tabla que le da el motor), `iman`, `realimentacion`, `colorizador`, `camara`, `sensor` y `compresion` (`lib/consola-gl.ts`).
 
 **La barra** (`cruce`, en `py/montaje/consola.py`) es la T del mezclador: `cantidad` 1 deja salir lo que viene de la
 cadena y 0 el cuadro como entró. Se pone donde termina lo que se mezcla (antes del tubo, que va siempre al final) y

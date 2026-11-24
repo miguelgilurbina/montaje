@@ -1,0 +1,28 @@
+{
+ "nombre": "Noche de Curiana",
+ "frase": "El etalonaje con la paleta de la marca: las sombras van al índigo y las luces al oro de arena, los medios quedan y el color baja un poco. Una tabla de color escrita en código.",
+ "para": [
+  "presentar la marca",
+  "mostrar el archivo"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "color",
+    "tabla": "noche-de-curiana"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "38-las-tablas-de-color"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

@@ -1001,12 +1001,12 @@ def _imagen() -> dict:
     de mezcla: su `APARATOS`) y los de señal que no están aquí (la casetera: su `SENAL`)."""
     global _IMAGEN
     if _IMAGEN is None:
-        from . import (aire, casetera, cinemudo, cinetico, consola, digital, fotografia, imprenta, juguetes, optica, pelicula,
-                       proyeccion, radio, rollo)
+        from . import (aire, casetera, cinemudo, cinetico, consola, digital, etalonaje, fotografia, imprenta, juguetes, optica,
+                       pelicula, proyeccion, radio, rollo)
 
         _IMAGEN = {}
-        for m in (optica, pelicula, rollo, cinemudo, proyeccion, fotografia, juguetes, imprenta, cinetico, radio, aire,
-                  digital, consola, casetera):
+        for m in (optica, pelicula, rollo, cinemudo, etalonaje, proyeccion, fotografia, juguetes, imprenta, cinetico, radio,
+                  aire, digital, consola, casetera):
             _IMAGEN.update(getattr(m, "APARATOS", {}))
             APARATOS.update(getattr(m, "SENAL", {}))
             POR_DEFECTO.update(m.POR_DEFECTO)

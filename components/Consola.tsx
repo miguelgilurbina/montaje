@@ -3,7 +3,7 @@
 // la tarjeta de video, lo que se graba al girar con el video corriendo, el MIDI y el render del motor.
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import Dial from '@/components/Dial';
-import {Consola as Motor, EN_VIVO, type Perillas, type Valor} from '@/lib/consola-gl';
+import {Consola as Motor, EN_VIVO, claveLut, type Perillas, type Valor} from '@/lib/consola-gl';
 import {aPistas, fusionar, tipoDe, valorEn, normal, desdeNormal, type PerillaInfo, type Punto, type Tipo} from '@/lib/consola-auto';
 
 type AparatoInfo = {tipo: string; gesto: boolean; modulo: string; doc: string; perillas: Record<string, PerillaInfo>};
@@ -150,6 +150,37 @@ export default function Consola() {
       setError((e as Error).message);
     }
   }, []);
+
+  // Las tablas de color que pide la cadena (la de cada `color` y las que aparecen en lo grabado) se piden al motor.
+  const pidiendo = useRef(new Set<string>());
+  useEffect(() => {
+    const m = motor.current;
+    if (!m) return;
+    const claves = new Map<string, string>();
+    for (const x of s.modulos) {
+      if (x.aparato !== 'color') continue;
+      const tablas = new Set<Valor>([x.perillas.tabla ?? null, ...(s.auto[x.id]?.tabla ?? []).map(([, v]) => v)]);
+      for (const tabla of tablas) {
+        const perillas = {...x.perillas, tabla};
+        const clave = claveLut(perillas);
+        const q = tabla === 'archivo' ? `archivo=${encodeURIComponent(String(x.perillas.archivo ?? ''))}` : `tabla=${encodeURIComponent(String(tabla))}`;
+        if (tabla === 'archivo' && !x.perillas.archivo) continue;
+        claves.set(clave, q);
+      }
+    }
+    for (const [clave, q] of claves) {
+      if (m.tieneLut(clave) || pidiendo.current.has(clave)) continue;
+      pidiendo.current.add(clave);
+      fetch(`/api/consola/lut?${q}`)
+        .then(async (r) => {
+          if (!r.ok) throw new Error(await r.text());
+          const {n, datos} = (await r.json()) as {n: number; datos: number[]};
+          m.fijarLut(clave, n, datos);
+        })
+        .catch((e) => setAviso(`la tabla ${clave}: ${(e as Error).message}`))
+        .finally(() => pidiendo.current.delete(clave));
+    }
+  }, [s.modulos, s.auto]);
 
   /** Las perillas de cada módulo en el segundo t: las suyas, lo grabado encima y, si se está tocando, la mano. */
   const efectivas = useCallback(
@@ -891,7 +922,33 @@ export default function Consola() {
                   );
                 })}
               </div>
-              {fijas.length ? <p className="dato tablero-doc">fijas (se escriben en la receta): {fijas.map(([k]) => k).join(', ')}</p> : null}
+              {fijas
+                .filter(([, pi]) => typeof pi.defecto === 'string')
+                .map(([k]) => (
+                  <label key={k} className="tablero-texto dato">
+                    {k}
+                    <input
+                      defaultValue={String(m.perillas[k] ?? '')}
+                      placeholder={k === 'archivo' ? 'luts/mi-tabla.cube (dentro de los medios)' : ''}
+                      onKeyDown={(e) => e.key === 'Enter' && (e.target as HTMLInputElement).blur()}
+                      onBlur={(e) => {
+                        const v = e.target.value;
+                        if (v !== String(m.perillas[k] ?? '')) {
+                          cambiar((prev) => ({...prev, modulos: prev.modulos.map((x) => (x.id === m.id ? {...x, perillas: {...x.perillas, [k]: v}} : x))}));
+                        }
+                      }}
+                    />
+                  </label>
+                ))}
+              {fijas.some(([, pi]) => typeof pi.defecto !== 'string') ? (
+                <p className="dato tablero-doc">
+                  fijas (se escriben en la receta):{' '}
+                  {fijas
+                    .filter(([, pi]) => typeof pi.defecto !== 'string')
+                    .map(([k]) => k)
+                    .join(', ')}
+                </p>
+              ) : null}
             </article>
           );
         })}

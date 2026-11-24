@@ -427,6 +427,17 @@ void main() {
   color = vec4(sale, 1.0);
 }`,
   },
+  // El etalonaje: cada color por la tabla 3D (la del motor, la misma del render), interpolada por la tarjeta.
+  color: {
+    frag: `
+uniform highp sampler3D uLut;
+uniform float uN, u_fuerza;
+void main() {
+  vec3 c = texture(uImg, vUv).rgb;
+  vec3 t = texture(uLut, clamp(c, 0.0, 1.0) * (uN - 1.0) / uN + 0.5 / uN).rgb;
+  color = vec4(mix(c, t, u_fuerza), 1.0);
+}`,
+  },
   // La barra del mezclador: el cuadro como entró, fundido con lo que salió de la cadena hasta aquí.
   cruce: {
     frag: `
@@ -565,6 +576,11 @@ function aNumero(aparato: string, perilla: string, v: Valor): number {
   return ops && typeof v === 'string' ? Math.max(0, ops.indexOf(v)) : 0;
 }
 
+/** Qué tabla de color pide un paso del aparato `color` (la clave con que se guarda en la tarjeta). */
+export function claveLut(perillas: Perillas): string {
+  return perillas.tabla === 'archivo' ? `archivo:${String(perillas.archivo ?? '')}` : String(perillas.tabla ?? '');
+}
+
 /** Los aparatos que la consola puede mostrar en vivo (los demás pasan sin tocar y sólo se ven en el render). */
 export const EN_VIVO = new Set(Object.keys(VIVOS));
 
@@ -581,6 +597,7 @@ export class Consola {
   // Lo que cada módulo dibujó en el cuadro anterior (por su lugar en la cadena): su memoria.
   private memorias: Destino[] = [];
   private retener = new Map<number, number>();
+  private luts = new Map<string, {tex: WebGLTexture; n: number}>();
   private cuadro = 0;
 
   constructor(private lienzo: HTMLCanvasElement) {
@@ -692,6 +709,25 @@ export class Consola {
     this.retener.clear();
   }
 
+  /** Una tabla de color de lado n (el rojo cambia más rápido, como en el .cube) como textura 3D. */
+  fijarLut(clave: string, n: number, datos: ArrayLike<number>) {
+    const gl = this.gl;
+    const viejo = this.luts.get(clave);
+    if (viejo) gl.deleteTexture(viejo.tex);
+    const tex = gl.createTexture()!;
+    gl.bindTexture(gl.TEXTURE_3D, tex);
+    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    for (const eje of [gl.TEXTURE_WRAP_S, gl.TEXTURE_WRAP_T, gl.TEXTURE_WRAP_R]) gl.texParameteri(gl.TEXTURE_3D, eje, gl.CLAMP_TO_EDGE);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+    gl.texImage3D(gl.TEXTURE_3D, 0, gl.RGB16F, n, n, n, 0, gl.RGB, gl.FLOAT, new Float32Array(datos));
+    this.luts.set(clave, {tex, n});
+  }
+
+  tieneLut(clave: string) {
+    return this.luts.has(clave);
+  }
+
   /** El lienzo, para grabar el boceto (`captureStream`). */
   get canvas() {
     return this.lienzo;
@@ -722,6 +758,9 @@ export class Consola {
       if (!m.activo) return;
       const p = this.pasada(m.aparato);
       if (!p) return;
+      // El etalonaje necesita su tabla en la tarjeta: mientras llega, pasa sin tocar.
+      const lut = m.aparato === 'color' ? this.luts.get(claveLut(m.perillas)) : undefined;
+      if (m.aparato === 'color' && !lut) return;
       // El paso a saltitos de la película y del sensor: mientras dura un cuadro suyo, se repite el anterior.
       let hold = 0;
       const cps = Number(m.perillas.cuadros ?? 0);
@@ -741,6 +780,12 @@ export class Consola {
       gl.uniform1f(this.u(p, 'uT'), t);
       gl.uniform1f(this.u(p, 'uK'), Math.floor(t * fps));
       gl.uniform1f(this.u(p, 'uHold'), hold);
+      if (lut) {
+        gl.activeTexture(gl.TEXTURE3);
+        gl.bindTexture(gl.TEXTURE_3D, lut.tex);
+        gl.uniform1i(this.u(p, 'uLut'), 3);
+        gl.uniform1f(this.u(p, 'uN'), lut.n);
+      }
       for (const [k, v] of Object.entries(m.perillas)) {
         if (Array.isArray(v)) {
           const par = v.length === 2 && typeof v[0] === 'number' && typeof v[1] === 'number';

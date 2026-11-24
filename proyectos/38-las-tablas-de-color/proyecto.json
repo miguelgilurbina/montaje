@@ -1,0 +1,7 @@
+{
+ "titulo": "38 · Las tablas de color",
+ "idea": "el etalonaje con tablas de color (LUT): procesos de laboratorio escritos en código desde la paleta, y cualquier archivo .cube de otro editor, en la mesa y en la consola Miguel: «y podríamos sacar nosotros algo de ahí pero hacerlo nosotros mismos?».",
+ "biblioteca": "probador",
+ "nota": "No tiene montaje propio: los estilos se muestran sobre el banco del probador (sus muestras en /estilos y en la mesa).",
+ "cadenas": []
+}

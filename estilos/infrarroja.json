@@ -1,0 +1,28 @@
+{
+ "nombre": "Película infrarroja",
+ "frase": "La película infrarroja de falso color: lo verde de la vegetación sale rojo o magenta, el rojo amarillo y el cielo se oscurece. El campo como otro planeta.",
+ "para": [
+  "destacar",
+  "subir la energía"
+ ],
+ "material": "cualquiera",
+ "energia": "media",
+ "dura": "un tramo",
+ "tecnica": {
+  "comando": "analogo",
+  "cadena": [
+   {
+    "aparato": "color",
+    "tabla": "infrarroja"
+   }
+  ]
+ },
+ "estado": "propuesta",
+ "miguel": [],
+ "visto_en": [
+  "38-las-tablas-de-color"
+ ],
+ "evitar": [
+  "encima de una imagen de la galería de Curiana que tiene que verse al 100 % (regla del tono): va en ventanas (`--ventana`), donde el guion lo pide"
+ ]
+}

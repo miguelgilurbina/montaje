@@ -581,6 +581,13 @@ def main() -> None:
     s.add_argument("--golpes", default=None, metavar="PROYECTO",
                    help="los golpes de la canción de ese proyecto, para lo que va al pulso (la consola `al pulso`)")
 
+    s = sub.add_parser("color", help="las tablas de color (LUT) de la mesa: listarlas o escribirlas a .cube para otro editor",
+                       description="las tablas de color (LUT 3D) del aparato `color` de la mesa (ver py/montaje/etalonaje.py)")
+    s.add_argument("--exportar", nargs=2, metavar=("TABLA", "SALIDA"),
+                   help="escribe una tabla (o un .cube, releído) a un .cube; SALIDA `-` la imprime")
+    s.add_argument("--json", metavar="TABLA", help="la tabla en JSON (la lee la consola del panel)")
+    s.add_argument("--tamano", type=int, default=33, help="puntos por lado de la grilla (las tablas de la mesa)")
+
     s = sub.add_parser("demo", help="material de prueba hecho con código (cielo con sol, carta, barras, fractal, juego de la vida), "
                                      "CC0, para probar sin material propio → medios/demo/clips/",
                        description="material de prueba hecho con código, CC0: un cielo con sol, la carta de prueba, las barras de "
@@ -607,6 +614,11 @@ def main() -> None:
         from . import analogo
 
         analogo.cmd(a)
+        return
+    if a.comando == "color":
+        from . import etalonaje
+
+        etalonaje.cmd(a)
         return
     if a.comando == "demo":
         from . import demo
